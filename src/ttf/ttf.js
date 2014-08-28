@@ -87,18 +87,28 @@ define(
          * @return {Object} 字符信息
          */
         TTF.prototype.chars = function() {
-            return this.ttf.chars;
+            return Object.keys(this.ttf.chars);
         };
 
         /**
          * 获取字符的glyf信息
          * 
-         * @return {Object} 字符信息
+         * @return {?number} 返回glyf索引号
+         */
+        TTF.prototype.getCharGlyfIndex = function(c) {
+            var charCode = typeof c == 'number' ? c : c.charCodeAt(0);
+            var glyfIndex = this.ttf.chars[charCode] || 0;
+            return glyfIndex;
+        };
+
+        /**
+         * 获取字符的glyf信息
+         * 
+         * @return {?Object} 返回glyf对象
          */
         TTF.prototype.getCharGlyf = function(c) {
-            var charCode = String.fromCharCode(c);
-            var glyfIndex = this.ttf.chars[charCode];
-            return glyfIndex == undefined ? null : this.ttf.glyf[glyfIndex];
+            var glyfIndex = this.getCharGlyfIndex(c);
+            return this.ttf.glyf[glyfIndex];
         };
 
         return TTF;

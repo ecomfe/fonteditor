@@ -4,13 +4,17 @@
  * @date 
  * @description
  * ttf读取器
+ * 
+ * thanks to：
+ * ynakajima/ttf.js
+ * https://github.com/ynakajima/ttf.js
  */
 
 define(
     function(require) {
 
-        var extend = require('common/lang').extend;
-        var curry = require('common/lang').curry;
+        var extend = require('../common/lang').extend;
+        var curry = require('../common/lang').curry;
 
         // 检查数组支持情况
         if(typeof ArrayBuffer === 'undefined' || typeof DataView === 'undefined') {

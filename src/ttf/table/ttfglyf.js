@@ -24,8 +24,6 @@ define(
                     val.endPtsOfContours.length - 1
                 ] + 1;
 
-            val.contours = contours;
-
             // 获取flag标志
             var i = 0;
             while (i < contours) {
@@ -181,6 +179,7 @@ define(
         ttfglyf.empty = function() {
             var val = {};
             val.flags = [];
+            val.endPtsOfContours = [];
             val.contours = 0;
             val.coordinates = [];
             val.xCoorinateOffset = 0; // x偏移
