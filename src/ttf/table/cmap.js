@@ -62,6 +62,9 @@ define(
                 }
                 format4.idDelta = idDelta;
 
+
+                format4.idRangeOffsetOffset = reader.offset;
+                
                 // idRangeOffset
                 var idRangeOffset = [];
                 for(i = 0; i < segCount; ++i) {
@@ -71,7 +74,10 @@ define(
 
                 // 总长度 - glyphIdArray起始偏移/2
                 var glyphCount = (format4.length - (reader.offset - startOffset)) / 2;
-                
+
+                // 记录array offset
+                format4.glyphIdArrayOffset = reader.offset;
+
                 // glyphIdArray
                 var glyphIdArray = [];
                 for(i = 0; i < glyphCount; ++i) {
@@ -91,6 +97,9 @@ define(
                 format6.language = reader.readUint16();
                 format6.firstCode = reader.readUint16();
                 format6.entryCount = reader.readUint16();
+
+                // 记录array offset
+                format6.glyphIdArrayOffset = reader.offset;
 
                 var glyphIndexArray = [];
                 var entryCount = format6.entryCount;

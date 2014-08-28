@@ -72,7 +72,7 @@ define(
 
             // 读取支持的表数据
             Object.keys(supportTables).forEach(function(tableName) {
-                console.log(tableName);
+                // console.log(tableName);
                 var offset = ttf.tables[tableName].offset;
                 ttf[tableName] = new supportTables[tableName](offset).read(reader, ttf);
             });
@@ -95,7 +95,6 @@ define(
             this.reader = new reader(buffer, 0, buffer.byteLength, false);
             this.ttf = {};
             init.call(this);
-            console.log(this.ttf);
             return this.ttf;
         };
 

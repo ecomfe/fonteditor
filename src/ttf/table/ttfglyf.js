@@ -169,7 +169,7 @@ define(
                     }
                     else {
                         // 读取复杂字形
-                        throw 'not support Compound  glyf';
+                        //throw 'not support Compound  glyf';
                     }
 
                     return val;
