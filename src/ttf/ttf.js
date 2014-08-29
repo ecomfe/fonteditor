@@ -92,6 +92,7 @@ define(
 
         /**
          * 获取字符的glyf信息
+         * @param {string} c 字符或者字符编码
          * 
          * @return {?number} 返回glyf索引号
          */
@@ -103,6 +104,7 @@ define(
 
         /**
          * 获取字符的glyf信息
+         * @param {string} c 字符或者字符编码
          * 
          * @return {?Object} 返回glyf对象
          */

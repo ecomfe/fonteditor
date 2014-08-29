@@ -13,38 +13,9 @@
 
 define(
     function(require) {
-
+        var directory = require('./table/directory');
         var supportTables = require('./table/support');
         var reader = require('./reader');
-
-
-        /**
-         * 读取ttf表偏移量
-         * 
-         */
-        function readTableOffset() {
-            var tables = {};
-            var numTables = this.ttf.numTables;
-            var offset = this.reader.offset;
-            var reader = this.reader;
-            for (var i = offset, l = numTables * 16; i < l; i += 16) {
-
-                var name = reader.readString(i, 4);
-                var checkSum = reader.readUint32(i + 4);
-                var tblOffset = reader.readUint32(i + 8);
-                var length = reader.readUint32(i + 12);
-
-                tables[name] = {
-                    name : name,
-                    checkSum : checkSum,
-                    offset : tblOffset,
-                    length : length,
-                };
-            }
-
-            return tables;
-        }
-
 
         /**
          * 初始化
@@ -68,7 +39,7 @@ define(
             // rengeShift
             ttf.rengeShift = reader.readUint16();
 
-            ttf.tables = readTableOffset.call(this);
+            ttf.tables = new directory(reader.offset).read(reader, ttf);
 
             // 读取支持的表数据
             Object.keys(supportTables).forEach(function(tableName) {
