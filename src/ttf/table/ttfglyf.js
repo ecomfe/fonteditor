@@ -161,6 +161,7 @@ define(
                     else {
                         // 读取复杂字形
                         //throw 'not support Compound  glyf';
+                        console.error('not support Compound  glyf', val);
                     }
 
                     return val;
