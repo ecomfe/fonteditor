@@ -1,34 +1,38 @@
 /**
- * @file glyf2svg.js
+ * @file glyf2canvas.js
  * @author mengke01
  * @date 
  * @description
- * glyf转换svg
- * 
- * thanks to：
- * ynakajima/ttf.js
- * https://github.com/ynakajima/ttf.js
+ * glyf 的canvas绘制
  */
 
 
 define(
     function(require) {
-        
+
         /**
-         * glyf转换svg 
+         * glyf canvas绘制
          * 
-         * @param {Object} glyf 解析后的glyf结构
-         * @return {string} svg文本
+         * @param {Object} glyf glyf数据
+         * @param {Context} ctx canvas的context
+         * @param {Object} options 绘制参数
          */
-        function glyf2svg(glyf, options) {
+        function glyf2canvas(glyf, ctx, options){
+
             if(!glyf) {
-                return null;
+                return;
             }
-            var pathArray = [];
-            var startPts = 0; // 起始点
-            var currentPts = 0; // 结束点
             
             options = options || {};
+
+            if(options.stroke) {
+                ctx.strokeWidth = options.strokeWidth || 1;
+                ctx.strokeStyle = options.strokeStyle || 'black';
+            }
+            else {
+                ctx.fillStyle = options.fillStyle || 'black';
+            }
+
 
             // 对轮廓进行反向，以及坐标系调整，取整
             var xOffset = -glyf.xMin;
@@ -45,13 +49,17 @@ define(
                 });
             });
 
+            var startPts = 0; // 起始点
+            var currentPts = 0; // 结束点
+
+            var commandQueue = []; // 命令队列
+
             // 处理glyf轮廓
             for ( var i = 0, l = glyf.endPtsOfContours.length; i < l; i++) {
                 try {
                     // 处理glyf坐标
                     for ( var endPts = glyf.endPtsOfContours[i]; currentPts < endPts + 1; currentPts++) {
 
-                        var path = "";
                         var currentPoint = coordinates[currentPts];
                         var prevPoint = (currentPts === startPts) 
                             ? coordinates[endPts]
@@ -67,11 +75,8 @@ define(
                         // 处理起始点
                         if (currentPts === startPts) {
                             if (currentPoint.isOnCurve) {
-                                path += "M" 
-                                    + currentPoint.x 
-                                    + "," 
-                                    + currentPoint.y
-                                    + " ";
+                                commandQueue.push('M');
+                                commandQueue.push(currentPoint);
                             }
                             // 起始点不在曲线上
                             else {
@@ -81,15 +86,11 @@ define(
                                     y : (prevPoint.y + currentPoint.y) / 2
                                 };
 
-                                path += "M" 
-                                    + midPoint.x 
-                                    + "," 
-                                    + midPoint.y 
-                                    + " Q"  
-                                    + currentPoint.x 
-                                    + "," 
-                                    + currentPoint.y
-                                    + " ";
+                                commandQueue.push('M');
+                                commandQueue.push(midPoint);
+
+                                commandQueue.push('Q');
+                                commandQueue.push(currentPoint);
                             }
                         } 
                         else {
@@ -101,7 +102,7 @@ define(
                                 && prevPoint != undefined
                                 && prevPoint.isOnCurve
                             ) {
-                                path += " L";
+                                commandQueue.push('L');
                             }
                             // 当前点不在曲线上
                             else if (
@@ -114,23 +115,17 @@ define(
                                     x : (prevPoint.x + currentPoint.x) / 2,
                                     y : (prevPoint.y + currentPoint.y) / 2
                                 };
-                                path += midPoint.x 
-                                    + "," 
-                                    + midPoint.y
-                                    + " ";
+                                commandQueue.push(midPoint);
                             } 
                             // 当前坐标不在曲线上
                             else if (!currentPoint.isOnCurve) {
-                                path += " Q";
+                                commandQueue.push('Q');
                             }
-
-                            // 当前坐标
-                            path += currentPoint.x + "," + currentPoint.y + " ";
+                            commandQueue.push(currentPoint);
                         }
-                        pathArray.push(path);
                     }
 
-                    // 当前点不在曲线上
+                    // 处理最后一个点
                     if (
                         !currentPoint.isOnCurve
                         && coordinates[startPts] != undefined
@@ -138,24 +133,19 @@ define(
 
                         // 轮廓起始点在曲线上
                       if (coordinates[startPts].isOnCurve) {
-                            pathArray.push(
-                                coordinates[startPts].x 
-                                + ","
-                                + coordinates[startPts].y 
-                                + " "
-                            );
+                            commandQueue.push(coordinates[startPts]);
                         } 
                         else {
                             var midPoint = {
                                 x : (currentPoint.x + coordinates[startPts].x) / 2,
                                 y : (currentPoint.y + coordinates[startPts].y) / 2
                             };
-                            pathArray.push(midPoint.x + "," + midPoint.y + " ");
+                            commandQueue.push(midPoint);
                         }
                     }
 
                     // 结束轮廓
-                    pathArray.push(" Z ");
+                    commandQueue.push('Z');
 
                     // 处理下一个轮廓
                     startPts = glyf.endPtsOfContours[i] + 1;
@@ -163,11 +153,56 @@ define(
                     throw e;
                 }
             }
-            return pathArray.join(" ");
+
+            var offset = 0;
+            var command = 0;
+            var cur, start;
+
+            commandQueue.unshift('Z');
+            ctx.beginPath();
+            while(command = commandQueue.shift()) {
+                
+                switch(command) {
+                    case 'M':
+                        cur = commandQueue.shift();
+                        ctx.moveTo(cur.x, cur.y);
+                        break;
+                    case 'L':
+                        cur = commandQueue.shift();
+                        ctx.lineTo(cur.x, cur.y);
+                        break;
+                    // Q 可能有多个轮廓片段，2个为一组
+                    case 'Q':
+                        var p;
+                        cur = commandQueue.shift();
+                        while(typeof cur !== 'string') {
+                            p = commandQueue.shift();
+                            ctx.quadraticCurveTo(cur.x, cur.y, p.x, p.y);
+                            cur = commandQueue.shift();
+                        }
+                        commandQueue.unshift(cur);
+                        break;
+                    case 'Z':
+                        // 处理闭合问题
+                        if(start) {
+                            ctx.lineTo(start.x, start.y);
+                        }
+
+                        start = commandQueue[1];
+                        
+                        break;
+                }
+            }
+
+            if(options.stroke) {
+                ctx.stroke();
+            }
+            else {
+                ctx.fill();
+            }                     
+
         }
 
-
-
-        return glyf2svg;
+        return glyf2canvas;
     }
 );

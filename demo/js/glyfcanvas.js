@@ -3,7 +3,7 @@
  * @author mengke01
  * @date 
  * @description
- * glyf 查看
+ * glyf canvas 绘制
  */
 
 define(
@@ -15,6 +15,7 @@ define(
         var ajaxBinaryFile = require('editor/common/ajaxBinaryFile');
         var glyf2svg = require('editor/ttf/glyf2svg');
         var setFontface = require('./setFontface');
+        var glyf2canvas = require('editor/editor/common/glyf2canvas');
         var ttf = null;
 
         // 设置字体
@@ -26,12 +27,11 @@ define(
 
         // 查看ttf glyf
         function showTTFGlyf(ttfData) {
-            console.log(ttfData);
+
             ttf = new TTF(ttfData);
             var chars = ttf.chars();
 
             var str = '';
-
             // 获取unicode字符
             chars.forEach(function(item) {
                 str += '<li data-code="'+ item +'">'
@@ -39,37 +39,33 @@ define(
                     +   (item > 255 ? '\\u' + Number(item).toString(16) : item) 
                     +'</li>';
             });
-
             $('#font-list').html(str);
-
             $('#font-list li:nth-child(4)').click();
         }
 
         function showGlyf(charcode) {
-            var tpl = ''
-                + '<svg class="glyf" viewBox="0 0 1200 2000">'
-                + ' <g transform="translate(1000, 0) scale(-1, 1) rotate(180, 500, 500)">'
-                +   '<polyline class="boundary" points="" />'
-                +   '<path class="path" d="M 0,0" />'
-                +   '</g>'
-                +  '</svg>';
-            var svg = $(tpl);
             var glyf = ttf.getCharGlyf(charcode);
-            var path = glyf2svg(glyf);
-            if (path) {
-                var scale = 1000 / ttf.ttf.head.unitsPerEm;
-                var boundary = ''
-                    + glyf.xMin + ',' + glyf.yMin + ' '
-                    + glyf.xMin + ',' + glyf.yMax + ' '
-                    + glyf.xMax + ',' + glyf.yMax + ' '
-                    + glyf.xMax + ',' + glyf.yMin + ' '
-                    + glyf.xMin + ',' + glyf.yMin + ' ';
+            var canvas = $('#glyf-canvas').get(0);
+            var ctx = canvas.getContext('2d');
 
-                svg.find(".boundary").attr('points', boundary).attr('transform', 'scale(' + scale + ',' + scale + ')');
-                svg.find(".path").attr('d', path).attr('transform', 'scale(' + scale + ',' + scale + ')');
+            // 调整大小
+            var width =  glyf.xMax - glyf.xMin;
+            var height =  glyf.yMax - glyf.yMin;
+            var scale = 1;
+            if(ttf.ttf.head.unitsPerEm > 512) {
+                scale = 512 / ttf.ttf.head.unitsPerEm;
+                width = width * scale;
+                height = height * scale;
             }
-
-            $('#svg-view').html(svg);
+            canvas.width = width;
+            canvas.height = height;
+            ctx.clearRect(0, 0, width, height);
+            glyf2canvas(glyf, ctx, {
+                stroke: 0,
+                scale: scale,
+                strokeStyle: 'green',
+                fillStyle: 'green'
+            });
         }
 
 

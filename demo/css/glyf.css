@@ -45,21 +45,11 @@ body {
 .font-list li.selected {
   background: #ECECEC;
 }
-.svg-view {
-  width: 500px;
-  height: 500px;
-  background: #F0F0F0;
-}
 .glyf {
-  width: 100%;
+  background: #F0F0F0;
 }
 .glyf .path {
   fill: green;
   stroke: none;
   stroke-width: 10px;
-}
-.boundary {
-  fill: none;
-  stroke-width: 1px;
-  stroke: black;
 }

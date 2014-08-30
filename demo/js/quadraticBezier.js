@@ -17,15 +17,16 @@ define(
              * 初始化
              */
             init: function() {
-                var ctx = document.getElementById('canvas').getContext('2d');
-                var width = ctx.offsetWidth;
-                var height = ctx.offsetHeight;
+                var canvas = $('#canvas').get(0);
+                var ctx = canvas.getContext('2d');
+                var width = canvas.offsetWidth;
+                var height = canvas.offsetHeight;
 
                 var points = [];
                 [0, 1, 2].forEach(function(i) {
                     var p = {
-                        x: Math.floor(Math.random() * 400 + 50),
-                        y: Math.floor(Math.random() * 400 + 50)
+                        x: Math.floor(Math.random() * (width - 100) + 50),
+                        y: Math.floor(Math.random() * (height - 100) + 50)
                     }
                     points[i] = p;
                     $($('.point').get(i)).css({
@@ -62,7 +63,7 @@ define(
                 }
 
                 function draw() {
-                    ctx.clearRect(0, 0, 500, 500);
+                    ctx.clearRect(0, 0, width, height);
                     //绘制2次贝塞尔曲线  
                     ctx.beginPath();
                     ctx.strokeStyle='black';
