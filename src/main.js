@@ -9,54 +9,19 @@
 
 define(
     function(require) {
-        var ttfreader = require('ttf/ttfreader');
-        var TTF = require('ttf/ttf');
-        var ajaxBinaryFile = require('common/ajaxBinaryFile');
-
-        function onUpFileChange(e) {
-            var file = e.target.files[0];
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var ttf = new ttfreader().read(e.target.result);
-            }
-
-            reader.onerror = function(e) {
-                console.error(e);
-            };
-
-            reader.readAsArrayBuffer(file);
-        }
 
         var entry = {
 
             /**
              * 初始化
              */
-            init: function() {
-                var upFile = document.getElementById('upload-file');
-                upFile.addEventListener('change', onUpFileChange);
-
-                ajaxBinaryFile({
-                    url: 'font/baiduHealth.ttf',
-                    onSuccess: function(binaryData) {
-                        var ttfData = new ttfreader().read(binaryData);
-                        console.log(ttfData);
-                        
-                        var ttf = new TTF(ttfData);
-                        console.log(ttf.chars());
-
-                    },
-                    onError: function() {
-                        console.error('error read file');
-                    }
-                });
-
+            init: function () {
 
             }
         };
 
         entry.init();
-
+        
         return entry;
     }
 );

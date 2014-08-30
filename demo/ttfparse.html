@@ -7,11 +7,21 @@
     <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
 </head>
 <body>
-    <script>
-        require.config({
-            baseUrl: 'src'
-        });
-        define('jquery', $);
-    </script>
+<script>
+    require.config({
+        baseUrl: './js',
+        paths: {
+            editor: '../../src',
+        }
+    });
+    define('jquery', $);
+</script>
+
+<input id="upload-file" type="file">
+
+<script>
+    require(['ttfparse']);
+</script>
+
 </body>
 </html>

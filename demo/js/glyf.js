@@ -26,6 +26,7 @@ define(
 
         // 查看ttf glyf
         function showTTFGlyf(ttfData) {
+            console.log(ttfData);
             ttf = new TTF(ttfData);
             var chars = ttf.chars();
 
