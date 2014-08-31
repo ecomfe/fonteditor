@@ -11,9 +11,9 @@
 <body>
     <script>
         require.config({
-            baseUrl: './js',
+            baseUrl: '../src',
             paths: {
-                editor: '../../src',
+                demo: '../demo/js',
             }
         });
         define('jquery', $);
@@ -28,7 +28,7 @@
     <div id="svg-view" class="svg-view"></div>
 
     <script>
-        require(['glyfsvg']);
+        require(['demo/glyfsvg']);
     </script>
 
 </body>

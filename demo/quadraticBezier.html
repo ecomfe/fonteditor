@@ -39,14 +39,14 @@
     </canvas>
 <script>
     require.config({
-        baseUrl: './js',
+        baseUrl: '../src',
         paths: {
-            editor: '../../src',
+            demo: '../demo/js',
         }
     });
     define('jquery', $);
 </script>
 
-<script>require(['quadraticBezier'])</script>
+<script>require(['demo/quadraticBezier'])</script>
 </body>
 </html>

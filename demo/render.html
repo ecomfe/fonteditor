@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>glyf查看</title>
+    <title>测试render</title>
     <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/1-8-2/esl.js"></script>
     <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/glyf.css">
+    <link rel="stylesheet" type="text/css" href="./css/render.css">
     <style id="font-face"></style>
 </head>
 <body>
@@ -19,16 +19,10 @@
         define('jquery', $);
     </script>
 
-    <form>
-        <input id="upload-file" type="file" class="upload-file">
-    </form>
-
-    <ul id="font-list" class="font-list"></ul>
-
-    <canvas id="glyf-canvas" style="background: #E0E0E0"></canvas>
+    <div id="render-view" class="render-view"></div>
 
     <script>
-        require(['demo/glyfcanvas']);
+        require(['demo/render']);
     </script>
 
 </body>

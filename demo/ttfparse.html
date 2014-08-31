@@ -9,9 +9,9 @@
 <body>
 <script>
     require.config({
-        baseUrl: './js',
+        baseUrl: '../src',
         paths: {
-            editor: '../../src',
+            demo: '../demo/js',
         }
     });
     define('jquery', $);
@@ -20,7 +20,7 @@
 <input id="upload-file" type="file">
 
 <script>
-    require(['ttfparse']);
+    require(['demo/ttfparse']);
 </script>
 
 </body>

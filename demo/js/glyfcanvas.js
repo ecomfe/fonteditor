@@ -9,13 +9,13 @@
 define(
     function(require) {
 
-        var ttfreader = require('editor/ttf/ttfreader');
-        var TTF = require('editor/ttf/ttf');
-        var ttf2base64 = require('editor/ttf/ttf2base64');
-        var ajaxBinaryFile = require('editor/common/ajaxBinaryFile');
-        var glyf2svg = require('editor/ttf/glyf2svg');
+        var ttfreader = require('ttf/ttfreader');
+        var TTF = require('ttf/ttf');
+        var ttf2base64 = require('ttf/ttf2base64');
+        var ajaxBinaryFile = require('common/ajaxBinaryFile');
+        var glyf2svg = require('ttf/glyf2svg');
         var setFontface = require('./setFontface');
-        var glyf2canvas = require('editor/editor/common/glyf2canvas');
+        var glyf2canvas = require('editor/common/glyf2canvas');
         var ttf = null;
 
         // 设置字体

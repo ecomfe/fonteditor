@@ -9,9 +9,9 @@
 
 define(
     function(require) {
-        var ttfreader = require('editor/ttf/ttfreader');
-        var TTF = require('editor/ttf/ttf');
-        var ajaxBinaryFile = require('editor/common/ajaxBinaryFile');
+        var ttfreader = require('ttf/ttfreader');
+        var TTF = require('ttf/ttf');
+        var ajaxBinaryFile = require('common/ajaxBinaryFile');
 
         function onUpFileChange(e) {
             var file = e.target.files[0];

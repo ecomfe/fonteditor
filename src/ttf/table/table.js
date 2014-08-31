@@ -10,7 +10,7 @@
 define(
     function(require) {
         var struct = require('./struct');
-        var extend = require('../../common/lang').extend;
+        var extend = require('common/lang').extend;
 
 
         /**
