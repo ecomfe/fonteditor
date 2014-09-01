@@ -9,12 +9,43 @@
 
 define(
     function(require) {
-
+        var ShapeConstructor = require('./Shape');
         var glyfDraw = require('../glyf/draw');
 
         var proto = {
             
             type: 'circle',
+
+            /**
+             * 对形状进行缩放平移调整
+             * 
+             * @param {Object} shape shape对象
+             * @param {Object} camera camera对象
+             * @return {Object} shape对象
+             */
+            adjust: function(shape, camera) {
+                ShapeConstructor.prototype.adjust.call(this, shape, camera);
+                var center = camera.center;
+                var ratio = camera.ratio;
+                var scale = camera.scale;
+                var _shape = shape['_shape'];
+
+                var coordinates = [];
+                shape.coordinates.forEach(function(p) {
+                    coordinates.push({
+                        x: p.x * scale,
+                        y: p.y * scale,
+                        isOnCurve: p.isOnCurve
+                    });
+                });
+
+                _shape.coordinates = coordinates;
+                _shape.xMax = shape.xMax * scale;
+                _shape.yMax = shape.yMax * scale;
+                _shape.xMin = shape.xMin * scale;
+                _shape.yMin = shape.yMin * scale;
+
+            },
 
             /**
              * 获取shape的矩形区域
@@ -59,6 +90,6 @@ define(
 
 
 
-        return require('./Shape').derive(proto);
+        return ShapeConstructor.derive(proto);
     }
 );

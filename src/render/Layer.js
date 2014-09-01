@@ -11,7 +11,7 @@ define(
     function(require) {
 
         var guid = require('./util/guid');
-        var support = require('./shape/support');
+        var ShapeConstructor = require('./shape/Shape');
         var lang = require('common/lang');
 
         /**
@@ -88,16 +88,29 @@ define(
                 var support = this.painter.support;
                 
                 this.context.clearRect(0, 0, this.painter.width, this.painter.height);
-                this.context.beginPath();
+                
 
                 setContextStyle(this.context, this.options);
 
-                var shapes = adjustCamera(this.shapes, this.painter.camera);
+                this.context.beginPath();
                 var context = this.context;
-                shapes.forEach(function(shape) {
-                    support[shape.type].draw(context, shape);
+                var camera = this.painter.camera;
+                this.shapes.forEach(function(shape) {
+
+                    if(!shape['_shape']) {
+                        shape['_shape'] = ShapeConstructor.clone(shape);
+                    }
+
+                    var drawer = support[shape.type];
+
+                    if(drawer) {
+                        if(camera.ratio != 1) {
+                            drawer.adjust(shape, camera);
+                        }
+                        drawer.draw(context, shape['_shape']);
+                    }
                 });
-                
+
                 if(this.options.stroke) {
                     this.context.stroke();
                 }
@@ -193,7 +206,7 @@ define(
                 var support = this.painter.support;
                 var shapes = this.shapes;
                 for(var i = 0, l = shapes.length; i < l; i++) {
-                    if (support[shapes[i].type].isIn(shapes[i], p.x, p.y)) {
+                    if (support[shapes[i].type].isIn(shapes[i]['_shape'], p.x, p.y)) {
                         return shapes[i];
                     }
                 }

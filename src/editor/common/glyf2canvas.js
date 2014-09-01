@@ -10,6 +10,8 @@
 define(
     function(require) {
 
+        var glyfAdjust = require('ttf/util/glyfAdjust');
+
         /**
          * glyf canvas绘制
          * 
@@ -35,20 +37,10 @@ define(
 
 
             // 对轮廓进行反向，以及坐标系调整，取整
-            var xOffset = -glyf.xMin;
-            var yOffset = -glyf.yMin;
-            var middleYx2 = glyf.yMax + glyf.yMin;
-            var scale = options.scale || 1;
-            var coordinates = [];
+            glyf = glyfAdjust(glyf, options.scale);
 
-            glyf.coordinates.forEach(function(p) {
-                coordinates.push({
-                    x: scale * (p.x + xOffset),
-                    y: scale * (middleYx2 - p.y + yOffset),
-                    isOnCurve: p.isOnCurve
-                });
-            });
-
+            
+            var coordinates = glyf.coordinates;
             var startPts = 0; // 起始点
             var currentPts = 0; // 结束点
 

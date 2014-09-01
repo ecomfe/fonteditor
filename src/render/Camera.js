@@ -10,16 +10,28 @@
 define(
     function(require) {
 
+
+
         /**
          * 视角对象
          * 
          * @constructor
          */
-        function Camera(center, ratio) {
-            this.center = center;
-            this.ratio = ratio;
+        function Camera(center, ratio, scale) {
+            this.center = center || {
+                x: 0,
+                y: 0
+            };
+            this.ratio = ratio || 1;
+            this.scale = scale || 1;
         }
 
+        /**
+         * 注销Camera
+         */
+        Camera.prototype.dispose = function() {
+            this.center = this.ratio = this.scale = null
+        }
         return Camera;
     }
 );

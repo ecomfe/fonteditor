@@ -254,7 +254,10 @@ define(
                 delta = e.detail / 3;
             }
 
-            this.fire('wheel', getEvent(e));
+            var event = getEvent(e);
+            event.delta = delta;
+
+            this.fire('wheel', event);
         }
 
 

@@ -110,16 +110,51 @@ define(
             return target;
         }
 
+        var hasOwnProperty = Object.prototype.hasOwnProperty;
+        
+        /**
+         * 深复制对象，仅复制数据
+         * 
+         * @param {Object} source 源数据
+         * @return {Object} 复制的数据
+         */
+        function clone(source) {
+            if (!source || typeof source !== 'object') {
+                return source;
+            }
 
+            var cloned = source;
 
+            if (exports.isArray(source)) {
+                cloned = source.slice().map(clone);
+            }
+            else if (exports.isObject(source) && 'isPrototypeOf' in source) {
+                cloned = {};
+                for (var key in source) {
+                    if (hasOwnProperty.call(source, key)) {
+                        cloned[key] = clone(source[key]);
+                    }
+                }
+            }
+
+            return cloned;
+        }
 
         var exports = {
             extend: extend,
             bind: bind,
             inherits: inherits,
             curry: curry,
-            uncurry: generic
+            uncurry: generic,
+            clone: clone
         };
+
+        // 生成 isXXX方法
+        ['String', 'Array', 'Function', 'Date', 'Object'].forEach(function (type) {
+            exports['is' + type] = function (obj) {
+                return obj != null && toString.call(obj).slice(8, -1) === type;
+            };
+        });
 
         return exports;
     }

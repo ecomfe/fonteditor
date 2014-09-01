@@ -18,29 +18,17 @@ define(
          */
         function draw(ctx, glyf) {
 
-            // 对轮廓进行反向，以及坐标系调整，取整
-            var xOffset = -glyf.xMin;
-            var yOffset = -glyf.yMin;
-            var middleYx2 = glyf.yMax + glyf.yMin;
-            var scale = glyf.scale || 1;
             var x = glyf.x || 0;
             var y = glyf.y || 0;
 
-            glyf.width = scale * (glyf.xMax - glyf.xMin);
-            glyf.height = scale * (glyf.yMax - glyf.yMin);
+            glyf.width = glyf.xMax - glyf.xMin;
+            glyf.height = glyf.yMax - glyf.yMin;
 
-            var coordinates = [];
-            glyf.coordinates.forEach(function(p) {
-                coordinates.push({
-                    x: x + scale * (p.x + xOffset),
-                    y: y + scale * (middleYx2 - p.y + yOffset),
-                    isOnCurve: p.isOnCurve
-                });
-            });
+            ctx.translate(x, y);
 
             var startPts = 0; // 起始点
             var currentPts = 0; // 结束点
-
+            var coordinates = glyf.coordinates;
             var commandQueue = []; // 命令队列
 
             // 处理glyf轮廓
@@ -182,6 +170,8 @@ define(
                         break;
                 }
             }
+
+            ctx.translate(-x, -y);
         }
 
 

@@ -28,6 +28,8 @@ define(
                 this.options.painter
             );
 
+            this.camera = this.painter.camera;
+
             // 注册鼠标
             this.capture = new MouseCapture(
                 this.main,
@@ -39,15 +41,36 @@ define(
                 this.main,
                 this.options.keyboard
             );
+        }
 
+
+        /**
+         * 绑定组件事件
+         * 
+         */
+        function bindEvent() {
 
             var me = this;
+            this.capture.on('wheel', function(e) {
+                var defaultRatio = me.options.defaultRatio || 1.2;
+                var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
+
+                me.camera.ratio = ratio;
+                me.camera.center.x = e.x;
+                me.camera.center.y = e.y;
+                me.camera.scale *= ratio;
+
+                me.painter.refresh();
+                console.log(me.camera.scale);
+                me.camera.ratio = 1;
+            });
 
             this.capture.on('dragstart', function(e) {
                 var shape = me.painter.getShapeIn(e);
                 if(shape) {
-                    shape['_x'] = shape.x;
-                    shape['_y'] = shape.y;
+                    var _shape = shape['_shape'];
+                    _shape._x = _shape.x;
+                    _shape._y= _shape.y;
                 }
                 me.selectedShape = shape;
             });
@@ -55,8 +78,9 @@ define(
             this.capture.on('drag', function(e) {
                 var shape = me.selectedShape;
                 if(shape) {
-                    shape.x = shape['_x'] + e.deltaX;
-                    shape.y = shape['_y'] + e.deltaY;
+                    var _shape = shape['_shape'];
+                    _shape.x = _shape._x + e.deltaX;
+                    _shape.y = _shape._y + e.deltaY;
                     me.painter.getLayer(shape.layerId).refresh();
                 }
             });
@@ -68,9 +92,8 @@ define(
                     me.selectedShape = null;
                 }
             });
-
-
         }
+
 
 
         /**
@@ -90,6 +113,7 @@ define(
             }
 
             init.call(this);
+            bindEvent.call(this);
         }
 
         /**

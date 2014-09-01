@@ -22,15 +22,39 @@ define(
         }
 
         lang.extend(Shape.prototype, {
-            
 
             /**
-             * 对形状进行缩放
+             * 对形状进行缩放平移调整
              * 
              * @return {Object} shape对象
              */
-            scale: function(shape, camera) {
-                // TODO
+            adjust: function(shape, camera) {
+                var center = camera.center;
+                var ratio = camera.ratio;
+                var scale = camera.scale;
+                var _shape = shape['_shape'];
+
+                if(typeof shape.x === 'number') {
+                    _shape.x = ratio * (_shape.x - center.x) + center.x;
+                }
+
+                if(typeof shape.y === 'number') {
+                    _shape.y = ratio * (_shape.y - center.y) + center.y;
+                }
+
+                if(typeof shape.width === 'number') {
+                    _shape.width = scale * shape.width;
+                }
+
+                if(typeof shape.width === 'number') {
+                    _shape.height = scale * shape.height;
+                }
+
+                if(typeof shape.r === 'number') {
+                    _shape.r = scale * shape.r;
+                }
+
+                return shape;
             },
 
             /**
@@ -88,9 +112,33 @@ define(
             }
 
             Constructor.constructor = Shape;
-            lang.extend(Constructor.prototype, prototype);
+            lang.extend(Constructor.prototype, Shape.prototype, prototype);
             return Constructor;
         }
+
+        /**
+         * 克隆一个shape对象
+         * 
+         * @param {Object} shape shape对象
+         * @return {Object} shape对象
+         */
+        function cloneShape(shape) {
+            var _shape = null;
+            // 移出克隆的元素
+            if(shape['_shape']) {
+                _shape = shape['_shape'];
+                delete shape['_shape'];
+            }
+
+            var cloned = lang.clone(shape);
+
+            if(_shape) {
+                shape['_shape'] = _shape;
+            }
+            return cloned;
+        }
+
+        Shape.clone = cloneShape;
 
         return Shape;
     }

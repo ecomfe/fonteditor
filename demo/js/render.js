@@ -12,6 +12,7 @@ define(
         var render = require('render/render');
         var shape_baidu = require('./shape-baidu');
         var shape_bdjk = require('./shape-bdjk');
+        var glyfAdjust = require('ttf/util/glyfAdjust');
         var currentRender;
 
         var entry = {
@@ -65,14 +66,14 @@ define(
                     level: 10
                 });
                 
+                shape_baidu = glyfAdjust(shape_baidu, 100 / 512);
                 shape_baidu.x = 50;
                 shape_baidu.y = 50;
-                shape_baidu.scale = 100 / 512;
                 font.addShape('font', shape_baidu);
 
-                shape_bdjk.x = 400;
-                shape_bdjk.y = 300;
-                shape_bdjk.scale = 100 / 512;
+                shape_bdjk = glyfAdjust(shape_bdjk, 100 / 512);
+                shape_bdjk.x = 444;
+                shape_bdjk.y = 255;
                 font.addShape('font', shape_bdjk);
 
                 currentRender.refresh();
