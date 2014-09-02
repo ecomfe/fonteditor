@@ -13,9 +13,10 @@ define(
         var TTF = require('ttf/ttf');
         var ttf2base64 = require('ttf/ttf2base64');
         var ajaxBinaryFile = require('common/ajaxBinaryFile');
-        var glyf2svg = require('ttf/glyf2svg');
+        var glyf2svg = require('ttf/util/glyf2svg');
         var setFontface = require('./setFontface');
         var ttf = null;
+        var glyf2path = require('ttf/util/glyf2path');
 
         // 设置字体
         function setFont(arrayBuffer) {
@@ -54,6 +55,9 @@ define(
                 +  '</svg>';
             var svg = $(tpl);
             var glyf = ttf.getCharGlyf(charcode);
+            var lang = require('common/lang');
+            var path = glyf2path(lang.clone(glyf));
+            console.log(path);
 
             // 调整大小
             var width =  glyf.xMax - glyf.xMin;

@@ -13,9 +13,9 @@ define(
         var TTF = require('ttf/ttf');
         var ttf2base64 = require('ttf/ttf2base64');
         var ajaxBinaryFile = require('common/ajaxBinaryFile');
-        var glyf2svg = require('ttf/glyf2svg');
         var setFontface = require('./setFontface');
-        var glyf2canvas = require('editor/common/glyf2canvas');
+        var glyf2canvas = require('ttf/util/glyf2canvas');
+
         var ttf = null;
 
         // 设置字体

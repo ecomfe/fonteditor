@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var computeBoundingBox = require('editor/common/computeBoundingBox');
+        var computeBoundingBox = require('render/util/computeBoundingBox');
 
         var entry = {
 
