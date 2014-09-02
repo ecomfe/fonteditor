@@ -135,6 +135,9 @@ define(
                 else if(typeof shape === 'number') {
                     return this.shapes[shape];
                 }
+                else if(typeof shape === 'object') {
+                    return shape;
+                }
             },
 
             /**
@@ -210,6 +213,31 @@ define(
                         return shapes[i];
                     }
                 }
+            },
+
+            /**
+             * 移动到指定的偏移
+             * @param {number} x 偏移
+             * @param {number} y 偏移
+             * @param {shape} shape对象
+             */
+            move: function(x, y, shape) {
+                shape = this.getShape(shape);
+                var shapes = [];
+                if(shape) {
+                    shapes.push(shape);
+                }
+                else {
+                    shapes = this.shapes;
+                }
+
+                shapes.forEach(function(shape) {
+                    var _shape = shape['_shape'];
+                    _shape.x = _shape.x + x;
+                    _shape.y= _shape.y + y;
+                });
+                
+                return this;
             },
 
             /**

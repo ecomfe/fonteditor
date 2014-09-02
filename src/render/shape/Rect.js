@@ -39,9 +39,9 @@ define(
              */
             isIn: function(shape, x, y) {
                 return x <= shape.x + shape.width 
-                    && x >= shape.x - shape.width
+                    && x >= shape.x
                     && y <= shape.y + shape.height
-                    && y >= shape.y - shape.height;
+                    && y >= shape.y;
             },
 
             /**

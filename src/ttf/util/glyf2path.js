@@ -44,18 +44,22 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
 
                     var commandQueue = [];
                     var curBezier = null;
+                    var currentPoint = null;
+                    var prevPoint = null;
+                    var nextPoint = null;
+
                     // 处理glyf坐标
                     for ( var endPts = glyf.endPtsOfContours[i]; currentPts < endPts + 1; currentPts++) {
 
-                        var currentPoint = coordinates[currentPts];
-                        var prevPoint = (currentPts === startPts) 
+                        currentPoint = coordinates[currentPts];
+                        prevPoint = (currentPts === startPts) 
                             ? coordinates[endPts]
                             : coordinates[currentPts - 1];
-                        var nextPoint = (currentPts === endPts) 
+                        nextPoint = (currentPts === endPts) 
                             ? coordinates[startPts]
                             : coordinates[currentPts + 1];
 
-                        if (currentPoint == undefined) {
+                        if (!currentPoint) {
                             continue;
                         }
 
@@ -70,7 +74,7 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
                                     }
                                 });
                             }
-                            // 起始点不在曲线上
+                            // 起始点不在曲线上，则中间点为bezier曲线的起始点
                             else {
 
                                 var midPoint = {
@@ -96,15 +100,11 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
 
                             // 直线
                             if (
-                                currentPoint != undefined
+                                currentPoint
                                 && currentPoint.isOnCurve
-                                && prevPoint != undefined
+                                && prevPoint
                                 && prevPoint.isOnCurve
                             ) {
-                                if(curBezier) {
-                                    curBezier.p = prevPoint;
-                                    curBezier = null;
-                                }
                                 commandQueue.push({
                                     c: 'L',
                                     p: {
@@ -113,11 +113,26 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
                                     }
                                 });
                             }
+                            // 当前在曲线上，并且上一个不在曲线上
+                            // 则当前为bezier终点
+                            else if (
+                                currentPoint.isOnCurve
+                                && prevPoint
+                                && !prevPoint.isOnCurve
+                            ) {
+                                if(curBezier) {
+                                    curBezier.p = {
+                                        x: currentPoint.x,
+                                        y: currentPoint.y
+                                    };
+                                    curBezier = null;
+                                }
+                            }
                             // 当前点不在曲线上，并且上一个点不在曲线上
-                            // 贝塞尔曲线的连续情况
+                            // 贝塞尔曲线的连续情况，需要求中间点为终点和起点
                             else if (
                                 !currentPoint.isOnCurve
-                                && prevPoint != undefined
+                                && prevPoint
                                 && !prevPoint.isOnCurve
                             ) {
 
@@ -153,13 +168,13 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
                         }
                     }
 
-                    // 处理最后一个点
+                    // 最后一个点不在曲线上
                     if (
                         !currentPoint.isOnCurve
-                        && coordinates[startPts] != undefined
+                        && coordinates[startPts]
                     ) {
 
-                        // 轮廓起始点在曲线上
+                        // 轮廓起始点在曲线上，则起始点为bezier曲线终点
                       if (coordinates[startPts].isOnCurve) {
                             if(curBezier) {
                                 curBezier.p = {

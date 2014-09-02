@@ -9,9 +9,24 @@
 
 define(
     function(require) {
+
+        var isInsidePolygon = require('../util/isInsidePolygon');
+
         var proto = {
             
             type: 'path',
+
+
+            /**
+             * 对形状进行缩放平移调整
+             * 
+             * @param {Object} shape shape对象
+             * @param {Object} camera camera对象
+             * @return {Object} shape对象
+             */
+            adjust: function(shape, camera) {
+                
+            },
 
             /**
              * 获取shape的矩形区域
@@ -37,7 +52,24 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                return Math.pow(shape.x - x, 2) + Math.pow(shape.y - y, 2) <= Math.pow(shape.r, 2);
+                x = x - shape.bound.x;
+                y = y - shape.bound.y;
+                if(
+                    x <= shape.x + shape.width 
+                    && x >= shape.x
+                    && y <= shape.y + shape.height
+                    && y >= shape.y
+                ) {
+                    var points = [];
+                    shape.points.forEach(function(point) {
+                        if(point.c == 'Q') {
+                            points.push(point.p1);
+                        }
+                        points.push(point.p);
+                    });
+                    return isInsidePolygon(points, x, y);
+                }
+                return false;
             },
 
             /**
@@ -47,7 +79,32 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                
+                var x = shape.x || 0;
+                var y = shape.y || 0;
+
+                ctx.translate(x, y);
+                var i = -1;
+                var points = shape.points;
+                var l = points.length;
+                var point;
+                while (++i < l) {
+                    point = points[i];
+                    switch (point.c) {
+                        case 'M':
+                            ctx.moveTo(point.p.x, point.p.y);
+                            break;
+                        case 'L':
+                            ctx.lineTo(point.p.x, point.p.y);
+                            break;
+                        case 'Q':
+                            ctx.quadraticCurveTo(point.p1.x, point.p1.y, point.p.x, point.p.y);
+                            break;
+                        case 'Z':
+                            ctx.lineTo(point.p.x, point.p.y);
+                            break;
+                    }
+                }
+                ctx.translate(-x, -y);
             }
         };
 

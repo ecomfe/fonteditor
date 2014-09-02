@@ -12,7 +12,8 @@ define(
         var support = {
             circle: require('./Circle'),
             rect: require('./Rect'),
-            font: require('./Font')
+            font: require('./Font'),
+            path: require('./Path')
         };
         return support;
     }

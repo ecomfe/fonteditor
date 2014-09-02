@@ -61,35 +61,43 @@ define(
                 me.camera.scale *= ratio;
 
                 me.painter.refresh();
-                console.log(me.camera.scale);
                 me.camera.ratio = 1;
             });
 
             this.capture.on('dragstart', function(e) {
                 var shape = me.painter.getShapeIn(e);
                 if(shape) {
-                    var _shape = shape['_shape'];
-                    _shape._x = _shape.x;
-                    _shape._y= _shape.y;
+                    me.selectedShape = shape;
                 }
-                me.selectedShape = shape;
+                me.camera.mx = e.x;
+                me.camera.my = e.y;
             });
 
             this.capture.on('drag', function(e) {
                 var shape = me.selectedShape;
                 if(shape) {
-                    var _shape = shape['_shape'];
-                    _shape.x = _shape._x + e.deltaX;
-                    _shape.y = _shape._y + e.deltaY;
-                    me.painter.getLayer(shape.layerId).refresh();
+                    me.painter.getLayer(shape.layerId)
+                        .move(e.x - me.camera.mx, e.y - me.camera.my, shape)
+                        .refresh();
                 }
+                else {
+                    me.painter.move(e.x - me.camera.mx, e.y - me.camera.my)
+                        .refresh();
+                }
+                me.camera.mx = e.x;
+                me.camera.my = e.y;
             });
 
             this.capture.on('dragend', function(e) {
                 var shape = me.selectedShape;
                 if(shape) {
-                    me.painter.getLayer(shape.layerId).refresh();
+                    me.painter.getLayer(shape.layerId)
+                        .move(e.x - me.camera.mx, e.y - me.camera.my, shape)
+                        .refresh();
                     me.selectedShape = null;
+                }
+                else {
+                    me.painter.refresh();
                 }
             });
         }

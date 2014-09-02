@@ -45,6 +45,8 @@ define(
                 _shape.xMin = shape.xMin * scale;
                 _shape.yMin = shape.yMin * scale;
 
+                shape.width = shape.width * scale;
+                shape.height = shape.height * scale;
             },
 
             /**
@@ -72,9 +74,9 @@ define(
              */
             isIn: function(shape, x, y) {
                 return x <= shape.x + shape.width 
-                    && x >= shape.x - shape.width
+                    && x >= shape.x 
                     && y <= shape.y + shape.height
-                    && y >= shape.y - shape.height;
+                    && y >= shape.y;
             },
 
             /**

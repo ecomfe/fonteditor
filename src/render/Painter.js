@@ -136,6 +136,9 @@ define(
                 else if(typeof layerId === 'number') {
                     return this.layers[layerId];
                 }
+                else if(typeof layerId === 'object') {
+                    return layerId;
+                }
             },
 
             /**
@@ -215,6 +218,29 @@ define(
                         return s;
                     }
                 }
+            },
+
+            /**
+             * 移动到指定的偏移
+             * @param {number} x 偏移
+             * @param {number} y 偏移
+             * @param {Layer} layerId对象
+             */
+            move: function(x, y, layerId) {
+                var layer = this.getLayer(layerId);
+                var layers = [];
+                if(layer) {
+                    layers.push(layer);
+                }
+                else {
+                    layers = this.layers;
+                }
+
+                layers.forEach(function(layer) {
+                    layer.move(x, y);
+                });
+                
+                return this;
             },
 
             /**
