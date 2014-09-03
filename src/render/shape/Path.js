@@ -10,7 +10,7 @@
 define(
     function(require) {
         var ShapeConstructor = require('./Shape');
-        var isInsidePolygon = require('../util/isInsidePolygon');
+        var isInsidePath = require('../util/isInsidePath');
         var pathAdjust = require('../util/pathAdjust');
         var proto = {
             
@@ -61,15 +61,10 @@ define(
                     && y >= shape.y
                 ) {
 
-                    return true;
-                    // var points = [];
-                    // shape.points.forEach(function(point) {
-                    //     if(point.c == 'Q') {
-                    //         points.push(point.p1);
-                    //     }
-                    //     points.push(point.p);
-                    // });
-                    // return isInsidePolygon(points, x, y);
+                    return isInsidePath(shape.points, {
+                        x: x - shape.x, 
+                        y: y - shape.y
+                    });
                 }
                 return false;
             },

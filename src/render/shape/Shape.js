@@ -122,19 +122,7 @@ define(
          * @return {Object} shape对象
          */
         function cloneShape(shape) {
-            var _shape = null;
-            // 移出克隆的元素
-            if(shape['_shape']) {
-                _shape = shape['_shape'];
-                delete shape['_shape'];
-            }
-
-            var cloned = lang.clone(shape);
-
-            if(_shape) {
-                shape['_shape'] = _shape;
-            }
-            return cloned;
+            return lang.clone(shape);
         }
 
         Shape.clone = cloneShape;

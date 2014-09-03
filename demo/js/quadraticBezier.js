@@ -10,6 +10,8 @@ define(
     function(require) {
 
         var computeBoundingBox = require('render/util/computeBoundingBox');
+        var isLineCross = require('render/util/isLineCross');
+        var isBezierCross = require('render/util/isBezierCross');
 
         var entry = {
 
@@ -23,7 +25,7 @@ define(
                 var height = canvas.offsetHeight;
 
                 var points = [];
-                [0, 1, 2].forEach(function(i) {
+                [0, 1, 2, 3].forEach(function(i) {
                     var p = {
                         x: Math.floor(Math.random() * (width - 100) + 50),
                         y: Math.floor(Math.random() * (height - 100) + 50)
@@ -63,6 +65,8 @@ define(
                 }
 
                 function draw() {
+                    
+
                     ctx.clearRect(0, 0, width, height);
                     //绘制2次贝塞尔曲线  
                     ctx.beginPath();
@@ -93,6 +97,8 @@ define(
                     ctx.lineTo(max[0], min[1]);
                     ctx.lineTo(min[0], min[1]);
                     ctx.stroke();
+
+                    console.log(isBezierCross(points[0], points[1], points[2], points[3]));
                 }
 
                 draw();
