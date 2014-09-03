@@ -32,26 +32,25 @@ define(
                 var center = camera.center;
                 var ratio = camera.ratio;
                 var scale = camera.scale;
-                var _shape = shape['_shape'];
 
                 if(typeof shape.x === 'number') {
-                    _shape.x = ratio * (_shape.x - center.x) + center.x;
+                    shape.x = ratio * (shape.x - center.x) + center.x;
                 }
 
                 if(typeof shape.y === 'number') {
-                    _shape.y = ratio * (_shape.y - center.y) + center.y;
+                    shape.y = ratio * (shape.y - center.y) + center.y;
                 }
 
                 if(typeof shape.width === 'number') {
-                    _shape.width = scale * shape.width;
+                    shape.width = ratio * shape.width;
                 }
 
                 if(typeof shape.width === 'number') {
-                    _shape.height = scale * shape.height;
+                    shape.height = ratio * shape.height;
                 }
 
                 if(typeof shape.r === 'number') {
-                    _shape.r = scale * shape.r;
+                    shape.r = ratio * shape.r;
                 }
 
                 return shape;

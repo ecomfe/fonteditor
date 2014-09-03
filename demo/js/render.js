@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var render = require('render/render');
+        var render = require('render/main');
         var shape_baidu = require('./shape-baidu');
         var shape_bdjk = require('./shape-bdjk');
         var glyfAdjust = require('ttf/util/glyfAdjust');
@@ -69,30 +69,29 @@ define(
                     level: 10
                 });
                 
-                shape_bdjk = glyfAdjust(shape_bdjk, 100 / 512);
+                shape_bdjk = glyfAdjust(shape_bdjk, 200 / 512);
                 shape_bdjk.x = 444;
-                shape_bdjk.y = 255;
+                shape_bdjk.y = 55;
                 font.addShape('font', shape_bdjk);
 
                 var pathPanel = currentRender.addLayer('path', {
                     level: 11
                 });
 
-                var pathArray = glyf2path(shape_baidu, {
-                    scale: 120 / 512
-                });
+                var pathArray = glyf2path(shape_baidu);
                 var computeBoundingBox = require('render/util/computeBoundingBox');
                 var pathAdjust = require('render/util/pathAdjust');
 
-                pathArray.forEach(function(path) {
+                pathArray.reverse().forEach(function(path) {
                     var shape = {};
                     shape.points = path;
-                    shape.bound = computeBoundingBox.computePath(path);
+                    var bound = computeBoundingBox.computePath(path);
+                    shape.points = pathAdjust(path, 1, -bound.x, -bound.y);
+                    shape.x = bound.x + 200;
+                    shape.y = bound.y + 200;
 
-                    shape.x = 200;
-                    shape.y = 200;
-                    shape.width = shape.bound.width;
-                    shape.height = shape.bound.height;
+                    shape.width = bound.width;
+                    shape.height = bound.height;
 
                     pathPanel.addShape('path', shape);
                 });

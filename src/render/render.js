@@ -1,10 +1,11 @@
 /**
- * @file Render.js
+ * @file render.js
  * @author mengke01
  * @date 
  * @description
- * 图形渲染组件
+ * 渲染器对象
  */
+
 
 define(
     function(require) {
@@ -43,67 +44,6 @@ define(
             );
         }
 
-
-        /**
-         * 绑定组件事件
-         * 
-         */
-        function bindEvent() {
-
-            var me = this;
-            this.capture.on('wheel', function(e) {
-                var defaultRatio = me.options.defaultRatio || 1.2;
-                var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
-
-                me.camera.ratio = ratio;
-                me.camera.center.x = e.x;
-                me.camera.center.y = e.y;
-                me.camera.scale *= ratio;
-
-                me.painter.refresh();
-                me.camera.ratio = 1;
-            });
-
-            this.capture.on('dragstart', function(e) {
-                var shape = me.painter.getShapeIn(e);
-                if(shape) {
-                    me.selectedShape = shape;
-                }
-                me.camera.mx = e.x;
-                me.camera.my = e.y;
-            });
-
-            this.capture.on('drag', function(e) {
-                var shape = me.selectedShape;
-                if(shape) {
-                    me.painter.getLayer(shape.layerId)
-                        .move(e.x - me.camera.mx, e.y - me.camera.my, shape)
-                        .refresh();
-                }
-                else {
-                    me.painter.move(e.x - me.camera.mx, e.y - me.camera.my)
-                        .refresh();
-                }
-                me.camera.mx = e.x;
-                me.camera.my = e.y;
-            });
-
-            this.capture.on('dragend', function(e) {
-                var shape = me.selectedShape;
-                if(shape) {
-                    me.painter.getLayer(shape.layerId)
-                        .move(e.x - me.camera.mx, e.y - me.camera.my, shape)
-                        .refresh();
-                    me.selectedShape = null;
-                }
-                else {
-                    me.painter.refresh();
-                }
-            });
-        }
-
-
-
         /**
          * Render 构造函数
          * 
@@ -121,7 +61,6 @@ define(
             }
 
             init.call(this);
-            bindEvent.call(this);
         }
 
         /**
@@ -164,16 +103,6 @@ define(
         };
 
         observable.mixin(Render.prototype);
-
-        /**
-         * 创建一个render
-         * @param {HTMLElement} main 主控区域
-         * @param {Object} options 创建参数
-         * @return {Render} render对象
-         */
-        Render.create = function(main, options) {
-            return new Render(main, options);
-        };
 
         return Render;
     }

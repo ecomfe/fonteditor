@@ -1,6 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  color: #03C;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.hide {
+  display: none;
+}
+body,
+html {
+  height: 100%;
+}
 #render-view {
-  width: 800px;
-  height: 600px;
+  width: 100%;
+  height: 100%;
   background: #F0F0F0;
   position: relative;
 }

@@ -25,20 +25,40 @@ define(
             var y = offsetY || 0;
             var l = path.length;
             var i = -1;
-            while (++i < l) {
-                var point = path[i];
-                switch (point.c) {
-                    case 'M':
-                    case 'L':
-                        point.p.x = scale * (point.p.x + x);
-                        point.p.y = scale * (point.p.y + y);
-                        break;
-                    case 'Q':
-                        point.p.x = scale * (point.p.x + x);
-                        point.p.y = scale * (point.p.y + y);
-                        point.p1.x = scale * (point.p1.x + x);
-                        point.p1.y = scale * (point.p1.y + y);
-                        break;
+            if(scale == 1) {
+                while (++i < l) {
+                    var point = path[i];
+                    switch (point.c) {
+                        case 'M':
+                        case 'L':
+                            point.p.x = (point.p.x + x);
+                            point.p.y = (point.p.y + y);
+                            break;
+                        case 'Q':
+                            point.p.x = (point.p.x + x);
+                            point.p.y = (point.p.y + y);
+                            point.p1.x = (point.p1.x + x);
+                            point.p1.y = (point.p1.y + y);
+                            break;
+                    }
+                }
+            }
+            else {
+                while (++i < l) {
+                    var point = path[i];
+                    switch (point.c) {
+                        case 'M':
+                        case 'L':
+                            point.p.x = scale * (point.p.x + x);
+                            point.p.y = scale * (point.p.y + y);
+                            break;
+                        case 'Q':
+                            point.p.x = scale * (point.p.x + x);
+                            point.p.y = scale * (point.p.y + y);
+                            point.p1.x = scale * (point.p1.x + x);
+                            point.p1.y = scale * (point.p1.y + y);
+                            break;
+                    }
                 }
             }
             return path;

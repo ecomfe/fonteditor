@@ -9,9 +9,9 @@
 
 define(
     function(require) {
-
+        var ShapeConstructor = require('./Shape');
         var isInsidePolygon = require('../util/isInsidePolygon');
-
+        var pathAdjust = require('../util/pathAdjust');
         var proto = {
             
             type: 'path',
@@ -25,7 +25,8 @@ define(
              * @return {Object} shape对象
              */
             adjust: function(shape, camera) {
-                
+                ShapeConstructor.prototype.adjust.call(this, shape, camera);
+                pathAdjust(shape.points, camera.ratio);
             },
 
             /**
@@ -52,22 +53,23 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                x = x - shape.bound.x;
-                y = y - shape.bound.y;
+
                 if(
                     x <= shape.x + shape.width 
                     && x >= shape.x
                     && y <= shape.y + shape.height
                     && y >= shape.y
                 ) {
-                    var points = [];
-                    shape.points.forEach(function(point) {
-                        if(point.c == 'Q') {
-                            points.push(point.p1);
-                        }
-                        points.push(point.p);
-                    });
-                    return isInsidePolygon(points, x, y);
+
+                    return true;
+                    // var points = [];
+                    // shape.points.forEach(function(point) {
+                    //     if(point.c == 'Q') {
+                    //         points.push(point.p1);
+                    //     }
+                    //     points.push(point.p);
+                    // });
+                    // return isInsidePolygon(points, x, y);
                 }
                 return false;
             },
@@ -100,10 +102,19 @@ define(
                             ctx.quadraticCurveTo(point.p1.x, point.p1.y, point.p.x, point.p.y);
                             break;
                         case 'Z':
-                            ctx.lineTo(point.p.x, point.p.y);
+                            //ctx.lineTo(point.p.x, point.p.y);
                             break;
                     }
                 }
+
+                // var w = shape.width;
+                // var h = shape.height;
+                // ctx.moveTo(0, 0);
+                // ctx.lineTo(w, 0);
+                // ctx.lineTo(w, h);
+                // ctx.lineTo(0, h);
+                // ctx.lineTo(0, 0);
+
                 ctx.translate(-x, -y);
             }
         };

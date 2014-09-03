@@ -25,28 +25,26 @@ define(
              */
             adjust: function(shape, camera) {
                 ShapeConstructor.prototype.adjust.call(this, shape, camera);
+
                 var center = camera.center;
                 var ratio = camera.ratio;
                 var scale = camera.scale;
-                var _shape = shape['_shape'];
 
                 var coordinates = [];
                 shape.coordinates.forEach(function(p) {
                     coordinates.push({
-                        x: p.x * scale,
-                        y: p.y * scale,
+                        x: p.x * ratio,
+                        y: p.y * ratio,
                         isOnCurve: p.isOnCurve
                     });
                 });
 
-                _shape.coordinates = coordinates;
-                _shape.xMax = shape.xMax * scale;
-                _shape.yMax = shape.yMax * scale;
-                _shape.xMin = shape.xMin * scale;
-                _shape.yMin = shape.yMin * scale;
+                shape.coordinates = coordinates;
+                shape.xMax = shape.xMax * ratio;
+                shape.yMax = shape.yMax * ratio;
+                shape.xMin = shape.xMin * ratio;
+                shape.yMin = shape.yMin * ratio;
 
-                shape.width = shape.width * scale;
-                shape.height = shape.height * scale;
             },
 
             /**

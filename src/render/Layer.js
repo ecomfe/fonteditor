@@ -97,17 +97,13 @@ define(
                 var camera = this.painter.camera;
                 this.shapes.forEach(function(shape) {
 
-                    if(!shape['_shape']) {
-                        shape['_shape'] = ShapeConstructor.clone(shape);
-                    }
-
                     var drawer = support[shape.type];
 
                     if(drawer) {
                         if(camera.ratio != 1) {
                             drawer.adjust(shape, camera);
                         }
-                        drawer.draw(context, shape['_shape']);
+                        drawer.draw(context, shape);
                     }
                 });
 
@@ -209,7 +205,7 @@ define(
                 var support = this.painter.support;
                 var shapes = this.shapes;
                 for(var i = 0, l = shapes.length; i < l; i++) {
-                    if (support[shapes[i].type].isIn(shapes[i]['_shape'], p.x, p.y)) {
+                    if (support[shapes[i].type].isIn(shapes[i], p.x, p.y)) {
                         return shapes[i];
                     }
                 }
@@ -232,9 +228,8 @@ define(
                 }
 
                 shapes.forEach(function(shape) {
-                    var _shape = shape['_shape'];
-                    _shape.x = _shape.x + x;
-                    _shape.y= _shape.y + y;
+                    shape.x = shape.x + x;
+                    shape.y= shape.y + y;
                 });
                 
                 return this;
