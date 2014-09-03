@@ -30,8 +30,9 @@ define(
                 render.camera.ratio = 1;
             });
 
-            render.capture.on('dragstart', function(e) {
+            render.capture.on('down', function(e) {
                 var shape = render.painter.getShapeIn(e);
+
                 if(shape) {
                     render.selectedShape = shape;
                 }

@@ -22,8 +22,8 @@ define(
              */
             getRect: function(shape) {
                 return {
-                    x: shape.x,
-                    y: shape.y,
+                    x: shape.x - shape.width / 2 ,
+                    y: shape.y - shape.height / 2,
                     width: shape.width,
                     height: shape.height
                 };
@@ -38,10 +38,12 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                return x <= shape.x + shape.width 
-                    && x >= shape.x
-                    && y <= shape.y + shape.height
-                    && y >= shape.y;
+                var w = shape.width / 2;
+                var h = shape.height / 2;
+                return x <= shape.x + w
+                    && x >= shape.x - w
+                    && y <= shape.y + h
+                    && y >= shape.y - h;
             },
 
             /**
@@ -51,13 +53,13 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                var w = shape.width;
-                var h = shape.height;
-                ctx.moveTo(shape.x, shape.y);
-                ctx.lineTo(shape.x + w, shape.y);
+                var w = shape.width / 2;
+                var h = shape.height / 2;
+                ctx.moveTo(shape.x - w, shape.y - h);
+                ctx.lineTo(shape.x + w, shape.y - h);
                 ctx.lineTo(shape.x + w, shape.y + h);
-                ctx.lineTo(shape.x, shape.y + h);
-                ctx.lineTo(shape.x, shape.y);
+                ctx.lineTo(shape.x - w, shape.y + h);
+                ctx.lineTo(shape.x - w, shape.y - h);
             }
         };
 
