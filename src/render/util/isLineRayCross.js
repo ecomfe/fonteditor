@@ -38,7 +38,10 @@ define(
 
                 var xcross = (p.y - p0.y) / (p1.y - p0.y) * (p1.x - p0.x) + p0.x;
                 if (xcross > p.x) {
-                    return true;
+                    return {
+                        x: xcross,
+                        y: p.y
+                    };
                 }
             }
 

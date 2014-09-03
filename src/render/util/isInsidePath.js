@@ -11,8 +11,8 @@
 
 define(
     function(require) {
-        var isBezierCross = require('./isBezierCross');
-        var isLineCross = require('./isLineCross');
+        var isBezierCross = require('./isBezierRayCross');
+        var isLineCross = require('./isLineRayCross');
 
         /**
          * 判断点是否在path内部

@@ -10,8 +10,8 @@ define(
     function(require) {
 
         var computeBoundingBox = require('render/util/computeBoundingBox');
-        var isLineCross = require('render/util/isLineCross');
-        var isBezierCross = require('render/util/isBezierCross');
+        var isLineCross = require('render/util/isLineRayCross');
+        var isBezierRayCross = require('render/util/isBezierRayCross');
 
         var entry = {
 
@@ -24,18 +24,62 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [];
-                [0, 1, 2, 3].forEach(function(i) {
-                    var p = {
-                        x: Math.floor(Math.random() * (width - 100) + 50),
-                        y: Math.floor(Math.random() * (height - 100) + 50)
+                // var points = [];
+                // [0, 1, 2, 3].forEach(function(i) {
+                //     var p = {
+                //         x: Math.floor(Math.random() * (width - 100) + 50),
+                //         y: Math.floor(Math.random() * (height - 100) + 50)
+                //     }
+                //     points[i] = p;
+                //     $($('.point').get(i)).css({
+                //         left: p.x,
+                //         top: p.y
+                //     });
+                // });
+
+                var points = [
+                    {
+                        x: 130,
+                        y: 77
+                    },
+                    {
+                        x: 130,
+                        y: 148
+                    },
+                    {
+                        x: 65,
+                        y: 148
+                    },
+                    {
+                        x: 9,
+                        y: 133
                     }
-                    points[i] = p;
-                    $($('.point').get(i)).css({
-                        left: p.x,
-                        top: p.y
-                    });
-                });
+                ];
+
+                // var points = [
+                //     {
+                //         x: 65,
+                //         y: 148
+                //     },
+                //     {
+                //         x: 20,
+                //         y: 148
+                //     },
+                //     {
+                //         x: 5,
+                //         y: 115
+                //     },
+                //     {
+                //         x: 9,
+                //         y: 133
+                //     }
+                // ];
+
+
+                $('[data-index="3"]').css({
+                    left: points[3].x,
+                    top: points[3].y
+                })
 
                 var point;
 
@@ -97,8 +141,10 @@ define(
                     ctx.lineTo(max[0], min[1]);
                     ctx.lineTo(min[0], min[1]);
                     ctx.stroke();
-
-                    console.log(isBezierCross(points[0], points[1], points[2], points[3]));
+                    //console.time('bezier');
+                    var r = isBezierRayCross(points[0], points[1], points[2], points[3]);
+                    //console.timeEnd('bezier');
+                    console.log(r);
                 }
 
                 draw();
