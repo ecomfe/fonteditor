@@ -9,9 +9,9 @@
 define(
     function(require) {
 
-        var computeBoundingBox = require('render/util/computeBoundingBox');
-        var isLineCross = require('render/util/isLineRayCross');
-        var isBezierRayCross = require('render/util/isBezierRayCross');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
+        var isLineCross = require('graphics/isLineRayCross');
+        var isBezierRayCross = require('graphics/isBezierRayCross');
 
         var entry = {
 

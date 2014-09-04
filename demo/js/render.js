@@ -79,7 +79,7 @@ define(
                 });
 
                 var pathArray = glyf2path(shape_baidu);
-                var computeBoundingBox = require('render/util/computeBoundingBox');
+                var computeBoundingBox = require('graphics/computeBoundingBox');
                 var pathAdjust = require('render/util/pathAdjust');
 
                 pathArray.reverse().forEach(function(path) {

@@ -1,5 +1,5 @@
 /**
- * @file quadeEquation.js
+ * @file quadraticEquation.js
  * @author mengke01
  * @date 
  * @description

@@ -1,5 +1,5 @@
 /**
- * @file isBezierCross.js
+ * @file isBezierRayCross.js
  * @author mengke01
  * @date 
  * @description
@@ -11,14 +11,14 @@ define(
     function(require) {
 
         var computeBoundingBox = require('./computeBoundingBox');
-        var bezierQuadeEquation = require('./bezierQuadeEquation');
+        var bezierQuadraticEquation = require('../math/bezierQuadraticEquation');
 
         /**
          * 判断x轴射线是否与贝塞尔曲线相交
          * 
          * @return {boolean} 是否
          */
-        function isBezierCross(p0, p1, p2, p) {
+        function isBezierRayCross(p0, p1, p2, p) {
             
             // 3点都在同一侧
             if(!((p0.y > p.y) + (p1.y > p.y) + (p2.y > p.y)) % 3) {
@@ -43,9 +43,9 @@ define(
                     : false;
             }
 
-            // 在包围盒内部
+            // 在包围盒左侧
             if(
-                p.x >= bound.x && p.x <= bound.x + bound.width
+                p.x <= bound.x + bound.width
                 && p.y >= bound.y && p.y <= bound.y + bound.height
              ) {
 
@@ -53,7 +53,7 @@ define(
                 var b = 2 * (p1.y - p0.y);
                 var c = p0.y - p.y;
                 
-                var tResult = bezierQuadeEquation(a, b, c);
+                var tResult = bezierQuadraticEquation(a, b, c);
 
                 // 无解
                 if(!tResult) {
@@ -105,6 +105,6 @@ define(
         }
 
 
-        return isBezierCross;
+        return isBezierRayCross;
     }
 );

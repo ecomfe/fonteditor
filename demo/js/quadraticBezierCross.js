@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var isBezierCross = require('render/util/isBezierCross');
+        var isBezierRayCross = require('graphics/isBezierRayCross');
 
         var entry = {
 

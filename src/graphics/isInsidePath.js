@@ -11,8 +11,8 @@
 
 define(
     function(require) {
-        var isBezierCross = require('./isBezierRayCross');
-        var isLineCross = require('./isLineRayCross');
+        var isBezierRayCross = require('./isBezierRayCross');
+        var isLineRayCross = require('./isLineRayCross');
 
         /**
          * 判断点是否在path内部
@@ -37,7 +37,7 @@ define(
 
                     case 'L':
 
-                        if(isLineCross(prev, point.p, p)) {
+                        if(isLineRayCross(prev, point.p, p)) {
                             if(point.p.y < prev.y) {
                                 zCount++;
                             }
@@ -51,7 +51,7 @@ define(
 
                     case 'Q':
                         var joint = p1 = p2 = null;
-                        if(joint = isBezierCross(prev, point.p1, point.p, p)) {
+                        if(joint = isBezierRayCross(prev, point.p1, point.p, p)) {
 
                             if(!(joint.x > prev.x)^(joint.x < point.p1.x)) {
                                 p1 = prev;
@@ -77,7 +77,7 @@ define(
                     //     prev = path[i - 1];
                     //     // 需要判断最后为直线的情况
                     //     if(prev && prev.c == 'L') {
-                    //         if(isLineCross(prev.p, point.p, p)) {
+                    //         if(isLineRayCross(prev.p, point.p, p)) {
 
                     //             if(point.p.y < prev.y) {
                     //                 zCount++;

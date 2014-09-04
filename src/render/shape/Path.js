@@ -10,7 +10,7 @@
 define(
     function(require) {
         var ShapeConstructor = require('./Shape');
-        var isInsidePath = require('../util/isInsidePath');
+        var isInsidePath = require('../../graphics/isInsidePath');
         var pathAdjust = require('../util/pathAdjust');
         var proto = {
             
