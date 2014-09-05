@@ -35,22 +35,34 @@ define(
             var b1_lb = isPointInBounding(b2, {x: b1.x, y: b1.y + b1.height}); // 左下
             var b1_rb = isPointInBounding(b2, {x: b1.x + b1.width, y: b1.y + b1.height}); //右下
 
+            // b2 包含 b1
+            if(b1_lt && b1_rt && b1_lb && b1_rb) {
+                return 2;
+            }
+
             var b2_lt = isPointInBounding(b1, b2); // 左上
             var b2_rt = isPointInBounding(b1, {x: b2.x + b2.width, y: b2.y}); // 右上
             var b2_lb = isPointInBounding(b1, {x: b2.x, y: b2.y + b2.height}); // 左下
             var b2_rb = isPointInBounding(b1, {x: b2.x + b2.width, y: b2.y + b2.height}); //右下
 
+            // b1 包含 b2
+            if(b2_lt && b2_rt && b2_lb && b2_rb) {
+                return 3;
+            }
+
             // 无交点
             if(false == (b1_lt || b1_rt || b1_lb || b1_rb || b2_lt || b2_rt || b2_lb || b2_rb)) {
-                return false;
-            }
-            // b2 包含 b1
-            else if (b1_lt && b1_rt && b1_lb && b1_rb) {
-                return 2;
-            }
-            // b1 包含 b2
-            else if (b2_lt && b2_rt && b2_lb && b2_rb) {
-                return 3;
+                // 判断十字架
+                if(
+                    (b1.x >= b2.x && b1.x <= b2.x + b2.width)
+                    || (b1.y >= b2.y && b1.y <= b2.y + b2.height)
+                ) {
+                    return 1;
+                }
+                else {
+                    return false;
+                }
+                
             }
             // 有交点
             else {

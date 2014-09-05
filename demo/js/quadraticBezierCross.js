@@ -22,33 +22,14 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [
-                    {
-                        x: 130,
-                        y: 77
-                    },
-                    {
-                        x: 130,
-                        y: 148
-                    },
-                    {
-                        x: 65,
-                        y: 148
-                    },
-                    {
-                        x: 330,
-                        y: 77
-                    },
-                    {
-                        x: 130,
-                        y: 148
-                    },
-                    {
-                        x: 165,
-                        y: 148
-                    }
-                ];
+                var points = [{"x":132,"y":409},{"x":314,"y":227},{"x":39,"y":356},{"x":181,"y":276},{"x":202,"y":567},{"x":100,"y":122}];
 
+                // benchmark
+                console.time('bezier');
+                for (var i = 0; i < 1000; i++) {
+                    isBezierCross.apply(null, points);
+                }
+                console.timeEnd('bezier');
 
                 points.forEach(function(p, index) {
                     $('[data-index="'+index+'"]').css({
@@ -105,13 +86,14 @@ define(
                     ctx.lineWidth = 1;
                     ctx.stroke();
 
-                    
-                    //console.time('bezier');
+                    //console.log(JSON.stringify(points));
+
                     var r = isBezierCross.apply(null, points);
-                    //console.timeEnd('bezier');
+ 
                     if(r) {
                         ctx.beginPath();
                         r.forEach(function(item) {
+                            ctx.moveTo(item.x, item.y);  
                             ctx.arc(item.x, item.y, 4, 0, Math.PI * 2, true);
                         });
                         ctx.fill();
@@ -121,8 +103,6 @@ define(
 
                 draw();
                 
-                //var points = [{"x":79,"y":156},{"x":314,"y":227},{"x":74,"y":287},{"x":159,"y":116},{"x":32,"y":256},{"x":303,"y":290}];
-                //console.log(isBezierCross.apply(null, points));
             }
         };
 

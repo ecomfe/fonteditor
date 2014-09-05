@@ -124,18 +124,23 @@ define(
                         tmatrix = minus(multi(xmatrix, ymatrix[4]), multi(ymatrix, xmatrix[4]));
                         tResult = bezierQ2Equation.apply(this, tmatrix);
                     }
-                    // matrix[4] 系数为0, 曲线2退化成垂直线
+                    // xmatrix[4] 系数为0, 曲线2退化成垂直线
                     else if(xmatrix[4] == 0) {
                         tResult = bezierQ2Equation.apply(this, xmatrix);
                     }
                     else if(ymatrix[4] == 0) {
                         tResult = bezierQ2Equation.apply(this, ymatrix);
+
+                        // 保证ymatrix可解
+                        tmatrix = xmatrix;
+                        xmatrix = ymatrix;
+                        ymatrix = tmatrix;
                     }
                 }
                 // 二次系数有一个为0
                 else {
                     // 代入法
-                    // 置换矩阵
+                    // 置换矩阵, 保持xmatrix[3]为 0
                     if (ymatrix[3] == 0) {
                         tmatrix = xmatrix;
                         xmatrix = ymatrix;
@@ -148,66 +153,79 @@ define(
                     }
                     // 同高次方程1
                     else {
+                        // 求t2的参数方程
                         tmatrix = multi(xmatrix, 1 / xmatrix[4]);
-                        // 代入法求四次方程系数
-                        tmatrix = [
-                            ymatrix[3] * Math.pow(tmatrix[0], 2), // 4
-                            2 * ymatrix[3] * tmatrix[0] * tmatrix[1] + ymatrix[4] * tmatrix[0], // 3
-                            ymatrix[3] * (2 * tmatrix[0] * tmatrix[2] + Math.pow(tmatrix[1], 2)) + ymatrix[4] * tmatrix[2] - ymatrix[0], // 2
-                            ymatrix[3] * 2 * tmatrix[1] * tmatrix[2] + ymatrix[4] * tmatrix[2] - ymatrix[1], // 1
-                            ymatrix[3] * tmatrix[2] * tmatrix[2] - ymatrix[2] // 0
-                        ];
-                        tResult = bezierQ4Equation.apply(this, tmatrix);
+                        var t4 = multi([
+                            Math.pow(tmatrix[0], 2),
+                            2 * tmatrix[0] * tmatrix[1],
+                            2 * tmatrix[0] * tmatrix[2] + Math.pow(tmatrix[1], 2),
+                            2 * tmatrix[1] * tmatrix[2],
+                            Math.pow(tmatrix[2], 2)
+                        ], ymatrix[3]);
+
+                        var t3 = multi([0, 0, tmatrix[0], tmatrix[1], tmatrix[2]], ymatrix[4]);
+
+                        // 四次方程系数
+                        var t5 = plus(t4, t3);
+                        t5[2] = t5[2] - ymatrix[0];
+                        t5[3] = t5[3] - ymatrix[1];
+                        t5[4] = t5[4] - ymatrix[2];
+
+                        tResult = bezierQ4Equation.apply(this, t5);
                     }
                 }
 
                 // t1 有解
                 if(tResult) {
 
-                    var pair = [], t1, t2, t2Result = false;
-                    
-                    for (var i = 0, l = tResult.length; i < l; i++) {
-                        t1 = tResult[i];
+                    var tr1, t2Result, tr2, px, tx;
+                    for (var i = tResult.length - 1; i >= 0; i--) {
+                        tr1 = tResult[i];
 
-                        // 代入求t2
+                        // 方程联和求解
                         t2Result = bezierQ2Equation(
-                            xmatrix[3],
-                            xmatrix[4],
-                            -(xmatrix[0] * Math.pow(t1, 2) + xmatrix[1] * t1 + xmatrix[2])
+                            ymatrix[3] - xmatrix[3],
+                            ymatrix[4] - xmatrix[4],
+                            (xmatrix[0] * Math.pow(tr1, 2) + xmatrix[1] * tr1 + xmatrix[2])
+                            -(ymatrix[0] * Math.pow(tr1, 2) + ymatrix[1] * tr1 + ymatrix[2])
                         );
 
-                        if(t2Result) {
-                            
-                            // 验证根是否成立
-                            for (var j = 0, ll = t2Result.length; j < ll; j++) {
-                                t2 = t2Result[j];
-                                // 控制舍入误差，非必需
-                                // if(
-                                //     true ||
-                                //     0.0001 > Math.abs(
-                                //     ymatrix[0] * Math.pow(t1, 2) + ymatrix[1] * t1 + ymatrix[2]
-                                //     - (ymatrix[3] * Math.pow(t2, 2) + ymatrix[4] * t2)
-                                //     )
-                                // ) {
-                                    pair.push([t1, t2]);
-                                //}
+                        if(!t2Result) {
+                            tResult.splice(i, 1);
+                        }
+                        else {
+                            for (var j = t2Result.length - 1; j >= 0; j--) {
+
+                                tr2 = t2Result[j];
+
+                                // 这里有些情况会出现4个解，需要舍去
+                                px = p0.x * Math.pow(1 - tr1, 2) + 2 * p1.x * tr1 * (1-tr1) + p2.x * Math.pow(tr1, 2);
+                                tx = t0.x * Math.pow(1 - tr2, 2) + 2 * t1.x * tr2 * (1-tr2) + t2.x * Math.pow(tr2, 2);
+
+                                if(0.001 < Math.abs(px - tx)){
+                                    t2Result.splice(j, 1);
+                                }
+                            }
+
+                            if(!t2Result.length) {
+                                tResult.splice(i, 1);
                             }
 
                         }
                     }
 
 
+
+
                     // 求解x，y坐标
-                    return pair.length
-                        ? pair.map(function(item) {
+                    return tResult.length
+                        ? tResult.map(function(t) {
                             return {
-                                x: xmatrix[0] * Math.pow(t1, 2) + xmatrix[1] * t1 + p0.x,
-                                y: ymatrix[0] * Math.pow(t1, 2) + ymatrix[1] * t1 + p0.y
+                                x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1-t) + p2.x * Math.pow(t, 2),
+                                y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1-t) + p2.y * Math.pow(t, 2)
                             };
                         })
                         : false;
-
-                    
                 }
 
             }
