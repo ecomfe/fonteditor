@@ -1,15 +1,15 @@
 /**
- * @file bezierQuadraticEquation.js
+ * @file bezierCubeEquation.js
  * @author mengke01
  * @date 
  * @description
- * 求解二次方程贝塞尔根
+ * 求解三次方程贝塞尔根
  */
 
 define(
     function(require) {
 
-        var quadraticEquation = require('./quadraticEquation');
+        var cubeEquation = require('./cubeEquation');
 
         /**
          * 求解二次方程
@@ -17,15 +17,15 @@ define(
          * @param {number} a a系数
          * @param {number} b b系数
          * @param {number} c c系数
+         * @param {number} d d系数
          * @return {Array} 系数解
          */
-        function bezierQuadraticEquation(a, b, c) {
-            var result = quadraticEquation(a, b, c);
-            
+        function bezierCubeEquation(a, b, c, d) {
+            var result = cubeEquation(a, b, c, d);
+
             if(!result) {
                 return result;
             }
-
             var filter = result.filter(function(item) {
                 return item >= 0 && item <= 1;
             });
@@ -34,7 +34,7 @@ define(
                 : false;
         }
 
-        return bezierQuadraticEquation;
+        return bezierCubeEquation;
     }
 );
 

@@ -13,8 +13,8 @@ define(
          * 求解二次方程
          * 
          * @param {number} a a系数
-         * @param {[type]} b b系数
-         * @param {[type]} c c系数
+         * @param {number} b b系数
+         * @param {number} c c系数
          * @return {Array} 系数解
          */
         function quadraticEquation(a, b, c) {
@@ -24,7 +24,11 @@ define(
             }
 
             if(b == 0) {
-                if(a | c <= 0) {
+                if(c == 0) {
+                    return [0];
+                }
+
+                if(a > 0 && c < 0 || a < 0 && c > 0) {
                     var x2 = Math.sqrt(-c / a);
                     return [x2, -x2];
                 }

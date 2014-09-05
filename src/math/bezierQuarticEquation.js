@@ -1,15 +1,15 @@
 /**
- * @file bezierQuadraticEquation.js
+ * @file bezierQuarticEquation.js
  * @author mengke01
  * @date 
  * @description
- * 求解二次方程贝塞尔根
+ * 求解四次方程贝塞尔根
  */
 
 define(
     function(require) {
 
-        var quadraticEquation = require('./quadraticEquation');
+        var quarticEquation = require('./quarticEquation');
 
         /**
          * 求解二次方程
@@ -17,11 +17,13 @@ define(
          * @param {number} a a系数
          * @param {number} b b系数
          * @param {number} c c系数
+         * @param {number} d d系数
+         * @param {number} e e系数
          * @return {Array} 系数解
          */
-        function bezierQuadraticEquation(a, b, c) {
-            var result = quadraticEquation(a, b, c);
-            
+        function bezierQuarticEquation(a, b, c, d, e) {
+            var result = quarticEquation(a, b, c, d, e);
+
             if(!result) {
                 return result;
             }
@@ -34,7 +36,7 @@ define(
                 : false;
         }
 
-        return bezierQuadraticEquation;
+        return bezierQuarticEquation;
     }
 );
 
