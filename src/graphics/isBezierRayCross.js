@@ -11,7 +11,7 @@ define(
     function(require) {
 
         var computeBoundingBox = require('./computeBoundingBox');
-        var bezierQuadraticEquation = require('../math/bezierQuadraticEquation');
+        var bezierQ2Equation = require('../math/bezierQ2Equation');
 
         /**
          * 判断x轴射线是否与贝塞尔曲线相交
@@ -53,7 +53,7 @@ define(
                 var b = 2 * (p1.y - p0.y);
                 var c = p0.y - p.y;
                 
-                var tResult = bezierQuadraticEquation(a, b, c);
+                var tResult = bezierQ2Equation(a, b, c);
 
                 // 无解
                 if(!tResult) {
