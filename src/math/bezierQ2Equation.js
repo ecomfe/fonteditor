@@ -1,5 +1,5 @@
 /**
- * @file bezierQuadraticEquation.js
+ * @file bezierQ2Equation.js
  * @author mengke01
  * @date 
  * @description
@@ -19,7 +19,7 @@ define(
          * @param {number} c c系数
          * @return {Array} 系数解
          */
-        function bezierQuadraticEquation(a, b, c) {
+        function bezierQ2Equation(a, b, c) {
             var result = quadraticEquation(a, b, c);
             
             if(!result) {
@@ -34,7 +34,7 @@ define(
                 : false;
         }
 
-        return bezierQuadraticEquation;
+        return bezierQ2Equation;
     }
 );
 

@@ -1,5 +1,5 @@
 /**
- * @file bezierQuarticEquation.js
+ * @file bezierQ4Equation.js
  * @author mengke01
  * @date 
  * @description

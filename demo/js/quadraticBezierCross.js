@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var isBezierRayCross = require('graphics/isBezierRayCross');
+        var isBezierCross = require('graphics/isBezierCross');
 
         var entry = {
 
@@ -21,19 +21,6 @@ define(
                 var ctx = canvas.getContext('2d');
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
-
-                // var points = [];
-                // [0, 1, 2, 3].forEach(function(i) {
-                //     var p = {
-                //         x: Math.floor(Math.random() * (width - 100) + 50),
-                //         y: Math.floor(Math.random() * (height - 100) + 50)
-                //     }
-                //     points[i] = p;
-                //     $($('.point').get(i)).css({
-                //         left: p.x,
-                //         top: p.y
-                //     });
-                // });
 
                 var points = [
                     {
@@ -117,13 +104,25 @@ define(
                     ctx.quadraticCurveTo(points[4].x, points[4].y, points[5].x, points[5].y);
                     ctx.lineWidth = 1;
                     ctx.stroke();
+
+                    
                     //console.time('bezier');
                     var r = isBezierCross.apply(null, points);
                     //console.timeEnd('bezier');
-                    //console.log(r);
+                    if(r) {
+                        ctx.beginPath();
+                        r.forEach(function(item) {
+                            ctx.arc(item.x, item.y, 4, 0, Math.PI * 2, true);
+                        });
+                        ctx.fill();
+                    }
+
                 }
 
                 draw();
+                
+                //var points = [{"x":79,"y":156},{"x":314,"y":227},{"x":74,"y":287},{"x":159,"y":116},{"x":32,"y":256},{"x":303,"y":290}];
+                //console.log(isBezierCross.apply(null, points));
             }
         };
 

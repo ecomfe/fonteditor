@@ -13,9 +13,9 @@ define(
         var cubeEquation = require('math/cubeEquation');
         var quarticEquation = require('math/quarticEquation');
 
-        var bezierQuadraticEquation = require('math/bezierQuadraticEquation');
+        var bezierQ2Equation = require('math/bezierQ2Equation');
         var bezierCubeEquation = require('math/bezierCubeEquation');
-        var bezierQuarticEquation = require('math/bezierQuarticEquation');
+        var bezierQ4Equation = require('math/bezierQ4Equation');
 
         var entry = {
 
@@ -26,10 +26,10 @@ define(
 
                 
                 console.log(quadraticEquation(1, 0, 1));
-                console.log(bezierQuadraticEquation(1, 0, 1));
+                console.log(bezierQ2Equation(1, 0, 1));
                 console.log('--------------------------------');
                 console.log(quadraticEquation(1, -2, 1));
-                console.log(bezierQuadraticEquation(1, -2, 1));
+                console.log(bezierQ2Equation(1, -2, 1));
                 console.log('--------------------------------');
 
 
@@ -46,10 +46,10 @@ define(
 
 
                 console.log(quarticEquation(1, 0, 0, 0, 1));
-                console.log(bezierQuarticEquation(1, 0, 0, 0, 1));
+                console.log(bezierQ4Equation(1, 0, 0, 0, 1));
                 console.log('--------------------------------');
                 console.log(quarticEquation(1, 0, 0, 0, -1));
-                console.log(bezierQuarticEquation(1, 0, 0, 0, -1));
+                console.log(bezierQ4Equation(1, 0, 0, 0, -1));
 
 
 
