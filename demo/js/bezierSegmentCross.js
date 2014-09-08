@@ -22,13 +22,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [
-                    {"x":163,"y":136},
-                    {"x":45,"y":54},
-                    {"x":124,"y":177},
-                    {"x":222,"y":122},
-                    {"x":57,"y":122}
-                ];
+                var points = [{"x":231,"y":609},{"x":231,"y":558},{"x":300,"y":516},{"x":299,"y":591},{"x":299,"y":600}];
 
                 $('[data-index]').each(function(index, item) {
                     $(item).css({

@@ -82,7 +82,7 @@ define(
                 var computeBoundingBox = require('graphics/computeBoundingBox');
                 var pathAdjust = require('render/util/pathAdjust');
 
-                pathArray.slice(4, 5).forEach(function(path) {
+                pathArray.forEach(function(path) {
                     var shape = {};
                     shape.points = path;
                     var bound = computeBoundingBox.computePath(path);
@@ -96,17 +96,7 @@ define(
                     pathPanel.addShape('path', shape);
                 });
                 
-
                 currentRender.refresh();
-
-                // cover.removeShape(0);
-                // cover.removeShape(shape1);
-                // cover.removeShape(shape2.id);
-
-                // currentRender.removeLayer('cover');
-                // currentRender.removeLayer(font);
-
-                //currentRender.dispose();
             }
         };
 

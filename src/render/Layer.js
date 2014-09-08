@@ -204,11 +204,13 @@ define(
             getShapeIn: function(p) {
                 var support = this.painter.support;
                 var shapes = this.shapes;
+                var result = [];
                 for(var i = 0, l = shapes.length; i < l; i++) {
                     if (support[shapes[i].type].isIn(shapes[i], p.x, p.y)) {
-                        return shapes[i];
+                        result.push(shapes[i]);
                     }
                 }
+                return result.length ? result : false;
             },
 
             /**

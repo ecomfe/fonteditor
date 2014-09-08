@@ -10,7 +10,8 @@
 define(
     function(require) {
         var lang = require('common/lang');
-
+        var selectShape = require('./util/selectShape');
+        
         /**
          * 初始化
          */
@@ -31,10 +32,15 @@ define(
             });
 
             render.capture.on('down', function(e) {
-                var shape = render.painter.getShapeIn(e);
+                var result = render.painter.getShapeIn(e);
 
-                if(shape) {
-                    render.selectedShape = shape;
+                if(result) {
+                    if (result.length > 1) {
+                        render.selectedShape = selectShape(result);
+                    }
+                    else {
+                        render.selectedShape = result[0];
+                    }
                 }
                 render.camera.mx = e.x;
                 render.camera.my = e.y;

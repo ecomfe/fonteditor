@@ -25,6 +25,7 @@ define(
          */
         function isBezierSegmentCross(p0, p1, p2, s0, s1) {
             var b1 = computeBoundingBox.quadraticBezier(p0, p1, p2);
+            var isPointInBound = require('./util').isPointInBound;
             var bound = {
                 x: Math.min(s0.x, s1.x),
                 y: Math.min(s0.y, s1.y),
@@ -36,8 +37,7 @@ define(
                 var result = isBezierLineCross(p0, p1, p2, s0, s1);
                 if (result) {
                     return result.filter(function(p) {
-                        return p.x >= s0.x && p.x <= s1.x
-                            || p.x >= s1.x && p.x <= s0.x;
+                        return isPointInBound(bound, p, true);
                     });
                 }
             }
