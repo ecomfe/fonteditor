@@ -12,7 +12,7 @@
 define(
     function(require) {
         var isBezierRayCross = require('./isBezierRayCross');
-        var isLineRayCross = require('./isLineRayCross');
+        var isSegmentRayCross = require('./isSegmentRayCross');
 
         /**
          * 判断点是否在path内部
@@ -36,9 +36,15 @@ define(
                         break;
 
                     case 'L':
+                        var joint = null;
+                        if(joint = isSegmentRayCross(prev, point.p, p)) {
 
-                        if(isLineRayCross(prev, point.p, p)) {
-                            if(point.p.y < prev.y) {
+                            // 在直线上
+                            if(joint[0].x == p.x) {
+                                return true;
+                            }
+
+                            if(point.p.y > prev.y) {
                                 zCount++;
                             }
                             else {
@@ -51,9 +57,21 @@ define(
 
                     case 'Q':
                         var joint = p1 = p2 = null;
+                        
                         if(joint = isBezierRayCross(prev, point.p1, point.p, p)) {
+                            
+                            // 在曲线上
+                            if(joint[0].x == p.x || joint[1] && joint[1].x == p.x) {
+                                return true;
+                            }
 
-                            if(!(joint.x > prev.x)^(joint.x < point.p1.x)) {
+                            if (joint.length == 2) {
+                                break;
+                            }
+                            
+                            joint = joint[0];
+
+                            if(joint.y > prev.y && joint.y < point.p1.y) {
                                 p1 = prev;
                                 p2 =  point.p1;
                             }
@@ -62,7 +80,7 @@ define(
                                 p2 =  point.p;
                             }
 
-                            if(p1.y < p2.y) {
+                            if(p2.y > p1.y) {
                                 zCount++;
                             }
                             else {
@@ -72,21 +90,6 @@ define(
                         }
                         prev = point.p;
                         break;
-
-                    // case 'Z':
-                    //     prev = path[i - 1];
-                    //     // 需要判断最后为直线的情况
-                    //     if(prev && prev.c == 'L') {
-                    //         if(isLineRayCross(prev.p, point.p, p)) {
-
-                    //             if(point.p.y < prev.y) {
-                    //                 zCount++;
-                    //             }
-                    //             else {
-                    //                 zCount--;
-                    //             }
-                    //         }
-                    //     }
                 }
             }
 

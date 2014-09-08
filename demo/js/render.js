@@ -82,7 +82,7 @@ define(
                 var computeBoundingBox = require('graphics/computeBoundingBox');
                 var pathAdjust = require('render/util/pathAdjust');
 
-                pathArray.reverse().forEach(function(path) {
+                pathArray.slice(4, 5).forEach(function(path) {
                     var shape = {};
                     shape.points = path;
                     var bound = computeBoundingBox.computePath(path);

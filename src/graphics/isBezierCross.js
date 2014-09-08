@@ -14,7 +14,8 @@ define(
         var bezierQ2Equation = require('../math/bezierQ2Equation');
         var bezierQ4Equation = require('../math/bezierQ4Equation');
         var bezierCubeEquation = require('../math/bezierCubeEquation');
-        
+        var ceil = require('./util').ceil;
+
         var matrix = require('./matrix');
         var multi = matrix.multi;
         var minus = matrix.minus;
@@ -186,10 +187,10 @@ define(
                     // 求解x，y坐标
                     return tResult.length
                         ? tResult.map(function(t) {
-                            return {
+                            return ceil({
                                 x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1-t) + p2.x * Math.pow(t, 2),
                                 y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1-t) + p2.y * Math.pow(t, 2)
-                            };
+                            });
                         })
                         : false;
                 }

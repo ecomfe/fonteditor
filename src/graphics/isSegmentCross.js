@@ -10,6 +10,7 @@ define(
     function(require) {
         
         var isBoundingBoxCross = require('./isBoundingBoxCross');
+        var ceil = require('./util').ceil;
         var matrix = require('./matrix');
         var multi = matrix.multi;
         var minus = matrix.minus;
@@ -141,7 +142,7 @@ define(
                     };
 
                     if(isPointInBound(b1, p) && isPointInBound(b2, p)) {
-                        return [p];
+                        return [ceil(p)];
                     }
                 }
             }
