@@ -8,19 +8,41 @@
 
 define(
     function(require) {
-        
+        var computeBoundingBox = require('./computeBoundingBox');
+        var isBezierLineCross = require('./isBezierLineCross');
+        var isBoundingBoxCross = require('./isBoundingBoxCross');
+        var isPointInBound = require('./util').isPointInBound;
+
         /**
          * 判断贝塞尔曲线与线段相交
          * 
          * @param {Object} p0 起点
          * @param {Object} p1 控制点
          * @param {Object} p2 终点
-         * @param {Object} s1 线段点1
-         * @param {Object} s2 线段点2
+         * @param {Object} s0 线段点1
+         * @param {Object} s1 线段点2
          * @return {boolean|Object} 是否相交
          */
-        function isBezierSegmentCross(p0, p1, p2, s1, s2) {
-            
+        function isBezierSegmentCross(p0, p1, p2, s0, s1) {
+            var b1 = computeBoundingBox.quadraticBezier(p0, p1, p2);
+            var bound = {
+                x: Math.min(s0.x, s1.x),
+                y: Math.min(s0.y, s1.y),
+                width: Math.abs(s0.x - s1.x),
+                height: Math.abs(s0.y - s1.y)
+            };
+
+            if (isBoundingBoxCross(b1, bound)) {
+                var result = isBezierLineCross(p0, p1, p2, s0, s1);
+                if (result) {
+                    return result.filter(function(p) {
+                        return p.x >= s0.x && p.x <= s1.x
+                            || p.x >= s1.x && p.x <= s0.x;
+                    });
+                }
+            }
+
+            return false;
         }
 
         return isBezierSegmentCross;

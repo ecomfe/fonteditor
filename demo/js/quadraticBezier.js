@@ -24,19 +24,6 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                // var points = [];
-                // [0, 1, 2, 3].forEach(function(i) {
-                //     var p = {
-                //         x: Math.floor(Math.random() * (width - 100) + 50),
-                //         y: Math.floor(Math.random() * (height - 100) + 50)
-                //     }
-                //     points[i] = p;
-                //     $($('.point').get(i)).css({
-                //         left: p.x,
-                //         top: p.y
-                //     });
-                // });
-
                 var points = [
                     {
                         x: 130,

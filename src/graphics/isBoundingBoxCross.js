@@ -9,18 +9,9 @@
 
 define(
     function(require) {
-        
-        /**
-         * 判断点是否在bounding box内部
-         * 
-         * @return {boolean} 是否
-         */
-        function isPointInBounding(bound, p) {
-            return p.x <= bound.x + bound.width 
-                && p.x >= bound.x
-                && p.y <= bound.y + bound.height
-                && p.y >= bound.y
-        }
+
+        var isPointInBound = require('./util').isPointInBound;
+
 
         /**
          * 两个boundingbox的关系
@@ -30,20 +21,20 @@ define(
          * @return {number} 包含关系
          */
         function isBoundingBoxCross(b1, b2) {
-            var b1_lt = isPointInBounding(b2, b1); // 左上
-            var b1_rt = isPointInBounding(b2, {x: b1.x + b1.width, y: b1.y}); // 右上
-            var b1_lb = isPointInBounding(b2, {x: b1.x, y: b1.y + b1.height}); // 左下
-            var b1_rb = isPointInBounding(b2, {x: b1.x + b1.width, y: b1.y + b1.height}); //右下
+            var b1_lt = isPointInBound(b2, b1); // 左上
+            var b1_rt = isPointInBound(b2, {x: b1.x + b1.width, y: b1.y}); // 右上
+            var b1_lb = isPointInBound(b2, {x: b1.x, y: b1.y + b1.height}); // 左下
+            var b1_rb = isPointInBound(b2, {x: b1.x + b1.width, y: b1.y + b1.height}); //右下
 
             // b2 包含 b1
             if(b1_lt && b1_rt && b1_lb && b1_rb) {
                 return 2;
             }
 
-            var b2_lt = isPointInBounding(b1, b2); // 左上
-            var b2_rt = isPointInBounding(b1, {x: b2.x + b2.width, y: b2.y}); // 右上
-            var b2_lb = isPointInBounding(b1, {x: b2.x, y: b2.y + b2.height}); // 左下
-            var b2_rb = isPointInBounding(b1, {x: b2.x + b2.width, y: b2.y + b2.height}); //右下
+            var b2_lt = isPointInBound(b1, b2); // 左上
+            var b2_rt = isPointInBound(b1, {x: b2.x + b2.width, y: b2.y}); // 右上
+            var b2_lb = isPointInBound(b1, {x: b2.x, y: b2.y + b2.height}); // 左下
+            var b2_rb = isPointInBound(b1, {x: b2.x + b2.width, y: b2.y + b2.height}); //右下
 
             // b1 包含 b2
             if(b2_lt && b2_rt && b2_lb && b2_rb) {
@@ -54,8 +45,8 @@ define(
             if(false == (b1_lt || b1_rt || b1_lb || b1_rb || b2_lt || b2_rt || b2_lb || b2_rb)) {
                 // 判断十字架
                 if(
-                    (b1.x >= b2.x && b1.x <= b2.x + b2.width)
-                    || (b1.y >= b2.y && b1.y <= b2.y + b2.height)
+                    (b1.x > b2.x && b1.x < b2.x + b2.width)
+                    || (b1.y > b2.y && b1.y < b2.y + b2.height)
                 ) {
                     return 1;
                 }

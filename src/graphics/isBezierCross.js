@@ -14,45 +14,11 @@ define(
         var bezierQ2Equation = require('../math/bezierQ2Equation');
         var bezierQ4Equation = require('../math/bezierQ4Equation');
         var bezierCubeEquation = require('../math/bezierCubeEquation');
-
-        /**
-         * 矩阵乘
-         * 
-         * @param {Array.<number>} matrix 一维矩阵
-         * @param {number} a 乘数算子
-         * @return {Array.<number>} 数组
-         */
-        function multi(matrix, a) {
-            return matrix.map(function(item) {
-                return item * a;
-            });
-        }
-
-        /**
-         * 矩阵减
-         * 
-         * @param {Array.<number>} matrix1 一维矩阵
-         * @param {Array.<number>} matrix2 一维矩阵
-         * @return {Array.<number>} 数组
-         */
-        function minus(matrix1, matrix2) {
-            return matrix1.map(function(item, index) {
-                return item - matrix2[index];
-            });
-        }
-
-        /**
-         * 矩阵加
-         * 
-         * @param {Array.<number>} matrix1 一维矩阵
-         * @param {Array.<number>} matrix2 一维矩阵
-         * @return {Array.<number>} 数组
-         */
-        function plus(matrix1, matrix2) {
-            return matrix1.map(function(item, index) {
-                return item + matrix2[index];
-            });
-        }
+        
+        var matrix = require('./matrix');
+        var multi = matrix.multi;
+        var minus = matrix.minus;
+        var plus = matrix.plus;
 
         /**
          * 求两个bezier曲线的交点
