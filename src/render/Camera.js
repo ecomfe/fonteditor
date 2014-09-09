@@ -27,6 +27,18 @@ define(
         }
 
         /**
+         * 重置camera
+         */
+        Camera.prototype.reset = function() {
+            this.center = {
+                x: 0,
+                y: 0
+            };
+            this.ratio = 1;
+            this.scale = 1;
+        };
+
+        /**
          * 注销Camera
          */
         Camera.prototype.dispose = function() {

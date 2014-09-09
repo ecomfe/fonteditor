@@ -32,7 +32,7 @@ define(
             });
 
             render.capture.on('down', function(e) {
-                var result = render.painter.getShapeIn(e);
+                var result = render.getShapeIn(e);
 
                 if(result) {
                     if (result.length > 1) {
@@ -42,30 +42,30 @@ define(
                         render.selectedShape = result[0];
                     }
                 }
-                render.camera.mx = e.x;
-                render.camera.my = e.y;
+                render.camera.x = e.x;
+                render.camera.y = e.y;
             });
 
             render.capture.on('drag', function(e) {
                 var shape = render.selectedShape;
                 if(shape) {
-                    render.painter.getLayer(shape.layerId)
-                        .move(e.x - render.camera.mx, e.y - render.camera.my, shape)
+                    render.getLayer(shape.layerId)
+                        .move(e.x - render.camera.x, e.y - render.camera.y, shape)
                         .refresh();
                 }
                 else {
-                    render.painter.move(e.x - render.camera.mx, e.y - render.camera.my)
+                    render.move(e.x - render.camera.x, e.y - render.camera.y)
                         .refresh();
                 }
-                render.camera.mx = e.x;
-                render.camera.my = e.y;
+                render.camera.x = e.x;
+                render.camera.y = e.y;
             });
 
             render.capture.on('dragend', function(e) {
                 var shape = render.selectedShape;
                 if(shape) {
-                    render.painter.getLayer(shape.layerId)
-                        .move(e.x - render.camera.mx, e.y - render.camera.my, shape)
+                    render.getLayer(shape.layerId)
+                        .move(e.x - render.camera.x, e.y - render.camera.y, shape)
                         .refresh();
                     render.selectedShape = null;
                 }

@@ -1,18 +1,25 @@
 /**
- * @file Rect.js
+ * @file CirclePoint.js
  * @author mengke01
  * @date 
  * @description
- * 绘制矩形
+ * 绘制控制圆
  */
 
 
 define(
     function(require) {
 
+        var POINT_SIZE = 6;
+
         var proto = {
             
-            type: 'rect',
+            type: 'cpoint',
+
+            // 调整大小
+            adjust: function(shape, camera) {
+                return shape;
+            },
 
             /**
              * 获取shape的矩形区域
@@ -22,10 +29,10 @@ define(
              */
             getRect: function(shape) {
                 return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: shape.width,
-                    height: shape.height
+                    x: shape.x - POINT_SIZE,
+                    y: shape.y - POINT_SIZE,
+                    width: 2 * POINT_SIZE,
+                    height: 2 * POINT_SIZE
                 };
             },
 
@@ -38,12 +45,7 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                var w = shape.width;
-                var h = shape.height;
-                return x <= shape.x + w
-                    && x >= shape.x
-                    && y <= shape.y + h
-                    && y >= shape.y;
+                return Math.pow(shape.x - x, 2) + Math.pow(shape.y - y, 2) <= Math.pow(POINT_SIZE, 2);
             },
 
             /**
@@ -53,13 +55,8 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                var w = shape.width;
-                var h = shape.height;
-                ctx.moveTo(shape.x, shape.y);
-                ctx.lineTo(shape.x + w, shape.y);
-                ctx.lineTo(shape.x + w, shape.y + h);
-                ctx.lineTo(shape.x, shape.y + h);
-                ctx.lineTo(shape.x, shape.y);
+                ctx.moveTo(shape.x + POINT_SIZE, shape.y);
+                ctx.arc(shape.x, shape.y, POINT_SIZE, 0, Math.PI * 2, true);
             }
         };
 

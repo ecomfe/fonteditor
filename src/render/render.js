@@ -1,5 +1,5 @@
 /**
- * @file render.js
+ * @file Render.js
  * @author mengke01
  * @date 
  * @description
@@ -72,6 +72,15 @@ define(
         };
 
         /**
+         * 重置渲染器
+         */
+        Render.prototype.reset = function() {
+            this.painter.clearShapes();
+            this.camera.reset();
+
+        };
+
+        /**
          * 注销对象
          * 
          */
@@ -84,23 +93,16 @@ define(
             this.painter = this.capture = this.keyCapture = null;
         };
 
-        /**
-         * 添加layer
-         * 
-         * @return {Layer} Layer对象
-         */
-        Render.prototype.addLayer = function() {
-            return this.painter.addLayer.apply(this.painter, arguments);
-        };
-
-        /**
-         * 移除layer
-         * 
-         * @return {boolean} 是否移除
-         */
-        Render.prototype.removeLayer = function() {
-            return this.painter.removeLayer.apply(this.painter, arguments);
-        };
+        // 注册painter中的函数
+        [   
+            'addSupport', 'move',
+            'getLayer', 'addLayer', 'removeLayer',
+            'getShapeIn', 'clearShapes'
+        ].forEach(function(fnName) {
+            Render.prototype[fnName] = function() {
+                return this.painter[fnName].apply(this.painter, arguments);
+            };
+        });
 
         observable.mixin(Render.prototype);
 

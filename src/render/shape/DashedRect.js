@@ -1,9 +1,9 @@
 /**
- * @file Rect.js
+ * @file DashedRect.js
  * @author mengke01
  * @date 
  * @description
- * 绘制矩形
+ * 绘制虚线矩形
  */
 
 
@@ -12,7 +12,7 @@ define(
 
         var proto = {
             
-            type: 'rect',
+            type: 'dashedrect',
 
             /**
              * 获取shape的矩形区域
@@ -21,12 +21,7 @@ define(
              * @param {Object} 矩形区域
              */
             getRect: function(shape) {
-                return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: shape.width,
-                    height: shape.height
-                };
+                return shape;
             },
 
             /**

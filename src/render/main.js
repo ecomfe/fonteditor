@@ -22,14 +22,16 @@ define(
         exports.create = function(main, options) {
             options = options || {};
             var render = new Render(main, options);
-
+            var controller = options.controller;
+            
             // 设置render的默认控制器
-            if (!options.controller) {
+            if (!controller) {
                 controller = new Controller();
             }
-            controller.setRender(render);
-            delete options.controller;
 
+            controller.setRender(render);
+            
+            delete options.controller;
             return render;
         };
 

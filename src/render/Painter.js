@@ -244,6 +244,16 @@ define(
             },
 
             /**
+             * 清空所有的layer中的图形
+             */
+            clearShapes: function() {
+                var layers = this.layers;
+                for(var i = 0, l = layers.length; i < l; i++) {
+                    layers[i].clearShapes();
+                }
+            },
+
+            /**
              * 注销本对象
              */
             dispose: function() {

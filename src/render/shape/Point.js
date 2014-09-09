@@ -1,18 +1,25 @@
 /**
- * @file Rect.js
+ * @file Point.js
  * @author mengke01
  * @date 
  * @description
- * 绘制矩形
+ * 绘制控制点
  */
 
 
 define(
     function(require) {
+        
+        var POINT_SIZE = 8; // 控制点的大小
 
         var proto = {
             
-            type: 'rect',
+            type: 'point',
+            
+            // 调整大小
+            adjust: function(shape, camera) {
+                return shape;
+            },
 
             /**
              * 获取shape的矩形区域
@@ -22,10 +29,10 @@ define(
              */
             getRect: function(shape) {
                 return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: shape.width,
-                    height: shape.height
+                    x: shape.x - POINT_SIZE / 2 ,
+                    y: shape.y - POINT_SIZE / 2,
+                    width: POINT_SIZE,
+                    height: POINT_SIZE
                 };
             },
 
@@ -38,12 +45,12 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                var w = shape.width;
-                var h = shape.height;
+                var w = POINT_SIZE / 2;
+                var h = POINT_SIZE / 2;
                 return x <= shape.x + w
-                    && x >= shape.x
+                    && x >= shape.x - w
                     && y <= shape.y + h
-                    && y >= shape.y;
+                    && y >= shape.y - h;
             },
 
             /**
@@ -53,13 +60,13 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                var w = shape.width;
-                var h = shape.height;
-                ctx.moveTo(shape.x, shape.y);
-                ctx.lineTo(shape.x + w, shape.y);
+                var w = POINT_SIZE / 2;
+                var h = POINT_SIZE / 2;
+                ctx.moveTo(shape.x - w, shape.y - h);
+                ctx.lineTo(shape.x + w, shape.y - h);
                 ctx.lineTo(shape.x + w, shape.y + h);
-                ctx.lineTo(shape.x, shape.y + h);
-                ctx.lineTo(shape.x, shape.y);
+                ctx.lineTo(shape.x - w, shape.y + h);
+                ctx.lineTo(shape.x - w, shape.y - h);
             }
         };
 

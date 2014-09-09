@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试render</title>
+    <script src="./lib/esl.js"></script>
+    <script src="./lib/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/render.css">
+    <style id="font-face"></style>
+</head>
+<body>
+    <script>
+        require.config({
+            baseUrl: '../src',
+            paths: {
+                demo: '../demo/js',
+            }
+        });
+        define('jquery', $);
+    </script>
+
+    <div id="render-view" class="render-view"></div>
+
+    <script>
+        require(['demo/editor']);
+    </script>
+
+</body>
+</html>

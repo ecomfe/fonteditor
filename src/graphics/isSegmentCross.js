@@ -10,23 +10,12 @@ define(
     function(require) {
         
         var isBoundingBoxCross = require('./isBoundingBoxCross');
-        var ceil = require('./util').ceil;
+        var ceil = require('./util').ceil; 
+        var isPointInBound = require('./util').isPointInBound;
         var matrix = require('./matrix');
         var multi = matrix.multi;
         var minus = matrix.minus;
         var plus = matrix.plus;
-
-        /**
-         * 判断点是否在bounding box内部
-         * 
-         * @return {boolean} 是否
-         */
-        function isPointInBound(bound, p) {
-            return p.x <= bound.x + bound.width 
-                && p.x >= bound.x
-                && p.y <= bound.y + bound.height
-                && p.y >= bound.y
-        }
 
         /**
          * 过滤相交重叠线段上的点

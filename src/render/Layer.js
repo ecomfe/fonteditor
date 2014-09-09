@@ -43,7 +43,7 @@ define(
             }
 
             if(options.strokeWidth) {
-                context.strokeWidth = options.strokeWidth;
+                context.strokeWidth = options.strokeWidth || 1;
             }
         }
 
@@ -106,6 +106,7 @@ define(
                         drawer.draw(context, shape);
                     }
                 });
+
 
                 if(this.options.stroke) {
                     this.context.stroke();
@@ -194,6 +195,13 @@ define(
                 return false;
             },
 
+            /**
+             * 清空所有的shapes
+             */
+            clearShapes: function() {
+                this.shapes.length = 0;
+                this.shapes = [];
+            },
 
             /**
              * 获取当前坐标下的shape
@@ -206,7 +214,10 @@ define(
                 var shapes = this.shapes;
                 var result = [];
                 for(var i = 0, l = shapes.length; i < l; i++) {
-                    if (support[shapes[i].type].isIn(shapes[i], p.x, p.y)) {
+                    if (
+                        false !== shapes[i].selectable
+                        && support[shapes[i].type].isIn(shapes[i], p.x, p.y)
+                    ) {
                         result.push(shapes[i]);
                     }
                 }
