@@ -100,6 +100,9 @@ define(
                 1, 1
             ];
             
+            // 是否需要等比例缩放
+            var ctrlKey = camera.event && camera.event.ctrlKey;
+
             switch (point.pos) {
                 case 1:
                     matrix[2] = (bound.width - mx) / bound.width;
@@ -121,6 +124,17 @@ define(
                         matrix[0] = camera.x;
                         matrix[1] = bound.y + bound.height;
                     }
+
+                    if(ctrlKey) {
+                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
+                        matrix[2] = matrix[2] > 0 ? scale : -scale;
+                        matrix[3] = matrix[3] > 0 ? scale : -scale;
+                        matrix[0] = Math.min(bound.x + bound.width,
+                            bound.x + bound.width - bound.width * matrix[2]);
+                        matrix[1] = Math.min(bound.y + bound.height, 
+                            bound.y + bound.height - bound.height * matrix[3]);
+                    }
+
                     break;
 
                 case 2:
@@ -143,7 +157,14 @@ define(
                         matrix[0] = bound.x;
                         matrix[1] = bound.y + bound.height;
                     }
-
+                    if(ctrlKey) {
+                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
+                        matrix[2] = matrix[2] > 0 ? scale : -scale;
+                        matrix[3] = matrix[3] > 0 ? scale : -scale;
+                        matrix[0] = Math.min(bound.x, bound.x + bound.width * matrix[2]);
+                        matrix[1] = Math.min(bound.y + bound.height, 
+                            bound.y + bound.height - bound.height * matrix[3]);
+                    }
                     break;
 
                 case 3:
@@ -151,6 +172,13 @@ define(
                     matrix[3] = (bound.height + my) / bound.height;
                     matrix[0] = Math.min(bound.x, camera.x);
                     matrix[1] = Math.min(bound.y, camera.y);
+                    if(ctrlKey) {
+                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
+                        matrix[2] = matrix[2] > 0 ? scale : -scale;
+                        matrix[3] = matrix[3] > 0 ? scale : -scale;
+                        matrix[0] = Math.min(bound.x, bound.x + bound.width * matrix[2]);
+                        matrix[1] = Math.min(bound.y, bound.y + bound.height * matrix[3]);
+                    }
                     break;
 
                 case 4:
@@ -173,7 +201,14 @@ define(
                         matrix[0] = camera.x;
                         matrix[1] = camera.y;
                     }
-
+                    if(ctrlKey) {
+                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
+                        matrix[2] = matrix[2] > 0 ? scale : -scale;
+                        matrix[3] = matrix[3] > 0 ? scale : -scale;
+                        matrix[0] = Math.min(bound.x + bound.width, 
+                            bound.x + bound.width - bound.width * matrix[2]);
+                        matrix[1] = Math.min(bound.y, bound.y + bound.height * matrix[3]);
+                    }
                     break;
 
                 case 5: 

@@ -194,11 +194,14 @@ define(
                 event.deltaX = event.x - this.startX;
                 event.deltaY = event.y - this.startY;
 
-                if (!this.isDragging) {
-                    this.isDragging = true;
-                    this.fire('dragstart', event);
+                if (event.deltaX >= this.dragDelta || event.deltaY >= this.dragDelta) {
+                    if (!this.isDragging) {
+                        this.isDragging = true;
+                        this.fire('dragstart', event);
+                    }
                 }
-                else {
+
+                if (this.isDragging) {
                     this.fire('drag', event);
                 }
             }
@@ -300,6 +303,7 @@ define(
             this.main = main;
             options = options || {};
             this.events = options.events || {};
+            this.dragDelta = 2;
             init.call(this, options);
         }
 

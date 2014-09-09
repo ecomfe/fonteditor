@@ -80,7 +80,8 @@ define(
 
                     render.camera.x = e.x;
                     render.camera.y = e.y;
-
+                    render.camera.event = e;
+                    
                     if (me.currentPoint) {
                         me.currentGroup.transform(me.currentPoint, render.camera);
                     }
