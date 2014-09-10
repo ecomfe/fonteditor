@@ -65,8 +65,6 @@ define(
 
                 ctx.translate(0.5, 0.5);
 
-                //ctx.translate(-shape.x, -shape.y);
-
                 // 横轴线
                 for(var i = y; i < yMax; i += gap) {
                     ctx.moveTo(0, i);
@@ -114,7 +112,7 @@ define(
 
                 // em 框
                 ctx.beginPath();
-                ctx.strokeStyle = shape.emColor || '#999';
+                ctx.strokeStyle = shape.emColor || '#000';
 
                 var unitsPerEm = Math.round(shape.unitsPerEm);
                 ctx.moveTo(x, y - unitsPerEm);

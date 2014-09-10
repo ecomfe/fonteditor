@@ -50,8 +50,16 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                ctx.moveTo(shape.x + POINT_SIZE, shape.y);
-                ctx.arc(shape.x, shape.y, POINT_SIZE, 0, Math.PI * 2, true);
+
+                ctx.translate(0.5, 0.5);
+
+                var x = Math.round(shape.x);
+                var y = Math.round(shape.y);
+
+                ctx.moveTo(x + POINT_SIZE, y);
+                ctx.arc(x, y, POINT_SIZE, 0, Math.PI * 2, true);
+
+                ctx.translate(-0.5, -0.5);
             }
         };
 

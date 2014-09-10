@@ -50,12 +50,16 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                var w = shape.width;
-                var h = shape.height;
-                dashedLineTo(ctx, shape.x, shape.y, shape.x + w, shape.y);
-                dashedLineTo(ctx, shape.x + w, shape.y, shape.x + w, shape.y + h);
-                dashedLineTo(ctx, shape.x + w, shape.y + h, shape.x, shape.y + h);
-                dashedLineTo(ctx, shape.x, shape.y + h, shape.x, shape.y);
+                ctx.translate(0.5, 0.5);
+                var x = Math.round(shape.x);
+                var y = Math.round(shape.y);
+                var w = Math.round(shape.width);
+                var h = Math.round(shape.height);
+                dashedLineTo(ctx, x, y, x + w, y);
+                dashedLineTo(ctx, x + w, y, x + w, y + h);
+                dashedLineTo(ctx, x + w, y + h, x, y + h);
+                dashedLineTo(ctx, x, y + h, x, y);
+                ctx.translate(-0.5, -0.5);
             }
         };
 

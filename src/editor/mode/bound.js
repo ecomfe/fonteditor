@@ -25,7 +25,9 @@ define(
              */
             down: function(e) {
                 var render = this.render;
+                var camera = this.render.camera;
                 var result = render.getLayer('cover').getShapeIn(e);
+
                 if(result) {
                     if (this.currentGroup) {
                         this.currentPoint = lang.clone(result[0]);
@@ -48,7 +50,17 @@ define(
                         }
                         this.currentGroup = new ShapeGroup(shape, render);
                     }
+                    // 框选模式
+                    else {
+                        this.selectionBox = {
+                            type: 'dashedrect',
+                            x: camera.x,
+                            y: camera.y
+                        };
+                        render.getLayer('cover').addShape(this.selectionBox);
+                    }
                 }
+
             },
 
             /**
@@ -65,6 +77,12 @@ define(
                         this.currentGroup.move(camera.mx, camera.my);
                     }
                 }
+                // 框选模式
+                else {
+                    this.selectionBox.width = camera.x - this.selectionBox.x;
+                    this.selectionBox.height = camera.y - this.selectionBox.y;
+                    render.getLayer('cover').refresh();
+                }
             },
 
             /**
@@ -76,6 +94,11 @@ define(
                         this.currentGroup.finishTransform(this.currentPoint);
                         this.currentPoint = null;
                     }
+                }
+                else if(this.selectionBox) {
+                    var coverLayer = this.render.getLayer('cover');
+                    coverLayer.clearShapes()
+                    coverLayer.refresh();
                 }
             },
 

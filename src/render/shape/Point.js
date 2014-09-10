@@ -55,13 +55,17 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
+                ctx.translate(0.5, 0.5);
+                var x = Math.round(shape.x);
+                var y = Math.round(shape.y);
                 var w = POINT_SIZE / 2;
                 var h = POINT_SIZE / 2;
-                ctx.moveTo(shape.x - w, shape.y - h);
-                ctx.lineTo(shape.x + w, shape.y - h);
-                ctx.lineTo(shape.x + w, shape.y + h);
-                ctx.lineTo(shape.x - w, shape.y + h);
-                ctx.lineTo(shape.x - w, shape.y - h);
+                ctx.moveTo(x - w, y - h);
+                ctx.lineTo(x + w, y - h);
+                ctx.lineTo(x + w, y + h);
+                ctx.lineTo(x - w, y + h);
+                ctx.lineTo(x - w, y - h);
+                ctx.translate(-0.5, -0.5);
             }
         };
 
