@@ -53,7 +53,7 @@ define(
         function Render(main, options) {
 
             this.main = main;
-            this.options = options || {};
+            this.options = lang.extend({}, options);
             this.id = guid();
 
             if(!this.main) {
@@ -62,6 +62,16 @@ define(
 
             init.call(this);
         }
+
+        /**
+         * 设置鼠标样式
+         * 
+         * @param {string} name 名字
+         * @return {Render} 本对象
+         */
+        Render.prototype.setCursor = function(name) {
+            this.main.style.cursor = name || 'default';
+        };
 
         /**
          * 刷新render

@@ -10,6 +10,8 @@
 define(
     function(require) {
 
+        var dashedLineTo = require('../util/dashedLineTo');
+
         var proto = {
             
             type: 'dashedrect',
@@ -50,11 +52,10 @@ define(
             draw: function(ctx, shape) {
                 var w = shape.width;
                 var h = shape.height;
-                ctx.moveTo(shape.x, shape.y);
-                ctx.lineTo(shape.x + w, shape.y);
-                ctx.lineTo(shape.x + w, shape.y + h);
-                ctx.lineTo(shape.x, shape.y + h);
-                ctx.lineTo(shape.x, shape.y);
+                dashedLineTo(ctx, shape.x, shape.y, shape.x + w, shape.y);
+                dashedLineTo(ctx, shape.x + w, shape.y, shape.x + w, shape.y + h);
+                dashedLineTo(ctx, shape.x + w, shape.y + h, shape.x, shape.y + h);
+                dashedLineTo(ctx, shape.x, shape.y + h, shape.x, shape.y);
             }
         };
 

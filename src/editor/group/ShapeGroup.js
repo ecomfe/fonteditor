@@ -3,13 +3,13 @@
  * @author mengke01
  * @date 
  * @description
- * 字体编辑控制器
+ * 形状编辑组
  */
 
 
 define(
     function(require) {
-        var adjustShape = require('./util/adjustShape');
+        var adjustShape = require('../util/adjustShape');
         var lang = require('common/lang');
 
         /**

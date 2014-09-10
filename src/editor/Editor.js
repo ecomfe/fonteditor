@@ -10,11 +10,10 @@
 define(
     function(require) {
         var lang = require('common/lang');
-        var selectShape = require('render/util/selectShape');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('render/util/pathAdjust');
         var glyf2path = require('ttf/util/glyf2path');
-        var ShapeGroup = require('./ShapeGroup');
+        var editorMode = require('./mode/editorMode');
 
         /**
          * 初始化
@@ -31,89 +30,69 @@ define(
                 render.camera.center.x = e.x;
                 render.camera.center.y = e.y;
                 render.camera.scale *= ratio;
-
                 render.painter.refresh();
                 render.camera.ratio = 1;
 
             });
 
             render.capture.on('down', function(e) {
-
-                var result = render.getLayer('cover').getShapeIn(e);
-
-                if(result) {
-                    if (me.currentGroup) {
-                        me.currentPoint = lang.clone(result[0]);
-                        me.currentGroup.beginTransform(me.currentPoint);
-                    }
-                }
-                else {
-
-                    if (me.currentGroup) {
-                        me.currentGroup.dispose();
-                        me.currentGroup = null;
-                    }
-
-                    result = render.getLayer('font').getShapeIn(e);
-                    
-                    if(result) {
-                        var shape = result[0];
-                        if (result.length > 1) {
-                            shape = selectShape(result);
-                        }
-                        me.currentGroup = new ShapeGroup(shape, render);
-                    }
-                }
-
                 render.camera.startx = e.x;
                 render.camera.starty = e.y;
                 render.camera.x = e.x;
                 render.camera.y = e.y;
+                render.camera.event = e;
+
+                me.mode.down && me.mode.down.call(me, e);
             });
 
             render.capture.on('drag', function(e) {
+                render.camera.mx = e.x - render.camera.x;
+                render.camera.my = e.y - render.camera.y;
+                render.camera.x = e.x;
+                render.camera.y = e.y;
+                render.camera.event = e;
 
-                if(me.currentGroup) {
-
-                    var mx = render.camera.x;
-                    var my = render.camera.y;
-
-                    render.camera.x = e.x;
-                    render.camera.y = e.y;
-                    render.camera.event = e;
-                    
-                    if (me.currentPoint) {
-                        me.currentGroup.transform(me.currentPoint, render.camera);
-                    }
-                    else {
-                        me.currentGroup.move(e.x - mx, e.y - my);
-                    }
-                }
+                me.mode.drag && me.mode.drag.call(me, e);
             });
 
             render.capture.on('dragend', function(e) {
-                if (me.currentGroup) {
-                    if (me.currentPoint) {
-                        me.currentGroup.finishTransform(me.currentPoint);
-                        me.currentPoint = null;
-                    }
-                }
-  
+                render.camera.x = e.x;
+                render.camera.y = e.y;
+                render.camera.event = e;
+
+                me.mode.dragend && me.mode.dragend.call(me, e);
             });
+
+            render.capture.on('dblclick', function(e) {
+                me.mode.end.call(me, e);
+                if(me.mode === editorMode.bound) {
+                    me.mode = editorMode.point;
+                    
+                }
+                else if(me.mode === editorMode.point){
+                    me.mode = editorMode.bound;
+                }
+                me.mode.begin.call(me, e);
+            });
+
         }
 
         function initLayer() {
             this.render.addLayer('cover', {
                 level: 30,
                 stroke: true,
-                strokeColor: 'green'
+                fill: false,
+                strokeColor: 'green',
+                fillColor: 'white',
             });
             this.render.addLayer('font', {
-                level: 20
+                level: 20,
+                strokeColor: 'red'
             });
             this.render.addLayer('axis', {
                 level: 10,
-                stroke: true
+                stroke: true,
+                fill: false
             });
         }
 
@@ -160,7 +139,7 @@ define(
                 return shape;
             });
 
-            this.shapes = shapes;
+
             this.font = font;
 
             // 渲染形状
@@ -168,11 +147,18 @@ define(
             
             var fontLayer = this.render.painter.getLayer('font');
 
-            this.shapes.forEach(function(shape) {
+            shapes.forEach(function(shape) {
                 fontLayer.addShape('path', shape);
             });
             
             this.render.refresh();
+
+            if (this.mode) {
+                this.mode.end.call(this);
+            }
+
+            this.mode = editorMode.bound;
+            this.mode.begin.call(this);
 
             return this;
         };

@@ -10,16 +10,11 @@
 define(
     function(require) {
         
-        var POINT_SIZE = 8; // 控制点的大小
+        var POINT_SIZE = 6; // 控制点的大小
 
         var proto = {
             
             type: 'point',
-            
-            // 调整大小
-            adjust: function(shape, camera) {
-                return shape;
-            },
 
             /**
              * 获取shape的矩形区域
@@ -45,8 +40,8 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                var w = POINT_SIZE / 2;
-                var h = POINT_SIZE / 2;
+                var w = POINT_SIZE;
+                var h = POINT_SIZE;
                 return x <= shape.x + w
                     && x >= shape.x - w
                     && y <= shape.y + h

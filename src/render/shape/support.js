@@ -14,7 +14,7 @@ define(
             cpoint: require('./CirclePoint'),
             rect: require('./Rect'),
             dashedrect: require('./DashedRect'),
-            point: require('./point'),
+            point: require('./Point'),
             font: require('./Font'),
             path: require('./Path')
         };

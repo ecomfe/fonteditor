@@ -33,17 +33,21 @@ define(
          * 设置canvas的绘制样式
          */
         function setContextStyle(context, options) {
+            context.fillStyle = options.fillColor || 'black';
+            context.strokeStyle = options.strokeColor || 'black';
+            context.strokeWidth = options.strokeWidth || 1;
+        }
 
-            if(options.fillColor) {
-                context.fillStyle = options.fillColor;
+        /**
+         * 绘制图形
+         */
+        function draw(context, options) {
+            if(false !== options.stroke) {
+                context.stroke();
             }
 
-            if(options.strokeColor) {
-                context.strokeStyle = options.strokeColor;
-            }
-
-            if(options.strokeWidth) {
-                context.strokeWidth = options.strokeWidth || 1;
+            if(false !== options.fill) {
+                context.fill();
             }
         }
 
@@ -68,7 +72,12 @@ define(
          */
         function Layer(context, options) {
             this.context = context;
-            this.options = options || {};
+            
+            this.options = lang.extend({
+                stroke: true,
+                fill: true
+            }, options);
+
             this.painter = this.options.painter;
             this.id = this.options.id || guid('layer');
             this.level = this.options.level;
@@ -86,15 +95,13 @@ define(
              */
             refresh: function() {
                 var support = this.painter.support;
-                
-                this.context.clearRect(0, 0, this.painter.width, this.painter.height);
-                
-
-                setContextStyle(this.context, this.options);
-
-                this.context.beginPath();
                 var context = this.context;
+                var options = this.options;
                 var camera = this.painter.camera;
+
+                context.clearRect(0, 0, this.painter.width, this.painter.height);
+                setContextStyle(context, options);
+                context.beginPath();
                 this.shapes.forEach(function(shape) {
 
                     var drawer = support[shape.type];
@@ -103,17 +110,28 @@ define(
                         if(camera.ratio != 1) {
                             drawer.adjust(shape, camera);
                         }
-                        drawer.draw(context, shape);
+
+                        if(shape.style) {
+                            // 绘制之前shape
+                            draw(context, options);
+
+                            // 绘制当前shape
+                            context.beginPath();
+                            setContextStyle(context, shape.style);
+                            drawer.draw(context, shape);
+                            draw(context, options);
+
+                            // 重置
+                            setContextStyle(context, options);
+                            context.beginPath();
+                        }
+                        else {
+                            drawer.draw(context, shape);
+                        }
                     }
                 });
 
-
-                if(this.options.stroke) {
-                    this.context.stroke();
-                }
-                else {
-                    this.context.fill();
-                }
+                draw(context, options);
 
                 return this;
             },

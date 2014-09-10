@@ -103,7 +103,6 @@ define(
          */
         function computePathBoundingBox(path) {
             var l = path.length;
-            var xMax = xMin = yMax = yMin = 0;
             var i = -1;
             var points = [];
             while (++i < l) {
@@ -111,6 +110,7 @@ define(
                 switch (point.c) {
                     case 'M':
                     case 'L':
+                    case 'Z':
                         points.push(point.p);
                         break;
                     case 'Q':
@@ -135,10 +135,41 @@ define(
             return computeBoundingBox(points);
         }
 
+
+        /**
+         * 计算曲线点边界
+         * 
+         * @private
+         * @param {path} path对象
+         * 
+         * @return {Object} x,y,width,height
+         */
+        function computePathBox(path) {
+            var l = path.length;
+            var i = -1;
+            var points = [];
+            while (++i < l) {
+                var point = path[i];
+                switch (point.c) {
+                    case 'M':
+                    case 'L':
+                    case 'Z':
+                        points.push(point.p);
+                        break;
+                    case 'Q':
+                        points.push(point.p1);
+                        points.push(point.p);
+                        break;
+                }
+            }
+            return computeBoundingBox(points);
+        }
+
         return {
             computeBounding: computeBoundingBox,
             quadraticBezier: computeQuadraticBezierBoundingBox,
-            computePath: computePathBoundingBox
+            computePath: computePathBoundingBox,
+            computePathBox: computePathBox,
         };
     }
 );

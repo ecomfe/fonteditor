@@ -10,16 +10,11 @@
 define(
     function(require) {
 
-        var POINT_SIZE = 6;
+        var POINT_SIZE = 2;
 
         var proto = {
             
             type: 'cpoint',
-
-            // 调整大小
-            adjust: function(shape, camera) {
-                return shape;
-            },
 
             /**
              * 获取shape的矩形区域
@@ -45,7 +40,7 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                return Math.pow(shape.x - x, 2) + Math.pow(shape.y - y, 2) <= Math.pow(POINT_SIZE, 2);
+                return Math.pow(shape.x - x, 2) + Math.pow(shape.y - y, 2) <= Math.pow(POINT_SIZE * 2, 2);
             },
 
             /**
