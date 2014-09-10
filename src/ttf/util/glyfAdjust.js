@@ -22,8 +22,6 @@ define(
         function glyfAdjust(glyf, scale, offsetX, offsetY) {
 
             // 对轮廓进行反向，以及坐标系调整，取整
-            var xOffset = -glyf.xMin;
-            var yOffset = -glyf.yMin;
             var middleYx2 = glyf.yMax + glyf.yMin;
             var scale = scale || 1;
             var x = offsetX || 0;
@@ -32,16 +30,17 @@ define(
 
             glyf.coordinates.forEach(function(p) {
                 coordinates.push({
-                    x: x + scale * (p.x + xOffset),
-                    y: y + scale * (middleYx2 - p.y + yOffset),
+                    x: x + scale * (p.x),
+                    y: y + scale * (middleYx2 - p.y),
                     isOnCurve: p.isOnCurve
                 });
             });
 
-            glyf.xMin = x;
-            glyf.yMin = y;
-            glyf.xMax = scale * (glyf.xMax - glyf.xMin) + x;
-            glyf.yMax = scale * (glyf.yMax - glyf.yMin) + y;
+            glyf.xMin = x + glyf.xMin * scale;
+            glyf.yMin = y + glyf.yMin * scale;
+            glyf.xMax = x + glyf.xMax * scale;
+            glyf.yMax = y + glyf.yMax * scale;
+            
             glyf.coordinates = coordinates;
 
             return glyf;

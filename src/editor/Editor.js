@@ -23,8 +23,13 @@ define(
             var render = this.render;
 
             render.capture.on('wheel', function(e) {
+
                 var defaultRatio = render.options.defaultRatio || 1.2;
                 var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
+
+                if (render.camera.scale * ratio < 0.1) {
+                    return;
+                }
 
                 render.camera.ratio = ratio;
                 render.camera.center.x = e.x;
@@ -78,6 +83,7 @@ define(
         }
 
         function initLayer() {
+
             this.render.addLayer('cover', {
                 level: 30,
                 stroke: true,
@@ -85,15 +91,35 @@ define(
                 strokeColor: 'green',
                 fillColor: 'white',
             });
+
             this.render.addLayer('font', {
                 level: 20,
                 strokeColor: 'red'
             });
+
             this.render.addLayer('axis', {
                 level: 10,
                 stroke: true,
-                fill: false
+                fill: false,
+                strokeColor: '#A6A6FF'
             });
+        }
+
+        function initAxis() {
+            // 将坐标原点翻转
+            var center = this.render.camera.center;
+
+            // 绘制轴线
+            this.axis = {
+                type: 'axis',
+                x: center.x,
+                y: center.y,
+                width: 100,
+                unitsPerEm: this.options.unitsPerEm,
+                metrics: this.options.metrics,
+                selectable: false
+            };
+            this.render.getLayer('axis').addShape(this.axis);
         }
 
         /**
@@ -102,7 +128,16 @@ define(
          * @constructor
          */
         function Editor(options) {
-            this.options = options || {};
+            this.options = lang.extend({
+                unitsPerEm: 512,
+                // 字体测量规格
+                metrics: {
+                    WinAscent: 480,
+                    WinDecent: -33,
+                    'x-Height': 256,
+                    'CapHeight': 358
+                }
+            }, options);
         }
 
         /**
@@ -119,12 +154,17 @@ define(
          * 设置渲染器
          */
         Editor.prototype.setFont = function(font) {
+
             var paths = glyf2path(font);
 
             var width = this.render.painter.width;
             var height = this.render.painter.height;
+
+            // 基线位置
             var offsetX = (width - (font.xMax - font.xMin)) / 2;
             var offsetY = (height - (font.yMax - font.yMin)) / 2;
+
+            var WinDecent = this.options.metrics.WinDecent;
 
             // 构造形状集合
             var shapes = paths.map(function(path) {
@@ -132,19 +172,30 @@ define(
                 var bound = computeBoundingBox.computePath(path);
 
                 shape.points = pathAdjust(path, 1, -bound.x, -bound.y);
+
                 shape.x = bound.x + offsetX;
-                shape.y = bound.y + offsetY;
+
+                // 加上 ymin
+                shape.y = bound.y + offsetY - font.yMin * 2;
+                
                 shape.width = bound.width;
                 shape.height = bound.height;
+                
                 return shape;
             });
-
 
             this.font = font;
 
             // 渲染形状
             this.render.reset();
-            
+
+            // 设置坐标原点
+            var camera = this.render.camera;
+            camera.center.x = offsetX;
+            camera.center.y = offsetY + (font.yMax - font.yMin);
+
+            initAxis.call(this);
+
             var fontLayer = this.render.painter.getLayer('font');
 
             shapes.forEach(function(shape) {

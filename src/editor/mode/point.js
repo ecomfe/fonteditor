@@ -21,11 +21,15 @@ define(
              * 按下事件
              */
             down: function(e) {
+
                 var render = this.render;
                 var result = render.getLayer('cover').getShapeIn(e);
 
                 if(result) {
                     this.currentPoint = result[0];
+                    this.currentPoint.style = {
+                        fillColor: 'red'
+                    };
                 }
             },
 
@@ -54,6 +58,9 @@ define(
              * 拖动结束事件
              */
             dragend: function(e) {
+                if (this.currentPoint) {
+                    delete this.currentPoint.style;
+                }
                 this.currentPoint = null;
             },
 

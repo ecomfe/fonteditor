@@ -16,7 +16,8 @@ define(
             dashedrect: require('./DashedRect'),
             point: require('./Point'),
             font: require('./Font'),
-            path: require('./Path')
+            path: require('./Path'),
+            axis: require('./Axis')
         };
         return support;
     }
