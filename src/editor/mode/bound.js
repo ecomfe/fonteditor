@@ -96,8 +96,9 @@ define(
                     }
                 }
                 else if(this.selectionBox) {
+                    this.selectionBox = null;
                     var coverLayer = this.render.getLayer('cover');
-                    coverLayer.clearShapes()
+                    coverLayer.clearShapes();
                     coverLayer.refresh();
                 }
             },

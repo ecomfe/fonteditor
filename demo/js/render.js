@@ -30,7 +30,7 @@ define(
                     level: 20
                 });
 
-                cover.options.stroke = 1;
+                cover.options.fill = false;
                 cover.options.strokeColor = 'green';
 
                 cover.addShape('circle', {
@@ -68,14 +68,15 @@ define(
                 var font = currentRender.addLayer('font', {
                     level: 10
                 });
-                
-                shape_bdjk = glyfAdjust(shape_bdjk, 200 / 512);
+                var scale = 200 / 512;
+                shape_bdjk = glyfAdjust(shape_bdjk, scale, -shape_bdjk.xMin * scale, -shape_bdjk.yMin * scale);
                 shape_bdjk.x = 444;
                 shape_bdjk.y = 55;
                 font.addShape('font', shape_bdjk);
 
                 var pathPanel = currentRender.addLayer('path', {
-                    level: 11
+                    level: 11,
+                    stroke: false
                 });
 
                 var pathArray = glyf2path(shape_baidu);
