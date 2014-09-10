@@ -123,12 +123,12 @@ define(
                     var fontLayer = this.render.getLayer('font');
                     shapes.forEach(function(shapeId) {
                         var shape = fontLayer.getShape(shapeId);
-                        var pathBox = computeBoundingBox.computePathBox(shape.points);
-                        shape.width = pathBox.width;
-                        shape.height = pathBox.height;
-                        shape.x = shape.x + pathBox.x;
-                        shape.y = shape.y + pathBox.y;
-                        shape.points = pathAdjust(shape.points, 1, -pathBox.x, -pathBox.y);
+                        var bound = computeBoundingBox.computePath(shape.points);
+                        shape.width = bound.width;
+                        shape.height = bound.height;
+                        shape.x = shape.x + bound.x;
+                        shape.y = shape.y + bound.y;
+                        shape.points = pathAdjust(shape.points, 1, -bound.x, -bound.y);
                     });
                     fontLayer.refresh();
                 }

@@ -194,7 +194,7 @@ define(
                 event.deltaX = event.x - this.startX;
                 event.deltaY = event.y - this.startY;
 
-                if (event.deltaX >= this.dragDelta || event.deltaY >= this.dragDelta) {
+                if (Math.abs(event.deltaX) >= this.dragDelta || Math.abs(event.deltaY) >= this.dragDelta) {
                     if (!this.isDragging) {
                         this.isDragging = true;
                         this.fire('dragstart', event);
