@@ -13,6 +13,7 @@ define(
         var pathIterator = require('render/util/pathIterator');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('render/util/pathAdjust');
+        var lang = require('common/lang');
 
         var pointMode = {
             name: 'point',
@@ -27,6 +28,7 @@ define(
 
                 if(result) {
                     this.currentPoint = result[0];
+                    this.currentPoint.reserved = lang.clone(this.currentPoint);
                     this.currentPoint.style = {
                         fillColor: 'red'
                     };
@@ -40,17 +42,31 @@ define(
                 var render = this.render;
                 var camera = render.camera;
                 if(this.currentPoint) {
+                    var current = this.currentPoint;
+                    var reserved = current.reserved;
 
-                    this.currentPoint.x  += camera.mx;
-                    this.currentPoint.y  += camera.my;
+                    if(camera.event.altKey) {
+                        current.x = reserved.x;
+                        current._point.x = reserved._point.x;
+                    }
+                    else {
+                        current.x = reserved.x + camera.event.deltaX;
+                        current._point.x = reserved._point.x + camera.event.deltaX;
+                    }
 
-                    this.currentPoint._point.x += camera.mx;
-                    this.currentPoint._point.y += camera.my;
+                    if(camera.event.shiftKey) {
+                        current.y = reserved.y;
+                        current._point.y = reserved._point.y;
+                    }
+                    else {
+                        current.y = reserved.y + camera.event.deltaY;
+                        current._point.y = reserved._point.y + camera.event.deltaY;
+                    }
 
                     render.getLayer('cover').refresh();
                     render.getLayer('font').refresh();
 
-                    this.modifiedShape[this.currentPoint._shape] = true;
+                    this.modifiedShape[current._shape] = true;
                 }
             },
 
