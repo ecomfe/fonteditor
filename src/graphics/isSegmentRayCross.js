@@ -17,7 +17,7 @@ define(
          * @return {boolean} 是否
          */
         function isSegmentRayCross(p0, p1, p) {
-            return isSegmentCross(p0, p1, p, {x: 100000, y: p.y});
+            return isSegmentCross(p0, p1, p, {x: 10000, y: p.y});
         }
 
         return isSegmentRayCross;

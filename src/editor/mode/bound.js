@@ -41,7 +41,7 @@ define(
                     }
 
                     result = render.getLayer('font').getShapeIn(e);
-                    
+
                     if(result) {
                         var shape = result[0];
                         if (result.length > 1) {
