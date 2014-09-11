@@ -9,8 +9,11 @@
 
 define(
     function(require) {
-        var adjustShape = require('../util/adjustShape');
+
+        var pathAdjust = require('render/util/pathAdjust');
+        var boundAdjust = require('render/util/boundAdjust');
         var lang = require('common/lang');
+        var computeBoundingBox = require('../../graphics/computeBoundingBox');
 
         /**
          * 获取bound边界
@@ -72,8 +75,7 @@ define(
         function Group(shape, render) {
             this.shape = shape;
             this.render = render;
-
-            updateControls.call(this, shape);
+            updateControls.call(this, computeBoundingBox.computePath(this.shape.points));
             this.render.getLayer('cover').refresh();
         }
 
@@ -81,23 +83,24 @@ define(
          * 根据控制点做图形变换
          */
         Group.prototype.beginTransform = function(point) {
+            this.bound = computeBoundingBox.computePath(this.shape.points);
             this.originShape = lang.clone(this.shape);
+            var coverLayer = this.render.getLayer('cover');
+            coverLayer.clearShapes();
         };
 
         /**
          * 根据控制点做图形变换
          */
         Group.prototype.transform = function(point, camera) {
-            var bound = this.originShape;
-            
-            var mx = camera.x - camera.startx;
-            var my = camera.y - camera.starty;
 
-            // x, y, xscale, yscale
+            var bound = this.bound;
+            // x, y, xscale 相对符号, yscale 相对符号
             var matrix = [
-                bound.x, 
-                bound.y, 
-                1, 1
+                0, 
+                0, 
+                1,
+                1
             ];
             
             // 是否需要等比例缩放
@@ -105,152 +108,85 @@ define(
 
             switch (point.pos) {
                 case 1:
-                    matrix[2] = (bound.width - mx) / bound.width;
-                    matrix[3] = (bound.height - my) / bound.height;
-                    
-                    if(matrix[2] >= 0 && matrix[3] >= 0) {
-                        matrix[0] = camera.x;
-                        matrix[1] = camera.y;
-                    }
-                    else if(matrix[2] < 0 && matrix[3] > 0) {
-                        matrix[0] = bound.x + bound.width;
-                        matrix[1] = camera.y;
-                    }
-                    else if(matrix[2] < 0 && matrix[3] < 0) {
-                        matrix[0] = bound.x + bound.width;
-                        matrix[1] = bound.y + bound.height;
-                    }
-                    else {
-                        matrix[0] = camera.x;
-                        matrix[1] = bound.y + bound.height;
-                    }
-
-                    if(ctrlKey) {
-                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
-                        matrix[2] = matrix[2] > 0 ? scale : -scale;
-                        matrix[3] = matrix[3] > 0 ? scale : -scale;
-                        matrix[0] = Math.min(bound.x + bound.width,
-                            bound.x + bound.width - bound.width * matrix[2]);
-                        matrix[1] = Math.min(bound.y + bound.height, 
-                            bound.y + bound.height - bound.height * matrix[3]);
-                    }
-
+                    matrix[0] = bound.x + bound.width;
+                    matrix[1] = bound.y + bound.height;
+                    matrix[2] = -(camera.x - matrix[0]) / bound.width;
+                    matrix[3] = -(camera.y - matrix[1]) / bound.height;
                     break;
-
                 case 2:
-                    matrix[2] = (bound.width + mx) / bound.width;
-                    matrix[3] = (bound.height - my) / bound.height;
-
-                    if(matrix[2] >= 0 && matrix[3] >= 0) {
-                        matrix[0] = bound.x;
-                        matrix[1] = camera.y;
-                    }
-                    else if(matrix[2] < 0 && matrix[3] > 0) {
-                        matrix[0] = camera.x;
-                        matrix[1] = camera.y;
-                    }
-                    else if(matrix[2] < 0 && matrix[3] < 0) {
-                        matrix[0] = camera.x;
-                        matrix[1] = bound.y + bound.height;
-                    }
-                    else {
-                        matrix[0] = bound.x;
-                        matrix[1] = bound.y + bound.height;
-                    }
-                    if(ctrlKey) {
-                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
-                        matrix[2] = matrix[2] > 0 ? scale : -scale;
-                        matrix[3] = matrix[3] > 0 ? scale : -scale;
-                        matrix[0] = Math.min(bound.x, bound.x + bound.width * matrix[2]);
-                        matrix[1] = Math.min(bound.y + bound.height, 
-                            bound.y + bound.height - bound.height * matrix[3]);
-                    }
+                    matrix[0] = bound.x;
+                    matrix[1] = bound.y + bound.height;
+                    matrix[2] = (camera.x - matrix[0]) / bound.width;
+                    matrix[3] = -(camera.y - matrix[1]) / bound.height;
                     break;
 
                 case 3:
-                    matrix[2] = (bound.width + mx) / bound.width;
-                    matrix[3] = (bound.height + my) / bound.height;
-                    matrix[0] = Math.min(bound.x, camera.x);
-                    matrix[1] = Math.min(bound.y, camera.y);
-                    if(ctrlKey) {
-                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
-                        matrix[2] = matrix[2] > 0 ? scale : -scale;
-                        matrix[3] = matrix[3] > 0 ? scale : -scale;
-                        matrix[0] = Math.min(bound.x, bound.x + bound.width * matrix[2]);
-                        matrix[1] = Math.min(bound.y, bound.y + bound.height * matrix[3]);
-                    }
+                    matrix[0] = bound.x;
+                    matrix[1] = bound.y;
+                    matrix[2] = (camera.x - matrix[0]) / bound.width;
+                    matrix[3] = (camera.y - matrix[1]) / bound.height;
                     break;
 
                 case 4:
-                    matrix[2] = (bound.width - mx) / bound.width;
-                    matrix[3] = (bound.height + my) / bound.height;
-
-                    if(matrix[2] >= 0 && matrix[3] >= 0) {
-                        matrix[0] = camera.x;
-                        matrix[1] = bound.y;
-                    }
-                    else if(matrix[2] < 0 && matrix[3] > 0) {
-                        matrix[0] = bound.x + bound.width;
-                        matrix[1] = bound.y;
-                    }
-                    else if(matrix[2] < 0 && matrix[3] < 0) {
-                        matrix[0] = bound.x + bound.width;
-                        matrix[1] = camera.y;
-                    }
-                    else {
-                        matrix[0] = camera.x;
-                        matrix[1] = camera.y;
-                    }
-                    if(ctrlKey) {
-                        var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
-                        matrix[2] = matrix[2] > 0 ? scale : -scale;
-                        matrix[3] = matrix[3] > 0 ? scale : -scale;
-                        matrix[0] = Math.min(bound.x + bound.width, 
-                            bound.x + bound.width - bound.width * matrix[2]);
-                        matrix[1] = Math.min(bound.y, bound.y + bound.height * matrix[3]);
-                    }
+                    matrix[0] = bound.x + bound.width;
+                    matrix[1] = bound.y;
+                    matrix[2] = -(camera.x - matrix[0]) / bound.width;
+                    matrix[3] = (camera.y - matrix[1]) / bound.height;
                     break;
 
-                case 5: 
-                    matrix[3] = (bound.height - my) / bound.height;
-                    matrix[0] = bound.x;
-                    matrix[1] = matrix[3] > 0 ? camera.y : bound.y + bound.height;
+                case 5:
+                    matrix[1] = bound.y + bound.height;
+                    matrix[2] = 1;
+                    matrix[3] = -(camera.y - matrix[1]) / bound.height;
                     break;
 
                 case 7:
-                    matrix[3] = (bound.height + my) / bound.height;
-                    matrix[0] = bound.x;
-                    matrix[1] = matrix[3] > 0 ? bound.y : camera.y;
+                    matrix[1] = bound.y;
+                    matrix[3] = (camera.y - matrix[1]) / bound.height;
                     break;
 
                 case 6:
-                    matrix[2] = (bound.width + mx) / bound.width;
-                    matrix[0] = matrix[2] > 0 ? bound.x : camera.x;
-                    matrix[1] = bound.y;
+                    matrix[0] = bound.x;
+                    matrix[2] = (camera.x - matrix[0]) / bound.width;
                     break;
 
                 case 8: 
-                    matrix[2] = (bound.width - mx) / bound.width;
-                    matrix[0] = matrix[2] > 0 ? camera.x : bound.x + bound.width;
-                    matrix[1] = bound.y;
+                    matrix[0] = bound.x + bound.width;
+                    matrix[2] = -(camera.x - matrix[0]) / bound.width;
                     break;
             };
 
-            var shape = adjustShape(lang.clone(this.originShape), matrix);
+            // 等比缩放
+            if (camera.event.ctrlKey && [1, 2, 3, 4].indexOf(point.pos) >= 0) {
+                var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
+                matrix[2] = matrix[2] >= 0 ? scale : -scale;
+                matrix[3] = matrix[3] >= 0 ? scale : -scale;
+            }
+
+
+            // 更新shape
+            var shape = lang.clone(this.originShape);
+
+            pathAdjust(shape.points, matrix[2], matrix[3], -matrix[0], -matrix[1]);
+            pathAdjust(shape.points, 1, 1, matrix[0], matrix[1]);
 
             lang.extend(this.shape, shape);
-
             this.render.getLayer('font').refresh();
+
+            // 更新边界
             var coverLayer = this.render.getLayer('cover');
-            coverLayer.clearShapes();
-            coverLayer.addShape({
-                type: 'dashedrect',
-                x: shape.x,
-                y: shape.y,
-                width: shape.width,
-                height: shape.height
-            });
+            if(!coverLayer.getShape('bound')) {
+                coverLayer.addShape({
+                    type: 'dashedrect',
+                    id: 'bound'
+                });
+            }
+
+            var bound = boundAdjust(lang.clone(this.bound), matrix[2], matrix[3], -matrix[0], -matrix[1]);
+            boundAdjust(bound, 1, 1, matrix[0], matrix[1]);
+            lang.extend(coverLayer.getShape('bound'), bound);
             coverLayer.refresh();
+
         };
 
         /**
@@ -258,7 +194,7 @@ define(
          */
         Group.prototype.finishTransform = function() {
             delete this.originShape;
-            updateControls.call(this, this.shape);
+            updateControls.call(this, computeBoundingBox.computePath(this.shape.points));
             this.render.getLayer('cover').refresh();
         };
 
@@ -266,12 +202,13 @@ define(
          * 移动到指定位置
          */
         Group.prototype.move = function(x, y) {
+
             var fontLayer = this.render.painter.getLayer(this.shape.layerId);
             fontLayer.move(x, y, this.shape)
             fontLayer.refresh();
 
             var coverLayer = this.render.getLayer('cover');
-            coverLayer.move(x, y)
+            coverLayer.move(x, y);
             coverLayer.refresh();
         };
 

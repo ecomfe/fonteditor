@@ -50,6 +50,14 @@ define(
                 me.mode.down && me.mode.down.call(me, e);
             });
 
+            render.capture.on('dragstart', function(e) {
+                render.camera.x = e.x;
+                render.camera.y = e.y;
+                render.camera.event = e;
+
+                me.mode.dragstart && me.mode.dragstart.call(me, e);
+            });
+
             render.capture.on('drag', function(e) {
                 render.camera.mx = e.x - render.camera.x;
                 render.camera.my = e.y - render.camera.y;
@@ -159,27 +167,19 @@ define(
 
             var width = this.render.painter.width;
             var height = this.render.painter.height;
+            var options = this.options;
 
-            // 基线位置
-            var offsetX = (width - (font.xMax - font.xMin)) / 2;
-            var offsetY = (height - (font.yMax - font.yMin)) / 2;
-
-            var WinDecent = this.options.metrics.WinDecent;
+            // 坐标原点位置，基线原点
+            var offsetX = (width - options.unitsPerEm) / 2;
+            var offsetY = (height + (options.unitsPerEm + options.metrics.WinDecent)) / 2;
 
             // 构造形状集合
             var shapes = paths.map(function(path) {
                 var shape = {};
                 var bound = computeBoundingBox.computePath(path);
 
-                shape.points = pathAdjust(path, 1, -bound.x, -bound.y);
-
-                shape.x = bound.x + offsetX;
-
-                // 加上 ymin
-                shape.y = bound.y + offsetY - font.yMin * 2;
-                
-                shape.width = bound.width;
-                shape.height = bound.height;
+                path = pathAdjust(path, 1, -1);
+                shape.points = pathAdjust(path, 1, 1, offsetX, offsetY);
                 
                 return shape;
             });
@@ -192,7 +192,7 @@ define(
             // 设置坐标原点
             var camera = this.render.camera;
             camera.center.x = offsetX;
-            camera.center.y = offsetY + (font.yMax - font.yMin);
+            camera.center.y = offsetY;
 
             initAxis.call(this);
 

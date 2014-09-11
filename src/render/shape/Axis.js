@@ -98,6 +98,7 @@ define(
 
                 ctx.moveTo(0, y);
                 ctx.lineTo(xMax, y);
+                ctx.fillText('Baseline', 2, y - 2);
 
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, yMax);
@@ -106,18 +107,17 @@ define(
                 var metrics = shape.metrics;
 
                 for (var line in metrics) {
-                    dashedLineTo(ctx, 0, y - Math.round(metrics[line]), xMax, y - Math.round(metrics[line]), 4);
+                    var lineY = y - Math.round(metrics[line]);
+                    dashedLineTo(ctx, 0, lineY, xMax, lineY, 4);
+                    ctx.fillText(line, 2, lineY - 2);
                 }
                 ctx.stroke();
 
                 // em 框
                 ctx.beginPath();
-                ctx.strokeStyle = shape.emColor || '#000';
-
-                var unitsPerEm = Math.round(shape.unitsPerEm);
-                ctx.moveTo(x, y - unitsPerEm);
-                dashedLineTo(ctx, x, y - unitsPerEm, x + unitsPerEm, y - unitsPerEm, 4);
-                dashedLineTo(ctx, x + unitsPerEm, y - unitsPerEm, x + unitsPerEm, y, 4);
+                ctx.strokeStyle = shape.emColor || 'red';
+                var mx = Math.round(x + shape.unitsPerEm);
+                dashedLineTo(ctx, mx, 0, mx, yMax , 4);
 
                 ctx.stroke();
 

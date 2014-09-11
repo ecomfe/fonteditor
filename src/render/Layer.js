@@ -36,6 +36,7 @@ define(
             context.fillStyle = options.fillColor || 'black';
             context.strokeStyle = options.strokeColor || 'black';
             context.strokeWidth = options.strokeWidth || 1;
+            context.font = options.font || "normal 10px arial";
         }
 
         /**
@@ -258,9 +259,9 @@ define(
                     shapes = this.shapes;
                 }
 
+                var support = this.painter.support;
                 shapes.forEach(function(shape) {
-                    shape.x = shape.x + x;
-                    shape.y= shape.y + y;
+                    support[shape.type].move(shape, x, y);
                 });
                 
                 return this;

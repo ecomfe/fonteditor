@@ -66,7 +66,6 @@ define(
                     render.getLayer('cover').refresh();
                     render.getLayer('font').refresh();
 
-                    this.modifiedShape[current._shape] = true;
                 }
             },
 
@@ -90,8 +89,8 @@ define(
                         if(c == 'M' || c == 'L') {
                             controls.push({
                                 type: 'point',
-                                x: shape.x + p0.x,
-                                y: shape.y + p0.y,
+                                x: p0.x,
+                                y: p0.y,
                                 _point: p0,
                                 _shape: shape.id
                             });
@@ -99,15 +98,15 @@ define(
                         else if (c == 'Q') {
                             controls.push({
                                 type: 'cpoint',
-                                x: shape.x + p1.x,
-                                y: shape.y + p1.y,
+                                x: p1.x,
+                                y: p1.y,
                                 _point: p1,
                                 _shape: shape.id
                             });
                             controls.push({
                                 type: 'point',
-                                x: shape.x + p2.x,
-                                y: shape.y + p2.y,
+                                x: p2.x,
+                                y: p2.y,
                                 _point: p2,
                                 _shape: shape.id
                             });
@@ -139,24 +138,6 @@ define(
             },
 
             end: function() {
-
-                // 重新调整shape大小和位置
-                var shapes = Object.keys(this.modifiedShape);
-                if(shapes.length) {
-                    var fontLayer = this.render.getLayer('font');
-                    shapes.forEach(function(shapeId) {
-                        var shape = fontLayer.getShape(shapeId);
-                        var bound = computeBoundingBox.computePath(shape.points);
-                        shape.width = bound.width;
-                        shape.height = bound.height;
-                        shape.x = shape.x + bound.x;
-                        shape.y = shape.y + bound.y;
-                        shape.points = pathAdjust(shape.points, 1, -bound.x, -bound.y);
-                    });
-                    fontLayer.refresh();
-                }
-
-                this.modifiedShape = null;
 
                 var coverLayer = this.render.getLayer('cover');
                 coverLayer.options.fill = false;

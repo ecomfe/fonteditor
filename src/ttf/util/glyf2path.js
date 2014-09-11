@@ -27,15 +27,10 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
             }
             
             options = options || {};
-
-            // 对轮廓进行反向，以及坐标系调整，取整
-            glyf = glyfAdjust(glyf, options.scale);
-
             
             var coordinates = glyf.coordinates;
             var startPts = 0; // 起始点
             var currentPts = 0; // 结束点
-
             var pathArr = []; // 路径序列
 
             // 处理glyf轮廓

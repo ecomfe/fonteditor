@@ -12,6 +12,7 @@ define(
         var ShapeConstructor = require('./Shape');
         var isInsidePath = require('../../graphics/isInsidePath');
         var pathAdjust = require('../util/pathAdjust');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
         var proto = {
             
             type: 'path',
@@ -25,9 +26,20 @@ define(
              * @return {Object} shape对象
              */
             adjust: function(shape, camera) {
-                ShapeConstructor.prototype.adjust.call(this, shape, camera);
-                pathAdjust(shape.points, camera.ratio);
+                pathAdjust(shape.points, camera.ratio, camera.ratio, -camera.center.x, -camera.center.y);
+                pathAdjust(shape.points, 1, 1, camera.center.x, camera.center.y);
             },
+
+            /**
+             * 移动指定位置
+             * 
+             * @return {Object} shape对象
+             */
+            move: function(shape, mx, my) {
+                pathAdjust(shape.points, 1, 1, mx, my);
+                return shape;
+            },
+
 
             /**
              * 获取shape的矩形区域
@@ -36,12 +48,7 @@ define(
              * @param {Object} 矩形区域
              */
             getRect: function(shape) {
-                return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: shape.width,
-                    height:shape.height,
-                };
+                return computeBoundingBox.computePath(shape.points);
             },
 
             /**
@@ -53,17 +60,17 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-
+                var bound = computeBoundingBox.computePath(shape.points);
                 if(
-                    x <= shape.x + shape.width 
-                    && x >= shape.x
-                    && y <= shape.y + shape.height
-                    && y >= shape.y
+                    x <= bound.x + bound.width 
+                    && x >= bound.x
+                    && y <= bound.y + bound.height
+                    && y >= bound.y
                 ) {
 
                     return isInsidePath(shape.points, {
-                        x: x - shape.x, 
-                        y: y - shape.y
+                        x: x, 
+                        y: y
                     });
                 }
                 return false;
@@ -79,7 +86,6 @@ define(
                 var x = shape.x || 0;
                 var y = shape.y || 0;
 
-                ctx.translate(x, y);
                 var i = -1;
                 var points = shape.points;
                 var l = points.length;
@@ -102,15 +108,6 @@ define(
                     }
                 }
 
-                // var w = shape.width;
-                // var h = shape.height;
-                // ctx.moveTo(0, 0);
-                // ctx.lineTo(w, 0);
-                // ctx.lineTo(w, h);
-                // ctx.lineTo(0, h);
-                // ctx.lineTo(0, 0);
-
-                ctx.translate(-x, -y);
             }
         };
 

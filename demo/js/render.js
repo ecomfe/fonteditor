@@ -86,13 +86,7 @@ define(
                 pathArray.forEach(function(path) {
                     var shape = {};
                     shape.points = path;
-                    var bound = computeBoundingBox.computePath(path);
-                    shape.points = pathAdjust(path, 1, -bound.x, -bound.y);
-                    shape.x = bound.x + 200;
-                    shape.y = bound.y + 200;
-
-                    shape.width = bound.width;
-                    shape.height = bound.height;
+                    shape.points = pathAdjust(path, 1, 1, 100, 400);
 
                     pathPanel.addShape('path', shape);
                 });

@@ -57,6 +57,23 @@ define(
             },
 
             /**
+             * 移动指定位置
+             * 
+             * @return {Object} shape对象
+             */
+            move: function(shape, mx, my) {
+                
+                if(typeof shape.x === 'number') {
+                    shape.x += mx;
+                }
+
+                if(typeof shape.y === 'number') {
+                    shape.y += my;
+                }
+                return shape;
+            },
+
+            /**
              * 获取shape的矩形区域
              * 
              * @param {Object} shape shape数据

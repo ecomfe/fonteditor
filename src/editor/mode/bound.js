@@ -31,7 +31,6 @@ define(
                 if(result) {
                     if (this.currentGroup) {
                         this.currentPoint = lang.clone(result[0]);
-                        this.currentGroup.beginTransform(this.currentPoint);
                     }
                 }
                 else {
@@ -61,6 +60,15 @@ define(
                     }
                 }
 
+            },
+
+            /**
+             * 开始拖动
+             */
+            dragstart: function(e) {
+                if (this.currentGroup && this.currentPoint) {
+                    this.currentGroup.beginTransform(this.currentPoint);
+                }
             },
 
             /**
@@ -109,6 +117,7 @@ define(
             begin: function() {
                 var me = this;
                 var coverLayer = me.render.getLayer('cover');
+
                 // 注册鼠标样式
                 me.render.capture.on('move', me.__moveEvent = function (e) {
                     var shapes = coverLayer.getShapeIn(e);
