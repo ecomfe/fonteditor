@@ -14,6 +14,7 @@ define(
         var boundAdjust = require('render/util/boundAdjust');
         var lang = require('common/lang');
         var computeBoundingBox = require('../../graphics/computeBoundingBox');
+        var getTransformMatrix = require('../util/getTransformMatrix');
 
         /**
          * 获取bound边界
@@ -94,70 +95,10 @@ define(
          */
         Group.prototype.transform = function(point, camera) {
 
-            var bound = this.bound;
-            // x, y, xscale 相对符号, yscale 相对符号
-            var matrix = [
-                0, 
-                0, 
-                1,
-                1
-            ];
-            
-            // 是否需要等比例缩放
-            var ctrlKey = camera.event && camera.event.ctrlKey;
-
-            switch (point.pos) {
-                case 1:
-                    matrix[0] = bound.x + bound.width;
-                    matrix[1] = bound.y + bound.height;
-                    matrix[2] = -(camera.x - matrix[0]) / bound.width;
-                    matrix[3] = -(camera.y - matrix[1]) / bound.height;
-                    break;
-                case 2:
-                    matrix[0] = bound.x;
-                    matrix[1] = bound.y + bound.height;
-                    matrix[2] = (camera.x - matrix[0]) / bound.width;
-                    matrix[3] = -(camera.y - matrix[1]) / bound.height;
-                    break;
-
-                case 3:
-                    matrix[0] = bound.x;
-                    matrix[1] = bound.y;
-                    matrix[2] = (camera.x - matrix[0]) / bound.width;
-                    matrix[3] = (camera.y - matrix[1]) / bound.height;
-                    break;
-
-                case 4:
-                    matrix[0] = bound.x + bound.width;
-                    matrix[1] = bound.y;
-                    matrix[2] = -(camera.x - matrix[0]) / bound.width;
-                    matrix[3] = (camera.y - matrix[1]) / bound.height;
-                    break;
-
-                case 5:
-                    matrix[1] = bound.y + bound.height;
-                    matrix[2] = 1;
-                    matrix[3] = -(camera.y - matrix[1]) / bound.height;
-                    break;
-
-                case 7:
-                    matrix[1] = bound.y;
-                    matrix[3] = (camera.y - matrix[1]) / bound.height;
-                    break;
-
-                case 6:
-                    matrix[0] = bound.x;
-                    matrix[2] = (camera.x - matrix[0]) / bound.width;
-                    break;
-
-                case 8: 
-                    matrix[0] = bound.x + bound.width;
-                    matrix[2] = -(camera.x - matrix[0]) / bound.width;
-                    break;
-            };
+            var matrix = getTransformMatrix(point.pos, this.bound, camera);
 
             // 等比缩放
-            if (camera.event.ctrlKey && [1, 2, 3, 4].indexOf(point.pos) >= 0) {
+            if (camera.event.shiftKey && [1, 2, 3, 4].indexOf(point.pos) >= 0) {
                 var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
                 matrix[2] = matrix[2] >= 0 ? scale : -scale;
                 matrix[3] = matrix[3] >= 0 ? scale : -scale;

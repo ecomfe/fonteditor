@@ -10,7 +10,6 @@
 define(
     function(require) {
 
-        var pathIterator = require('render/util/pathIterator');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('render/util/pathAdjust');
         var lang = require('common/lang');
@@ -85,32 +84,15 @@ define(
                 var shapes = this.render.getLayer('font').shapes;
 
                 shapes.forEach(function(shape) {
-                    pathIterator(shape.points, function(c, i, p0, p1, p2) {
-                        if(c == 'M' || c == 'L') {
-                            controls.push({
-                                type: 'point',
-                                x: p0.x,
-                                y: p0.y,
-                                _point: p0,
-                                _shape: shape.id
-                            });
-                        }
-                        else if (c == 'Q') {
-                            controls.push({
-                                type: 'cpoint',
-                                x: p1.x,
-                                y: p1.y,
-                                _point: p1,
-                                _shape: shape.id
-                            });
-                            controls.push({
-                                type: 'point',
-                                x: p2.x,
-                                y: p2.y,
-                                _point: p2,
-                                _shape: shape.id
-                            });
-                        }
+
+                    shape.points.forEach(function(p) {
+                        controls.push({
+                            type: p.onCurve ? 'point' : 'cpoint',
+                            x: p.x,
+                            y: p.y,
+                            _point: p,
+                            _shape: shape.id
+                        });
                     });
                 });
 
