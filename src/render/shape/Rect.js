@@ -1,5 +1,5 @@
 /**
- * @file Rect.js
+ * @file DashedRect.js
  * @author mengke01
  * @date 
  * @description
@@ -9,6 +9,8 @@
 
 define(
     function(require) {
+
+        var dashedLineTo = require('../util/dashedLineTo');
 
         var proto = {
             
@@ -21,12 +23,7 @@ define(
              * @param {Object} 矩形区域
              */
             getRect: function(shape) {
-                return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: shape.width,
-                    height: shape.height
-                };
+                return shape;
             },
 
             /**
@@ -53,13 +50,27 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                var w = shape.width;
-                var h = shape.height;
-                ctx.moveTo(shape.x, shape.y);
-                ctx.lineTo(shape.x + w, shape.y);
-                ctx.lineTo(shape.x + w, shape.y + h);
-                ctx.lineTo(shape.x, shape.y + h);
-                ctx.lineTo(shape.x, shape.y);
+
+                ctx.translate(0.5, 0.5);
+                var x = Math.round(shape.x);
+                var y = Math.round(shape.y);
+                var w = Math.round(shape.width);
+                var h = Math.round(shape.height);
+
+                if(shape.dashed) {
+                    dashedLineTo(ctx, x, y, x + w, y);
+                    dashedLineTo(ctx, x + w, y, x + w, y + h);
+                    dashedLineTo(ctx, x + w, y + h, x, y + h);
+                    dashedLineTo(ctx, x, y + h, x, y);
+                    
+                }
+                else {
+                    ctx.lineTo(x, y, x + w, y);
+                    ctx.lineTo(x + w, y, x + w, y + h);
+                    ctx.lineTo(x + w, y + h, x, y + h);
+                    ctx.lineTo(x, y + h, x, y);
+                }
+                ctx.translate(-0.5, -0.5);
             }
         };
 

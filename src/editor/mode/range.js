@@ -10,11 +10,29 @@
 define(
     function(require) {
 
-        var ShapeGroup = require('../group/ShapeGroup');
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
+        var isBoundingBoxCross = require('graphics/isBoundingBoxCross');
 
-        var POS_CUSOR = require('./cursor');
+        /**
+         * 多选shape
+         */
+        function selectShapes(bound) {
+            var shapes = this.render.getLayer('font').shapes;
+            var selectedShapes = [];
+
+            shapes.forEach(function(shape) {
+                var sb = computeBoundingBox.computePath(shape.points);
+                // 包含
+                if(3 == isBoundingBoxCross(bound, sb)) {
+                    selectedShapes.push(shape);
+                }
+            });
+
+            return selectedShapes.length ? selectedShapes : false;
+        }
+
 
         var mode = {
 
@@ -24,13 +42,6 @@ define(
              * 按下事件
              */
             down: function(e) {
-
-            },
-
-            /**
-             * 开始拖动
-             */
-            dragstart: function(e) {
                 mode.begin.call(this, e);
             },
 
@@ -46,16 +57,28 @@ define(
                 }
             },
 
+
             /**
-             * 拖动结束事件
+             * 鼠标弹起
              */
-            dragend: function(e) {
+            up: function(e) {
                 if(this.selectionBox) {
-                    this.selectionBox = null;
+
+                    // 对shape进行多选
+                    if(this.selectionBox.width >= 20 && this.selectionBox.height >= 20) {
+                        var shapes;
+                        if(shapes = selectShapes.call(this, this.selectionBox)) {
+                            this.setMode('shapes', shapes);
+                            return;
+                        }
+                    }
+
                     var coverLayer = this.render.getLayer('cover');
                     coverLayer.clearShapes();
                     coverLayer.refresh();
                 }
+                
+                this.selectionBox = null;
                 this.setMode();
             },
 
@@ -65,7 +88,8 @@ define(
             begin: function() {
                 var camera = this.render.camera;
                 this.selectionBox = {
-                    type: 'dashedrect',
+                    type: 'rect',
+                    dashed: true,
                     x: camera.x,
                     y: camera.y
                 };

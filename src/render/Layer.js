@@ -36,6 +36,7 @@ define(
             context.fillStyle = options.fillColor || 'black';
             context.strokeStyle = options.strokeColor || 'black';
             context.strokeWidth = options.strokeWidth || 1;
+            context.lineWidth = options.lineWidth || 1;
             context.font = options.font || "normal 10px arial";
         }
 
@@ -95,6 +96,7 @@ define(
              * @return {Painter} this对象
              */
             refresh: function() {
+
                 var support = this.painter.support;
                 var context = this.context;
                 var options = this.options;

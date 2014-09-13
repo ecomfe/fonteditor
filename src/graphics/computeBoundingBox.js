@@ -100,39 +100,49 @@ define(
          * 计算曲线包围盒
          * 
          * @private
-         * @param {Arrau} path 坐标点集
+         * @param {Array...} path 坐标点集, 支持多个path
          * 
          * @return {Object} x, y, width, height
          */
         function computePathBoundingBox(path) {
 
             var points = [];
+            if (arguments.length === 1) {
+                pathIterator(path, function (c, p0, p1, p2) {
+                    if (c === 'L') {
+                        points.push(p0);
+                        points.push(p1);
+                    }
+                    else if(c === 'Q') {
+                        var bound = computeQuadraticBezierBoundingBox(p0, p1, p2);
 
-            pathIterator(path, function (c, p0, p1, p2) {
-                if (c === 'L') {
-                    points.push(p0);
-                    points.push(p1);
+                        points.push(bound);
+                        points.push({
+                            x: bound.x + bound.width,
+                            y: bound.y + bound.height
+                        });
+                    }
+                });
+            }
+            else {
+                for (var i = 0, l = arguments.length; i < l; i++) {
+                    pathIterator(arguments[i], function (c, p0, p1, p2) {
+                        if (c === 'L') {
+                            points.push(p0);
+                            points.push(p1);
+                        }
+                        else if(c === 'Q') {
+                            var bound = computeQuadraticBezierBoundingBox(p0, p1, p2);
+
+                            points.push(bound);
+                            points.push({
+                                x: bound.x + bound.width,
+                                y: bound.y + bound.height
+                            });
+                        }
+                    });
                 }
-                else if(c === 'Q') {
-                    var bound = computeQuadraticBezierBoundingBox(p0, p1, p2);
-
-                    points.push(bound);
-                    points.push({
-                        x: bound.x,
-                        y: bound.y + bound.height
-                    });
-
-                    points.push({
-                        x: bound.x + bound.width,
-                        y: bound.y
-                    });
-
-                    points.push({
-                        x: bound.x + bound.width,
-                        y: bound.y + bound.height
-                    });
-                }
-            });
+            }
 
             return computeBoundingBox(points);
         }
@@ -142,12 +152,21 @@ define(
          * 计算曲线点边界
          * 
          * @private
-         * @param {Array} path对象
+         * @param {Array...} path对象, 支持多个path
          * 
          * @return {Object} x, y, width, height
          */
         function computePathBox(path) {
-            return computeBoundingBox(path);
+            var points = [];
+            if (arguments.length === 1) {
+                points = path;
+            }
+            else {
+                for (var i = 0, l = arguments.length; i < l; i++) {
+                    points = points.concat(arguments[i]);
+                }
+            }
+            return computeBoundingBox(points);
         }
 
         return {

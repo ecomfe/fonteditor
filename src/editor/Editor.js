@@ -22,6 +22,12 @@ define(
             var me = this;
             var render = this.render;
 
+            function setCamera(e) {
+                render.camera.x = e.x;
+                render.camera.y = e.y;
+                render.camera.event = e;
+            }
+
             render.capture.on('wheel', function(e) {
 
                 if (me.contextMenu.visible()) {
@@ -52,9 +58,8 @@ define(
 
                 render.camera.startx = e.x;
                 render.camera.starty = e.y;
-                render.camera.x = e.x;
-                render.camera.y = e.y;
-                render.camera.event = e;
+                setCamera(e);
+
                 me.mode.down && me.mode.down.call(me, e);
             });
 
@@ -63,11 +68,7 @@ define(
                 if (me.contextMenu.visible()) {
                     return;
                 }
-
-                render.camera.x = e.x;
-                render.camera.y = e.y;
-                render.camera.event = e;
-
+                setCamera(e);
                 me.mode.dragstart && me.mode.dragstart.call(me, e);
             });
 
@@ -79,9 +80,7 @@ define(
 
                 render.camera.mx = e.x - render.camera.x;
                 render.camera.my = e.y - render.camera.y;
-                render.camera.x = e.x;
-                render.camera.y = e.y;
-                render.camera.event = e;
+                setCamera(e);
 
                 me.mode.drag && me.mode.drag.call(me, e);
             });
@@ -91,12 +90,20 @@ define(
                 if (me.contextMenu.visible()) {
                     return;
                 }
-
-                render.camera.x = e.x;
-                render.camera.y = e.y;
-                render.camera.event = e;
+                setCamera(e);
 
                 me.mode.dragend && me.mode.dragend.call(me, e);
+            });
+
+            render.capture.on('up', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
+                setCamera(e);
+
+                me.mode.up && me.mode.up.call(me, e);
             });
 
             render.capture.on('dblclick', function(e) {
@@ -122,7 +129,6 @@ define(
 
             this.render.addLayer('cover', {
                 level: 30,
-                stroke: true,
                 fill: false,
                 strokeColor: 'green',
                 fillColor: 'white',
@@ -130,12 +136,12 @@ define(
 
             this.render.addLayer('font', {
                 level: 20,
+                lineWidth: 2,
                 strokeColor: 'red'
             });
 
             this.render.addLayer('axis', {
                 level: 10,
-                stroke: true,
                 fill: false,
                 strokeColor: '#A6A6FF'
             });
@@ -249,9 +255,10 @@ define(
             if (this.mode) {
                 this.mode.end.call(this);
             }
-
             this.mode = editorMode[modeName] || editorMode['default'];
-            this.mode.begin.call(this);
+
+            var args = Array.prototype.slice.call(arguments, 1);
+            this.mode.begin.apply(this, args);
         };
 
         /**

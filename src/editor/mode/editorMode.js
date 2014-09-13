@@ -13,7 +13,8 @@ define(
             'bound': require('./bound'),
             'point': require('./point'),
             'range': require('./range'),
-            'default': require('./bound')
+            'default': require('./bound'),
+            'shapes': require('./shapes')
         };
     }
 );

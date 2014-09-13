@@ -106,7 +106,7 @@ define(
         }
 
 
-        var pointMode = {
+        var mode = {
             name: 'point',
 
             /**
@@ -228,6 +228,6 @@ define(
             }
         };
 
-        return pointMode;
+        return mode;
     }
 );

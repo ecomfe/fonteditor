@@ -48,8 +48,10 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
+                ctx.translate(0.5, 0.5);
                 ctx.moveTo(shape.x + shape.r, shape.y);
                 ctx.arc(shape.x, shape.y, shape.r, 0, Math.PI * 2, true);
+                ctx.translate(-0.5, -0.5);
             }
         };
 

@@ -10,13 +10,12 @@
 define(
     function(require) {
 
-        var ShapeGroup = require('../group/ShapeGroup');
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
 
         var POS_CUSOR = require('./cursor');
 
-        var boundMode = {
+        var mode = {
 
             name: 'bound',
 
@@ -26,112 +25,35 @@ define(
             down: function(e) {
                 var render = this.render;
                 var camera = this.render.camera;
-                var result = render.getLayer('cover').getShapeIn(e);
 
+                var result = render.getLayer('font').getShapeIn(e);
                 if(result) {
-                    if (this.currentGroup) {
-                        this.currentPoint = lang.clone(result[0]);
+                    var shape = result[0];
+                    if (result.length > 1) {
+                        shape = selectShape(result);
                     }
+                    this.setMode('shapes', [shape]);
                 }
+                // 框选模式
                 else {
-
-                    if (this.currentGroup) {
-                        this.currentGroup.dispose();
-                        this.currentGroup = null;
-                    }
-
-                    result = render.getLayer('font').getShapeIn(e);
-
-                    if(result) {
-                        var shape = result[0];
-                        if (result.length > 1) {
-                            shape = selectShape(result);
-                        }
-                        this.currentGroup = new ShapeGroup(shape, render);
-                    }
-                    // 框选模式
-                    else {
-                        this.setMode('range');
-                    }
+                    this.setMode('range');
                 }
 
-            },
-
-            /**
-             * 开始拖动
-             */
-            dragstart: function(e) {
-                if (this.currentGroup && this.currentPoint) {
-                    this.currentGroup.beginTransform(this.currentPoint);
-                }
-            },
-
-            /**
-             * 拖动事件
-             */
-            drag: function(e) {
-                var render = this.render;
-                var camera = render.camera;
-                if(this.currentGroup) {
-                    if (this.currentPoint) {
-                        this.currentGroup.transform(this.currentPoint, camera);
-                    }
-                    else {
-                        this.currentGroup.move(camera.mx, camera.my);
-                    }
-                }
-            },
-
-            /**
-             * 拖动结束事件
-             */
-            dragend: function(e) {
-                if (this.currentGroup) {
-                    if (this.currentPoint) {
-                        this.currentGroup.finishTransform(this.currentPoint);
-                        this.currentPoint = null;
-                    }
-                }
             },
 
             /**
              * 开始模式
              */
             begin: function() {
-                var me = this;
-                var coverLayer = me.render.getLayer('cover');
-
-                // 注册鼠标样式
-                me.render.capture.on('move', me.__moveEvent = function (e) {
-                    var shapes = coverLayer.getShapeIn(e);
-                    if(shapes) {
-                        me.render.setCursor(POS_CUSOR[shapes[0].pos] || 'default');
-                    }
-                    else {
-                        me.render.setCursor('default');
-                    }
-                });
             },
 
             /**
              * 结束模式
              */
             end: function() {
-
-                if (this.currentGroup) {
-                    if (this.currentPoint) {
-                        this.currentGroup.finishTransform(this.currentPoint);
-                        this.currentPoint = null;
-                    }
-                    this.currentGroup.dispose();
-                    this.currentGroup = null;
-                }
-
-                this.render.capture.un('move', this.__moveEvent);
-                this.render.setCursor('default');
             }
         };
 
-        return boundMode;
+        return mode;
     }
 );

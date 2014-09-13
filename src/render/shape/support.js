@@ -13,7 +13,6 @@ define(
             circle: require('./Circle'),
             cpoint: require('./CirclePoint'),
             rect: require('./Rect'),
-            dashedrect: require('./DashedRect'),
             point: require('./Point'),
             font: require('./Font'),
             path: require('./Path'),
