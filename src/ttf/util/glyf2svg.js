@@ -58,7 +58,7 @@ define(
 
                         // 处理起始点
                         if (currentPts === startPts) {
-                            if (currentPoint.isOnCurve) {
+                            if (currentPoint.onCurve) {
                                 path += "M" 
                                     + currentPoint.x 
                                     + "," 
@@ -89,17 +89,17 @@ define(
                             // 直线
                             if (
                                 currentPoint != undefined
-                                && currentPoint.isOnCurve
+                                && currentPoint.onCurve
                                 && prevPoint != undefined
-                                && prevPoint.isOnCurve
+                                && prevPoint.onCurve
                             ) {
                                 path += " L";
                             }
                             // 当前点不在曲线上
                             else if (
-                                !currentPoint.isOnCurve
+                                !currentPoint.onCurve
                                 && prevPoint != undefined
-                                && !prevPoint.isOnCurve
+                                && !prevPoint.onCurve
                             ) {
 
                                 var midPoint = {
@@ -112,7 +112,7 @@ define(
                                     + " ";
                             } 
                             // 当前坐标不在曲线上
-                            else if (!currentPoint.isOnCurve) {
+                            else if (!currentPoint.onCurve) {
                                 path += " Q";
                             }
 
@@ -124,12 +124,12 @@ define(
 
                     // 当前点不在曲线上
                     if (
-                        !currentPoint.isOnCurve
+                        !currentPoint.onCurve
                         && coordinates[startPts] != undefined
                     ) {
 
                         // 轮廓起始点在曲线上
-                      if (coordinates[startPts].isOnCurve) {
+                      if (coordinates[startPts].onCurve) {
                             pathArray.push(
                                 coordinates[startPts].x 
                                 + ","

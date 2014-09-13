@@ -32,7 +32,7 @@ define(
                 coordinates.push({
                     x: x + scale * (p.x),
                     y: y + scale * (middleYx2 - p.y),
-                    isOnCurve: p.isOnCurve
+                    onCurve: p.onCurve
                 });
             });
 

@@ -77,9 +77,11 @@ define(
                 val.xCoordinates[i] = prevX;
                 val.coordinates[i] = {
                     x : prevX,
-                    y : 0,
-                    isOnCurve : Boolean(flag & glyFlag.ONCURVE)
+                    y : 0
                 };
+                if (flag & glyFlag.ONCURVE) {
+                    val.coordinates[i].onCurve = true;
+                }
             }
 
             // yCoordinates

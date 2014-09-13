@@ -60,7 +60,7 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
 
                         // 处理起始点
                         if (currentPts === startPts) {
-                            if (currentPoint.isOnCurve) {
+                            if (currentPoint.onCurve) {
                                 commandQueue.push({
                                     c: 'M',
                                     p: {
@@ -96,9 +96,9 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
                             // 直线
                             if (
                                 currentPoint
-                                && currentPoint.isOnCurve
+                                && currentPoint.onCurve
                                 && prevPoint
-                                && prevPoint.isOnCurve
+                                && prevPoint.onCurve
                             ) {
                                 commandQueue.push({
                                     c: 'L',
@@ -111,9 +111,9 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
                             // 当前在曲线上，并且上一个不在曲线上
                             // 则当前为bezier终点
                             else if (
-                                currentPoint.isOnCurve
+                                currentPoint.onCurve
                                 && prevPoint
-                                && !prevPoint.isOnCurve
+                                && !prevPoint.onCurve
                             ) {
                                 if(curBezier) {
                                     curBezier.p = {
@@ -126,9 +126,9 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
                             // 当前点不在曲线上，并且上一个点不在曲线上
                             // 贝塞尔曲线的连续情况，需要求中间点为终点和起点
                             else if (
-                                !currentPoint.isOnCurve
+                                !currentPoint.onCurve
                                 && prevPoint
-                                && !prevPoint.isOnCurve
+                                && !prevPoint.onCurve
                             ) {
 
                                 var midPoint = {
@@ -150,7 +150,7 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
 
                             } 
                             // 当前坐标不在曲线上
-                            else if (!currentPoint.isOnCurve) {
+                            else if (!currentPoint.onCurve) {
                                 commandQueue.push(curBezier = {
                                     c: 'Q',
                                     p1: {
@@ -165,12 +165,12 @@ var glyfAdjust = require('ttf/util/glyfAdjust');
 
                     // 最后一个点不在曲线上
                     if (
-                        !currentPoint.isOnCurve
+                        !currentPoint.onCurve
                         && coordinates[startPts]
                     ) {
 
                         // 轮廓起始点在曲线上，则起始点为bezier曲线终点
-                      if (coordinates[startPts].isOnCurve) {
+                      if (coordinates[startPts].onCurve) {
                             if(curBezier) {
                                 curBezier.p = {
                                     x: coordinates[startPts].x,

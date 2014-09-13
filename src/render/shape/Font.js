@@ -35,7 +35,7 @@ define(
                     coordinates.push({
                         x: p.x * ratio,
                         y: p.y * ratio,
-                        isOnCurve: p.isOnCurve
+                        onCurve: p.onCurve
                     });
                 });
 
