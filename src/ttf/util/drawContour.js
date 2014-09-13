@@ -10,7 +10,7 @@
 define(
     function(require) {
         
-        var pathIterator = require('graphics/pathIterator');
+        //var pathIterator = require('graphics/pathIterator');
 
         /**
          * ctx绘制轮廓

@@ -13,7 +13,6 @@ define(
         var shape_baidu = require('./shape-baidu');
         var shape_bdjk = require('./shape-bdjk');
         var glyfAdjust = require('ttf/util/glyfAdjust');
-        var glyf2path = require('ttf/util/glyf2path');
         var lang = require('common/lang');
 
         var currentRender;

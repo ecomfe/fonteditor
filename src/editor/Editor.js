@@ -12,7 +12,6 @@ define(
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('render/util/pathAdjust');
-        var glyf2path = require('ttf/util/glyf2path');
         var editorMode = require('./mode/editorMode');
 
         /**
