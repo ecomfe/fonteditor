@@ -51,12 +51,7 @@ define(
                     }
                     // 框选模式
                     else {
-                        this.selectionBox = {
-                            type: 'dashedrect',
-                            x: camera.x,
-                            y: camera.y
-                        };
-                        render.getLayer('cover').addShape(this.selectionBox);
+                        this.setMode('range');
                     }
                 }
 
@@ -85,12 +80,6 @@ define(
                         this.currentGroup.move(camera.mx, camera.my);
                     }
                 }
-                // 框选模式
-                else {
-                    this.selectionBox.width = camera.x - this.selectionBox.x;
-                    this.selectionBox.height = camera.y - this.selectionBox.y;
-                    render.getLayer('cover').refresh();
-                }
             },
 
             /**
@@ -102,12 +91,6 @@ define(
                         this.currentGroup.finishTransform(this.currentPoint);
                         this.currentPoint = null;
                     }
-                }
-                else if(this.selectionBox) {
-                    this.selectionBox = null;
-                    var coverLayer = this.render.getLayer('cover');
-                    coverLayer.clearShapes();
-                    coverLayer.refresh();
                 }
             },
 

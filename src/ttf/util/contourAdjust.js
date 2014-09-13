@@ -30,7 +30,7 @@ define(
                 p.x = scaleX * (p.x + x);
                 p.y = scaleY * (p.y + y);
             });
-
+            
             return contour;
         }
 

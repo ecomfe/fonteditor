@@ -130,11 +130,10 @@ define(
             this.isDown = true;
 
             // 左键
-            if (1 == e.which) {
-                this.fire('down', event);
-            }
-            // 这里把中键和右键处理成同一个
-            else {
+            
+            this.fire('down', event);
+
+            if (3 == e.which) {
                 this.fire('rightdown', event);
             }
         }
@@ -223,8 +222,13 @@ define(
 
             var event = getEvent(e);
 
-            
+            // 左键
+
             this.fire('up', event);
+
+            if (3 == e.which) {
+                this.fire('rightup', event);
+            }
 
             if (this.isDown && this.isDragging && false !== this.events.drag) {
                 event.deltaX = event.x - this.startX;
@@ -270,6 +274,7 @@ define(
          * @param {Object} e 事件参数
          */
         function mouseover(e) {
+            prevent(e);
             if(false === this.events.mouseover) {
                 return;
             }
@@ -282,13 +287,12 @@ define(
          * @param {Object} e 事件参数
          */
         function mouseout(e) {
+            prevent(e);
             if(false === this.events.mouseout) {
                 return;
             }
             this.fire('out');
         }
-
-
 
         /**
          * 鼠标动作捕获器

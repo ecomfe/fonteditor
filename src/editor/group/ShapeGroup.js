@@ -111,6 +111,14 @@ define(
             pathAdjust(shape.points, matrix[2], matrix[3], -matrix[0], -matrix[1]);
             pathAdjust(shape.points, 1, 1, matrix[0], matrix[1]);
 
+            if (matrix[2] < 0 && !matrix[3] < 0) {
+                shape.points = shape.points.reverse();
+            }
+
+            if (matrix[3] < 0 && !matrix[2] < 0) {
+                shape.points = shape.points.reverse();
+            }
+
             lang.extend(this.shape, shape);
             this.render.getLayer('font').refresh();
 

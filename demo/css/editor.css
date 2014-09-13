@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  color: #03C;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.hide {
+  display: none;
+}
+body,
+html {
+  height: 100%;
+}
+#render-view {
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  -webkit-text-size-adjust: none;
+}
+#render-view .editor-contextmenu {
+  width: 120px;
+  border: 1px solid #999;
+  background: #FEFEFE;
+  line-height: 24px;
+  padding: 0 4px;
+  box-shadow: 1px 1px 1px #CCC;
+}
+#render-view .editor-contextmenu div {
+  padding-left: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #CCC;
+}
+#render-view .editor-contextmenu div:hover {
+  background: #EEE;
+}
+#render-view .editor-contextmenu div:last-child {
+  border-bottom: none;
+}

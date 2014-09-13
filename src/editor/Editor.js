@@ -13,6 +13,7 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('render/util/pathAdjust');
         var editorMode = require('./mode/editorMode');
+        var ContextMenu = require('./menu/ContextMenu');
 
         /**
          * 初始化
@@ -22,6 +23,10 @@ define(
             var render = this.render;
 
             render.capture.on('wheel', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
 
                 var defaultRatio = render.options.defaultRatio || 1.2;
                 var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
@@ -40,16 +45,25 @@ define(
             });
 
             render.capture.on('down', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
                 render.camera.startx = e.x;
                 render.camera.starty = e.y;
                 render.camera.x = e.x;
                 render.camera.y = e.y;
                 render.camera.event = e;
-
                 me.mode.down && me.mode.down.call(me, e);
             });
 
             render.capture.on('dragstart', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
                 render.camera.x = e.x;
                 render.camera.y = e.y;
                 render.camera.event = e;
@@ -58,6 +72,11 @@ define(
             });
 
             render.capture.on('drag', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
                 render.camera.mx = e.x - render.camera.x;
                 render.camera.my = e.y - render.camera.y;
                 render.camera.x = e.x;
@@ -68,6 +87,11 @@ define(
             });
 
             render.capture.on('dragend', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
                 render.camera.x = e.x;
                 render.camera.y = e.y;
                 render.camera.event = e;
@@ -76,15 +100,20 @@ define(
             });
 
             render.capture.on('dblclick', function(e) {
-                me.mode.end.call(me, e);
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
                 if(me.mode === editorMode.bound) {
-                    me.mode = editorMode.point;
-                    
+                    me.setMode('point');
                 }
                 else if(me.mode === editorMode.point){
-                    me.mode = editorMode.bound;
+                    me.setMode('bound');
                 }
-                me.mode.begin.call(me, e);
+                else {
+                    me.setMode('point');
+                }
             });
 
         }
@@ -134,7 +163,7 @@ define(
          * @param {Object} options 参数
          * @constructor
          */
-        function Editor(options) {
+        function Editor(main, options) {
             this.options = lang.extend({
                 unitsPerEm: 512,
                 // 字体测量规格
@@ -143,8 +172,11 @@ define(
                     WinDecent: -33,
                     'x-Height': 256,
                     'CapHeight': 358
-                }
+                },
+                contextMenu: {}
             }, options);
+
+            this.contextMenu = new ContextMenu(main, this.options.contextMenu);
         }
 
         /**
@@ -201,14 +233,25 @@ define(
             
             this.render.refresh();
 
+            this.setMode();
+
+            return this;
+        };
+
+        /**
+         * 切换编辑模式
+         * 
+         * @param {string} modeName 模式名称
+         * @return {Editor} 本对象
+         */
+        Editor.prototype.setMode = function(modeName) {
+
             if (this.mode) {
                 this.mode.end.call(this);
             }
 
-            this.mode = editorMode.bound;
+            this.mode = editorMode[modeName] || editorMode['default'];
             this.mode.begin.call(this);
-
-            return this;
         };
 
         /**
@@ -223,8 +266,9 @@ define(
          * 注销
          */
         Editor.prototype.dispose = function() {
+            this.contextMenu.dispose();
             this.render && this.render.dispose();
-            this.options = this.render = null;
+            this.options = this.contextMenu = this.render = null;
         };
 
         return Editor;

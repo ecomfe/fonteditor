@@ -22,8 +22,13 @@ define(
          * @return {Render} render对象
          */
         exports.create = function(main, options) {
+            
+            if(!main) {
+                throw 'need main element';
+            }
+
             options = options || {};
-            var editor = new Editor(options);
+            var editor = new Editor(main, options);
             var opt = options.renderOptions || {};
             opt.controller = editor;
             render.create(main, opt);
