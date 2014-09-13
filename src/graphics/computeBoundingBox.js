@@ -12,6 +12,9 @@
 
 define(
     function(require) {
+
+        var pathIterator = require('./pathIterator');
+
         /**
          * 计算包围盒
          */
@@ -97,41 +100,40 @@ define(
          * 计算曲线包围盒
          * 
          * @private
-         * @param {path} path对象
+         * @param {Arrau} path 坐标点集
          * 
-         * @return {Object} x,y,width,height
+         * @return {Object} x, y, width, height
          */
         function computePathBoundingBox(path) {
-            var l = path.length;
-            var i = -1;
+
             var points = [];
-            while (++i < l) {
-                var point = path[i];
-                switch (point.c) {
-                    case 'M':
-                    case 'L':
-                    case 'Z':
-                        points.push(point.p);
-                        break;
-                    case 'Q':
-                        var p0 = path[i - 1].p;
-                        var bound = computeQuadraticBezierBoundingBox(p0, point.p1, point.p);
-                        points.push(bound);
-                        points.push({
-                            x: bound.x,
-                            y: bound.y + bound.height
-                        });
-                        points.push({
-                            x: bound.x + bound.width,
-                            y: bound.y
-                        });
-                        points.push({
-                            x: bound.x + bound.width,
-                            y: bound.y + bound.height
-                        });
-                        break;
+
+            pathIterator(path, function (c, p0, p1, p2) {
+                if (c === 'L') {
+                    points.push(p0);
+                    points.push(p1);
                 }
-            }
+                else if(c === 'Q') {
+                    var bound = computeQuadraticBezierBoundingBox(p0, p1, p2);
+
+                    points.push(bound);
+                    points.push({
+                        x: bound.x,
+                        y: bound.y + bound.height
+                    });
+
+                    points.push({
+                        x: bound.x + bound.width,
+                        y: bound.y
+                    });
+
+                    points.push({
+                        x: bound.x + bound.width,
+                        y: bound.y + bound.height
+                    });
+                }
+            });
+
             return computeBoundingBox(points);
         }
 
@@ -140,29 +142,12 @@ define(
          * 计算曲线点边界
          * 
          * @private
-         * @param {path} path对象
+         * @param {Array} path对象
          * 
-         * @return {Object} x,y,width,height
+         * @return {Object} x, y, width, height
          */
         function computePathBox(path) {
-            var l = path.length;
-            var i = -1;
-            var points = [];
-            while (++i < l) {
-                var point = path[i];
-                switch (point.c) {
-                    case 'M':
-                    case 'L':
-                    case 'Z':
-                        points.push(point.p);
-                        break;
-                    case 'Q':
-                        points.push(point.p1);
-                        points.push(point.p);
-                        break;
-                }
-            }
-            return computeBoundingBox(points);
+            return computeBoundingBox(path);
         }
 
         return {

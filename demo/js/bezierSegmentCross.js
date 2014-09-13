@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var isBezierSegmentCross = require('graphics/isBezierSegmentCross');
+        var isBezierSegmentCross = require('graphics/isBezierRayCross');
 
         var entry = {
 
@@ -22,10 +22,10 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":231,"y":609},{"x":231,"y":558},{"x":300,"y":516},{"x":299,"y":591},{"x":299,"y":600}];
+                var points = [{"x":384,"y":507,"onCurve":true},{"x":384,"y":400},{"x":421,"y":393,"onCurve":true},{"x":459,"y":486}] ;
 
-                $('[data-index]').each(function(index, item) {
-                    $(item).css({
+                $(points).each(function(index, item) {
+                    $('[data-index="'+index+'"]').css({
                         left: points[index].x,
                         top: points[index].y
                     })
@@ -68,7 +68,14 @@ define(
                     ctx.moveTo(points[0].x, points[0].y);  
                     ctx.quadraticCurveTo(points[1].x, points[1].y, points[2].x, points[2].y);
                     ctx.moveTo(points[3].x, points[3].y);
-                    ctx.lineTo(points[4].x, points[4].y);
+
+                    if(points[4]) {
+                        ctx.lineTo(points[4].x, points[4].y);
+                    }
+                    else {
+                        ctx.lineTo(1000, points[3].y);
+                    }
+
                     ctx.lineWidth = 1;
                     ctx.stroke();
                     //console.time('bezier');

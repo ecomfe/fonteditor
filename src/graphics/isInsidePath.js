@@ -11,6 +11,7 @@
 
 define(
     function(require) {
+        var pathIterator = require('./pathIterator');
         var isBezierRayCross = require('./isBezierRayCross');
         var isSegmentRayCross = require('./isSegmentRayCross');
 
@@ -23,75 +24,64 @@ define(
          * @return {boolean} 是否
          */
         function isInsidePath(path, p) {
-            var i = -1;
-            var l = path.length;
-            var prev, cur, point;
-            var zCount = 0; 
 
-            while (++i < l) {
-                point = path[i];
-                switch (point.c) {
-                    case 'M':
-                        prev = point.p;
-                        break;
+            var zCount = 0, joint; 
 
-                    case 'L':
-                        var joint = null;
-                        if(joint = isSegmentRayCross(prev, point.p, p)) {
+            pathIterator(path, function (c, p0, p1, p2) {
+                if (c === 'L') {
 
-                            // 在直线上
-                            if(joint[0].x == p.x) {
-                                return true;
-                            }
-
-                            if(point.p.y > prev.y) {
-                                zCount++;
-                            }
-                            else {
-                                zCount--;
-                            }
+                    if(joint = isSegmentRayCross(p0, p1, p)) {
+                        // 在直线上
+                        if(joint[0].x == p.x) {
+                            zCount = 0;
+                            return false;
                         }
-                        prev = point.p;
 
-                        break;
-
-                    case 'Q':
-                        var joint = p1 = p2 = null;
-                        
-                        if(joint = isBezierRayCross(prev, point.p1, point.p, p)) {
-                            
-                            // 在曲线上
-                            if(joint[0].x == p.x || joint[1] && joint[1].x == p.x) {
-                                return true;
-                            }
-
-                            if (joint.length == 2) {
-                                break;
-                            }
-                            
-                            joint = joint[0];
-
-                            if(joint.y > prev.y && joint.y < point.p1.y) {
-                                p1 = prev;
-                                p2 =  point.p1;
-                            }
-                            else {
-                                p1 = point.p1;
-                                p2 =  point.p;
-                            }
-
-                            if(p2.y > p1.y) {
-                                zCount++;
-                            }
-                            else {
-                                zCount--;
-                            }
-
+                        if(p1.y > p0.y) {
+                            zCount++;
                         }
-                        prev = point.p;
-                        break;
+                        else {
+                            zCount--;
+                        }
+                    }
                 }
-            }
+                else if(c === 'Q') {
+
+                    var ps = pe = null; // 确定贝塞尔曲线的方向点
+
+                    if(joint = isBezierRayCross(p0, p1, p2, p)) {
+
+                        // 在曲线上
+                        if(joint[0].x == p.x || joint[1] && joint[1].x == p.x) {
+                            zCount = 0;
+                            return false;
+                        }
+
+                        if (joint.length == 2) {
+                            return;
+                        }
+                        
+                        joint = joint[0];
+
+                        if(joint.y > p0.y && joint.y < p1.y) {
+                            ps = p0;
+                            pe =  p1;
+                        }
+                        else {
+                            ps = p1;
+                            pe =  p2;
+                        }
+
+                        if(pe.y > ps.y) {
+                            zCount++;
+                        }
+                        else {
+                            zCount--;
+                        }
+
+                    }
+                }
+            });
 
             return !!zCount;
         }

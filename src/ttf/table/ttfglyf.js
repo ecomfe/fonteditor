@@ -42,6 +42,8 @@ define(
                 }
             }
 
+            // 坐标集合
+            var coordinates = [];
             // xCoordinates
             val.xCoorinateOffset = reader.offset;
             var prevX = 0;
@@ -75,12 +77,12 @@ define(
 
                 prevX += x;
                 val.xCoordinates[i] = prevX;
-                val.coordinates[i] = {
+                coordinates[i] = {
                     x : prevX,
                     y : 0
                 };
                 if (flag & glyFlag.ONCURVE) {
-                    val.coordinates[i].onCurve = true;
+                    coordinates[i].onCurve = true;
                 }
             }
 
@@ -106,9 +108,20 @@ define(
 
                 prevY += y;
                 val.yCoordinates[i] = prevY;
-                if (val.coordinates[i]) {
-                    val.coordinates[i].y = prevY;
+                if (coordinates[i]) {
+                    coordinates[i].y = prevY;
                 }
+            }
+
+            // 计算轮廓集合
+            if (coordinates.length) {
+                var endPtsOfContours = val.endPtsOfContours;
+                var contours = [];
+                contours.push(coordinates.slice(0, endPtsOfContours[0] + 1));
+                for (var i = 1, l = endPtsOfContours.length; i < l; i++) {
+                    contours.push(coordinates.slice(endPtsOfContours[i - 1] + 1, endPtsOfContours[i] + 1));
+                }
+                val.contours = contours;
             }
         }
 
@@ -176,8 +189,7 @@ define(
             var val = {};
             val.flags = [];
             val.endPtsOfContours = [];
-            val.contours = 0;
-            val.coordinates = [];
+            val.contours = [];
             val.xCoorinateOffset = 0; // x偏移
             val.xCoordinates = []; //x 坐标集合
             val.yCoorinateOffset = 0; // y偏移

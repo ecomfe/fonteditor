@@ -14,6 +14,7 @@ define(
         var isBezierSegmentCross = require('./isBezierSegmentCross');
         var isInsidePath = require('./isInsidePath');
         var isBoundingBoxCross = require('./isBoundingBoxCross');
+        var pathIterator = require('./pathIterator');
 
         /**
          * 求两个路径的交点集合 
@@ -21,51 +22,31 @@ define(
          */
         function getJoint(path, command, p0, p1, p2) {
 
-            var i = -1;
-            var l = path.length;
-            var prev, point;
             var joint = [];
             var result;
-
-            while (++i < l) {
-
-                result = false;
-                point = path[i];
-
-                switch (point.c) {
-                    case 'L':
-                        if (command == 'L') {
-                            result = isSegmentCross(p0, p1, prev, point.p);
-                        }
-                        else if (command == 'Q') {
-                            result = isBezierSegmentCross(p0, p1, p2, prev, point.p);
-                        }
-                        
-                        // if(result) {
-                        //     console.log(p0, p1, p2, prev, point.p);
-                        // }
-                        break;
-                    case 'Q':
-                        if (command == 'L') {
-                            result = isBezierSegmentCross(
-                                    prev, point.p1, point.p, p0, p1);
-                        }
-                        else if (command == 'Q') {
-                            result = isBezierCross(prev, point.p1, point.p, p0, p1, p2);
-                        }
-
-                        // if(result) {
-                        //     console.log(prev, point.p1, point.p, p0, p1, p2);
-                        // }
-                        break;
+            pathIterator(path, function (c, t0, t1, t2) {
+                if (c === 'L') {
+                    if (command == 'L') {
+                        result = isSegmentCross(p0, p1, t0, t1);
+                    }
+                    else if (command == 'Q') {
+                        result = isBezierSegmentCross(p0, p1, p2, t0, t1, t2);
+                    }
                 }
-                
+                else if(c === 'Q') {
+                    if (command == 'L') {
+                        result = isBezierSegmentCross(
+                                t0, t1, t2, p0, p1);
+                    }
+                    else if (command == 'Q') {
+                        result = isBezierCross(t0, t1, t2, p0, p1, p2);
+                    }
+                }
+
                 if (result) {
                     joint = joint.concat(result);
                 }
-
-                prev = point.p;
-            }
+            });
 
             return joint.length ? joint : false;
         }
@@ -76,30 +57,20 @@ define(
          */
         function getPathJoint(path0, path1) {
 
-            var i = -1;
-            var l = path0.length;
-            var prev, point;
             var joint = [];
             var result;
-
-            while (++i < l) {
-                result = false;
-                point = path0[i];
-                switch (point.c) {
-                    case 'L':
-                        result = getJoint(path1, 'L', prev, point.p);
-                        break;
-                    case 'Q':
-                        result = getJoint(path1, 'Q', prev, point.p1, point.p);
-                        break;
+            pathIterator(path0, function (c, p0, p1, p2) {
+                if (c === 'L') {
+                    result = getJoint(path1, 'L', p0, p1);
                 }
-                
+                else if(c === 'Q') {
+                    result = getJoint(path1, 'Q', p0, p1, p2);
+                }
+
                 if (result) {
                     joint = joint.concat(result);
                 }
-
-                prev = point.p;
-            }
+            });
 
             return joint.length ? joint : false;
         }
@@ -112,17 +83,18 @@ define(
         function isPathCross(path0, path1, bound0, bound1) {
             bound0 = bound0 || computeBoundingBox.computePath(path0);
             bound1 = bound1 || computeBoundingBox.computePath(path1);
+
             var boundCross = isBoundingBoxCross(bound0, bound1);
 
             if (boundCross) {
                 var result = getPathJoint(path0, path1);
                 if (!result) {
                     // 0 包含 1
-                    if (isInsidePath(path1, path0[0].p)) {
+                    if (isInsidePath(path1, path0[0])) {
                         return 2;
                     }
                     // 1 包含 0
-                    else if(isInsidePath(path0, path1[0].p)) {
+                    else if(isInsidePath(path0, path1[0])) {
                         return 3;
                     }
                 }

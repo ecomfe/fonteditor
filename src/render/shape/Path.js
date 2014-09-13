@@ -12,6 +12,7 @@ define(
         var ShapeConstructor = require('./Shape');
         var isInsidePath = require('../../graphics/isInsidePath');
         var pathAdjust = require('../util/pathAdjust');
+        var drawContour = require('ttf/util/drawContour');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var proto = {
             
@@ -83,31 +84,7 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                var x = shape.x || 0;
-                var y = shape.y || 0;
-
-                var i = -1;
-                var points = shape.points;
-                var l = points.length;
-                var point;
-                while (++i < l) {
-                    point = points[i];
-                    switch (point.c) {
-                        case 'M':
-                            ctx.moveTo(point.p.x, point.p.y);
-                            break;
-                        case 'L':
-                            ctx.lineTo(point.p.x, point.p.y);
-                            break;
-                        case 'Q':
-                            ctx.quadraticCurveTo(point.p1.x, point.p1.y, point.p.x, point.p.y);
-                            break;
-                        case 'Z':
-                            //ctx.lineTo(point.p.x, point.p.y);
-                            break;
-                    }
-                }
-
+                drawContour(shape.points, ctx);
             }
         };
 

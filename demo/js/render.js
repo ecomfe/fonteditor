@@ -68,27 +68,14 @@ define(
                 var font = currentRender.addLayer('font', {
                     level: 10
                 });
-                var scale = 200 / 512;
-                shape_bdjk = glyfAdjust(shape_bdjk, scale, -shape_bdjk.xMin * scale, -shape_bdjk.yMin * scale);
-                shape_bdjk.x = 444;
-                shape_bdjk.y = 55;
-                font.addShape('font', shape_bdjk);
 
-                var pathPanel = currentRender.addLayer('path', {
-                    level: 11,
-                    stroke: false
-                });
+                var contourAdjust = require('ttf/util/contourAdjust');
 
-                var pathArray = glyf2path(shape_baidu);
-                var computeBoundingBox = require('graphics/computeBoundingBox');
-                var pathAdjust = require('render/util/pathAdjust');
-
-                pathArray.forEach(function(path) {
+                shape_baidu.contours.forEach(function(contour) {
                     var shape = {};
-                    shape.points = path;
-                    shape.points = pathAdjust(path, 1, 1, 100, 400);
-
-                    pathPanel.addShape('path', shape);
+                    shape.points = contour;
+                    shape.points = contourAdjust(contour, 1, 1, 100, 400);
+                    font.addShape('path', shape);
                 });
                 
                 currentRender.refresh();

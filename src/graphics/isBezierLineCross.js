@@ -38,6 +38,7 @@ define(
                     p0.y - s0.y
                 );
             }
+            // 垂直y
             else if (s0.x == s1.x) {
                 result = bezierQ2Equation(
                     p0.x  + p2.x - 2 * p1.x,

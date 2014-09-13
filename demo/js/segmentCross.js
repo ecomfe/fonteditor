@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var isSegmentCross = require('graphics/isSegmentCross');
+        var isSegmentCross = require('graphics/isSegmentRayCross');
 
         var entry = {
 
@@ -22,9 +22,12 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":50,"y":200},{"x":97,"y":98},{"x":58,"y":94},{"x":105,"y":201}];
+                var points = [{"x":398,"y":31,"onCurve":true},{"x":474,"y":201,"onCurve":true},{"x":457,"y":74}] ;
 
                 $('[data-index]').each(function(index, item) {
+                    if(!points[index]) {
+                        return false;
+                    }
                     $(item).css({
                         left: points[index].x,
                         top: points[index].y
@@ -68,8 +71,13 @@ define(
                     ctx.moveTo(points[0].x, points[0].y);  
                     ctx.lineTo(points[1].x, points[1].y);
                     
-                    ctx.moveTo(points[2].x, points[2].y);  
-                    ctx.lineTo(points[3].x, points[3].y);
+                    ctx.moveTo(points[2].x, points[2].y);
+                    if (points[3]) {
+                        ctx.lineTo(points[3].x, points[3].y);
+                    }
+                    else {
+                        ctx.lineTo(1000, points[2].y);
+                    }
 
                     ctx.lineWidth = 1;
                     ctx.stroke();

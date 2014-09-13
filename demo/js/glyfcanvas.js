@@ -44,7 +44,17 @@ define(
         }
 
         function showGlyf(charcode) {
-            var glyf = ttf.getCharGlyf(charcode);
+            var glyfData = ttf.getCharGlyf(charcode);
+
+            var glyf = {
+                xMin: glyfData.xMin,
+                xMax: glyfData.xMax,
+                yMin: glyfData.yMin,
+                yMax: glyfData.yMax,
+                contours: glyfData.contours
+            };
+
+
             var canvas = $('#glyf-canvas').get(0);
             var ctx = canvas.getContext('2d');
 
@@ -57,9 +67,9 @@ define(
                 width = width * scale;
                 height = height * scale;
             }
-            canvas.width = width;
-            canvas.height = height;
-            ctx.clearRect(0, 0, width, height);
+
+            ctx.clearRect(0, 0, 1000, 1000);
+
             glyf2canvas(glyf, ctx, {
                 stroke: 0,
                 scale: scale,

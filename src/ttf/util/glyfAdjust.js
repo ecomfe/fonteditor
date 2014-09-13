@@ -26,13 +26,11 @@ define(
             var scale = scale || 1;
             var x = offsetX || 0;
             var y = offsetY || 0;
-            var coordinates = [];
 
-            glyf.coordinates.forEach(function(p) {
-                coordinates.push({
-                    x: x + scale * (p.x),
-                    y: y + scale * (middleYx2 - p.y),
-                    onCurve: p.onCurve
+            glyf.contours.forEach(function (path) {
+                path.forEach(function(p) {
+                    p.x = x + scale * (p.x);
+                    p.y = y + scale * (middleYx2 - p.y);
                 });
             });
 
@@ -41,8 +39,6 @@ define(
             glyf.xMax = x + glyf.xMax * scale;
             glyf.yMax = y + glyf.yMax * scale;
             
-            glyf.coordinates = coordinates;
-
             return glyf;
         }
 
