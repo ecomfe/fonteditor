@@ -11,7 +11,7 @@ define(
     function(require) {
 
         var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('render/util/pathAdjust');
+        var pathAdjust = require('graphics/pathAdjust');
         var lang = require('common/lang');
 
 

@@ -48,6 +48,7 @@ define(
                             }
                             else {
                                 this.currentGroup.setShapes([shape]);
+                                this.currentGroup.setMode('scale');
                                 this.currentGroup.refresh();
                                 return;
                             }
@@ -97,6 +98,20 @@ define(
             },
 
             /**
+             * 点击
+             */
+            click: function(e) {
+                // 变换编辑模式
+                if (e.time > 400 && this.currentGroup && !this.currentPoint) {
+                    this.currentGroup.setMode(this.currentGroup.mode == 'scale' ? 'rotate' : 'scale');
+                    this.currentGroup.refresh();
+                }
+                else {
+                    this.currentPoint = null;
+                }
+            },
+
+            /**
              * 开始模式
              */
             begin: function(shapes) {
@@ -105,12 +120,12 @@ define(
 
                 this.currentGroup = new ShapesGroup(shapes, this.render);
                 this.currentGroup.refresh();
-                
+
                 // 注册鼠标样式
                 me.render.capture.on('move', me.__moveEvent = function (e) {
                     var shapes = coverLayer.getShapeIn(e);
                     if(shapes) {
-                        me.render.setCursor(POS_CUSOR[shapes[0].pos] || 'default');
+                        me.render.setCursor(POS_CUSOR[me.currentGroup.mode][shapes[0].pos] || 'default');
                     }
                     else {
                         me.render.setCursor('default');

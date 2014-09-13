@@ -1,5 +1,5 @@
 /**
- * @file DashedRect.js
+ * @file Rect.js
  * @author mengke01
  * @date 
  * @description
@@ -62,13 +62,13 @@ define(
                     dashedLineTo(ctx, x + w, y, x + w, y + h);
                     dashedLineTo(ctx, x + w, y + h, x, y + h);
                     dashedLineTo(ctx, x, y + h, x, y);
-                    
                 }
                 else {
-                    ctx.lineTo(x, y, x + w, y);
-                    ctx.lineTo(x + w, y, x + w, y + h);
-                    ctx.lineTo(x + w, y + h, x, y + h);
-                    ctx.lineTo(x, y + h, x, y);
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + w, y);
+                    ctx.lineTo(x + w, y + h);
+                    ctx.lineTo(x, y + h);
+                    ctx.lineTo(x, y);
                 }
                 ctx.translate(-0.5, -0.5);
             }

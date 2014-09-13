@@ -35,7 +35,6 @@ define(
         function setContextStyle(context, options) {
             context.fillStyle = options.fillColor || 'black';
             context.strokeStyle = options.strokeColor || 'black';
-            context.strokeWidth = options.strokeWidth || 1;
             context.lineWidth = options.lineWidth || 1;
             context.font = options.font || "normal 10px arial";
         }

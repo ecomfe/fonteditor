@@ -12,8 +12,9 @@ define(
         var support = {
             circle: require('./Circle'),
             cpoint: require('./CirclePoint'),
-            rect: require('./Rect'),
             point: require('./Point'),
+            rect: require('./Rect'),
+            polygon: require('./Polygon'),
             font: require('./Font'),
             path: require('./Path'),
             axis: require('./Axis')

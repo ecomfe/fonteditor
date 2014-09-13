@@ -9,13 +9,11 @@
 
 define(
     function(require) {
-
-        var pathAdjust = require('render/util/pathAdjust');
-        var boundAdjust = require('render/util/boundAdjust');
+        var pathAdjust = require('graphics/pathAdjust');
         var lang = require('common/lang');
-        var computeBoundingBox = require('../../graphics/computeBoundingBox');
-        var getTransformMatrix = require('../util/getTransformMatrix');
-
+        var computeBoundingBox = require('graphics/computeBoundingBox');
+        var scaleTransform = require('./scaleTransform');
+        var rotateTransform = require('./rotateTransform');
         var updateControls = require('./updateControls');
         
 
@@ -58,57 +56,12 @@ define(
          * 根据控制点做图形变换
          */
         ShapesGroup.prototype.transform = function(point, camera) {
-
-
-            var matrix = getTransformMatrix(point.pos, this.bound, camera);
-
-            // 等比缩放
-            if (camera.event.shiftKey && [1, 2, 3, 4].indexOf(point.pos) >= 0) {
-                var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
-                matrix[2] = matrix[2] >= 0 ? scale : -scale;
-                matrix[3] = matrix[3] >= 0 ? scale : -scale;
+            if (this.mode === 'scale') {
+                scaleTransform.call(this, point, camera);
             }
-
-
-            // 更新shape
-            var shapes = this.shapes;
-
-            this.originShapes.forEach(function(originShape, index) {
-
-                var shape = lang.clone(originShape);
-                pathAdjust(shape.points, matrix[2], matrix[3], -matrix[0], -matrix[1]);
-                pathAdjust(shape.points, 1, 1, matrix[0], matrix[1]);
-
-                if (matrix[2] < 0 && !matrix[3] < 0) {
-                    shape.points = shape.points.reverse();
-                }
-
-                if (matrix[3] < 0 && !matrix[2] < 0) {
-                    shape.points = shape.points.reverse();
-                }
-
-                lang.extend(shapes[index], shape);
-
-            });
-            
-            this.render.getLayer('font').refresh();
-
-            // 更新边界
-            var coverLayer = this.render.getLayer('cover');
-            var boundShape = coverLayer.getShape('bound');
-            if(!boundShape) {
-                boundShape = {
-                    type: 'rect',
-                    dashed: true,
-                    id: 'bound'
-                };
-                coverLayer.addShape(boundShape);
+            else {
+                rotateTransform.call(this, point, camera);
             }
-
-            var bound = boundAdjust(lang.clone(this.bound), matrix[2], matrix[3], -matrix[0], -matrix[1]);
-            boundAdjust(bound, 1, 1, matrix[0], matrix[1]);
-            lang.extend(boundShape, bound);
-            coverLayer.refresh();
         };
 
         /**

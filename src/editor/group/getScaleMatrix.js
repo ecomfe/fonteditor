@@ -1,5 +1,5 @@
 /**
- * @file getTransformMatrix.js
+ * @file getScaleMatrix.js
  * @author mengke01
  * @date 
  * @description
@@ -19,7 +19,7 @@ define(
          * @param {Object} camera 镜头对象
          * @return {Array} 变换矩阵，x,y,xScale,yScale
          */
-        function getTransformMatrix(pos, bound, camera) {
+        function getScaleMatrix(pos, bound, camera) {
 
             // x, y, xscale 相对符号, yscale 相对符号
             var matrix = [
@@ -83,6 +83,6 @@ define(
         }
 
 
-        return getTransformMatrix;
+        return getScaleMatrix;
     }
 );

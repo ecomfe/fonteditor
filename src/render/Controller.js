@@ -32,9 +32,13 @@ define(
             });
 
             render.capture.on('down', function(e) {
-                var result = render.getShapeIn(e);
+                var result = render.getLayer('cover').getShapeIn(e);
 
                 if(result) {
+                    render.selectedShape = result[0];
+                }
+                else {
+                    result = render.getLayer('font').getShapeIn(e);
                     if (result.length > 1) {
                         render.selectedShape = selectShape(result);
                     }
@@ -42,6 +46,8 @@ define(
                         render.selectedShape = result[0];
                     }
                 }
+
+
                 render.camera.x = e.x;
                 render.camera.y = e.y;
             });

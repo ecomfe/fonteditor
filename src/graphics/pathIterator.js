@@ -14,6 +14,8 @@ define(
          * 遍历路径的路径集合
          * 
          * @param {Array} contour 坐标点集
+         * @param {Function} callBack 回调函数，参数集合：command, p0, p1, p2
+         * 其中command = L 或者 Q，表示直线或者贝塞尔曲线
          */
         function pathIterator(contour, callBack) {
 

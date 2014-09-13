@@ -64,16 +64,26 @@ define(
                     height: 42
                 });
 
+                var shape3 = cover.addShape('polygon', {
+                    points: [
+                        {x:300, y: 344},
+                        {x:350, y: 344},
+                        {x:450, y: 400},
+                        {x:400, y: 400}
+                    ],
+                    dashed: true
+                });
+
                 var font = currentRender.addLayer('font', {
                     level: 10
                 });
 
-                var contourAdjust = require('ttf/util/contourAdjust');
+                var pathAdjust = require('graphics/pathAdjust');
 
                 shape_baidu.contours.forEach(function(contour) {
                     var shape = {};
                     shape.points = contour;
-                    shape.points = contourAdjust(contour, 1, 1, 100, 400);
+                    shape.points = pathAdjust(contour, 1, 1, 100, 400);
                     font.addShape('path', shape);
                 });
                 

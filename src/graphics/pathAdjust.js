@@ -1,5 +1,5 @@
 /**
- * @file contourAdjust.js
+ * @file pathAdjust.js
  * @author mengke01
  * @date 
  * @description
@@ -20,7 +20,7 @@ define(
          * @param {number} offsetY y偏移
          * @return {number} contour 坐标点
          */
-        function contourAdjust(contour, scaleX, scaleY, offsetX, offsetY) {
+        function pathAdjust(contour, scaleX, scaleY, offsetX, offsetY) {
             var scaleX = scaleX == undefined ? 1 : scaleX;
             var scaleY = scaleY == undefined ? 1 : scaleY;
             var x = offsetX || 0;
@@ -34,6 +34,6 @@ define(
             return contour;
         }
 
-        return contourAdjust;
+        return pathAdjust;
     }
 );

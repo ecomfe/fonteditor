@@ -11,7 +11,7 @@ define(
     function(require) {
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('render/util/pathAdjust');
+        var pathAdjust = require('graphics/pathAdjust');
         var editorMode = require('./mode/editorMode');
         var ContextMenu = require('./menu/ContextMenu');
 
@@ -56,8 +56,8 @@ define(
                     return;
                 }
 
-                render.camera.startx = e.x;
-                render.camera.starty = e.y;
+                render.camera.startX = e.x;
+                render.camera.startY = e.y;
                 setCamera(e);
 
                 me.mode.down && me.mode.down.call(me, e);
@@ -104,6 +104,17 @@ define(
                 setCamera(e);
 
                 me.mode.up && me.mode.up.call(me, e);
+            });
+
+            render.capture.on('click', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
+                setCamera(e);
+
+                me.mode.click && me.mode.click.call(me, e);
             });
 
             render.capture.on('dblclick', function(e) {

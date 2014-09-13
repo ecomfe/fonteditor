@@ -18,25 +18,26 @@ define(
         function updateControls(bound) {
 
             if (!this.controls) {
-                this.controls = [{
-                    type: 'rect',
-                    dashed: true,
-                    selectable: false
-                }];
-                for (var i = 0; i < 8; i++) {
-                    this.controls.push({
-                        type: 'point'
-                    });
-                }
+                // 虚线框
+                this.controls = [
+                    {
+                        type: 'polygon',
+                        dashed: true,
+                        selectable: false
+                    }, 
+                    {}, {}, {}, {}, {}, {}, {}, {}
+                ];
             }
 
             var points = [
-                // 虚线框
+
                 {
-                    x: bound.x,
-                    y: bound.y,
-                    width: bound.width,
-                    height: bound.height
+                    points: [
+                        {x: bound.x,y:bound.y},
+                        {x: bound.x + bound.width, y:bound.y},
+                        {x: bound.x + bound.width, y:bound.y + bound.height},
+                        {x: bound.x, y:bound.y + bound.height},
+                    ]
                 },
 
                 // 控制点
@@ -55,9 +56,13 @@ define(
                 {x: bound.x, y: bound.y + bound.height / 2, pos: 8},
             ];
 
+            var mode = this.mode;
             var controls = this.controls;
-            points.forEach(function(p, index) {
-                lang.extend(controls[index], p);
+            points.forEach(function(p, i) {
+                lang.extend(controls[i], p);
+                if (i > 0) {
+                    controls[i].type = mode == 'rotate' && i <= 4 ? 'cpoint' : 'point';
+                }
             });
 
             var coverLayer = this.render.getLayer('cover');

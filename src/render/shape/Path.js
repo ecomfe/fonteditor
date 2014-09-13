@@ -11,7 +11,7 @@ define(
     function(require) {
         var ShapeConstructor = require('./Shape');
         var isInsidePath = require('../../graphics/isInsidePath');
-        var pathAdjust = require('../util/pathAdjust');
+        var pathAdjust = require('graphics/pathAdjust');
         var drawContour = require('ttf/util/drawContour');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var proto = {

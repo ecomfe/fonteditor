@@ -93,7 +93,6 @@ define(
                 mousemove: lang.bind(mousemove, this),
                 mousedown: lang.bind(mousedown, this),
                 dblclick: lang.bind(dblclick, this),
-                click: lang.bind(click, this),
                 mouseover: lang.bind(mouseover, this),
                 mouseout: lang.bind(mouseout, this),
                 mouseup: lang.bind(mouseup, this)
@@ -104,7 +103,6 @@ define(
             target.addEventListener('mousemove', this.handlers.mousemove, false);
             target.addEventListener('mousedown', this.handlers.mousedown, false);
             target.addEventListener('dblclick', this.handlers.dblclick, false);
-            target.addEventListener('click', this.handlers.click, false);
             target.addEventListener('mouseover', this.handlers.mouseover, false);
             target.addEventListener('mouseout', this.handlers.mouseout, false);
             document.addEventListener('mouseup', this.handlers.mouseup, false);
@@ -127,6 +125,7 @@ define(
 
             this.startX = event.x;
             this.startY = event.y;
+            this.startTime = Date.now();
             this.isDown = true;
 
             // 左键
@@ -136,22 +135,6 @@ define(
             if (3 == e.which) {
                 this.fire('rightdown', event);
             }
-        }
-
-        /**
-         * 点击事件
-         * 
-         * @param {Object} e 事件参数
-         */
-        function click(e) {
-
-            prevent(e);
-
-            if(false === this.events.click) {
-                return;
-            }
-
-            this.fire('click', getEvent(e));
         }
 
         /**
@@ -221,6 +204,7 @@ define(
             }
 
             var event = getEvent(e);
+            event.time = Date.now() - this.startTime;
 
             // 左键
 
@@ -235,6 +219,10 @@ define(
                 event.deltaY = event.y - this.startY;
                 this.isDragging = false;
                 this.fire('dragend', event);
+            }
+            else if(this.isDown && !this.isDragging && false !== this.events.click) {
+                this.isDragging = false;
+                this.fire('click', event);
             }
 
             this.isDown = false;
