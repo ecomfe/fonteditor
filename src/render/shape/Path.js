@@ -12,7 +12,7 @@ define(
         var ShapeConstructor = require('./Shape');
         var isInsidePath = require('../../graphics/isInsidePath');
         var pathAdjust = require('graphics/pathAdjust');
-        var drawContour = require('ttf/util/drawContour');
+        var drawPath = require('../util/drawPath');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var proto = {
             
@@ -27,8 +27,11 @@ define(
              * @return {Object} shape对象
              */
             adjust: function(shape, camera) {
-                pathAdjust(shape.points, camera.ratio, camera.ratio, -camera.center.x, -camera.center.y);
-                pathAdjust(shape.points, 1, 1, camera.center.x, camera.center.y);
+                var ratio = camera.ratio;
+                var x = camera.center.x;
+                var y = camera.center.y;
+                pathAdjust(shape.points, ratio, ratio, -x, -x);
+                pathAdjust(shape.points, 1, 1, x, x);
             },
 
             /**
@@ -84,7 +87,7 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                drawContour(shape.points, ctx);
+                drawPath(ctx, shape.points);
             }
         };
 

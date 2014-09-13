@@ -45,7 +45,7 @@ define(
             // 处理glyf轮廓
             ctx.beginPath();
             for ( var i = 0, l = contours.length; i < l; i++) {
-                drawContour(contours[i], ctx);
+                drawContour(ctx, contours[i]);
             }
 
             if(false !== options.stroke) {

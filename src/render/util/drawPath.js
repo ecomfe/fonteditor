@@ -1,5 +1,5 @@
 /**
- * @file drawContour.js
+ * @file drawPath.js
  * @author mengke01
  * @date 
  * @description
@@ -17,7 +17,7 @@ define(
          * @param {Array} contour 轮廓序列
          * @return {Canvas2DContext} canvas会话
          */
-        function drawContour(ctx, contour) {
+        function drawPath(ctx, contour) {
 
             var curPoint, prevPoint, nextPoint;
             for (var i = 0, l = contour.length; i < l; i++) {
@@ -55,6 +55,6 @@ define(
             }
         }
 
-        return drawContour;
+        return drawPath;
     }
 );

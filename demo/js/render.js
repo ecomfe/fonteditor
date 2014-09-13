@@ -80,6 +80,12 @@ define(
 
                 var pathAdjust = require('graphics/pathAdjust');
 
+                shape_bdjk.contours.forEach(function(contour) {
+                    pathAdjust(contour, 0.5, 0.5);
+                    pathAdjust(contour, 1, 1, 300, 100);
+                });
+                font.addShape('font', shape_bdjk);
+
                 shape_baidu.contours.forEach(function(contour) {
                     var shape = {};
                     shape.points = contour;

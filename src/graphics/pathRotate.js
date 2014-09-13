@@ -25,16 +25,17 @@ define(
             var y = centerY || 0;
             var cos = Math.cos(angle);
             var sin = Math.sin(angle);
-            var px, py;
+            var px, py, p;
 
             //x1=cos(angle)*x-sin(angle)*y;
             //y1=cos(angle)*y+sin(angle)*x;
-            contour.forEach(function(p) {
+            for (var i = 0, l = contour.length; i < l; i++) {
+                p = contour[i];
                 px = cos * (p.x - x) - sin * (p.y - y);
                 py = cos * (p.y - y) + sin * (p.x - x);
                 p.x = px + x;
                 p.y = py + y;
-            });
+            }
             
             return contour;
         }

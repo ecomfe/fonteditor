@@ -24,19 +24,20 @@ define(
             var x = offsetX || 0;
             var y = offsetY || 0;
             var tan = Math.tan(angle);
-            var px, py;
-
+            var p;
             // x 平移
             if (x == 0) {
-                contour.forEach(function(p) {
+                for (var i = 0, l = contour.length; i < l; i++) {
+                    p = contour[i];
                     p.x += tan * (p.y - offsetY);
-                });
+                }
             }
             // y平移
             else {
-                contour.forEach(function(p) {
-                   p.y += tan * (p.x - offsetX);
-                });
+                for (var i = 0, l = contour.length; i < l; i++) {
+                    p = contour[i];
+                    p.y += tan * (p.x - offsetX);
+                }
             }
 
             return contour;

@@ -25,12 +25,12 @@ define(
             var scaleY = scaleY == undefined ? 1 : scaleY;
             var x = offsetX || 0;
             var y = offsetY || 0;
-
-            contour.forEach(function(p) {
+            var p;
+            for (var i = 0, l = contour.length; i < l; i++) {
+                p = contour[i];
                 p.x = scaleX * (p.x + x);
                 p.y = scaleY * (p.y + y);
-            });
-            
+            }
             return contour;
         }
 

@@ -11,10 +11,14 @@ define(
     function(require) {
         var ShapeConstructor = require('./Shape');
         var glyfDraw = require('../glyf/draw');
+        var isInsidePath = require('../../graphics/isInsidePath');
+        var pathAdjust = require('graphics/pathAdjust');
+        var drawPath = require('../util/drawPath');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
 
         var proto = {
             
-            type: 'circle',
+            type: 'font',
 
             /**
              * 对形状进行缩放平移调整
@@ -24,27 +28,30 @@ define(
              * @return {Object} shape对象
              */
             adjust: function(shape, camera) {
-                ShapeConstructor.prototype.adjust.call(this, shape, camera);
-
-                var center = camera.center;
                 var ratio = camera.ratio;
-                var scale = camera.scale;
+                var x = camera.center.x;
+                var y = camera.center.y;
+                var contours = shape.contours;
+                for (var i = 0, l = contours.length; i < l; i++) {
+                    pathAdjust(contours[i], ratio, ratio, -x, -x);
+                    pathAdjust(contours[i], 1, 1, x, x);
+                };
 
-                var coordinates = [];
-                shape.coordinates.forEach(function(p) {
-                    coordinates.push({
-                        x: p.x * ratio,
-                        y: p.y * ratio,
-                        onCurve: p.onCurve
-                    });
-                });
+                return shape;
 
-                shape.coordinates = coordinates;
-                shape.xMax = shape.xMax * ratio;
-                shape.yMax = shape.yMax * ratio;
-                shape.xMin = shape.xMin * ratio;
-                shape.yMin = shape.yMin * ratio;
+            },
 
+            /**
+             * 移动指定位置
+             * 
+             * @return {Object} shape对象
+             */
+            move: function(shape, mx, my) {
+                var contours = shape.contours;
+                for (var i = 0, l = contours.length; i < l; i++) {
+                    pathAdjust(contours[i], 1, 1, mx, my);
+                }
+                return shape;
             },
 
             /**
@@ -54,12 +61,7 @@ define(
              * @param {Object} 矩形区域
              */
             getRect: function(shape) {
-                return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: shape.width,
-                    height:shape.height,
-                };
+                return computeBoundingBox.computePath.apply(null, shape.contours);
             },
 
             /**
@@ -71,10 +73,24 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                return x <= shape.x + shape.width 
-                    && x >= shape.x 
-                    && y <= shape.y + shape.height
-                    && y >= shape.y;
+                var bound = computeBoundingBox.computePath.apply(null, shape.contours);
+                if(
+                    x <= bound.x + bound.width 
+                    && x >= bound.x
+                    && y <= bound.y + bound.height
+                    && y >= bound.y
+                ) {
+                    var contours = shape.contours;
+                    for (var i = 0, l = contours.length; i < l; i++) {
+                        if(isInsidePath(contours[i], {
+                            x: x, 
+                            y: y
+                        })) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             },
 
             /**
@@ -84,7 +100,10 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                glyfDraw(ctx, shape);
+                var contours = shape.contours;
+                for (var i = 0, l = contours.length; i < l; i++) {
+                    drawPath(ctx, contours[i]);
+                }
             }
         };
 
