@@ -90,9 +90,9 @@ define(
         lang.extend(Layer.prototype, {
 
             /**
-             * 刷新painter
+             * 刷新layer
              * 
-             * @return {Painter} this对象
+             * @return {this}
              */
             refresh: function() {
 
@@ -104,15 +104,18 @@ define(
                 context.clearRect(0, 0, this.painter.width, this.painter.height);
                 setContextStyle(context, options);
                 context.beginPath();
-                this.shapes.forEach(function(shape) {
+
+                var shapes = this.shapes, shape, drawer;
+
+                for (var i = 0, l = shapes.length; i < l; i++) {
+
+                    shape = shapes[i];
 
                     if (true === shape.disabled) {
                         return;
                     }
 
-                    var drawer = support[shape.type];
-
-                    if(drawer) {
+                    if(drawer = support[shape.type]) {
                         if(camera.ratio != 1) {
                             drawer.adjust(shape, camera);
                         }
@@ -135,7 +138,7 @@ define(
                             drawer.draw(context, shape);
                         }
                     }
-                });
+                };
 
                 draw(context, options);
 
@@ -144,8 +147,10 @@ define(
 
             /**
              * 根据编号或索引获取一个Shape
+             * 
              * @param {string|number} shape id或者shape index
-             * @return {Painter} this对象
+             * 
+             * @return {Object?} shape对象
              */
             getShape: function(shape) {
                 if(typeof shape === 'string') {
@@ -163,8 +168,10 @@ define(
 
             /**
              * 添加一个Shape
+             * 
              * @param {string} shape Shape 类型， 或者 Shape 对象
-             * @return {Painter} this对象
+             * 
+             * @return {Object?} Shape对象
              */
             addShape: function(shape, options) {
                 if(typeof shape === 'string') {
@@ -181,14 +188,14 @@ define(
                 else {
                     throw 'add shape faild';
                 }
-                
-                return this;
             },
 
             /**
              * 移除一个Shape
+             * 
              * @param {Shape|string|number} shape Shape对象或者ID或者索引号
-             * @return {Painter} this对象
+             * 
+             * @return {boolean} 是否成功
              */
             removeShape: function(shape) {
                 var id = -1;
@@ -221,17 +228,23 @@ define(
 
             /**
              * 清空所有的shapes
+             * 
+             * @return {this}
              */
             clearShapes: function() {
                 this.shapes.length = 0;
                 this.shapes = [];
+
+                return this;
             },
 
             /**
              * 获取当前坐标下的shape
              * 
              * @param {Object} p 坐标值
-             * @return {Object} shape对象
+             * 
+             * 
+             * @return {Array} 选中的shapes
              */
             getShapeIn: function(p) {
                 var support = this.painter.support;
@@ -249,15 +262,15 @@ define(
             },
 
             /**
-             * 移动到指定的偏移
-             * @param {number} x 偏移
-             * @param {number} y 偏移
-             * @param {shape} shape对象
+             * 根据镜头调整shape
+             * 
+             * @return {this}
              */
-            move: function(x, y, shape) {
-                shape = this.getShape(shape);
+            adjust: function(shape) {
+
                 var shapes = [];
                 if(shape) {
+                    shape = this.getShape(shape);
                     shapes.push(shape);
                 }
                 else {
@@ -265,9 +278,52 @@ define(
                 }
 
                 var support = this.painter.support;
-                shapes.forEach(function(shape) {
-                    support[shape.type].move(shape, x, y);
-                });
+                var camera = this.painter.camera;
+                var shape, drawer;
+
+                for (var i = 0, l = shapes.length; i < l; i++) {
+
+                    shape = shapes[i];
+                    if(drawer = support[shape.type]) {
+                        if(camera.ratio != 1) {
+                            drawer.adjust(shape, camera);
+                        }
+                    }
+
+                }
+
+                return this;
+            },
+
+            /**
+             * 移动到指定的偏移
+             * @param {number} x 偏移
+             * @param {number} y 偏移
+             * 
+             * @return {this}
+             */
+            move: function(x, y, shape) {
+                
+                var shapes = [];
+                if(shape) {
+                    shape = this.getShape(shape);
+                    shapes.push(shape);
+                }
+                else {
+                    shapes = this.shapes;
+                }
+
+                var support = this.painter.support;
+                var shape, drawer;
+
+                for (var i = 0, l = shapes.length; i < l; i++) {
+
+                    shape = shapes[i];
+                    if(drawer = support[shape.type]) {
+                        drawer.move(shape, x, y);
+                    }
+
+                }
                 
                 return this;
             },
@@ -285,7 +341,7 @@ define(
              * 获取当前坐标下的shape
              * 
              * @param {Object} options 参数选项
-             * @return {Shape} Shape对象
+             * @return {Object} shape对象
              */
             createShape: function(options) {
                 return createShape.call(this, options);

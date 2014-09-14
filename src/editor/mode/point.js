@@ -33,6 +33,13 @@ define(
 
             this.contextMenu.hide();
 
+            var command = e.command;
+            // 是否编辑器支持
+            if(this.supportCommand(command)) {
+                this.execCommand(command);
+                return;
+            }
+
             var fontLayer = this.fontLayer;
             var command = e.command;
             var shape = fontLayer.getShape(this.currentPoint.shapeId);

@@ -75,7 +75,7 @@ define(
             this.camera = new Camera({
                 x: this.width / 2,
                 y: this.height /2
-            }, 1);
+            });
 
             var support = {};
             Object.keys(SupportShape).forEach(function(shape) {
@@ -90,7 +90,8 @@ define(
              * 增加一个支持的shape类型
              * 
              * @param {Object} shape 支持类型
-             * @return {Painter} 绘制对象
+             * 
+             * @return {this}
              */
             addSupport: function(shape) {
                 if (this.support[shape.type]) {
@@ -102,7 +103,7 @@ define(
             /**
              * 刷新painter
              * 
-             * @return {Painter} this对象
+             * @return {this}
              */
             refresh: function() {
                 this.layers.forEach(function(layer) {
@@ -114,18 +115,23 @@ define(
             /**
              * 对layer进行排序
              * 
-             * @return {Painter} this对象
+             * @return {this}
              */
             sortLayer: function() {
+
                 this.layers.sort(function(a, b) {
                     return a.level > b.level ? -1 : a.level == b.level ? 0 : 1;
                 });
+
+                return this;
             },
 
             /**
              * 根据编号或索引获取一个Layer
+             * 
              * @param {string|number} layer id或者layer index
-             * @return {Painter} this对象
+             * 
+             * @return {Layer} layer对象
              */
             getLayer: function(layerId) {
                 if(typeof layerId === 'string') {
@@ -143,8 +149,10 @@ define(
 
             /**
              * 添加一个Layer
+             * 
              * @param {Layer|string} layer layer对象，或者layer id
-             * @return {Painter} this对象
+             * 
+             * @return {Layer?} layer对象
              */
             addLayer: function(layer, options) {
                 if(layer instanceof Layer) {
@@ -168,7 +176,8 @@ define(
             /**
              * 移除一个Layer
              * @param {Layer|string|number} layer layer对象或者ID或者索引号
-             * @return {Painter} this对象
+             * 
+             * @return {boolean} 是否成功
              */
             removeLayer: function(layer) {
                 var id = -1;
@@ -206,7 +215,8 @@ define(
              * 获取当前坐标下的shape
              * 
              * @param {string} p [p description]
-             * @return {[type]} [return description]
+             * 
+             * @return {Array} 选中的shape
              */
             getShapeIn: function(p) {
                 var layers = this.layers.filter(function(layer) {
@@ -221,15 +231,44 @@ define(
             },
 
             /**
+             * 根据镜头调整坐标
+             * 
+             * @param {Layer} layerId
+             * 
+             * @return {this}
+             */
+            adjust: function(layerId) {
+
+                var layers = [];
+                if(layerId) {
+                    var layer = this.getLayer(layerId);
+                    layers.push(layer);
+                }
+                else {
+                    layers = this.layers;
+                }
+
+                layers.forEach(function(layer) {
+                    layer.adjust();
+                });
+                
+                return this;
+            },
+
+            /**
              * 移动到指定的偏移
+             * 
              * @param {number} x 偏移
              * @param {number} y 偏移
-             * @param {Layer} layerId对象
+             * @param {Layer} layerId
+             * 
+             * @return {this}
              */
             move: function(x, y, layerId) {
-                var layer = this.getLayer(layerId);
+
                 var layers = [];
-                if(layer) {
+                if(layerId) {
+                    var layer = this.getLayer(layerId);
                     layers.push(layer);
                 }
                 else {
@@ -245,12 +284,15 @@ define(
 
             /**
              * 清空所有的layer中的图形
+             * 
+             * @return {this}
              */
             clearShapes: function() {
                 var layers = this.layers;
                 for(var i = 0, l = layers.length; i < l; i++) {
                     layers[i].clearShapes();
                 }
+                return this;
             },
 
             /**
@@ -263,6 +305,21 @@ define(
                     width: this.width,
                     height: this.height
                 }
+            },
+
+            /**
+             * 重置
+             * 
+             * @return {this}
+             */
+            reset: function() {
+                this.clearShapes();
+                this.camera.reset({
+                    x: this.width / 2,
+                    y: this.height /2
+                });
+
+                return this;
             },
 
             /**

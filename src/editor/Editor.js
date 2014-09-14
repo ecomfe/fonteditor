@@ -31,22 +31,6 @@ define(
                 render.camera.event = e;
             }
 
-            render.capture.on('wheel', function(e) {
-
-                if (me.contextMenu.visible()) {
-                    return;
-                }
-
-                var defaultRatio = render.options.defaultRatio || 1.2;
-                var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
-
-                if (render.camera.scale * ratio < 0.1) {
-                    return;
-                }
-
-                render.scale(ratio, e);
-            });
-
             render.capture.on('down', function(e) {
 
                 if (me.contextMenu.visible()) {

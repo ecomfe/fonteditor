@@ -18,12 +18,7 @@ define(
         function initRender() {
             
             var render = this.render;
-            render.capture.on('wheel', function(e) {
 
-                var defaultRatio = render.options.defaultRatio || 1.2;
-                var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
-                render.scale(ratio, e);
-            });
 
             render.capture.on('down', function(e) {
                 var result = render.getLayer('cover').getShapeIn(e);

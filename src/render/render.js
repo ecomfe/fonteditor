@@ -29,7 +29,7 @@ define(
                 this.options.painter
             );
 
-            this.camera = this.painter.camera;
+
 
             // 注册鼠标
             this.capture = new MouseCapture(
@@ -42,6 +42,28 @@ define(
                 this.main,
                 this.options.keyboard
             );
+
+
+            this.camera = this.painter.camera;
+
+            // 是否允许缩放
+            if(this.options.enableScale) {
+                var me = this;
+                this.capture.on('wheel', function(e) {
+
+                    var defaultRatio = me.options.defaultRatio || 1.2;
+                    var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
+                    var toScale = me.camera.scale * ratio;
+                    if (
+                        toScale < me.options.minScale 
+                        || toScale > me.options.maxScale
+                    ) {
+                        return;
+                    }
+
+                    me.scale(ratio, e);
+                });
+            }
         }
 
         /**
@@ -53,7 +75,17 @@ define(
         function Render(main, options) {
 
             this.main = main;
-            this.options = lang.extend({}, options);
+
+            this.options = lang.extend(
+                {
+                    defaultRatio: 1.2, // 默认的缩放比例
+                    minScale: 0.1, // 最小缩放
+                    maxScale: 100, //最大缩放
+                    enableScale: true // 是否允许缩放
+                }, 
+                options
+            );
+
             this.id = guid();
 
             if(!this.main) {
@@ -88,8 +120,7 @@ define(
          * 重置渲染器
          */
         Render.prototype.reset = function() {
-            this.painter.clearShapes();
-            this.camera.reset();
+            this.painter.reset();
 
         };
 
@@ -98,14 +129,23 @@ define(
          * 
          * @param {number} ratio 比例
          * @param {Object} p 参考点坐标
+         * @param {boolean} noRefresh 无刷新缩放
+         * 
          * @return {this}
          */
-        Render.prototype.scale = function(ratio, p) {
+        Render.prototype.scale = function(ratio, p, noRefresh) {
             this.camera.ratio = ratio;
             this.camera.center.x = p.x;
             this.camera.center.y = p.y;
             this.camera.scale *= ratio;
-            this.painter.refresh();
+
+            if(true !== noRefresh) {
+                this.painter.refresh();
+            }
+            else {
+                this.painter.adjust();
+            }
+
             this.camera.ratio = 1;
         };
 
@@ -114,10 +154,22 @@ define(
          * 
          * @param {number} scale 比例
          * @param {Object} p 中心点坐标
+         * @param {boolean} noRefresh 无刷新缩放
+         * 
          * @return {this}
          */
-        Render.prototype.scaleTo = function(scale, p) {
-            this.scale(scale / this.camera.scale, p);
+        Render.prototype.scaleTo = function(scale, p, noRefresh) {
+
+            // 缩放
+            this.scale(scale / this.camera.scale, this.camera.center, true);
+            this.painter.refresh();
+            // 平移
+            //this.painter.move(p.x - this.camera.center.x, p.y - this.camera.center.y);
+            //this.camera.reset(p);
+
+            if(true !== noRefresh) {
+                this.painter.refresh();
+            }
         };
 
         /**
