@@ -33,8 +33,8 @@ define(
                 var y = camera.center.y;
                 var contours = shape.contours;
                 for (var i = 0, l = contours.length; i < l; i++) {
-                    pathAdjust(contours[i], ratio, ratio, -x, -x);
-                    pathAdjust(contours[i], 1, 1, x, x);
+                    pathAdjust(contours[i], ratio, ratio, -x, -y);
+                    pathAdjust(contours[i], 1, 1, x, y);
                 };
 
                 return shape;

@@ -30,8 +30,8 @@ define(
                 var ratio = camera.ratio;
                 var x = camera.center.x;
                 var y = camera.center.y;
-                pathAdjust(shape.points, ratio, ratio, -x, -x);
-                pathAdjust(shape.points, 1, 1, x, x);
+                pathAdjust(shape.points, ratio, ratio, -x, -y);
+                pathAdjust(shape.points, 1, 1, x, y);
             },
 
             /**

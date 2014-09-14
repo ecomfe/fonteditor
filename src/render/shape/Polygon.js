@@ -27,8 +27,11 @@ define(
              * @return {Object} shape对象
              */
             adjust: function(shape, camera) {
-                pathAdjust(shape.points, camera.ratio, camera.ratio, -camera.center.x, -camera.center.y);
-                pathAdjust(shape.points, 1, 1, camera.center.x, camera.center.y);
+                var ratio = camera.ratio;
+                var x = camera.center.x;
+                var y = camera.center.y;
+                pathAdjust(shape.points, ratio, ratio, -x, -y);
+                pathAdjust(shape.points, 1, 1, x, y);
             },
 
             /**
