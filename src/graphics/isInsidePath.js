@@ -33,7 +33,7 @@ define(
                     if(joint = isSegmentRayCross(p0, p1, p)) {
                         // 在直线上
                         if(joint[0].x == p.x) {
-                            zCount = 0;
+                            zCount = 1;
                             return false;
                         }
 
@@ -53,7 +53,7 @@ define(
 
                         // 在曲线上
                         if(joint[0].x == p.x || joint[1] && joint[1].x == p.x) {
-                            zCount = 0;
+                            zCount = 1;
                             return false;
                         }
 
