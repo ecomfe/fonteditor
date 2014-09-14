@@ -17,20 +17,20 @@ define(
          * 
          * @constructor
          */
-        function Camera(center, ratio, scale) {
-            this.reset(center, ratio, scale);
+        function Camera(center, scale, ratio) {
+            this.reset(center, scale, ratio);
         }
 
         /**
          * 重置camera
          */
-        Camera.prototype.reset = function(center, ratio, scale) {
+        Camera.prototype.reset = function(center, scale, ratio) {
             this.center = center || {
                 x: 0,
                 y: 0
             };
-            this.ratio = ratio || 1;
             this.scale = scale || 1;
+            this.ratio = ratio || 1;
         };
 
         /**

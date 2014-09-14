@@ -42,18 +42,22 @@ define(
              * 按下事件
              */
             down: function(e) {
-                mode.begin.call(this, e);
+                if(1 == e.which) {
+                    mode.begin.call(this, e);
+                }
             },
 
             /**
              * 拖动事件
              */
             drag: function(e) {
-                if (this.selectionBox) {
-                    var camera = this.render.camera;
-                    this.selectionBox.width = camera.x - this.selectionBox.x;
-                    this.selectionBox.height = camera.y - this.selectionBox.y;
-                    this.coverLayer.refresh();
+                if(1 == e.which) {
+                    if (this.selectionBox) {
+                        var camera = this.render.camera;
+                        this.selectionBox.width = camera.x - this.selectionBox.x;
+                        this.selectionBox.height = camera.y - this.selectionBox.y;
+                        this.coverLayer.refresh();
+                    }
                 }
             },
 
@@ -62,23 +66,21 @@ define(
              * 鼠标弹起
              */
             up: function(e) {
-                if(this.selectionBox) {
+                if(1 == e.which) {
+                    if(this.selectionBox) {
 
-                    // 对shape进行多选
-                    if(this.selectionBox.width >= 20 && this.selectionBox.height >= 20) {
-                        var shapes;
-                        if(shapes = selectShapes.call(this, this.selectionBox)) {
-                            this.setMode('shapes', shapes);
-                            return;
+                        // 对shape进行多选
+                        if(this.selectionBox.width >= 20 && this.selectionBox.height >= 20) {
+                            var shapes;
+                            if(shapes = selectShapes.call(this, this.selectionBox)) {
+                                this.setMode('shapes', shapes);
+                                return;
+                            }
                         }
                     }
-
-                    this.coverLayer.clearShapes();
-                    this.coverLayer.refresh();
+                    
+                    this.setMode();
                 }
-                
-                this.selectionBox = null;
-                this.setMode();
             },
 
             /**
@@ -100,6 +102,8 @@ define(
              */
             end: function() {
                 this.selectionBox = null;
+                this.coverLayer.clearShapes();
+                this.coverLayer.refresh();
             }
         };
 

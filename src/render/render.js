@@ -162,10 +162,10 @@ define(
 
             // 缩放
             this.scale(scale / this.camera.scale, this.camera.center, true);
-            this.painter.refresh();
+
             // 平移
-            //this.painter.move(p.x - this.camera.center.x, p.y - this.camera.center.y);
-            //this.camera.reset(p);
+            this.painter.moveTo(p.x, p.y);
+            this.camera.reset(p, scale);
 
             if(true !== noRefresh) {
                 this.painter.refresh();

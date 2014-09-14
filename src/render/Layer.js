@@ -13,6 +13,7 @@ define(
         var guid = require('./util/guid');
         var ShapeConstructor = require('./shape/Shape');
         var lang = require('common/lang');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
 
         /**
          * 创建一个shape对象，这里仅创建数据结构，具体绘制由Shape对象完成
@@ -296,7 +297,7 @@ define(
             },
 
             /**
-             * 移动到指定的偏移
+             * 移动指定的偏移量
              * @param {number} x 偏移
              * @param {number} y 偏移
              * 
@@ -324,8 +325,80 @@ define(
                     }
 
                 }
-                
+
                 return this;
+            },
+
+            /**
+             * 移动到指定的位置, 相对于对shape的中心点
+             * 
+             * @param {number} x 偏移
+             * @param {number} y 偏移
+             * 
+             * @return {this}
+             */
+            moveTo: function(x, y, shape) {
+                
+                var shapes = [];
+                if(shape) {
+                    shape = this.getShape(shape);
+                    shapes.push(shape);
+                }
+                else {
+                    shapes = this.shapes;
+                }
+
+                var support = this.painter.support;
+                var shape, drawer;
+                var bound = getBound(shapes);
+
+                if (bound) {
+                    var mx = x - (bound.x + bound.width / 2);
+                    var my = y - (bound.y + bound.height / 2);
+
+                    for (var i = 0, l = shapes.length; i < l; i++) {
+                        shape = shapes[i];
+                        if(drawer = support[shape.type]) {
+                            drawer.move(shape, mx, my);
+                        }
+                    }
+                }
+
+                return this;
+            },
+
+            /**
+             * 获取Layer bound
+             * 
+             * @return {Object} bound对象
+             */
+            getBound: function(shapes) {
+                shapes = shapes || this.shapes;
+
+                if (shapes.length == 0) {
+                    return false;
+                }
+
+                // 求所有图形的bound
+                var shape, boundPoints = [];
+                var support = this.painter.support;
+                for (var i = 0, l = shapes.length; i < l; i++) {
+                    shape = shapes[i];
+
+                    if(drawer = support[shape.type]) {
+                        if(undefined != shape.x && undefined != shape.y) {
+                            boundPoints.push(shape);
+                        }
+                        else {
+                            var bound = drawer.getRect(shape);
+                            if (bound) {
+                                boundPoints.push(bound);
+                                boundPoints.push({x: bound.x + bound.width, y: bound.y + bound.height});
+                            }
+                        }
+                    }
+                }
+                return computeBoundingBox.computeBounding(boundPoints);
             },
 
             /**

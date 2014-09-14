@@ -59,6 +59,7 @@ define(
             return {
                 x: getX(e),
                 y: getY(e),
+                which: e.which,
                 ctrlKey: e.ctrlKey,
                 metaKey: e.metaKey,
                 altKey: e.altKey,

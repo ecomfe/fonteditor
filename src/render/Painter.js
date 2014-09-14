@@ -15,6 +15,7 @@ define(
         var lang = require('common/lang');
         var SupportShape = require('./shape/support');
         var Camera = require('./Camera');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
         var MAX_LEVEL = 10000;
 
         /**
@@ -256,7 +257,7 @@ define(
             },
 
             /**
-             * 移动到指定的偏移
+             * 移动指定的偏移
              * 
              * @param {number} x 偏移
              * @param {number} y 偏移
@@ -279,6 +280,50 @@ define(
                     layer.move(x, y);
                 });
                 
+                return this;
+            },
+
+
+            /**
+             * 移动到指定的位置
+             * 
+             * @param {number} x 偏移
+             * @param {number} y 偏移
+             * @param {Layer} layerId
+             * 
+             * @return {this}
+             */
+            moveTo: function(x, y, layerId) {
+
+                var layers = [];
+                if(layerId) {
+                    var layer = this.getLayer(layerId);
+                    layers.push(layer);
+                }
+                else {
+                    layers = this.layers;
+                }
+
+                var boundPoints = [];
+                layers.forEach(function(layer) {
+                    var bound = layer.getBound();
+                    if(bound) {
+                        boundPoints.push(bound);
+                        boundPoints.push({x: bound.x + bound.width, y: bound.y + bound.height});
+                    }
+                });
+
+                var bound = computeBoundingBox.computeBounding(boundPoints);
+
+                if (bound) {
+                    var mx = x - (bound.x + bound.width / 2);
+                    var my = y - (bound.y + bound.height / 2);
+
+                    layers.forEach(function(layer) {
+                        layer.move(mx, my);
+                    });
+                }
+
                 return this;
             },
 

@@ -20,7 +20,7 @@ define(
          */
         function computeBoundingBox(points) {
             if (points.length === 0) {
-                return;
+                return false;
             }
             var left = points[0].x;
             var right = points[0].x;

@@ -16,6 +16,7 @@ define(
              * 重置缩放
              */
             rescale: function() {
+                this.coverLayer.clearShapes();
                 var size = this.render.getSize();
                 this.render.scaleTo(1, {
                     x: size.width / 2, 
