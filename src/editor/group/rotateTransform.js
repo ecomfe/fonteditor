@@ -37,10 +37,10 @@ define(
 
             });
             
-            this.render.getLayer('font').refresh();
+            this.editor.fontLayer.refresh();
 
             // 更新边界
-            var coverLayer = this.render.getLayer('cover');
+            var coverLayer = this.editor.coverLayer;
             var boundShape = coverLayer.getShape('bound');
 
             if(!boundShape) {

@@ -36,8 +36,8 @@ define(
         /**
          * 选择组控制器
          */
-        function ShapesGroup(shapes, render, mode) {
-            this.render = render;
+        function ShapesGroup(shapes, editor, mode) {
+            this.editor = editor;
             this.setShapes(shapes);
             this.setMode(mode);
         }
@@ -48,8 +48,7 @@ define(
         ShapesGroup.prototype.beginTransform = function(point) {
             this.bound = getBound(this.shapes);
             this.originShapes = lang.clone(this.shapes);
-            var coverLayer = this.render.getLayer('cover');
-            coverLayer.clearShapes();
+            this.editor.coverLayer.clearShapes();
         };
 
         /**
@@ -82,12 +81,9 @@ define(
                 pathAdjust(shape.points, 1, 1, mx, my);
             });
             
-            var fontLayer = this.render.painter.getLayer('font');
-            fontLayer.refresh();
-
-            var coverLayer = this.render.getLayer('cover');
-            coverLayer.move(mx, my);
-            coverLayer.refresh();
+            this.editor.fontLayer.refresh();
+            this.editor.coverLayer.move(mx, my);
+            this.editor.coverLayer.refresh();
         };
 
         /**
@@ -114,21 +110,21 @@ define(
          */
         ShapesGroup.prototype.refresh = function() {
             updateControls.call(this, getBound(this.shapes));
-            this.render.getLayer('cover').refresh();
+            this.editor.coverLayer.refresh();
         };
 
         /**
          * 注销
          */
         ShapesGroup.prototype.dispose = function() {
-            var coverLayer = this.render.getLayer('cover');
-            coverLayer.clearShapes();
-            coverLayer.refresh();
+
+            this.editor.coverLayer.clearShapes();
+            this.editor.coverLayer.refresh();
 
             this.shapes.length = 0;
             this.controls.length = 0;
             
-            this.shapes = this.controls = this.render = null;
+            this.shapes = this.controls = this.editor = null;
         };
 
         return ShapesGroup;

@@ -67,18 +67,21 @@ define(
          * 设置鼠标样式
          * 
          * @param {string} name 名字
-         * @return {Render} 本对象
+         * @return {this}
          */
         Render.prototype.setCursor = function(name) {
             this.main.style.cursor = name || 'default';
+            return this;
         };
 
         /**
          * 刷新render
          * 
+         * @return {this}
          */
         Render.prototype.refresh = function() {
             this.painter.refresh();
+            return this;
         };
 
         /**
@@ -88,6 +91,33 @@ define(
             this.painter.clearShapes();
             this.camera.reset();
 
+        };
+
+        /**
+         * 缩放指定的比例
+         * 
+         * @param {number} ratio 比例
+         * @param {Object} p 参考点坐标
+         * @return {this}
+         */
+        Render.prototype.scale = function(ratio, p) {
+            this.camera.ratio = ratio;
+            this.camera.center.x = p.x;
+            this.camera.center.y = p.y;
+            this.camera.scale *= ratio;
+            this.painter.refresh();
+            this.camera.ratio = 1;
+        };
+
+        /**
+         * 缩放到指定的比例
+         * 
+         * @param {number} scale 比例
+         * @param {Object} p 中心点坐标
+         * @return {this}
+         */
+        Render.prototype.scaleTo = function(scale, p) {
+            this.scale(scale / this.camera.scale, p);
         };
 
         /**
@@ -105,7 +135,7 @@ define(
 
         // 注册painter中的函数
         [   
-            'addSupport', 'move',
+            'addSupport', 'move', 'getSize',
             'getLayer', 'addLayer', 'removeLayer',
             'getShapeIn', 'clearShapes'
         ].forEach(function(fnName) {

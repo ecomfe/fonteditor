@@ -13,7 +13,7 @@ define(
         var ShapesGroup = require('../group/ShapesGroup');
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
-        var commandList = require('../menu/command');
+        var commandList = require('../menu/commandList');
         var POS_CUSOR = require('./cursor');
 
 
@@ -34,46 +34,33 @@ define(
 
             this.contextMenu.hide();
 
-            var coverLayer = this.render.getLayer('cover');
-            var fontLayer = this.render.getLayer('font');
             var command = e.command;
+            // 是否编辑器支持
+            if(this.supportCommand(command)) {
+                this.execCommand(command);
+                return;
+            }
+
             var shape = this.currentGroup.shapes[0];
 
-            if (command == 'add') {
-                this.setMode('addshape');
-            }
-            else if (command == 'remove') {
-
-                this.currentGroup.shapes.forEach(function(shape) {
-                    fontLayer.removeShape(shape);
-                });
-                
-                fontLayer.refresh();
+            if (command == 'remove') {
+                this.execCommand('removeshapes', this.currentGroup.shapes);
                 this.setMode();
             }
             else if (command == 'reverse') {
-                shape.points = shape.points.reverse();
-                fontLayer.refresh();
+                this.execCommand('reverseshape', shape);
             }
             else if (command == 'top') {
-                var index = fontLayer.shapes.indexOf(shape);
-                fontLayer.shapes.splice(index, 1);
-                fontLayer.shapes.push(shape);
+                this.execCommand('topshape', shape);
             }
             else if (command == 'bottom') {
-                var index = fontLayer.shapes.indexOf(shape);
-                fontLayer.shapes.splice(index, 1);
-                fontLayer.shapes.unshift(shape);
+                this.execCommand('bottomshape', shape);
             }
             else if (command == 'up') {
-                var index = fontLayer.shapes.indexOf(shape);
-                fontLayer.shapes.splice(index, 1);
-                fontLayer.shapes.splice(index + 1, 0, shape);
+                this.execCommand('upshape', shape);
             }
             else if (command == 'down') {
-                var index = fontLayer.shapes.indexOf(shape);
-                fontLayer.shapes.splice(index, 1);
-                fontLayer.shapes.splice(index - 1, 0, shape);
+                this.execCommand('downshape', shape);
             }
         }
 
@@ -87,7 +74,6 @@ define(
              */
             down: function(e) {
                 var render = this.render;
-                var camera = this.render.camera;
                 var result = render.getLayer('cover').getShapeIn(e);
 
                 if(result) {
@@ -174,39 +160,39 @@ define(
             },
 
             /**
+             * 移动
+             */
+            move: function(e) {
+                var shapes = this.coverLayer.getShapeIn(e);
+                if(shapes) {
+                    this.render.setCursor(POS_CUSOR[this.currentGroup.mode][shapes[0].pos] || 'default');
+                }
+                else {
+                    this.render.setCursor('default');
+                }
+            },
+
+            /**
              * 开始模式
              */
             begin: function(shapes) {
-                var me = this;
-                var coverLayer = me.render.getLayer('cover');
-
-                this.currentGroup = new ShapesGroup(shapes, this.render);
+                this.currentGroup = new ShapesGroup(shapes, this);
                 this.currentGroup.refresh();
+            },
 
-                // 注册鼠标样式
-                me.render.capture.on('move', me.__moveEvent = function (e) {
-                    var shapes = coverLayer.getShapeIn(e);
-                    if(shapes) {
-                        me.render.setCursor(POS_CUSOR[me.currentGroup.mode][shapes[0].pos] || 'default');
-                    }
-                    else {
-                        me.render.setCursor('default');
-                    }
-                });
-
-                // 右键菜单
-                me.render.capture.on('rightdown', me.__contextEvent = function (e) {
-                    // 对单个shape进行操作
-                    if (me.currentGroup) {
-                        me.contextMenu.onClick = lang.bind(onContextMenu, me);
-                        me.contextMenu.show(e, 
-                            me.currentGroup.shapes.length > 1
-                            ? commandList.shapes
-                            : commandList.shape
-                        );
-                    }
-                });
-
+            /**
+             * 右键
+             */
+            rightdown: function(e) {
+                // 对单个shape进行操作
+                if (this.currentGroup) {
+                    this.contextMenu.onClick = lang.bind(onContextMenu, this);
+                    this.contextMenu.show(e, 
+                        this.currentGroup.shapes.length > 1
+                        ? commandList.shapes
+                        : commandList.shape
+                    );
+                }
             },
 
             /**
@@ -223,8 +209,6 @@ define(
                     this.currentGroup = null;
                 }
 
-                this.render.capture.un('move', this.__moveEvent);
-                this.render.capture.un('rightdown', this.__contextEvent);
                 this.render.setCursor('default');
             }
         };

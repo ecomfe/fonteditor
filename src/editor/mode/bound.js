@@ -23,10 +23,9 @@ define(
              * 按下事件
              */
             down: function(e) {
-                var render = this.render;
                 var camera = this.render.camera;
 
-                var result = render.getLayer('font').getShapeIn(e);
+                var result = this.fontLayer.getShapeIn(e);
                 if(result) {
                     var shape = result[0];
                     if (result.length > 1) {

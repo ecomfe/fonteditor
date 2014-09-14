@@ -19,16 +19,10 @@ define(
             
             var render = this.render;
             render.capture.on('wheel', function(e) {
+
                 var defaultRatio = render.options.defaultRatio || 1.2;
                 var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
-
-                render.camera.ratio = ratio;
-                render.camera.center.x = e.x;
-                render.camera.center.y = e.y;
-                render.camera.scale *= ratio;
-
-                render.painter.refresh();
-                render.camera.ratio = 1;
+                render.scale(ratio, e);
             });
 
             render.capture.on('down', function(e) {

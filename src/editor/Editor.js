@@ -13,10 +13,13 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('graphics/pathAdjust');
         var editorMode = require('./mode/editorMode');
+        var commandList = require('./menu/commandList');
         var ContextMenu = require('./menu/ContextMenu');
+        var commandSupport = require('./command/support');
+
 
         /**
-         * 初始化
+         * 初始化渲染器
          */
         function initRender() {
             var me = this;
@@ -41,13 +44,7 @@ define(
                     return;
                 }
 
-                render.camera.ratio = ratio;
-                render.camera.center.x = e.x;
-                render.camera.center.y = e.y;
-                render.camera.scale *= ratio;
-                render.painter.refresh();
-                render.camera.ratio = 1;
-
+                render.scale(ratio, e);
             });
 
             render.capture.on('down', function(e) {
@@ -95,13 +92,20 @@ define(
                 me.mode.dragend && me.mode.dragend.call(me, e);
             });
 
+            render.capture.on('move', function(e) {
+
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+                
+                me.mode.move && me.mode.move.call(me, e);
+            });
+
             render.capture.on('up', function(e) {
 
                 if (me.contextMenu.visible()) {
                     return;
                 }
-
-                setCamera(e);
 
                 me.mode.up && me.mode.up.call(me, e);
             });
@@ -112,10 +116,9 @@ define(
                     return;
                 }
 
-                setCamera(e);
-
                 me.mode.click && me.mode.click.call(me, e);
             });
+
 
             render.capture.on('dblclick', function(e) {
 
@@ -134,18 +137,46 @@ define(
                 }
             });
 
+            render.capture.on('rightdown', function(e) {
+
+                if (me.mode.rightdown) {
+                    me.mode.rightdown.call(me, e);
+                }
+                else {
+                    me.contextMenu.onClick = lang.bind(onContextMenu, me);
+                    me.contextMenu.show(e, commandList.editor);
+                }
+            });
+
+            render.keyCapture.on('keyup', function(e) {
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
+                // esc键，重置model
+                if (e.key == 'esc' && !me.mode.keyup) {
+                    me.setMode();
+                }
+                else {
+                    me.mode.keyup && me.mode.keyup.call(me, e);
+                }
+            });
+
         }
 
+        /**
+         * 初始化层
+         */
         function initLayer() {
 
-            this.render.addLayer('cover', {
+            this.coverLayer = this.render.addLayer('cover', {
                 level: 30,
                 fill: false,
                 strokeColor: 'green',
                 fillColor: 'white',
             });
 
-            this.render.addLayer('font', {
+            this.fontLayer = this.render.addLayer('font', {
                 level: 20,
                 lineWidth: 2,
                 strokeColor: 'red'
@@ -158,15 +189,13 @@ define(
             });
         }
 
-        function initAxis() {
-            // 将坐标原点翻转
-            var center = this.render.camera.center;
+        function initAxis(origin) {
 
             // 绘制轴线
             this.axis = {
                 type: 'axis',
-                x: center.x,
-                y: center.y,
+                x: origin.x,
+                y: origin.y,
                 width: 100,
                 unitsPerEm: this.options.unitsPerEm,
                 metrics: this.options.metrics,
@@ -174,6 +203,15 @@ define(
             };
             this.render.getLayer('axis').addShape(this.axis);
         }
+
+        /**
+         * 右键点击处理
+         */
+        function onContextMenu(e) {
+            this.contextMenu.hide();
+            this.execCommand(e.command);
+        }
+
 
         /**
          * Render控制器
@@ -235,12 +273,7 @@ define(
             // 渲染形状
             this.render.reset();
 
-            // 设置坐标原点
-            var camera = this.render.camera;
-            camera.center.x = offsetX;
-            camera.center.y = offsetY;
-
-            initAxis.call(this);
+            initAxis.call(this, {x: offsetX, y: offsetY});
 
             var fontLayer = this.render.painter.getLayer('font');
 
@@ -280,6 +313,59 @@ define(
             return this;
         };
 
+
+        /**
+         * 执行指定命令
+         * 
+         * @param {string...} command 指令名，后续为命令参数集合
+         * @return {boolean} 是否执行成功
+         */
+        Editor.prototype.execCommand = function(command) {
+
+            var args = Array.prototype.slice.call(arguments, 1);
+            var event = {
+                command: command,
+                args: args
+            };
+            this.fire('command', event);
+
+            if(event.returnValue == false) {
+                return false;
+            }
+
+            if (commandSupport[command]) {
+                commandSupport[command].apply(this, args);
+                return true;
+            }
+
+            return false;
+        };
+
+        /**
+         * 是否支持指令
+         * 
+         * @param {string} command 指令名
+         * @return {boolean} 是否
+         */
+        Editor.prototype.supportCommand = function(command) {
+            return !!commandSupport[command];
+        };
+
+        /**
+         * 添加指令
+         * 
+         * @param {string} command 指令名
+         * @param {Function} worker 执行函数
+         * @return {boolean} 是否成功
+         */
+        Editor.prototype.addCommand = function(command, worker) {
+            if(commandSupport[command]) {
+                return false;
+            }
+            commandSupport[command] = worker;
+            return true;
+        };
+
         /**
          * 注销
          */
@@ -287,6 +373,7 @@ define(
             this.contextMenu.dispose();
             this.render && this.render.dispose();
             this.options = this.contextMenu = this.render = null;
+            this.fontLayer = this.coverLayer = null;
         };
 
         require('common/observable').mixin(Editor.prototype);

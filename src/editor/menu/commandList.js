@@ -1,5 +1,5 @@
 /**
- * @file command.js
+ * @file commandList.js
  * @author mengke01
  * @date 
  * @description
@@ -36,7 +36,7 @@ define(
         // 路径编辑命令
         var shape_command = {
 
-            add: {
+            addshape: {
                 title: '添加轮廓'
             },
 
@@ -75,7 +75,7 @@ define(
 
         var shapes_command = {
 
-            add: {
+            addshape: {
                 title: '添加轮廓'
             },
 
@@ -84,10 +84,31 @@ define(
             }
         }
 
+
+        var editor_command = {
+
+            addshape: {
+                title: '添加轮廓'
+            },
+
+            rescale: {
+                title: '重置缩放'
+            },
+
+            // undo: {
+            //     title: '撤销'
+            // },
+
+            // redo: {
+            //     title: '恢复'
+            // }
+        };
+
         return {
             point: point_command,
             shape: shape_command,
-            shapes: shapes_command
+            shapes: shapes_command,
+            editor: editor_command
         };
     }
 );

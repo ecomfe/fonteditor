@@ -65,7 +65,7 @@ define(
                 }
             });
 
-            var coverLayer = this.render.getLayer('cover');
+            var coverLayer = this.editor.coverLayer;
             coverLayer.clearShapes();
             controls.forEach(function(shape) {
                 coverLayer.addShape(shape);

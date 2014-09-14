@@ -17,7 +17,8 @@ define(
             polygon: require('./Polygon'),
             font: require('./Font'),
             path: require('./Path'),
-            axis: require('./Axis')
+            axis: require('./Axis'),
+            line: require('./Line')
         };
         return support;
     }

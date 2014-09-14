@@ -106,6 +106,10 @@ define(
                 context.beginPath();
                 this.shapes.forEach(function(shape) {
 
+                    if (true === shape.disabled) {
+                        return;
+                    }
+
                     var drawer = support[shape.type];
 
                     if(drawer) {

@@ -56,6 +56,7 @@ define(
         function getKey(e) {
             return {
                 keyCode: e.keyCode,
+                key: keyCodeMap[e.keyCode],
                 ctrlKey: e.ctrlKey,
                 metaKey: e.metaKey,
                 altKey: e.altKey,
@@ -102,7 +103,7 @@ define(
 
             var keyName = keyCodeMap[event.keyCode];
             if (keyName) {
-                this.fire(keyName + keyEvent, event);
+                this.fire(keyName + ':' + keyEvent, event);
             }
         }
 

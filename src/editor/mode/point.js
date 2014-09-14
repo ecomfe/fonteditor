@@ -30,11 +30,10 @@ define(
             if(e.returnValue == false) {
                 return;
             }
-            
+
             this.contextMenu.hide();
 
-            var coverLayer = this.render.getLayer('cover');
-            var fontLayer = this.render.getLayer('font');
+            var fontLayer = this.fontLayer;
             var command = e.command;
             var shape = fontLayer.getShape(this.currentPoint.shapeId);
             var points = shape.points;
@@ -67,13 +66,13 @@ define(
             refreshControlPoints.call(this);
 
             this.currentPoint = null;
-            fontLayer.refresh();
+            this.fontLayer.refresh();
         }
 
         // 刷新控制点
         function refreshControlPoints() {
             var controls = [];
-            var shapes = this.render.getLayer('font').shapes;
+            var shapes = this.fontLayer.shapes;
             shapes.forEach(function(shape) {
                 var last = shape.points.length - 1;
                 shape.points.forEach(function(p, index) {
@@ -103,7 +102,7 @@ define(
                 });
             });
 
-            var coverLayer = this.render.getLayer('cover');
+            var coverLayer = this.coverLayer;
             coverLayer.clearShapes();
             controls.forEach(function(shape){
                 coverLayer.addShape(shape);
@@ -125,8 +124,7 @@ define(
                     this.currentPoint = this.currentPointReserved = null;
                 }
 
-                var render = this.render;
-                var result = render.getLayer('cover').getShapeIn(e);
+                var result = this.coverLayer.getShapeIn(e);
 
                 if(result) {
 
@@ -139,7 +137,7 @@ define(
                         }
                     );
 
-                    render.getLayer('cover').refresh();
+                    this.coverLayer.refresh();
                 }
             },
 
@@ -148,8 +146,7 @@ define(
              */
             drag: function(e) {
 
-                var render = this.render;
-                var camera = render.camera;
+                var camera = this.render.camera;
                 if(this.currentPoint) {
                     var current = this.currentPoint;
                     var reserved = this.currentPointReserved;
@@ -172,8 +169,8 @@ define(
                         current.point.y = reserved.point.y + camera.event.deltaY;
                     }
 
-                    render.getLayer('cover').refresh();
-                    render.getLayer('font').refresh();
+                    this.coverLayer.refresh();
+                    this.fontLayer.refresh();
 
                 }
             },
@@ -190,44 +187,49 @@ define(
                 }
             },
 
+            /**
+             * 鼠标移动
+             */
+            move: function(e) {
+                var shape = this.coverLayer.getShapeIn(e);
+                if(shape) {
+                    this.render.setCursor('pointer');
+                }
+                else {
+                    this.render.setCursor('default');
+                }
+            },
+
+            /**
+             * 开始
+             */
             begin: function() {
 
                 var me = this;
-                var coverLayer = this.render.getLayer('cover');
+                var coverLayer = this.coverLayer;
                 coverLayer.options.fill = true;
-
                 refreshControlPoints.call(me);
 
-                // 注册鼠标样式
-                me.render.capture.on('move', me.__moveEvent = function (e) {
-                    var shape = coverLayer.getShapeIn(e);
-                    if(shape) {
-                        me.render.setCursor('pointer');
-                    }
-                    else {
-                        me.render.setCursor('default');
-                    }
-                });
-
-                // 右键菜单
-                me.render.capture.on('rightdown', me.__contextEvent = function (e) {
-                    if (me.currentPoint) {
-                        me.contextMenu.onClick = lang.bind(onContextMenu, me);
-                        me.contextMenu.show(e, require('../menu/command').point);
-                    }
-                });
             },
 
+            /**
+             * 右键
+             */
+            rightdown: function(e) {
+                if (this.currentPoint) {
+                    this.contextMenu.onClick = lang.bind(onContextMenu, this);
+                    this.contextMenu.show(e, require('../menu/commandList').point);
+                }
+            },
+
+            /**
+             * 结束
+             */
             end: function() {
 
-                var coverLayer = this.render.getLayer('cover');
-                coverLayer.options.fill = false;
-                coverLayer.clearShapes();
-                coverLayer.refresh();
-
-                this.render.capture.un('move', this.__moveEvent);
-                this.render.capture.un('rightdown', this.__contextEvent);
-
+                this.coverLayer.options.fill = false;
+                this.coverLayer.clearShapes();
+                this.coverLayer.refresh();
                 this.render.setCursor('default');
             }
         };

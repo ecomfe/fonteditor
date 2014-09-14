@@ -254,6 +254,18 @@ define(
             },
 
             /**
+             * 获取操作面板大小
+             * 
+             * @return {Object} width, height
+             */
+            getSize: function() {
+                return {
+                    width: this.width,
+                    height: this.height
+                }
+            },
+
+            /**
              * 注销本对象
              */
             dispose: function() {

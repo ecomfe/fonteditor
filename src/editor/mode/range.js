@@ -19,7 +19,7 @@ define(
          * 多选shape
          */
         function selectShapes(bound) {
-            var shapes = this.render.getLayer('font').shapes;
+            var shapes = this.fontLayer.shapes;
             var selectedShapes = [];
 
             shapes.forEach(function(shape) {
@@ -53,7 +53,7 @@ define(
                     var camera = this.render.camera;
                     this.selectionBox.width = camera.x - this.selectionBox.x;
                     this.selectionBox.height = camera.y - this.selectionBox.y;
-                    this.render.getLayer('cover').refresh();
+                    this.coverLayer.refresh();
                 }
             },
 
@@ -73,9 +73,8 @@ define(
                         }
                     }
 
-                    var coverLayer = this.render.getLayer('cover');
-                    coverLayer.clearShapes();
-                    coverLayer.refresh();
+                    this.coverLayer.clearShapes();
+                    this.coverLayer.refresh();
                 }
                 
                 this.selectionBox = null;
@@ -93,7 +92,7 @@ define(
                     x: camera.x,
                     y: camera.y
                 };
-                this.render.getLayer('cover').addShape(this.selectionBox);
+                this.coverLayer.addShape(this.selectionBox);
             },
 
             /**
