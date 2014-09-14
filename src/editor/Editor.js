@@ -289,6 +289,8 @@ define(
             this.options = this.contextMenu = this.render = null;
         };
 
+        require('common/observable').mixin(Editor.prototype);
+
         return Editor;
     }
 );

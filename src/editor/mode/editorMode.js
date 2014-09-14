@@ -14,7 +14,8 @@ define(
             'point': require('./point'),
             'range': require('./range'),
             'default': require('./bound'),
-            'shapes': require('./shapes')
+            'shapes': require('./shapes'),
+            'addshape': require('./addshape')
         };
     }
 );

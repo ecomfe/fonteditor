@@ -26,6 +26,13 @@ define(
                 return;
             }
 
+            this.fire('command', e);
+            if(e.returnValue == false) {
+                return;
+            }
+            
+            this.contextMenu.hide();
+
             var coverLayer = this.render.getLayer('cover');
             var fontLayer = this.render.getLayer('font');
             var command = e.command;
@@ -61,7 +68,6 @@ define(
 
             this.currentPoint = null;
             fontLayer.refresh();
-            this.contextMenu.hide();
         }
 
         // 刷新控制点
@@ -210,8 +216,6 @@ define(
                         me.contextMenu.show(e, require('../menu/command').point);
                     }
                 });
-
-                this.modifiedShape = {};
             },
 
             end: function() {
@@ -222,7 +226,7 @@ define(
                 coverLayer.refresh();
 
                 this.render.capture.un('move', this.__moveEvent);
-                this.render.capture.un('move', this.__contextEvent);
+                this.render.capture.un('rightdown', this.__contextEvent);
 
                 this.render.setCursor('default');
             }

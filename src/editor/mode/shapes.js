@@ -13,8 +13,70 @@ define(
         var ShapesGroup = require('../group/ShapesGroup');
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
-
+        var commandList = require('../menu/command');
         var POS_CUSOR = require('./cursor');
+
+
+        /**
+         * 处理右键菜单
+         * 
+         * @param {string} command 命令
+         */
+        function onContextMenu(e) {
+            if(!this.currentGroup.shapes.length == 1) {
+                return;
+            }
+
+            this.fire('command', e);
+            if(e.returnValue == false) {
+                return;
+            }
+
+            this.contextMenu.hide();
+
+            var coverLayer = this.render.getLayer('cover');
+            var fontLayer = this.render.getLayer('font');
+            var command = e.command;
+            var shape = this.currentGroup.shapes[0];
+
+            if (command == 'add') {
+                this.setMode('addshape');
+            }
+            else if (command == 'remove') {
+
+                this.currentGroup.shapes.forEach(function(shape) {
+                    fontLayer.removeShape(shape);
+                });
+                
+                fontLayer.refresh();
+                this.setMode();
+            }
+            else if (command == 'reverse') {
+                shape.points = shape.points.reverse();
+                fontLayer.refresh();
+            }
+            else if (command == 'top') {
+                var index = fontLayer.shapes.indexOf(shape);
+                fontLayer.shapes.splice(index, 1);
+                fontLayer.shapes.push(shape);
+            }
+            else if (command == 'bottom') {
+                var index = fontLayer.shapes.indexOf(shape);
+                fontLayer.shapes.splice(index, 1);
+                fontLayer.shapes.unshift(shape);
+            }
+            else if (command == 'up') {
+                var index = fontLayer.shapes.indexOf(shape);
+                fontLayer.shapes.splice(index, 1);
+                fontLayer.shapes.splice(index + 1, 0, shape);
+            }
+            else if (command == 'down') {
+                var index = fontLayer.shapes.indexOf(shape);
+                fontLayer.shapes.splice(index, 1);
+                fontLayer.shapes.splice(index - 1, 0, shape);
+            }
+        }
+
 
         var mode = {
 
@@ -131,6 +193,20 @@ define(
                         me.render.setCursor('default');
                     }
                 });
+
+                // 右键菜单
+                me.render.capture.on('rightdown', me.__contextEvent = function (e) {
+                    // 对单个shape进行操作
+                    if (me.currentGroup) {
+                        me.contextMenu.onClick = lang.bind(onContextMenu, me);
+                        me.contextMenu.show(e, 
+                            me.currentGroup.shapes.length > 1
+                            ? commandList.shapes
+                            : commandList.shape
+                        );
+                    }
+                });
+
             },
 
             /**
@@ -148,6 +224,7 @@ define(
                 }
 
                 this.render.capture.un('move', this.__moveEvent);
+                this.render.capture.un('rightdown', this.__contextEvent);
                 this.render.setCursor('default');
             }
         };

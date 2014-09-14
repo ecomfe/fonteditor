@@ -34,7 +34,7 @@ define(
         };
 
         // 路径编辑命令
-        var path_command = {
+        var shape_command = {
 
             add: {
                 title: '添加轮廓'
@@ -48,13 +48,13 @@ define(
                 title: '改变方向'
             },
 
-            cut: {
-                title: '剪切'
-            },
+            // cut: {
+            //     title: '剪切'
+            // },
 
-            copy: {
-                title: '复制'
-            },
+            // copy: {
+            //     title: '复制'
+            // },
 
             top: {
                 title: '置前'
@@ -73,9 +73,21 @@ define(
             }
         };
 
+        var shapes_command = {
+
+            add: {
+                title: '添加轮廓'
+            },
+
+            remove: {
+                title: '删除轮廓'
+            }
+        }
+
         return {
             point: point_command,
-            path: path_command
+            shape: shape_command,
+            shapes: shapes_command
         };
     }
 );
