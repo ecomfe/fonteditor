@@ -173,14 +173,6 @@ define(
             },
 
             /**
-             * 开始模式
-             */
-            begin: function(shapes) {
-                this.currentGroup = new ShapesGroup(shapes, this);
-                this.currentGroup.refresh();
-            },
-
-            /**
              * 右键
              */
             rightdown: function(e) {
@@ -194,6 +186,29 @@ define(
                     );
                 }
             },
+
+            /**
+             * 按键
+             */
+            keyup: function(e) {
+                // esc键，重置model
+                if (e.key == 'delete' && this.currentGroup) {
+                    this.execCommand('removeshapes', this.currentGroup.shapes);
+                    this.setMode();
+                }
+                else if (e.key == 'esc') {
+                    this.setMode();
+                }
+            },
+
+            /**
+             * 开始模式
+             */
+            begin: function(shapes) {
+                this.currentGroup = new ShapesGroup(shapes, this);
+                this.currentGroup.refresh();
+            },
+
 
             /**
              * 结束模式

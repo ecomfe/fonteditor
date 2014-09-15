@@ -208,6 +208,32 @@ define(
             },
 
             /**
+             * 右键
+             */
+            rightdown: function(e) {
+                if (this.currentPoint) {
+                    this.contextMenu.onClick = lang.bind(onContextMenu, this);
+                    this.contextMenu.show(e, require('../menu/commandList').point);
+                }
+            },
+
+
+            /**
+             * 按键
+             */
+            keyup: function(e) {
+                // esc键，重置model
+                if (e.key == 'delete' && this.currentPoint) {
+                    onContextMenu.call(this, {
+                        command: 'remove'
+                    });
+                }
+                else if (e.key == 'esc') {
+                    this.setMode();
+                }
+            },
+
+            /**
              * 开始
              */
             begin: function() {
@@ -219,15 +245,7 @@ define(
 
             },
 
-            /**
-             * 右键
-             */
-            rightdown: function(e) {
-                if (this.currentPoint) {
-                    this.contextMenu.onClick = lang.bind(onContextMenu, this);
-                    this.contextMenu.show(e, require('../menu/commandList').point);
-                }
-            },
+
 
             /**
              * 结束

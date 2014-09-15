@@ -31,8 +31,7 @@ define(
                         }
                     });
 
-                    var shape = this.fontLayer.addShape({
-                        type: 'path',
+                    var shape = this.fontLayer.addShape('path', {
                         points: points
                     });
                     this.fontLayer.refresh();
@@ -121,6 +120,7 @@ define(
                 this.points = this.dashedLine = null;
                 this.coverLayer.clearShapes();
                 this.coverLayer.refresh();
+                this.render.setCursor('default');
             }
         };
 

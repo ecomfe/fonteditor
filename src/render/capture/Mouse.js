@@ -82,34 +82,6 @@ define(
         }
 
         /**
-         * 初始化函数
-         * 
-         * @private
-         */
-        function init() {
-            var target = this.main;
-
-            this.handlers = {
-                mousewheel: lang.bind(mousewheel, this),
-                mousemove: lang.bind(mousemove, this),
-                mousedown: lang.bind(mousedown, this),
-                dblclick: lang.bind(dblclick, this),
-                mouseover: lang.bind(mouseover, this),
-                mouseout: lang.bind(mouseout, this),
-                mouseup: lang.bind(mouseup, this)
-            };
-
-            target.addEventListener('DOMMouseScroll', this.handlers.mousewheel, false);
-            target.addEventListener('mousewheel', this.handlers.mousewheel, false);
-            target.addEventListener('mousemove', this.handlers.mousemove, false);
-            target.addEventListener('mousedown', this.handlers.mousedown, false);
-            target.addEventListener('dblclick', this.handlers.dblclick, false);
-            target.addEventListener('mouseover', this.handlers.mouseover, false);
-            target.addEventListener('mouseout', this.handlers.mouseout, false);
-            document.addEventListener('mouseup', this.handlers.mouseup, false);
-        }
-
-        /**
          * 按下处理事件
          * 
          * @param {Object} e 事件参数
@@ -297,16 +269,49 @@ define(
             options = options || {};
             this.events = options.events || {};
             this.dragDelta = 2;
-            init.call(this, options);
+            this.start();
         }
 
 
         lang.extend(MouseCapture.prototype, {
 
             /**
-             * 注销
+             * 开始监听
+             * 
+             * @return {this}
              */
-            dispose: function() {
+            start: function() {
+
+                var target = this.main;
+                this.handlers = {
+                    mousewheel: lang.bind(mousewheel, this),
+                    mousemove: lang.bind(mousemove, this),
+                    mousedown: lang.bind(mousedown, this),
+                    dblclick: lang.bind(dblclick, this),
+                    mouseover: lang.bind(mouseover, this),
+                    mouseout: lang.bind(mouseout, this),
+                    mouseup: lang.bind(mouseup, this)
+                };
+
+                target.addEventListener('DOMMouseScroll', this.handlers.mousewheel, false);
+                target.addEventListener('mousewheel', this.handlers.mousewheel, false);
+                target.addEventListener('mousemove', this.handlers.mousemove, false);
+                target.addEventListener('mousedown', this.handlers.mousedown, false);
+                target.addEventListener('dblclick', this.handlers.dblclick, false);
+                target.addEventListener('mouseover', this.handlers.mouseover, false);
+                target.addEventListener('mouseout', this.handlers.mouseout, false);
+                document.addEventListener('mouseup', this.handlers.mouseup, false);
+
+                return this;
+            },
+
+            /**
+             * 停止监听
+             * 
+             * @return {this}
+             */
+            stop: function() {
+
                 var target = this.main;
                 target.removeEventListener('DOMMouseScroll', this.handlers.mousewheel);
                 target.removeEventListener('mousewheel', this.handlers.mousewheel);
@@ -317,6 +322,15 @@ define(
                 target.removeEventListener('mouseover', this.handlers.mouseover);
                 target.removeEventListener('mouseout', this.handlers.mouseout);
                 document.removeEventListener('mouseup', this.handlers.mouseup);
+
+                return this;
+            },
+
+            /**
+             * 注销
+             */
+            dispose: function() {
+                this.stop();
                 this.un();
                 this.main = this.events = null;
             }

@@ -53,7 +53,7 @@ define(
          * 
          * @return {Object} 按键列表
          */
-        function getKey(e) {
+        function getEvent(e) {
             return {
                 keyCode: e.keyCode,
                 key: keyCodeMap[e.keyCode],
@@ -65,34 +65,11 @@ define(
         }
 
         /**
-         * 初始化函数
-         * 
-         * @private
-         */
-        function init() {
-
-            var target = this.main;
-
-            this.handlers = {
-                keydown: lang.bind(keydetect, this, 'down'),
-                keyup: lang.bind(keydetect, this, 'up'),
-                keypress: lang.bind(keydetect, this, 'press'),
-            };
-
-            target.addEventListener('keydown', this.handlers.keydown, false);
-            target.addEventListener('keyup', this.handlers.keyup, false);
-            target.addEventListener('keypress', this.handlers.keypress, false);
-        }
-
-
-        /**
          * 按下处理事件
          * 
          * @param {Object} e 事件参数
          */
         function keydetect(keyEvent, e) {
-
-            prevent(e);
 
             if(false === this.events['key' + Event]) {
                 return;
@@ -120,19 +97,53 @@ define(
             this.main = main;
             options = options || {};
             this.events = options.events || {};
-            init.call(this, options);
+            this.start();
         }
 
 
         lang.extend(KeyboardCapture.prototype, {
+
+            /**
+             * 开始监听
+             * 
+             * @return {this}
+             */
+            start: function() {
+
+                var target = document.body;
+                this.handlers = {
+                    keydown: lang.bind(keydetect, this, 'down'),
+                    keyup: lang.bind(keydetect, this, 'up'),
+                    keypress: lang.bind(keydetect, this, 'press'),
+                };
+
+                target.addEventListener('keydown', this.handlers.keydown, false);
+                target.addEventListener('keyup', this.handlers.keyup, false);
+                target.addEventListener('keypress', this.handlers.keypress, false);
+
+                return this;
+            },
+
+            /**
+             * 停止监听
+             * 
+             * @return {this}
+             */
+            stop: function() {
+
+                var target = document.body;
+                target.removeEventListener('keydown', this.handlers.keydown);
+                target.removeEventListener('keyup', this.handlers.keyup);
+                target.removeEventListener('keypress', this.handlers.keypress);
+
+                return this;
+            },
+
             /**
              * 注销
              */
             dispose: function() {
-                var target = this.main;
-                target.removeEventListener('keydown', this.handlers.keydown);
-                target.removeEventListener('keyup', this.handlers.keyup);
-                target.removeEventListener('keypress', this.handlers.keypress);
+                this.stop();
                 this.main = this.events = null;
                 this.un();
             }
