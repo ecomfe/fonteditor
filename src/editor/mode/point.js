@@ -14,6 +14,13 @@ define(
         var pathAdjust = require('graphics/pathAdjust');
         var lang = require('common/lang');
 
+        // 移动步频
+        var stepMap = {
+            'left': [-5, 0],
+            'right': [5, 0],
+            'up': [0, -5],
+            'down': [0, 5]
+        };
 
         /**
          * 处理右键菜单
@@ -72,7 +79,7 @@ define(
 
             refreshControlPoints.call(this);
 
-            this.currentPoint = null;
+            this.currentPoint = this.currentPointReserved = null;
             this.fontLayer.refresh();
         }
 
@@ -178,19 +185,6 @@ define(
 
                     this.coverLayer.refresh();
                     this.fontLayer.refresh();
-
-                }
-            },
-
-            /**
-             * 拖动结束事件
-             */
-            dragend: function(e) {
-
-                if(this.currentPoint) {
-                    this.currentPoint.style = this.currentPointReserved.style;
-                    this.currentPointReserved = null;
-                    this.currentPoint = null;
                 }
             },
 
@@ -234,10 +228,35 @@ define(
             },
 
             /**
+             * 按住
+             */
+            keydown: function(e) {
+                // 移动
+                if(stepMap[e.key] && this.currentPoint) {
+                    var step = stepMap[e.key];
+                    var current = this.currentPoint;
+                    var reserved = this.currentPointReserved;
+                    if (step[0]) {
+                        current.x += step[0];
+                        current.point.x += step[0];
+                        reserved.x += step[0];
+                        reserved.point.x += step[0];
+                    }
+                    if (step[1]) {
+                        current.y += step[1];
+                        current.point.y += step[1];
+                        reserved.y += step[1];
+                        reserved.point.y += step[1];
+                    }
+                    this.coverLayer.refresh();
+                    this.fontLayer.refresh();
+                }
+            },
+
+            /**
              * 开始
              */
             begin: function() {
-
                 var me = this;
                 var coverLayer = this.coverLayer;
                 coverLayer.options.fill = true;
@@ -245,13 +264,11 @@ define(
 
             },
 
-
-
             /**
              * 结束
              */
             end: function() {
-
+                this.currentPoint = this.currentPointReserved = null;
                 this.coverLayer.options.fill = false;
                 this.coverLayer.clearShapes();
                 this.coverLayer.refresh();

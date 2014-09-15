@@ -22,6 +22,7 @@ define(
                     x: size.width / 2, 
                     y: size.height / 2
                 });
+                this.setMode();
             },
 
 

@@ -146,6 +146,13 @@ define(
                 }
             });
 
+            render.keyCapture.on('keydown', function(e) {
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+                
+                me.mode.keydown && me.mode.keydown.call(me, e);
+            });
         }
 
         /**

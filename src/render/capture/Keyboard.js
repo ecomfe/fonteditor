@@ -65,12 +65,12 @@ define(
         }
 
         /**
-         * 按下处理事件
+         * 按下弹起事件
          * 
          * @param {Object} e 事件参数
          */
         function keydetect(keyEvent, e) {
-
+            
             if(false === this.events['key' + Event]) {
                 return;
             }
@@ -83,7 +83,6 @@ define(
                 this.fire(keyName + ':' + keyEvent, event);
             }
         }
-
 
         /**
          * 鼠标动作捕获器

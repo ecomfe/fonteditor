@@ -16,6 +16,13 @@ define(
         var commandList = require('../menu/commandList');
         var POS_CUSOR = require('./cursor');
 
+        // 移动步频
+        var stepMap = {
+            'left': [-5, 0],
+            'right': [5, 0],
+            'up': [0, -5],
+            'down': [0, 5]
+        };
 
         /**
          * 处理右键菜单
@@ -198,6 +205,16 @@ define(
                 }
                 else if (e.key == 'esc') {
                     this.setMode();
+                }
+            },
+
+            /**
+             * 按住
+             */
+            keydown: function(e) {
+                // 移动
+                if(stepMap[e.key] && this.currentGroup) {
+                    this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);
                 }
             },
 
