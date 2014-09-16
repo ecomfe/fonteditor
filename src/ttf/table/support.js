@@ -20,7 +20,10 @@ define(
             'gasp': require('./gasp'),
             'hhea': require('./hhea'),
             'hmtx': require('./hhea'),
-            'post': require('./post')
+            'post': require('./post'),
+            'DSIG': require('./DSIG'),
+            'GDEF': require('./GDEF'),
+            'GPOS': require('./GPOS')
         };
 
         return support;
