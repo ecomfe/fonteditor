@@ -25,9 +25,15 @@ define(
             //UFWord: 10, 
             // 16-bit signed fixed number with the low 14 bits of fraction
             F2Dot14: 11, 
+
             // The long internal format of a date in seconds since 12:00 midnight, 
             // January 1, 1904. It is represented as a signed 64-bit integer.
-            LongDateTime: 12
+            LongDateTime: 12,
+
+            // extend data type
+            Char: 13,
+            String: 14,
+            Byte: 15
         };
 
         var names = {};

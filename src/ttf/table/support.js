@@ -23,7 +23,8 @@ define(
             'post': require('./post'),
             'DSIG': require('./DSIG'),
             'GDEF': require('./GDEF'),
-            'GPOS': require('./GPOS')
+            'GPOS': require('./GPOS'),
+            'OS/2': require('./OS2')
         };
 
         return support;

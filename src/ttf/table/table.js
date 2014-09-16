@@ -43,12 +43,27 @@ define(
                         var typeName = struct.names[type];
                         me[name] = reader.read(typeName);
                         break;
+
                     case struct.Fixed:
                         me[name] = reader.readFixed();
                         break;
+
                     case struct.LongDateTime:
                         me[name] = reader.readLongDateTime();
                         break;
+
+                    case struct.Byte:
+                        me[name] = reader.readByte(reader.offset, item[2] || 0);
+                        break;
+
+                    case struct.Char:
+                        me[name] = reader.readChar();
+                        break;
+
+                    case struct.String:
+                        me[name] = reader.readString(reader.offset, item[2] || 0);
+                        break;
+
                     default:
                         throw 'unknown type:' + name + ':' + type;
                 }
