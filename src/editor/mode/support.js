@@ -10,7 +10,6 @@
 define(
     function(require) {
         return {
-            'bound': require('./bound'),
             'point': require('./point'),
             'range': require('./range'),
             'default': require('./bound'),

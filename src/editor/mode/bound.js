@@ -16,9 +16,7 @@ define(
         var POS_CUSOR = require('./cursor');
 
         var mode = {
-
-            name: 'bound',
-
+            
             /**
              * 按下事件
              */

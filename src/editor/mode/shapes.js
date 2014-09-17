@@ -91,8 +91,6 @@ define(
 
         var mode = {
 
-            name: 'shapes',
-
             /**
              * 按下事件
              */

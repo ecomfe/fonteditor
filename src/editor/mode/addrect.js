@@ -14,8 +14,6 @@ define(
 
         var mode = {
 
-            name: 'range',
-
             /**
              * 按下事件
              */

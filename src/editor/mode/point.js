@@ -128,8 +128,7 @@ define(
 
 
         var mode = {
-            name: 'point',
-
+            
             /**
              * 按下事件
              */
