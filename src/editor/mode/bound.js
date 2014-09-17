@@ -23,21 +23,21 @@ define(
              * 按下事件
              */
             down: function(e) {
-                var camera = this.render.camera;
-
-                var result = this.fontLayer.getShapeIn(e);
-                if(result) {
-                    var shape = result[0];
-                    if (result.length > 1) {
-                        shape = selectShape(result);
+                if (1 === e.which) {
+                    var camera = this.render.camera;
+                    var result = this.fontLayer.getShapeIn(e);
+                    if(result) {
+                        var shape = result[0];
+                        if (result.length > 1) {
+                            shape = selectShape(result);
+                        }
+                        this.setMode('shapes', [shape]);
                     }
-                    this.setMode('shapes', [shape]);
+                    // 框选模式
+                    else {
+                        this.setMode('range');
+                    }                    
                 }
-                // 框选模式
-                else {
-                    this.setMode('range');
-                }
-
             },
 
             /**

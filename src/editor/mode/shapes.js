@@ -48,14 +48,15 @@ define(
                 return;
             }
 
-            var shape = this.currentGroup.shapes[0];
+            var shapes = this.currentGroup.shapes;
+            var shape = shapes[0];
 
             if (command == 'remove') {
-                this.execCommand('removeshapes', this.currentGroup.shapes);
+                this.execCommand('removeshapes', shapes);
                 this.setMode();
             }
-            else if (command == 'reverse') {
-                this.execCommand('reverseshape', shape);
+            else if (command == 'reverse_point') {
+                this.execCommand('reversepoint', shape);
             }
             else if (command == 'top') {
                 this.execCommand('topshape', shape);
@@ -68,6 +69,20 @@ define(
             }
             else if (command == 'down') {
                 this.execCommand('downshape', shape);
+            }
+            else if (command == 'rotate_left') {
+                this.execCommand('rotateleft', shapes);
+                this.currentGroup.refresh();
+            }
+            else if (command == 'rotate_right') {
+                this.execCommand('rotateright', shapes);
+                this.currentGroup.refresh();
+            }
+            else if (command == 'reverse_shapes') {
+                this.execCommand('reverseshapes', shapes);
+            }
+            else if (command == 'mirror_shapes') {
+                this.execCommand('mirrorshapes', shapes);
             }
         }
 

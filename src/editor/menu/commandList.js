@@ -36,15 +36,11 @@ define(
         // 路径编辑命令
         var shape_command = {
 
-            addshape: {
-                title: '添加轮廓'
-            },
-
             remove: {
                 title: '删除轮廓'
             },
 
-            reverse: {
+            reverse_point: {
                 title: '改变方向'
             },
 
@@ -70,6 +66,22 @@ define(
 
             down: {
                 title: '下移一层'
+            },
+
+            rotate_left: {
+                title: '向左旋转'
+            },
+
+            rotate_right: {
+                title: '向右旋转'
+            },
+
+            reverse_shapes: {
+                title: '翻转'
+            },
+
+            mirror_shapes: {
+                title: '镜像'
             }
         };
 
@@ -81,6 +93,22 @@ define(
 
             remove: {
                 title: '删除轮廓'
+            },
+
+            rotate_left: {
+                title: '向左旋转'
+            },
+
+            rotate_right: {
+                title: '向右旋转'
+            },
+
+            reverse_shapes: {
+                title: '翻转'
+            },
+
+            mirror_shapes: {
+                title: '镜像'
             }
         }
 

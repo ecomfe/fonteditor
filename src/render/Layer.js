@@ -41,20 +41,6 @@ define(
         }
 
         /**
-         * 绘制图形
-         */
-        function draw(context, options) {
-            if(false !== options.stroke) {
-                context.stroke();
-            }
-
-            if(false !== options.fill) {
-                context.fill();
-            }
-        }
-
-
-        /**
          * 对shape进行camera调整
          * 
          * @return {Array} 调整后的shape
@@ -96,7 +82,7 @@ define(
              * @return {this}
              */
             refresh: function() {
-
+                console.time('layer-refresh');
                 var support = this.painter.support;
                 var context = this.context;
                 var options = this.options;
@@ -122,14 +108,26 @@ define(
                         }
 
                         if(shape.style) {
+
                             // 绘制之前shape
-                            draw(context, options);
+                            if(false !== options.fill) {
+                                context.fill();
+                            }
+                            if(false !== options.stroke) {
+                                context.stroke();
+                            }
 
                             // 绘制当前shape
                             context.beginPath();
                             setContextStyle(context, shape.style);
                             drawer.draw(context, shape);
-                            draw(context, options);
+
+                            if(false !== options.fill) {
+                                context.fill();
+                            }
+                            if(false !== options.stroke) {
+                                context.stroke();
+                            }
 
                             // 重置
                             setContextStyle(context, options);
@@ -139,10 +137,16 @@ define(
                             drawer.draw(context, shape);
                         }
                     }
-                };
+                }
 
-                draw(context, options);
+                if(false !== options.fill) {
+                    context.fill();
+                }
 
+                if(false !== options.stroke) {
+                    context.stroke();
+                }
+                console.timeEnd('layer-refresh');
                 return this;
             },
 

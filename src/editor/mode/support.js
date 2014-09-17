@@ -16,7 +16,8 @@ define(
             'default': require('./bound'),
             'shapes': require('./shapes'),
             'addshape': require('./addshape'),
-            'addrect': require('./addrect')
+            'addrect': require('./addrect'),
+            'addcircle': require('./addcircle')
         };
     }
 );

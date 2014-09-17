@@ -10,6 +10,8 @@
 define(
     function(require) {
 
+        var lang = require('common/lang');
+
         var support = {
 
             /**
@@ -41,6 +43,13 @@ define(
             },
 
             /**
+             * 添加circle
+             */
+            addcircle: function() {
+                this.setMode('addcircle');
+            },
+
+            /**
              * 移除shape
              */
             removeshapes: function(shapes) {
@@ -54,7 +63,7 @@ define(
             /**
              * 反转shape
              */
-            reverseshape: function(shape) {
+            reversepoint: function(shape) {
                 shape.points = shape.points.reverse();
                 this.fontLayer.refresh();
             },
@@ -95,6 +104,8 @@ define(
                 this.fontLayer.shapes.splice(index - 1, 0, shape);
             }
         };
+
+        lang.extend(support, require('./transform'));
 
         return support;
     }

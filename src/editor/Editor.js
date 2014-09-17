@@ -164,13 +164,14 @@ define(
                 level: 30,
                 fill: false,
                 strokeColor: 'green',
-                fillColor: 'white',
+                fillColor: 'white'
             });
 
             this.fontLayer = this.render.addLayer('font', {
                 level: 20,
-                lineWidth: 2,
-                strokeColor: 'red'
+                lineWidth: 1,
+                strokeColor: 'red',
+                strokeSeparate: false
             });
 
             this.render.addLayer('axis', {

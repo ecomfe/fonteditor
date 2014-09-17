@@ -52,7 +52,7 @@ define(
             /**
              * 鼠标弹起
              */
-            up: function(e) {
+            dragend: function(e) {
                 if(1 == e.which) {
                     if(this.selectionBox) {
                         var box = this.selectionBox;
@@ -69,6 +69,7 @@ define(
 
                             this.fontLayer.refresh();
                             this.setMode('shapes', [shape]);
+                            return;
                         }
                     }
                     
