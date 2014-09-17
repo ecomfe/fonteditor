@@ -35,7 +35,6 @@ define(
                         points: points
                     });
                     this.fontLayer.refresh();
-
                     this.setMode('shapes', [shape]);
                 }
                 // 添加控制点
@@ -100,8 +99,6 @@ define(
              */
             begin: function() {
                 this.coverLayer.clearShapes();
-
-                this.render.setCursor('crosshair');
                 this.points = [];
                 this.dashedLine = this.coverLayer.addShape({
                     type: 'line',
@@ -111,6 +108,7 @@ define(
                     p0: {},
                     p1: {}
                 });
+                this.render.setCursor('crosshair');
             },
 
             /**

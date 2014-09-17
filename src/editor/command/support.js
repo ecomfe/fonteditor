@@ -34,6 +34,13 @@ define(
             },
 
             /**
+             * 添加rect
+             */
+            addrect: function() {
+                this.setMode('addrect');
+            },
+
+            /**
              * 移除shape
              */
             removeshapes: function(shapes) {

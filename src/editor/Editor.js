@@ -12,7 +12,7 @@ define(
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('graphics/pathAdjust');
-        var editorMode = require('./mode/editorMode');
+        var modeSupport = require('./mode/support');
         var commandList = require('./menu/commandList');
         var ContextMenu = require('./menu/ContextMenu');
         var commandSupport = require('./command/support');
@@ -110,10 +110,10 @@ define(
                     return;
                 }
 
-                if(me.mode === editorMode.bound) {
+                if(me.mode === modeSupport.bound) {
                     me.setMode('point');
                 }
-                else if(me.mode === editorMode.point){
+                else if(me.mode === modeSupport.point){
                     me.setMode();
                 }
                 else {
@@ -290,7 +290,7 @@ define(
             if (this.mode) {
                 this.mode.end.call(this);
             }
-            this.mode = editorMode[modeName] || editorMode['default'];
+            this.mode = modeSupport[modeName] || modeSupport['default'];
 
             var args = Array.prototype.slice.call(arguments, 1);
             this.mode.begin.apply(this, args);

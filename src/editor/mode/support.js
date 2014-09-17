@@ -1,5 +1,5 @@
 /**
- * @file editorMode.js
+ * @file support.js
  * @author mengke01
  * @date 
  * @description
@@ -15,7 +15,8 @@ define(
             'range': require('./range'),
             'default': require('./bound'),
             'shapes': require('./shapes'),
-            'addshape': require('./addshape')
+            'addshape': require('./addshape'),
+            'addrect': require('./addrect')
         };
     }
 );
