@@ -41,6 +41,15 @@ define(
             },
 
             /**
+             * 按键
+             */
+            keyup: function(e) {
+                if(e.keyCode == 65 && e.ctrlKey) {
+                    this.setMode('shapes', this.fontLayer.shapes.slice());
+                }
+            },
+
+            /**
              * 开始模式
              */
             begin: function() {

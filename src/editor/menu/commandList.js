@@ -91,6 +91,14 @@ define(
                 title: '添加轮廓'
             },
 
+            addrect: {
+                title: '添加矩形'
+            },
+
+            addcircle: {
+                title: '添加圆'
+            },
+
             rescale: {
                 title: '重置缩放'
             },

@@ -203,6 +203,10 @@ define(
                     this.execCommand('removeshapes', this.currentGroup.shapes);
                     this.setMode();
                 }
+                else if(e.keyCode == 65 && e.ctrlKey && this.currentGroup) {
+                    this.currentGroup.setShapes(this.fontLayer.shapes.slice());
+                    this.currentGroup.refresh();
+                }
                 else if (e.key == 'esc') {
                     this.setMode();
                 }
