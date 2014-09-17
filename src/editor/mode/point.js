@@ -228,6 +228,10 @@ define(
                         command: 'remove'
                     });
                 }
+                // 移动
+                else if(stepMap[e.key] && this.currentPoint) {
+                    this.fire('change');
+                }
                 else if (e.key == 'esc') {
                     this.setMode();
                 }

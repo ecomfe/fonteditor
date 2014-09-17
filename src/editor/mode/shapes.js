@@ -225,6 +225,10 @@ define(
                     this.currentGroup.setShapes(this.fontLayer.shapes.slice());
                     this.currentGroup.refresh();
                 }
+                // 移动
+                else if(stepMap[e.key] && this.currentGroup) {
+                    this.fire('change');
+                }
                 else if (e.key == 'esc') {
                     this.setMode();
                 }
@@ -237,7 +241,6 @@ define(
                 // 移动
                 if(stepMap[e.key] && this.currentGroup) {
                     this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);
-                    this.fire('change');
                 }
             },
 
