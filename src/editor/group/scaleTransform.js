@@ -23,14 +23,15 @@ define(
         function scaleTransform(point, camera) {
 
             var matrix = getScaleMatrix(point.pos, this.bound, camera);
-            // 等比缩放
-            if (camera.event.shiftKey && [1, 2, 3, 4].indexOf(point.pos) >= 0) {
-                var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
-                matrix[2] = matrix[2] >= 0 ? scale : -scale;
-                matrix[3] = matrix[3] >= 0 ? scale : -scale;
+            // 默认等比缩放
+            if ([1, 2, 3, 4].indexOf(point.pos) >= 0) {
+                if(!camera.event.shiftKey) {
+                    var scale = Math.max(Math.abs(matrix[2]), Math.abs(matrix[3]));
+                    matrix[2] = matrix[2] >= 0 ? scale : -scale;
+                    matrix[3] = matrix[3] >= 0 ? scale : -scale;
+                }
             }
-
-
+            
             // 更新shape
             var shapes = this.shapes;
 

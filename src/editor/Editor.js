@@ -114,7 +114,7 @@ define(
                     me.setMode('point');
                 }
                 else if(me.mode === editorMode.point){
-                    me.setMode('bound');
+                    me.setMode();
                 }
                 else {
                     me.setMode('point');
@@ -286,7 +286,7 @@ define(
          * @return {Editor} 本对象
          */
         Editor.prototype.setMode = function(modeName) {
-
+            console.log(modeName);
             if (this.mode) {
                 this.mode.end.call(this);
             }
