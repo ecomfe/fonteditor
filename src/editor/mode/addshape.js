@@ -35,6 +35,7 @@ define(
                         points: points
                     });
                     this.fontLayer.refresh();
+                    this.fire('change');
                     this.setMode('shapes', [shape]);
                 }
                 // 添加控制点

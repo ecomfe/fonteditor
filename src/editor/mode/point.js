@@ -81,6 +81,8 @@ define(
 
             this.currentPoint = this.currentPointReserved = null;
             this.fontLayer.refresh();
+
+            this.fire('change');
         }
 
         // 刷新控制点
@@ -186,6 +188,10 @@ define(
                     this.coverLayer.refresh();
                     this.fontLayer.refresh();
                 }
+            },
+
+            dragend: function() {
+                this.fire('change');
             },
 
             /**

@@ -16,7 +16,7 @@ define(
         var commandList = require('./menu/commandList');
         var ContextMenu = require('./menu/ContextMenu');
         var commandSupport = require('./command/support');
-
+        var History = require('./util/History');
 
         /**
          * 初始化渲染器
@@ -137,8 +137,16 @@ define(
                     return;
                 }
 
+                // 撤销
+                if (e.keyCode == 90 && e.ctrlKey) {
+                    me.execCommand('cancel');
+                }
+                // 恢复
+                else if (e.keyCode == 89 && e.ctrlKey) {
+                    me.execCommand('recover');
+                }
                 // esc键，重置model
-                if (e.key == 'esc' && !me.mode.keyup) {
+                else if (e.key == 'esc' && !me.mode.keyup) {
                     me.setMode();
                 }
                 else {
@@ -181,6 +189,11 @@ define(
             });
         }
 
+        /**
+         * 初始化坐标系
+         * 
+         * @param {Object} origin 字体原点
+         */
         function initAxis(origin) {
 
             // 绘制轴线
@@ -195,6 +208,19 @@ define(
             };
             this.render.getLayer('axis').addShape(this.axis);
         }
+
+        /**
+         * 初始化绑定器
+         */
+        function initBinder() {
+            var me = this;
+            // 保存历史记录
+            this.on('change', function(e) {
+                me.history.add(me.getShapes());
+            });
+
+        }
+
 
         /**
          * 右键点击处理
@@ -224,6 +250,7 @@ define(
             }, options);
 
             this.contextMenu = new ContextMenu(main, this.options.contextMenu);
+            this.history = new History();
         }
 
         /**
@@ -233,6 +260,7 @@ define(
             this.render = render;
             initRender.call(this);
             initLayer.call(this);
+            initBinder.call(this);
             return this;
         };
 
@@ -262,7 +290,7 @@ define(
 
             this.font = font;
 
-            // 渲染形状
+            // 重置形状
             this.render.reset();
 
             initAxis.call(this, {x: offsetX, y: offsetY});
@@ -275,10 +303,49 @@ define(
             
             this.render.refresh();
 
+            // 重置历史
+            this.history.reset();
+            this.history.add(this.getShapes());
+
             this.setMode();
 
             return this;
         };
+
+        /**
+         * 获取编辑中的shapes
+         * 
+         * @return {Array} 获取编辑中的shape
+         */
+        Editor.prototype.getShapes = function() {
+            var origin = this.render.getLayer('axis').shapes[0];
+            var shapes = lang.clone(this.fontLayer.shapes);
+            var scale = 1 / this.render.camera.scale;
+            // 调整坐标系
+            shapes.forEach(function(shape) {
+                pathAdjust(shape.points, scale, -scale, -origin.x, -origin.y);
+            });
+            return shapes;
+        };
+
+        /**
+         * 设置编辑中的shapes
+         * 
+         * @return {this}
+         */
+        Editor.prototype.setShapes = function(shapes) {
+            var origin = this.render.getLayer('axis').shapes[0];
+            var scale = this.render.camera.scale;
+            // 调整坐标系
+            shapes.forEach(function(shape) {
+                pathAdjust(shape.points, scale, -scale);
+                pathAdjust(shape.points, 1, 1, origin.x, origin.y);
+            });
+            this.fontLayer.shapes = shapes;
+            this.fontLayer.refresh();
+            return this;
+        };
+
 
         /**
          * 切换编辑模式
@@ -364,8 +431,10 @@ define(
         Editor.prototype.dispose = function() {
             this.contextMenu.dispose();
             this.render && this.render.dispose();
+            this.history.reset();
             this.options = this.contextMenu = this.render = null;
             this.fontLayer = this.coverLayer = null;
+            this.history = null;
         };
 
         require('common/observable').mixin(Editor.prototype);

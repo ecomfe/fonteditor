@@ -59,6 +59,7 @@ define(
                     if(this.circle) {
                         this.fontLayer.addShape(this.circle);
                         this.fontLayer.refresh();
+                        this.fire('change');
                         this.setMode('shapes', [this.circle]);
                         return;
                     }

@@ -102,6 +102,24 @@ define(
                 var index = this.fontLayer.shapes.indexOf(shape);
                 this.fontLayer.shapes.splice(index, 1);
                 this.fontLayer.shapes.splice(index - 1, 0, shape);
+            },
+
+            /**
+             * 撤销
+             */
+            cancel: function() {
+                var shapes = this.history.back();
+                this.setShapes(shapes);
+                this.setMode();
+            },
+
+            /**
+             * 恢复
+             */
+            recover: function() {
+                var shapes = this.history.forward();
+                this.setShapes(shapes);
+                this.setMode();
             }
         };
 

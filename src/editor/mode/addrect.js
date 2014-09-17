@@ -68,6 +68,7 @@ define(
                             });
 
                             this.fontLayer.refresh();
+                            this.fire('change');
                             this.setMode('shapes', [shape]);
                             return;
                         }

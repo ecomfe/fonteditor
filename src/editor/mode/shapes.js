@@ -84,6 +84,8 @@ define(
             else if (command == 'mirror_shapes') {
                 this.execCommand('mirrorshapes', shapes);
             }
+
+            this.fire('change');
         }
 
 
@@ -164,6 +166,7 @@ define(
                         this.currentGroup.finishTransform(this.currentPoint);
                         this.currentPoint = null;
                     }
+                    this.fire('change');
                 }
             },
 
@@ -234,6 +237,7 @@ define(
                 // 移动
                 if(stepMap[e.key] && this.currentGroup) {
                     this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);
+                    this.fire('change');
                 }
             },
 
