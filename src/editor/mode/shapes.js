@@ -218,6 +218,7 @@ define(
                 if (e.key == 'delete' && this.currentGroup) {
                     this.execCommand('removeshapes', this.currentGroup.shapes);
                     this.setMode();
+                    this.fire('change');
                 }
                 else if(e.keyCode == 65 && e.ctrlKey && this.currentGroup) {
                     this.currentGroup.setShapes(this.fontLayer.shapes.slice());
