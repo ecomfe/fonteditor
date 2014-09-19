@@ -18,6 +18,7 @@ define(
             font: require('./Font'),
             path: require('./Path'),
             axis: require('./Axis'),
+            graduation: require('./Graduation'),
             line: require('./Line')
         };
         return support;

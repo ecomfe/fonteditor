@@ -1,20 +1,20 @@
 /**
- * @file Circle.js
+ * @file Graduation.js
  * @author mengke01
  * @date 
  * @description
- * 圆绘制
+ * 刻度线
  */
 
 
 define(
     function(require) {
 
-        var drawAxis = require('../util/drawAxis');
+        var drawGraduation = require('../util/drawGraduation');
 
         var proto = {
             
-            type: 'axis',
+            type: 'graduation',
 
             /**
              * 对形状进行缩放平移调整
@@ -22,19 +22,6 @@ define(
              * @return {Object} shape对象
              */
             adjust: function(shape, camera) {
-                var center = camera.center;
-                var ratio = camera.ratio;
-
-                shape.gap *= ratio;
-                shape.unitsPerEm *= ratio;
-                var metrics = shape.metrics;
-                for (var line in metrics) {
-                    metrics[line] *= ratio;
-                }
-
-                shape.x = ratio * (shape.x - center.x) + center.x;
-                shape.y = ratio * (shape.y - center.y) + center.y;
-
                 return shape;
             },
 
@@ -58,14 +45,11 @@ define(
              */
             draw: function(ctx, shape) {
 
-                if (undefined === shape.gap) {
-                    shape.gap = 100;
-                }
-                
                 ctx.translate(0.5, 0.5);
                 ctx.save();
 
-                drawAxis(ctx, shape);
+                // 绘制刻度线
+                drawGraduation(ctx, shape.config);
 
                 ctx.restore();
                 ctx.beginPath();
@@ -73,8 +57,6 @@ define(
                 ctx.translate(-0.5, -0.5);
             }
         };
-
-
 
         return require('./Shape').derive(proto);
     }

@@ -19,7 +19,7 @@ define(
             'name': require('./name'),
             'gasp': require('./gasp'),
             'hhea': require('./hhea'),
-            'hmtx': require('./hhea'),
+            'hmtx': require('./hmtx'),
             'post': require('./post'),
             'DSIG': require('./DSIG'),
             'GDEF': require('./GDEF'),

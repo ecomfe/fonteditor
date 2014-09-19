@@ -185,7 +185,13 @@ define(
             this.render.addLayer('axis', {
                 level: 10,
                 fill: false,
-                strokeColor: '#A6A6FF'
+                disabled: true
+            });
+
+            this.render.addLayer('graduation', {
+                level: 40,
+                fill: false,
+                disabled: true
             });
         }
 
@@ -202,9 +208,13 @@ define(
                 id: 'axis',
                 x: origin.x,
                 y: origin.y,
-                width: origin.axisWidth,
+                gap: origin.axisGap,
                 unitsPerEm: this.options.unitsPerEm,
                 metrics: this.options.metrics,
+                // 刻度配置
+                graduation: {
+                    gap: origin.axisGap
+                },
                 selectable: false
             });
 
@@ -216,6 +226,10 @@ define(
                 style: {
                     strokeColor: 'blue'
                 }
+            });
+
+            this.render.getLayer('graduation').addShape('graduation', {
+                config: this.axis
             });
 
         }
@@ -309,7 +323,7 @@ define(
                 x: offsetX, 
                 y: offsetY,
                 rightSideBearing: rightSideBearing,
-                axisWidth: 100
+                axisGap: 100
             });
 
             var fontLayer = this.render.painter.getLayer('font');

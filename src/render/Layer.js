@@ -82,7 +82,7 @@ define(
              * @return {this}
              */
             refresh: function() {
-                console.time('layer-refresh');
+                //console.time('layer-refresh');
                 var support = this.painter.support;
                 var context = this.context;
                 var options = this.options;
@@ -146,7 +146,7 @@ define(
                 if(false !== options.stroke) {
                     context.stroke();
                 }
-                console.timeEnd('layer-refresh');
+                //console.timeEnd('layer-refresh');
                 return this;
             },
 
