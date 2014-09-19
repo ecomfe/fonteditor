@@ -16,6 +16,8 @@ function(require) {
         "xMax": 521,
         "yMin": -27,
         "yMax": 475,
+        "advanceWidth": 520,
+
         "contours": [
             [
                 {

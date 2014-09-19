@@ -196,17 +196,28 @@ define(
          */
         function initAxis(origin) {
 
+            var axisLayer = this.render.getLayer('axis');
             // 绘制轴线
-            this.axis = {
-                type: 'axis',
+            this.axis = axisLayer.addShape('axis', {
+                id: 'axis',
                 x: origin.x,
                 y: origin.y,
-                width: 100,
+                width: origin.axisWidth,
                 unitsPerEm: this.options.unitsPerEm,
                 metrics: this.options.metrics,
                 selectable: false
-            };
-            this.render.getLayer('axis').addShape(this.axis);
+            });
+
+            axisLayer.addShape('line', {
+                id: 'rightSideBearing',
+                p0: {
+                    x: origin.rightSideBearing
+                },
+                style: {
+                    strokeColor: 'blue'
+                }
+            });
+
         }
 
         /**
@@ -293,7 +304,13 @@ define(
             // 重置形状
             this.render.reset();
 
-            initAxis.call(this, {x: offsetX, y: offsetY});
+            var rightSideBearing = offsetX + font.advanceWidth + font.xMin;
+            initAxis.call(this, {
+                x: offsetX, 
+                y: offsetY,
+                rightSideBearing: rightSideBearing,
+                axisWidth: 100
+            });
 
             var fontLayer = this.render.painter.getLayer('font');
 
