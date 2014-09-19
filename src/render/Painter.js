@@ -114,20 +114,6 @@ define(
             },
 
             /**
-             * 对layer进行排序
-             * 
-             * @return {this}
-             */
-            sortLayer: function() {
-
-                this.layers.sort(function(a, b) {
-                    return a.level > b.level ? -1 : a.level == b.level ? 0 : 1;
-                });
-
-                return this;
-            },
-
-            /**
              * 根据编号或索引获取一个Layer
              * 
              * @param {string|number} layer id或者layer index
@@ -158,7 +144,6 @@ define(
             addLayer: function(layer, options) {
                 if(layer instanceof Layer) {
                     this.layers.push(layer);
-                    this.sortLayer();
                     return layer;
                 }
                 else if(typeof layer === 'string') {
@@ -166,7 +151,6 @@ define(
                     options.id = layer;
                     layer = createLayer.call(this, options);
                     this.layers.push(layer);
-                    this.sortLayer();
                     return layer;
                 }
                 else {
