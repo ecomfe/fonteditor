@@ -45,7 +45,6 @@ define(
              */
             draw: function(ctx, shape) {
 
-                ctx.translate(0.5, 0.5);
                 ctx.save();
 
                 // 绘制刻度线
@@ -53,8 +52,7 @@ define(
 
                 ctx.restore();
                 ctx.beginPath();
-
-                ctx.translate(-0.5, -0.5);
+  
             }
         };
 

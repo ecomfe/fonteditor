@@ -51,15 +51,12 @@ define(
              */
             draw: function(ctx, shape) {
 
-                ctx.translate(0.5, 0.5);
-
                 var x = Math.round(shape.x);
                 var y = Math.round(shape.y);
 
                 ctx.moveTo(x + POINT_SIZE, y);
                 ctx.arc(x, y, POINT_SIZE, 0, Math.PI * 2, true);
 
-                ctx.translate(-0.5, -0.5);
             }
         };
 

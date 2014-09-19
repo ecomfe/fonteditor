@@ -62,8 +62,9 @@ define(
             this.context = context;
             
             this.options = lang.extend({
-                stroke: true,
-                fill: true
+                stroke: true, // 是否描边
+                fill: true, // 是否填充
+                thin: true // 是否细线模式
             }, options);
 
             this.painter = this.options.painter;
@@ -90,6 +91,12 @@ define(
 
                 context.clearRect(0, 0, this.painter.width, this.painter.height);
                 setContextStyle(context, options);
+
+                // 细线模式
+                if (false !== options.thin) {
+                    context.translate(-0.5, -0.5);
+                }
+
                 context.beginPath();
 
                 var shapes = this.shapes, shape, drawer;
@@ -146,6 +153,11 @@ define(
                 if(false !== options.stroke) {
                     context.stroke();
                 }
+
+                if (false !== options.thin) {
+                    context.translate(0.5, 0.5);
+                }
+
                 //console.timeEnd('layer-refresh');
                 return this;
             },

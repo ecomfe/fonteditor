@@ -107,7 +107,7 @@ define(
             draw: function(ctx, shape) {
 
 
-                ctx.translate(0.5, 0.5);
+                
 
                 // 单点模式
                 if(undefined === shape.p1) {
@@ -138,7 +138,7 @@ define(
                         ctx.lineTo(x1, y1);
                     }
                 }
-                ctx.translate(-0.5, -0.5);
+                
             }
         };
 

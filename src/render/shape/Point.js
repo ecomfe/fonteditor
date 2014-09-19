@@ -55,7 +55,7 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
-                ctx.translate(0.5, 0.5);
+                
                 var x = Math.round(shape.x);
                 var y = Math.round(shape.y);
                 var w = POINT_SIZE / 2;
@@ -65,7 +65,6 @@ define(
                 ctx.lineTo(x + w, y + h);
                 ctx.lineTo(x - w, y + h);
                 ctx.lineTo(x - w, y - h);
-                ctx.translate(-0.5, -0.5);
             }
         };
 

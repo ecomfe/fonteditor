@@ -87,6 +87,7 @@ define(
              * @param {Object} shape shape数据
              */
             draw: function(ctx, shape) {
+                
                 drawPath(ctx, shape.points);
             }
         };

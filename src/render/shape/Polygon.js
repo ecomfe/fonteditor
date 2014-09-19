@@ -88,8 +88,6 @@ define(
              */
             draw: function(ctx, shape) {
 
-                ctx.translate(0.5, 0.5);
-
                 var points = shape.points;
                 var i = 0, l = points.length;
                 if(shape.dashed) {
@@ -116,7 +114,7 @@ define(
                         Math.round(points[0].x), Math.round(points[0].y)
                     );
                 }
-                ctx.translate(-0.5, -0.5);
+                
             }
         };
 

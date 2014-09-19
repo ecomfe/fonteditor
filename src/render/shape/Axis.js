@@ -62,15 +62,13 @@ define(
                     shape.gap = 100;
                 }
                 
-                ctx.translate(0.5, 0.5);
                 ctx.save();
 
                 drawAxis(ctx, shape);
 
                 ctx.restore();
                 ctx.beginPath();
-
-                ctx.translate(-0.5, -0.5);
+                
             }
         };
 

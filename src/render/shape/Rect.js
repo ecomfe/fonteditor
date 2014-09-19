@@ -51,7 +51,6 @@ define(
              */
             draw: function(ctx, shape) {
 
-                ctx.translate(0.5, 0.5);
                 var x = Math.round(shape.x);
                 var y = Math.round(shape.y);
                 var w = Math.round(shape.width);
@@ -70,7 +69,7 @@ define(
                     ctx.lineTo(x, y + h);
                     ctx.lineTo(x, y);
                 }
-                ctx.translate(-0.5, -0.5);
+                
             }
         };
 
