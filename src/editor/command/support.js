@@ -190,6 +190,40 @@ define(
                     axisLayer.removeShape(l);
                 });
                 axisLayer.refresh();
+            },
+
+            /**
+             * 剪切shapes
+             * 
+             * @param {Array} shapes 形状集合
+             */
+            cutshapes: function(shapes) {
+                var cutedShapes = this.getShapes(shapes);
+                this.setClipBoard(cutedShapes);
+                var fontLayer = this.fontLayer;
+                shapes.forEach(function(shape) {
+                    fontLayer.removeShape(shape);
+                });
+                fontLayer.refresh();
+            },
+
+            /**
+             * 复制shapes
+             * 
+             * @param {Array} shapes 形状集合
+             */
+            copyshapes: function(shapes) {
+                shapes = this.getShapes(shapes);
+                this.setClipBoard(shapes);
+            },
+
+            /**
+             * 增加shapes
+             * 
+             * @param {Array} shapes 形状集合
+             */
+            addshapes: function(shapes) {
+                this.setShapes(shapes);
             }
         };
 

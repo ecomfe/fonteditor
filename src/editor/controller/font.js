@@ -13,7 +13,8 @@ define(
         var lang = require('common/lang');
         var pathAdjust = require('graphics/pathAdjust');
         var computeBoundingBox = require('graphics/computeBoundingBox');
-        
+        var guid = require('render/util/guid');
+
         /**
          * 初始化字体
          * 
@@ -80,13 +81,27 @@ define(
         function setShapes(shapes) {
             var origin = this.render.getLayer('axis').shapes[0];
             var scale = this.render.camera.scale;
-            // 调整坐标系
+            var fontLayer = this.fontLayer;
+
+            // 建立id hash 防止重复
+            var shapeIdList = {};
+            fontLayer.shapes.forEach(function(shape) {
+                shapeIdList[shape.id] = true;
+            });
+
+            // 调整坐标系，重置ID
             shapes.forEach(function(shape) {
                 pathAdjust(shape.points, scale, -scale);
                 pathAdjust(shape.points, 1, 1, origin.x, origin.y);
+
+                if (shapeIdList[shape.id]) {
+                    shape.id = guid('shape');
+                }
+
+                fontLayer.addShape(shape);
             });
-            Array.prototype.splice.apply(this.fontLayer.shapes, [-1, 0].concat(shapes));
-            this.fontLayer.refresh();
+
+            fontLayer.refresh();
             return this;
         }
 
@@ -100,6 +115,7 @@ define(
             var origin = this.render.getLayer('axis').shapes[0];
             shapes = shapes ? lang.clone(shapes) : lang.clone(this.fontLayer.shapes);
             var scale = 1 / this.render.camera.scale;
+            
             // 调整坐标系
             shapes.forEach(function(shape) {
                 pathAdjust(shape.points, scale, -scale, -origin.x, -origin.y);

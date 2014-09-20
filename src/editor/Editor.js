@@ -132,6 +132,28 @@ define(
         };
 
         /**
+         * 添加到剪切板
+         * 
+         * @param {Array} 形状集合
+         * @return {this}
+         */
+        Editor.prototype.setClipBoard = function(shapes) {
+            Editor.ClipBoardData = null;
+            Editor.ClipBoardData = shapes;
+            return this;
+        };
+
+        /**
+         * 从剪切板中获取
+         * 
+         * @param {Array} 形状集合
+         * @return {this}
+         */
+        Editor.prototype.getClipBoard = function() {
+            return Editor.ClipBoardData ? lang.clone(Editor.ClipBoardData) : null;
+        };
+
+        /**
          * 注销
          */
         Editor.prototype.dispose = function() {

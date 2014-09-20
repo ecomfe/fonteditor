@@ -44,13 +44,13 @@ define(
                 title: '改变方向'
             },
 
-            // cut: {
-            //     title: '剪切'
-            // },
+            cut: {
+                title: '剪切'
+            },
 
-            // copy: {
-            //     title: '复制'
-            // },
+            copy: {
+                title: '复制'
+            },
 
             top: {
                 title: '置前'
@@ -98,6 +98,15 @@ define(
             remove: {
                 title: '删除轮廓'
             },
+            
+            cut: {
+                title: '剪切'
+            },
+
+            copy: {
+                title: '复制'
+            },
+
 
             rotate_left: {
                 title: '向左旋转'
@@ -141,6 +150,10 @@ define(
 
             redo: {
                 title: '恢复'
+            },
+
+            paste: {
+                title: '粘贴'
             },
 
             add_referenceline: {

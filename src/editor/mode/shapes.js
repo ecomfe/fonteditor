@@ -95,6 +95,14 @@ define(
                     );
                 }
             }
+            else if (command == 'cut') {
+                this.execCommand('cutshapes', shapes);
+                this.setMode();
+                this.fire('change');
+            }
+            else if (command == 'copy') {
+                this.execCommand('copyshapes', shapes);
+            }
             this.fire('change');
         }
 
@@ -233,6 +241,16 @@ define(
                 else if(e.keyCode == 65 && e.ctrlKey && this.currentGroup) {
                     this.currentGroup.setShapes(this.fontLayer.shapes.slice());
                     this.currentGroup.refresh();
+                }
+                // 剪切
+                else if (e.keyCode == 88 && e.ctrlKey && this.currentGroup) {
+                    this.execCommand('cutshapes', this.currentGroup.shapes);
+                    this.setMode();
+                    this.fire('change');
+                }
+                // 复制
+                else if (e.keyCode == 67 && e.ctrlKey && this.currentGroup) {
+                    this.execCommand('copyshapes', this.currentGroup.shapes);
                 }
                 // 移动
                 else if(stepMap[e.key] && this.currentGroup) {

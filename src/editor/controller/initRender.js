@@ -23,6 +23,14 @@ define(
                 var pos = e.pos;
                 this.execCommand('addreferenceline', pos.x, pos.y);
             }
+            else if (e.command == 'paste') {
+                var shapes = this.getClipBoard();
+                if(shapes) {
+                    this.setShapes(shapes);
+                    this.setMode('shapes', shapes);
+                    this.fire('change');
+                }
+            }
             else {
                 this.execCommand(e.command, e);
             }
@@ -154,6 +162,15 @@ define(
                 // 恢复
                 else if (e.keyCode == 89 && e.ctrlKey) {
                     me.execCommand('redo');
+                }
+                // 粘贴
+                else if (e.keyCode == 86 && e.ctrlKey) {
+                    var shapes = me.getClipBoard();
+                    if(shapes) {
+                        me.setShapes(shapes);
+                        me.setMode('shapes', shapes);
+                        me.fire('change');
+                    }
                 }
                 // esc键，重置model
                 else if (e.key == 'esc' && !me.mode.keyup) {
