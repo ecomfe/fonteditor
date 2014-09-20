@@ -66,11 +66,16 @@ define(
             up: function(e) {
                 if(1 == e.which) {
                     if(this.selectionBox) {
-
+                        var bound = {
+                            x: Math.min(this.selectionBox.x, this.selectionBox.x + this.selectionBox.width),
+                            y: Math.min(this.selectionBox.y, this.selectionBox.y + this.selectionBox.height),
+                            width: Math.abs(this.selectionBox.width),
+                            height: Math.abs(this.selectionBox.height),
+                        }
                         // 对shape进行多选
-                        if(this.selectionBox.width >= 20 && this.selectionBox.height >= 20) {
+                        if(bound.width >= 20 && bound.height >= 20) {
                             var shapes;
-                            if(shapes = selectShapes.call(this, this.selectionBox)) {
+                            if(shapes = selectShapes.call(this, bound)) {
                                 this.setMode('shapes', shapes);
                                 return;
                             }

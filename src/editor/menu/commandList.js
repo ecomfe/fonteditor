@@ -135,10 +135,6 @@ define(
                 title: '添加圆'
             },
 
-            rescale: {
-                title: '重置缩放'
-            },
-
             undo: {
                 title: '撤销'
             },
@@ -150,8 +146,13 @@ define(
             add_referenceline: {
                 title: '添加参考线'
             },
+            
             clearreferenceline: {
                 title: '清除参考线'
+            },
+
+            rescale: {
+                title: '重置缩放'
             }
         };
 
