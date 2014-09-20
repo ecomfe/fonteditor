@@ -89,6 +89,10 @@ define(
                 var bound = this.currentGroup.getBound();
                 if(bound) {
                     this.execCommand('addreferenceline', bound.x, bound.y);
+                    this.execCommand(
+                        'addreferenceline', 
+                        bound.x + bound.width, bound.y + bound.height
+                    );
                 }
             }
             this.fire('change');

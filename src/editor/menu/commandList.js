@@ -85,7 +85,7 @@ define(
             },
             
             add_referenceline: {
-                title: '添加参考线'
+                title: '添加边界参考线'
             }
         };
 
@@ -116,7 +116,7 @@ define(
             },
 
             add_referenceline: {
-                title: '添加参考线'
+                title: '添加边界参考线'
             }
         }
 
@@ -149,6 +149,9 @@ define(
 
             add_referenceline: {
                 title: '添加参考线'
+            },
+            clearreferenceline: {
+                title: '清除参考线'
             }
         };
 

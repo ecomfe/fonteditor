@@ -166,7 +166,7 @@ define(
                 // rightside bearing 线不可移除
                 lines = lines.filter(function(line) {
                     return line !== rightSideBearing;
-                })
+                });
 
                 lines.forEach(function(l) {
                     axisLayer.removeShape(l);
@@ -174,6 +174,21 @@ define(
                 axisLayer.refresh();
             },
 
+            /**
+             * 清除参考线
+             */
+            clearreferenceline: function() {
+                var axisLayer = this.axisLayer;
+                var rightSideBearing = this.rightSideBearing;
+                var lines = axisLayer.shapes.filter(function(line) {
+                    return line.type === 'line' && line !== rightSideBearing;
+                });
+
+                lines.forEach(function(l) {
+                    axisLayer.removeShape(l);
+                });
+                axisLayer.refresh();
+            }
         };
 
         lang.extend(support, require('./transform'));
