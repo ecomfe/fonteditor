@@ -4,7 +4,8 @@
  * @date 
  * @description
  * GDEF表
- * 
+ * The Glyph Definition Table
+ * 暂不支持解析子表，因此四个offset为0
  * http://www.microsoft.com/typography/otspec/gdef.htm
  */
 

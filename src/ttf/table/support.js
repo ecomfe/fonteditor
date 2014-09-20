@@ -24,6 +24,7 @@ define(
             'DSIG': require('./DSIG'),
             'GDEF': require('./GDEF'),
             'GPOS': require('./GPOS'),
+            'GSUB': require('./GSUB'),
             'OS/2': require('./OS2')
         };
 

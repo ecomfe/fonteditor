@@ -26,9 +26,10 @@ define(
 
             // 获取flag标志
             var i = 0;
+            var flags = [];
             while (i < contours) {
                 var flag = reader.readUint8();
-                val.flags.push(flag);
+                flags.push(flag);
                 i++;
 
                 // 标志位3重复flag 
@@ -36,7 +37,7 @@ define(
                     // 重复个数
                     var repeat = reader.readUint8();
                     for ( var j = 0; j < repeat; j++) {
-                        val.flags.push(flag);
+                        flags.push(flag);
                         i++;
                     }
                 }
@@ -44,12 +45,12 @@ define(
 
             // 坐标集合
             var coordinates = [];
-            // xCoordinates
-            val.xCoorinateOffset = reader.offset;
+            var xCoordinates = [];
+
             var prevX = 0;
-            for (var i = 0, l = val.flags.length; i < l; ++i) {
+            for (var i = 0, l = flags.length; i < l; ++i) {
                 var x = 0;
-                var flag = val.flags[i];
+                var flag = flags[i];
 
                 //标志位1
                 // If set, the corresponding y-coordinate is 1 byte long, not 2
@@ -76,7 +77,7 @@ define(
                 }
 
                 prevX += x;
-                val.xCoordinates[i] = prevX;
+                xCoordinates[i] = prevX;
                 coordinates[i] = {
                     x : prevX,
                     y : 0
@@ -86,12 +87,12 @@ define(
                 }
             }
 
-            // yCoordinates
-            val.yCoorinateOffset = reader.offset;
+            var yCoordinates = [];
+
             var prevY = 0;
-            for ( var i = 0, l = val.flags.length; i < l; i++) {
+            for ( var i = 0, l = flags.length; i < l; i++) {
                 var y = 0;
-                var flag = val.flags[i];
+                var flag = flags[i];
 
                 if (flag & glyFlag.YSHORT) {
                     y = reader.readUint8();
@@ -107,7 +108,7 @@ define(
                 }
 
                 prevY += y;
-                val.yCoordinates[i] = prevY;
+                yCoordinates[i] = prevY;
                 if (coordinates[i]) {
                     coordinates[i].y = prevY;
                 }
@@ -139,7 +140,7 @@ define(
                     reader.seek(offset);
 
                     // 边界值
-                    val.numberOfContours = reader.readInt16();
+                    var numberOfContours = reader.readInt16();
                     val.xMin = reader.readInt16();
                     val.yMin = reader.readInt16();
                     val.xMax = reader.readInt16();
@@ -147,8 +148,8 @@ define(
 
                     // endPtsOfConturs
                     var endPtsOfContours = [];
-                    if (val.numberOfContours >= 0) {
-                        for ( var i = 0; i < val.numberOfContours; i++) {
+                    if (numberOfContours >= 0) {
+                        for ( var i = 0; i < numberOfContours; i++) {
                             endPtsOfContours.push(reader.readUint16());
                         }
                         val.endPtsOfContours = endPtsOfContours;
@@ -164,7 +165,7 @@ define(
                     val.instructions = instructions;
 
                     // 读取简单字形
-                    if (val.numberOfContours >= 0) {
+                    if (numberOfContours >= 0) {
                         readSimpleGlyf.call(
                             this,
                             reader,
@@ -172,8 +173,11 @@ define(
                             reader.offset,
                             val
                         );
+
+                        delete val.endPtsOfContours;
                     }
                     else {
+                        val.Compound = true;
                         // 读取复杂字形
                         //throw 'not support Compound  glyf';
                         console.error('not support Compound  glyf', val);
@@ -187,13 +191,7 @@ define(
         // 空路径
         ttfglyf.empty = function() {
             var val = {};
-            val.flags = [];
-            val.endPtsOfContours = [];
             val.contours = [];
-            val.xCoorinateOffset = 0; // x偏移
-            val.xCoordinates = []; //x 坐标集合
-            val.yCoorinateOffset = 0; // y偏移
-            val.yCoordinates = []; // y坐标集合
             return val;
         };
 

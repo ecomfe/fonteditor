@@ -4,7 +4,9 @@
  * @date 
  * @description
  * DSIG表
+ * Digital Signature Table
  * 
+ * 暂不支持数字签名解析
  * http://www.microsoft.com/typography/otspec/dsig.htm
  */
 
