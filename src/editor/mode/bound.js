@@ -23,6 +23,8 @@ define(
             down: function(e) {
                 if (1 === e.which) {
                     var camera = this.render.camera;
+
+                    // 字体模式
                     var result = this.fontLayer.getShapeIn(e);
                     if(result) {
                         var shape = result[0];
@@ -30,11 +32,20 @@ define(
                             shape = selectShape(result);
                         }
                         this.setMode('shapes', [shape]);
+                        return;
                     }
+
+                    // 参考线模式
+
+                    var result = this.axisLayer.getShapeIn(e);
+                    if(result) {
+                        var line = result[0];
+                        this.setMode('referenceline', line);
+                        return;
+                    }
+
                     // 框选模式
-                    else {
-                        this.setMode('range');
-                    }                    
+                    this.setMode('range');
                 }
             },
 

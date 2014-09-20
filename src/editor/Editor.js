@@ -139,11 +139,11 @@ define(
 
                 // 撤销
                 if (e.keyCode == 90 && e.ctrlKey) {
-                    me.execCommand('cancel');
+                    me.execCommand('undo');
                 }
                 // 恢复
                 else if (e.keyCode == 89 && e.ctrlKey) {
-                    me.execCommand('recover');
+                    me.execCommand('redo');
                 }
                 // esc键，重置model
                 else if (e.key == 'esc' && !me.mode.keyup) {
@@ -182,10 +182,9 @@ define(
                 strokeSeparate: false
             });
 
-            this.render.addLayer('axis', {
+            this.axisLayer = this.render.addLayer('axis', {
                 level: 10,
-                fill: false,
-                disabled: true
+                fill: false
             });
 
             this.render.addLayer('graduation', {
@@ -202,9 +201,8 @@ define(
          */
         function initAxis(origin) {
 
-            var axisLayer = this.render.getLayer('axis');
             // 绘制轴线
-            this.axis = axisLayer.addShape('axis', {
+            this.axis = this.axisLayer.addShape('axis', {
                 id: 'axis',
                 x: origin.x,
                 y: origin.y,
@@ -218,7 +216,7 @@ define(
                 selectable: false
             });
 
-            axisLayer.addShape('line', {
+            this.rightSideBearing = this.axisLayer.addShape('line', {
                 id: 'rightSideBearing',
                 p0: {
                     x: origin.rightSideBearing
@@ -252,7 +250,13 @@ define(
          */
         function onContextMenu(e) {
             this.contextMenu.hide();
-            this.execCommand(e.command);
+            if (e.command == 'add_referenceline') {
+                var pos = e.pos;
+                this.execCommand('addreferenceline', pos.x, pos.y);
+            }
+            else {
+                this.execCommand(e.command, e);
+            }
         }
 
 
@@ -464,7 +468,8 @@ define(
             this.render && this.render.dispose();
             this.history.reset();
             this.options = this.contextMenu = this.render = null;
-            this.fontLayer = this.coverLayer = null;
+            this.fontLayer = this.coverLayer = this.axisLayer = null;
+            this.axis = this.rightSideBearing = this.font = null;
             this.history = null;
         };
 

@@ -98,6 +98,16 @@ define(
         };
 
         /**
+         * 获取边界
+         */
+        ShapesGroup.prototype.getBound = function() {
+            if(this.shapes.length) {
+               return getBound(this.shapes);
+            }
+            return false;
+        };
+
+        /**
          * 设置操作的shapes
          */
         ShapesGroup.prototype.setMode = function(mode) {
@@ -120,10 +130,8 @@ define(
 
             this.editor.coverLayer.clearShapes();
             this.editor.coverLayer.refresh();
-
             this.shapes.length = 0;
             this.controls.length = 0;
-            
             this.shapes = this.controls = this.editor = null;
         };
 

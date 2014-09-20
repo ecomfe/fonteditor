@@ -16,7 +16,8 @@ define(
             'shapes': require('./shapes'),
             'addshape': require('./addshape'),
             'addrect': require('./addrect'),
-            'addcircle': require('./addcircle')
+            'addcircle': require('./addcircle'),
+            'referenceline': require('./referenceline')
         };
     }
 );

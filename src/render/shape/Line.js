@@ -71,7 +71,9 @@ define(
              * @param {Object} 矩形区域
              */
             getRect: function(shape) {
-                return undefined === shape.p1 ? false : computeBoundingBox.computeBounding([shape.p0, shape.p1]);
+                return undefined === shape.p1 
+                    ? false 
+                    : computeBoundingBox.computeBounding([shape.p0, shape.p1]);
             },
 
             /**
@@ -86,8 +88,8 @@ define(
 
                 // 单点模式
                 if(undefined === shape.p1) {
-                    return  undefined !== shape.p0.x && Math.abs(shape.p0.x - x) < 2
-                        || undefined !== shape.p0.y && Math.abs(shape.p0.y - y) < 2;
+                    return  undefined !== shape.p0.x && Math.abs(shape.p0.x - x) < 3
+                        || undefined !== shape.p0.y && Math.abs(shape.p0.y - y) < 3;
                 }
                 else {
                     var x0 = shape.p0.x;

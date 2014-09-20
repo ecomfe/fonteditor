@@ -42,9 +42,10 @@ define(
             this.contextMenu.hide();
 
             var command = e.command;
+
             // 是否编辑器支持
             if(this.supportCommand(command)) {
-                this.execCommand(command);
+                this.execCommand(command, e);
                 return;
             }
 
@@ -84,7 +85,12 @@ define(
             else if (command == 'mirror_shapes') {
                 this.execCommand('mirrorshapes', shapes);
             }
-
+            else if (command == 'add_referenceline') {
+                var bound = this.currentGroup.getBound();
+                if(bound) {
+                    this.execCommand('addreferenceline', bound.x, bound.y);
+                }
+            }
             this.fire('change');
         }
 

@@ -46,7 +46,8 @@ define(
                 if (key) {
                     var event = {
                         command: key,
-                        commandArgs: me.commands[key]
+                        commandArgs: me.commands[key],
+                        pos: me.pos
                     };
                     me.onClick && me.onClick(event);
                 }
@@ -96,6 +97,7 @@ define(
 
                 this.main.style.left = x + 'px';
                 this.main.style.top = y + 'px';
+                this.pos = p;
 
                 this.container.addEventListener('click', this._hide_click);
             },
@@ -130,7 +132,7 @@ define(
                 this.main.removeEventListener('click', this._command_click, false);
                 this.container.removeEventListener('click', this._hide_click, false);
                 this.main.remove();
-                this.main = this.container = null;
+                this.main = this.container = this.pos = null;
                 this._command_click = this._hide_click = null;
                 this.onClick = null;
             }

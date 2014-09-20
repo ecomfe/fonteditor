@@ -82,6 +82,10 @@ define(
 
             mirror_shapes: {
                 title: '镜像'
+            },
+            
+            add_referenceline: {
+                title: '添加参考线'
             }
         };
 
@@ -109,6 +113,10 @@ define(
 
             mirror_shapes: {
                 title: '镜像'
+            },
+
+            add_referenceline: {
+                title: '添加参考线'
             }
         }
 
@@ -131,13 +139,17 @@ define(
                 title: '重置缩放'
             },
 
-            // undo: {
-            //     title: '撤销'
-            // },
+            undo: {
+                title: '撤销'
+            },
 
-            // redo: {
-            //     title: '恢复'
-            // }
+            redo: {
+                title: '恢复'
+            },
+
+            add_referenceline: {
+                title: '添加参考线'
+            }
         };
 
         return {

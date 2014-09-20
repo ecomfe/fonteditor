@@ -51,6 +51,21 @@ define(
             },
 
             /**
+             * 获取边界
+             * 
+             * @param {Object} shape shape数据
+             * @return {Object} bound对象
+             */
+            getBound: function(shape) {
+                return {
+                    x: shape.x,
+                    y: shape.y,
+                    width: 0,
+                    height: 0
+                }
+            },
+
+            /**
              * 绘制一个shape对象
              * 
              * @param {CanvasContext} ctx canvas的context
@@ -68,7 +83,6 @@ define(
 
                 ctx.restore();
                 ctx.beginPath();
-                
             }
         };
 
