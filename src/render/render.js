@@ -29,8 +29,6 @@ define(
                 this.options.painter
             );
 
-
-
             // 注册鼠标
             this.capture = new MouseCapture(
                 this.main,
@@ -42,7 +40,6 @@ define(
                 this.main,
                 this.options.keyboard
             );
-
 
             this.camera = this.painter.camera;
 
