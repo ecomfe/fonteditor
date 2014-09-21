@@ -140,13 +140,68 @@ define(
             return cloned;
         }
 
+
+        // Returns a function, that, when invoked, will only be triggered at most once
+        // during a given window of time.
+        // @see underscore.js
+        function throttle(func, wait) {
+            var context, args, timeout, result;
+            var previous = 0;
+            var later = function() {
+                previous = new Date;
+                timeout = null;
+                result = func.apply(context, args);
+            };
+            return function() {
+                var now = new Date;
+                var remaining = wait - (now - previous);
+                context = this;
+                args = arguments;
+                if (remaining <= 0) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    previous = now;
+                    result = func.apply(context, args);
+                }
+                else if (!timeout) {
+                    timeout = setTimeout(later, remaining);
+                }
+                return result;
+            };
+        }
+
+        // Returns a function, that, as long as it continues to be invoked, will not
+        // be triggered. The function will be called after it stops being called for
+        // N milliseconds. If `immediate` is passed, trigger the function on the
+        // leading edge, instead of the trailing.
+        // @see underscore.js
+        function debounce(func, wait, immediate) {
+            var timeout, result;
+            return function() {
+                var context = this,
+                    args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) result = func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) result = func.apply(context, args);
+                return result;
+            };
+        }
+
+
         var exports = {
             extend: extend,
             bind: bind,
             inherits: inherits,
             curry: curry,
             uncurry: generic,
-            clone: clone
+            clone: clone,
+            throttle: throttle,
+            debounce: debounce
         };
 
         // 生成 isXXX方法

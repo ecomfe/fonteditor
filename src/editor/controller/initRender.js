@@ -205,6 +205,15 @@ define(
                 
                 me.mode.keydown && me.mode.keydown.call(me, e);
             });
+
+
+            render.on('resize', function(e) {
+                me.render.move(
+                    (e.size.width - e.prevSize.width) / 2,
+                    (e.size.height - e.prevSize.height) / 2
+                );
+                me.render.refresh();
+            });
         }
 
         return initRender;

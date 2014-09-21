@@ -157,12 +157,14 @@ define(
          * 注销
          */
         Editor.prototype.dispose = function() {
+            this.un();
             this.contextMenu.dispose();
             this.render && this.render.dispose();
-            this.history.reset();
             this.options = this.contextMenu = this.render = null;
             this.fontLayer = this.coverLayer = this.axisLayer = null;
             this.axis = this.rightSideBearing = this.font = null;
+            this.mode = null;
+            this.history.reset();
             this.history = null;
         };
 

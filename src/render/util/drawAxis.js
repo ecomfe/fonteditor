@@ -57,24 +57,28 @@ define(
                 ctx.beginPath();
                 ctx.strokeStyle = config.gridColor || 'red';
 
+                ctx.moveTo(0, y);
+                ctx.lineTo(xMax, y);
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, yMax);
+
                 // 绘制辅助线
                 var metrics = config.metrics;
                 var thickness = config.graduation.thickness || 22;
                 for (var line in metrics) {
                     var lineY = y - Math.round(metrics[line]);
                     dashedLineTo(ctx, 0, lineY, xMax, lineY, 4);
-                    ctx.fillText(line, thickness, lineY - 2);
                 }
-                
-                ctx.moveTo(0, y);
-                ctx.lineTo(xMax, y);
-                ctx.fillText('Baseline', thickness, y - 2);
 
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, yMax);
+                ctx.save();
+                ctx.scale(0.8, 0.8);
+                for (var line in metrics) {
+                    ctx.fillText(line, thickness * 1.25, (y - metrics[line]) * 1.25 - 2);
+                }
+                ctx.fillText('Baseline', thickness * 1.25, y * 1.25 - 2);
+                ctx.restore();
 
                 ctx.stroke();
-
 
                 // em 框
                 ctx.beginPath();

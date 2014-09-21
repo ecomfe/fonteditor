@@ -62,6 +62,23 @@ define(
                     console.timeEnd('refresh');
                 });
             }
+
+            var me = this;
+            me._resizeObserver = lang.debounce(function(e) {
+
+                var prevSize = me.painter.getSize();
+                me.painter.resetSize();
+                var size = me.painter.getSize();
+                if(size.width != prevSize.width || size.height != prevSize.height) {
+                    me.fire('resize', {
+                        size: size,
+                        prevSize: prevSize
+                    });
+                }
+            }, 200);
+
+            // 改变大小
+            window.addEventListener('resize', me._resizeObserver, false);
         }
 
         /**
@@ -175,11 +192,18 @@ define(
          * 
          */
         Render.prototype.dispose = function() {
+
+            this.un();
+
+            // 改变大小
+            window.removeEventListener('resize', this._resizeObserver, false);
+            this._resizeObserver = null;
+
             this.painter.dispose();
             this.capture.dispose();
             this.keyCapture.dispose();
-            this.un();
-            this.main = this.options = null;
+
+            this.main = this.options = this.camera = null;
             this.painter = this.capture = this.keyCapture = null;
         };
 

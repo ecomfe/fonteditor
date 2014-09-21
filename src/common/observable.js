@@ -77,6 +77,11 @@ define(
                     listener = type;
                     type = '*';
                 }
+                else if (typeof type === 'undefined') {
+                    delete this._listeners;
+                    this._listeners = {};
+                    return this;
+                }
 
                 this._listeners = this._listeners || {};
                 var listeners = this._listeners[type];

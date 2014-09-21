@@ -70,9 +70,7 @@ define(
             this.layers = [];
 
             this.main.style.position = 'relative';
-            this.width = this.options.width || this.main.clientWidth;
-            this.height = this.options.height || this.main.clientHeight;
-
+            this.resetSize();
             this.camera = new Camera({
                 x: this.width / 2,
                 y: this.height /2
@@ -325,6 +323,33 @@ define(
             },
 
             /**
+             * 设置大小
+             */
+            resetSize: function() {
+
+                if(this.options.width) {
+                    this.main.style.width = this.options.width + 'px';
+                }
+
+                if(this.options.height) {
+                    this.main.style.height = this.options.height + 'px';
+                }
+
+                var width = this.main.clientWidth;
+                var height = this.main.clientHeight;
+
+                this.layers.forEach(function(layer) {
+                    document.getElementById(layer.id).width = width;
+                    document.getElementById(layer.id).height = height;
+                });
+
+                this.width = width;
+                this.height = height;
+
+                return this;
+            },
+
+            /**
              * 获取操作面板大小
              * 
              * @return {Object} width, height
@@ -342,12 +367,14 @@ define(
              * @return {this}
              */
             reset: function() {
+                
                 this.clearShapes();
+                this.resetSize();
+
                 this.camera.reset({
                     x: this.width / 2,
                     y: this.height /2
                 });
-
                 return this;
             },
 

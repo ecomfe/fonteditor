@@ -95,6 +95,7 @@ define(
             }
 
             // 绘制轴线文字，这里由于canvas不支持小字体，因此进行缩放后绘制
+            ctx.save();
             ctx.scale(0.8, 0.8);
             var textOffset = thickness - 8; // 文本偏移
             for(var axis = x, i = 0; axis < width; i++, axis += markSize) {
@@ -124,8 +125,7 @@ define(
                 }
             }
 
-            ctx.scale(1.25, 1.25);
-
+            ctx.restore();
 
             ctx.stroke();
         }
