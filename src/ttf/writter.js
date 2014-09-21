@@ -1,14 +1,11 @@
 /**
- * @file reader.js
+ * @file writter.js
  * @author mengke01
  * @date 
  * @description
- * 数据读取器
- * 
- * thanks to：
- * ynakajima/ttf.js
- * https://github.com/ynakajima/ttf.js
+ * 数据写入器
  */
+
 
 define(
     function(require) {
@@ -41,10 +38,12 @@ define(
          * 
          * @param {number} size 大小
          * @param {number=} offset 位移
+         * @param {number} value value值
          * @param {boolean=} littleEndian 是否小尾
-         * @return {number} 返回值
+         * 
+         * @return {this}
          */
-        function read(type, offset, littleEndian) {
+        function write(type, value, offset, littleEndian) {
             
             // 使用当前位移
             if(undefined == offset) {
@@ -57,19 +56,20 @@ define(
             }
 
             // 扩展方法
-            if(expandProto[read + type]) {
-                return this[read + type](offset, littleEndian);
+            if(expandProto[write + type]) {
+                return this[write + type](value, offset, littleEndian);
             }
             else {
                 var size = dataType[type];
                 this.offset = offset + size;
-                return this.view['get' + type](offset, littleEndian);
+                this.view['set' + type](offset, value, littleEndian);
+                return this;
             }
         }
 
         // 直接支持的数据类型
         Object.keys(dataType).forEach(function(type) {
-            proto['read' + type] = curry(read, type);
+            proto['write' + type] = curry(write, type);
          });
 
 
@@ -82,7 +82,7 @@ define(
          * @param {number} length 数组长度
          * @param {boolean} bigEndian 是否大尾
          */
-        function Reader(buffer, offset, length, littleEndian) {
+        function Writter(buffer, offset, length, littleEndian) {
 
             var bufferLength = buffer.byteLength || buffer.length;
 
@@ -93,68 +93,80 @@ define(
             this.view = new DataView(buffer, this.offset, this.length);
         }
 
-        Reader.prototype = {
-            read: read,
+        Writter.prototype = {
+            write: write,
 
             /**
-             * 读取一个string
+             * 写入一个string
              * 
+             * @param {number} value 写入值
              * @param {number} offset 偏移
              * @param {number} length 长度
-             * @return {string} 字符串
+             * @return {this}
              */
-            readString: function(offset, length) {
+            writeString: function(str, offset) {
 
                 if(arguments.length == 1) {
-                    length = arguments[0];
                     offset = this.offset;
                 }
-
+                var length  = str.replace(/[^\x00-\xff]/g, '11').length;
                 if(length < 0 || offset + length > this.length) {
                     throw 'length out of range:' + offset + ',' + length;
                 }
 
-                var value = '';
-                for (var i = 0; i < length; ++i) {
-                    var c = this.readUint8(offset + i);
-                    value += String.fromCharCode(c);
+                this.seek(offset);
+                
+                for (var i = 0, l = str.length, charCode; i < l; ++i) {
+                    charCode = str.charCodeAt(i);
+                    if (charCode > 127) {
+                        // unicode编码可能会超出2字节, 写入与编码有关系，此处不做处理
+                        // FIXME
+                        this.writeUint16(charCode);
+                    }
+                    else {
+                        this.writeUint8(charCode);
+                    }
                 }
 
                 this.offset = offset + length;
 
-                return value;
+                return this;
             },
 
             /**
-             * 获取指定的字节数组
+             * 写入指定的字节数组
              * 
-             * @return {Array} 字节数组
+             * @param {ArrayBuffer} value 写入值
+             * @return {this}
              */
-            readBytes: function(offset, length) {
+            writeBytes: function(value, offset) {
 
                 if(arguments.length == 1) {
-                    length = arguments[0];
                     offset = this.offset;
                 }
+
+                var length = value.byteLength || value.length;
 
                 if(length < 0 || offset + length > this.length) {
                     throw 'length out of range:' + offset + ',' + length;
                 }
 
-                var buffer = [];
+                var view = new DataView(value, 0, length);
+                var littleEndian = this.littleEndian;
+
                 for (var i = 0; i < length; ++i) {
-                    buffer.push(this.view.getUint8(offset + i));
+                    this.writeUint8(view.readUint8(i, littleEndian));
                 }
 
                 this.offset = offset + length;
-                return buffer;
+                return this;
             },
 
             /**
              * 跳转到指定偏移
              * 
              * @param {number} offset 偏移
-             * @return {Object} this
+             * @return {this}
              */
             seek: function (offset) {
                 if (undefined == offset) {
@@ -165,9 +177,19 @@ define(
                     throw 'offset out of range:' + offset;
                 }
 
+                this._offset = Math.max(this._offset, this.offset);
                 this.offset = offset;
 
                 return this;
+            },
+
+            /**
+             * 跳转到写入头部位置
+             * 
+             * @return {this}
+             */
+            head: function() {
+                this.offset = this._offset || 0;
             }
         };
 
@@ -175,50 +197,57 @@ define(
         var expandProto = {
 
             /**
-             * 读取一个字符
+             * 写入一个字符
              * 
+             * @param {string} value 写入值
              * @param {number} offset 偏移
-             * @return {string} 字符串
+             * @return {this}
              */
-            readChar: function(offset) {
-                return this.readString(offset, 1);
+            writeChar: function(value, offset) {
+                return this.writeString(value, offset);
             },
 
             /**
-             * 读取fixed类型
+             * 写入fixed类型
              * 
+             * @param {number} value 写入值
              * @param {number} offset 偏移
              * @return {number} float
              */
-            readFixed: function(offset) {
+            writeFixed: function(value, offset) {
                 if(undefined == offset) {
                     offset = this.offset;
                 }
-                var val = this.readInt32(offset, false) / 65536.0;
-                return Math.ceil(val * 100000) / 100000;
+                this.writeInt32(Math.ceil(val * 65536), offset);
+
+                return this;
             },
 
             /**
-             * 读取长日期
+             * 写入长日期
              * 
+             * @param {Date} value 日期对象
              * @param {number} offset 偏移
+             * 
              * @return {Date} Date对象
              */
-            readLongDateTime: function(offset) {
+            writeLongDateTime: function(value, offset) {
                 if(undefined == offset) {
                     offset = this.offset;
                 }
-                var delta = -2077545600000;// new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();
-                var time = this.readUint32(offset + 4, false);
-                var date = new Date();
-                date.setTime(time * 1000 + delta);
-                return date;
+
+                var delta = -2077545600000; // new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();
+                var time = Math.round((value.getTime() - delta) / 1000);
+                this.writeUint32(0, offset);
+                this.writeUint32(time, offset + 4);
+
+                return this;
             }
         };
 
 
-        extend(Reader.prototype, proto, expandProto);
+        extend(Writter.prototype, proto, expandProto);
 
-        return Reader;
+        return Writter;
     }
 );
