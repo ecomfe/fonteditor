@@ -1,5 +1,5 @@
 /**
- * @file writter.js
+ * @file writer.js
  * @author mengke01
  * @date 
  * @description
@@ -46,12 +46,12 @@ define(
         function write(type, value, offset, littleEndian) {
             
             // 使用当前位移
-            if(undefined == offset) {
+            if(undefined === offset) {
                 offset = this.offset;
             }
 
             // 使用小尾
-            if(undefined == littleEndian) {
+            if(undefined === littleEndian) {
                 littleEndian = this.littleEndian;
             }
 
@@ -82,7 +82,7 @@ define(
          * @param {number} length 数组长度
          * @param {boolean} bigEndian 是否大尾
          */
-        function Writter(buffer, offset, length, littleEndian) {
+        function Writer(buffer, offset, length, littleEndian) {
 
             var bufferLength = buffer.byteLength || buffer.length;
 
@@ -93,7 +93,7 @@ define(
             this.view = new DataView(buffer, this.offset, this.length);
         }
 
-        Writter.prototype = {
+        Writer.prototype = {
             write: write,
 
             /**
@@ -106,7 +106,7 @@ define(
              */
             writeString: function(str, offset) {
 
-                if(arguments.length == 1) {
+                if(undefined === offset) {
                     offset = this.offset;
                 }
                 var length  = str.replace(/[^\x00-\xff]/g, '11').length;
@@ -139,26 +139,36 @@ define(
              * @param {ArrayBuffer} value 写入值
              * @return {this}
              */
-            writeBytes: function(value, offset) {
+            writeBytes: function(value, length, offset) {
 
-                if(arguments.length == 1) {
+                if(undefined === offset) {
                     offset = this.offset;
                 }
 
-                var length = value.byteLength || value.length;
+                length = length || value.byteLength || value.length;
 
                 if(length < 0 || offset + length > this.length) {
                     throw 'length out of range:' + offset + ',' + length;
                 }
 
-                var view = new DataView(value, 0, length);
-                var littleEndian = this.littleEndian;
+                // ArrayBuffer
+                this.seek(offset);
+                if (value instanceof ArrayBuffer) {
+                    var view = new DataView(value, 0, length);
+                    var littleEndian = this.littleEndian;
 
-                for (var i = 0; i < length; ++i) {
-                    this.writeUint8(view.readUint8(i, littleEndian));
+                    for (var i = 0; i < length; ++i) {
+                        this.writeUint8(view.readUint8(i, littleEndian));
+                    }                    
+                }
+                else {
+                    for (var i = 0; i < length; ++i) {
+                        this.writeUint8(value[i]);
+                    }
                 }
 
                 this.offset = offset + length;
+
                 return this;
             },
 
@@ -169,7 +179,7 @@ define(
              * @return {this}
              */
             seek: function (offset) {
-                if (undefined == offset) {
+                if (undefined === offset) {
                     this.offset = 0;
                 }
 
@@ -177,7 +187,7 @@ define(
                     throw 'offset out of range:' + offset;
                 }
 
-                this._offset = Math.max(this._offset, this.offset);
+                this._offset = this.offset;
                 this.offset = offset;
 
                 return this;
@@ -218,7 +228,7 @@ define(
                 if(undefined == offset) {
                     offset = this.offset;
                 }
-                this.writeInt32(Math.ceil(val * 65536), offset);
+                this.writeInt32(Math.ceil(value * 65536), offset);
 
                 return this;
             },
@@ -246,8 +256,8 @@ define(
         };
 
 
-        extend(Writter.prototype, proto, expandProto);
+        extend(Writer.prototype, proto, expandProto);
 
-        return Writter;
+        return Writer;
     }
 );

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件系统</title>
+    <script src="./lib/esl.js"></script>
+    <script src="./lib/jquery.min.js"></script>
+</head>
+<body>
+
+<input id="upload-file" type="file">
+
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>
+    require(['demo/filesystem']);
+</script>
+
+</body>
+</html>
