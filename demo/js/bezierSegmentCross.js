@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var isBezierSegmentCross = require('graphics/isBezierRayCross');
+        var isBezierSegmentCross = require('graphics/isBezierSegmentCross');
 
         var entry = {
 
@@ -22,7 +22,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":384,"y":507,"onCurve":true},{"x":384,"y":400},{"x":421,"y":393,"onCurve":true},{"x":459,"y":486}] ;
+                var points = [{"x":384,"y":507,"onCurve":true},{"x":384,"y":400},{"x":421,"y":393,"onCurve":true},{"x":459,"y":486},{"x":359,"y":486}] ;
 
                 $(points).each(function(index, item) {
                     $('[data-index="'+index+'"]').css({

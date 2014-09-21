@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var isSegmentCross = require('graphics/isSegmentRayCross');
+        var isSegmentCross = require('graphics/isSegmentCross');
 
         var entry = {
 
@@ -22,7 +22,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":398,"y":31,"onCurve":true},{"x":474,"y":201,"onCurve":true},{"x":457,"y":74}] ;
+                var points = [{"x":398,"y":31,"onCurve":true},{"x":474,"y":201,"onCurve":true},{"x":457,"y":74},{"x":407,"y":74}] ;
 
                 $('[data-index]').each(function(index, item) {
                     if(!points[index]) {
