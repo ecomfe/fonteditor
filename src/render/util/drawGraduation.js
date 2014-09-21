@@ -18,6 +18,7 @@ define(
          */
         function drawGraduation(ctx, config) {
 
+            
             var x = Math.round(config.x);
             var y = Math.round(config.y);
 
@@ -68,22 +69,16 @@ define(
 
             ctx.fillStyle = ctx.strokeStyle;
 
+
             // 横轴线
-            var textOffset = thickness - 8; // 文本偏移
             for(var axis = x, i = 0; axis < width; i++, axis += markSize) {
                 ctx.moveTo(axis, thickness - (i % 5 ? markHeight : 2 * markHeight));
                 ctx.lineTo(axis, thickness);
-                if (0 == i % 10) {
-                    ctx.fillText( gap * i, axis, textOffset);
-                }
             }
 
             for(var axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
                 ctx.moveTo(axis, thickness - (i % 5 ? markHeight : 2 * markHeight));
                 ctx.lineTo(axis, thickness);
-                if (0 == i % 10) {
-                    ctx.fillText( -gap * i, axis, textOffset);
-                }
             }
 
 
@@ -92,19 +87,46 @@ define(
             for(var axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
                 ctx.moveTo(thickness - (i % 5 ? markHeight : 2 * markHeight), axis);
                 ctx.lineTo(thickness, axis);
-                if (0 == i % 10) {
-                    ctx.fillText(gap * i, textOffset, axis);
-                }
             }         
 
             for(var axis = y, i = 0; axis < height; i++, axis += markSize) {
                 ctx.moveTo(thickness - (i % 5 ? markHeight : 2 * markHeight), axis);
                 ctx.lineTo(thickness, axis);
+            }
+
+            // 绘制轴线文字，这里由于canvas不支持小字体，因此进行缩放后绘制
+            ctx.scale(0.8, 0.8);
+            var textOffset = thickness - 8; // 文本偏移
+            for(var axis = x, i = 0; axis < width; i++, axis += markSize) {
                 if (0 == i % 10) {
-                    ctx.fillText( -gap * i, 0, axis);
+                    ctx.fillText( gap * i, axis * 1.25 - 3, textOffset * 1.25);
                 }
             }
-            
+
+            for(var axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
+                if (0 == i % 10) {
+                    ctx.fillText( -gap * i, axis * 1.25 - 3, textOffset * 1.25);
+                }
+            }
+
+
+            // 纵轴线
+            var textOffset = 0; // 文本偏移
+            for(var axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
+                if (0 == i % 10) {
+                    ctx.fillText(gap * i, textOffset * 1.25, axis * 1.25 + 3);
+                }
+            }         
+
+            for(var axis = y, i = 0; axis < height; i++, axis += markSize) {
+                if (0 == i % 10) {
+                    ctx.fillText( -gap * i, textOffset * 1.25, axis * 1.25 + 3);
+                }
+            }
+
+            ctx.scale(1.25, 1.25);
+
+
             ctx.stroke();
         }
 

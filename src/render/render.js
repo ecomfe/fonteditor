@@ -57,8 +57,9 @@ define(
                     ) {
                         return;
                     }
-
+                    console.time('refresh');
                     me.scale(ratio, e);
+                    console.timeEnd('refresh');
                 });
             }
         }

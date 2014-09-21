@@ -12,7 +12,9 @@ define(
 
         var commandList = require('../menu/commandList');
         var lang = require('common/lang');
-
+        var modeSupport = require('../mode/support');
+        var pathAdjust = require('graphics/pathAdjust');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
 
         /**
          * 右键点击处理
@@ -26,6 +28,21 @@ define(
             else if (e.command == 'paste') {
                 var shapes = this.getClipBoard();
                 if(shapes) {
+                    var bound = computeBoundingBox.computePath.apply(null, 
+                        shapes.map(function(shape){
+                            return shape.points;
+                        })
+                    );
+                    // 需要根据坐标原点以及缩放换算成鼠标位置移动
+                    var origin = this.axis;
+                    var pos = e.pos;
+                    var scale = this.render.camera.scale;
+                    var x = (pos.x - origin.x) / scale;
+                    var y = (origin.y - pos.y) / scale;
+
+                    shapes.forEach(function(shape) {
+                        pathAdjust(shape.points, 1, 1, x - bound.x, y - bound.y - bound.height);
+                    });
                     this.setShapes(shapes);
                     this.setMode('shapes', shapes);
                     this.fire('change');
