@@ -61,7 +61,14 @@ define(
             points.forEach(function(p, i) {
                 lang.extend(controls[i], p);
                 if (i > 0) {
-                    controls[i].type = mode == 'rotate' && i <= 4 ? 'cpoint' : 'point';
+                    if (mode == 'rotate' && i <= 4) {
+                        controls[i].type = 'cpoint';
+                        controls[i].size = 3;
+                    }
+                    else {
+                        controls[i].type = 'point';
+                        controls[i].size = 6;
+                    }
                 }
             });
 

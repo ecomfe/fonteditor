@@ -23,11 +23,12 @@ define(
              * @param {Object} 矩形区域
              */
             getRect: function(shape) {
+                var size = shape.size || POINT_SIZE;
                 return {
-                    x: shape.x - POINT_SIZE / 2 ,
-                    y: shape.y - POINT_SIZE / 2,
-                    width: POINT_SIZE,
-                    height: POINT_SIZE
+                    x: shape.x - size / 2 ,
+                    y: shape.y - size / 2,
+                    width: size,
+                    height: size
                 };
             },
 
@@ -40,8 +41,9 @@ define(
              * @param {boolean} 是否
              */
             isIn: function(shape, x, y) {
-                var w = POINT_SIZE;
-                var h = POINT_SIZE;
+                var size = shape.size || POINT_SIZE;
+                var w = size;
+                var h = size;
                 return x <= shape.x + w
                     && x >= shape.x - w
                     && y <= shape.y + h
@@ -58,8 +60,9 @@ define(
                 
                 var x = Math.round(shape.x);
                 var y = Math.round(shape.y);
-                var w = POINT_SIZE / 2;
-                var h = POINT_SIZE / 2;
+                var size = shape.size || POINT_SIZE;
+                var w = size / 2;
+                var h = size / 2;
                 ctx.moveTo(x - w, y - h);
                 ctx.lineTo(x + w, y - h);
                 ctx.lineTo(x + w, y + h);
