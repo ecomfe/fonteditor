@@ -21,20 +21,20 @@ define(
          * @return {number} 包含关系
          */
         function isBoundingBoxCross(b1, b2) {
-            var b1_lt = isPointInBound(b2, b1); // 左上
-            var b1_rt = isPointInBound(b2, {x: b1.x + b1.width, y: b1.y}); // 右上
-            var b1_lb = isPointInBound(b2, {x: b1.x, y: b1.y + b1.height}); // 左下
-            var b1_rb = isPointInBound(b2, {x: b1.x + b1.width, y: b1.y + b1.height}); //右下
+            var b1_lt = isPointInBound(b2, b1, true); // 左上
+            var b1_rt = isPointInBound(b2, {x: b1.x + b1.width, y: b1.y}, true); // 右上
+            var b1_lb = isPointInBound(b2, {x: b1.x, y: b1.y + b1.height}, true); // 左下
+            var b1_rb = isPointInBound(b2, {x: b1.x + b1.width, y: b1.y + b1.height}, true); //右下
 
             // b2 包含 b1
             if(b1_lt && b1_rt && b1_lb && b1_rb) {
                 return 2;
             }
 
-            var b2_lt = isPointInBound(b1, b2); // 左上
-            var b2_rt = isPointInBound(b1, {x: b2.x + b2.width, y: b2.y}); // 右上
-            var b2_lb = isPointInBound(b1, {x: b2.x, y: b2.y + b2.height}); // 左下
-            var b2_rb = isPointInBound(b1, {x: b2.x + b2.width, y: b2.y + b2.height}); //右下
+            var b2_lt = isPointInBound(b1, b2, true); // 左上
+            var b2_rt = isPointInBound(b1, {x: b2.x + b2.width, y: b2.y}, true); // 右上
+            var b2_lb = isPointInBound(b1, {x: b2.x, y: b2.y + b2.height}, true); // 左下
+            var b2_rb = isPointInBound(b1, {x: b2.x + b2.width, y: b2.y + b2.height}, true); //右下
 
             // b1 包含 b2
             if(b2_lt && b2_rt && b2_lb && b2_rb) {

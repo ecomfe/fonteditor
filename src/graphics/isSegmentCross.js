@@ -10,7 +10,7 @@ define(
     function(require) {
         
         var isBoundingBoxCross = require('./isBoundingBoxCross');
-        var ceil = require('./util').ceil; 
+        var ceilPoint = require('./util').ceilPoint; 
         var isPointInBound = require('./util').isPointInBound;
         var matrix = require('./matrix');
         var multi = matrix.multi;
@@ -125,13 +125,13 @@ define(
                         x = - (seg2[2] + seg2[1] * y) / seg2[0];
                     }
 
-                    p = {
+                    p = ceilPoint({
                         x: x,
                         y: y
-                    };
+                    });
 
-                    if(isPointInBound(b1, p) && isPointInBound(b2, p)) {
-                        return [ceil(p)];
+                    if(isPointInBound(b1, p, true) && isPointInBound(b2, p, true)) {
+                        return [p];
                     }
                 }
             }

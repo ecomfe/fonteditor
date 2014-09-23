@@ -55,7 +55,7 @@ define(
                 return end;
             }
             else {
-                return shapes[0];
+                return start;
             }
         }
 

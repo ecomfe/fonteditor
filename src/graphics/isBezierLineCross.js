@@ -10,7 +10,7 @@ define(
     function(require) {
         
         var bezierQ2Equation = require('../math/bezierQ2Equation');
-        var ceil = require('./util').ceil;
+        var ceilPoint = require('./util').ceilPoint;
 
         /**
          * 判断贝塞尔曲线与直线相交
@@ -68,7 +68,7 @@ define(
 
             if(result) {
                 return result.map(function(t) {
-                    return ceil({
+                    return ceilPoint({
                         x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1-t) + p2.x * Math.pow(t, 2),
                         y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1-t) + p2.y * Math.pow(t, 2)
                     });

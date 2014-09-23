@@ -22,7 +22,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":398,"y":31,"onCurve":true},{"x":474,"y":201,"onCurve":true},{"x":457,"y":74},{"x":407,"y":74}] ;
+                var points = [{"x":563.5776234567902,"y":637.5320987654322,"onCurve":true},{"x":563.5776234567902,"y":433.53209876543207,"onCurve":true},{"x":543,"y":478},{"x":10000,"y":478}] ;
 
                 $('[data-index]').each(function(index, item) {
                     if(!points[index]) {
