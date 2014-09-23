@@ -10,6 +10,7 @@
 define(
     function(require) {
 
+        var guid = require('render/util/guid');
         var ShapesGroup = require('../group/ShapesGroup');
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
@@ -152,8 +153,26 @@ define(
              * 开始拖动
              */
             dragstart: function(e) {
-                if (this.currentGroup && this.currentPoint) {
-                    this.currentGroup.beginTransform(this.currentPoint);
+
+
+                if (this.currentGroup) {
+
+                    // 点拖动模式
+                    if (this.currentPoint) {
+                        this.currentGroup.beginTransform(this.currentPoint);
+                    }
+                    // 复制模式
+                    else if (e.ctrlKey && e.altKey) {
+                        var shapes = lang.clone(this.currentGroup.shapes);
+                        var fontLayer = this.fontLayer;
+                        shapes.forEach(function(shape) {
+                            shape.id = guid('shape');
+                            fontLayer.addShape(shape);
+                        });
+                        
+                        this.currentGroup.setShapes(shapes);
+                    }
+
                 }
             },
 

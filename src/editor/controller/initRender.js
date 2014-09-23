@@ -172,13 +172,9 @@ define(
                     return;
                 }
 
-                // 撤销
-                if (e.keyCode == 90 && e.ctrlKey) {
-                    me.execCommand('undo');
-                }
-                // 恢复
-                else if (e.keyCode == 89 && e.ctrlKey) {
-                    me.execCommand('redo');
+                // esc键，重置model
+                if (e.key == 'esc' && !me.mode.keyup) {
+                    me.setMode();
                 }
                 // 粘贴
                 else if (e.keyCode == 86 && e.ctrlKey) {
@@ -189,14 +185,29 @@ define(
                         me.fire('change');
                     }
                 }
-                // esc键，重置model
-                else if (e.key == 'esc' && !me.mode.keyup) {
-                    me.setMode();
-                }
                 else {
                     me.mode.keyup && me.mode.keyup.call(me, e);
                 }
             });
+
+            render.keyCapture.on('keydown', function(e) {
+                if (me.contextMenu.visible()) {
+                    return;
+                }
+
+                // 撤销
+                if (e.keyCode == 90 && e.ctrlKey) {
+                    me.execCommand('undo');
+                }
+                // 恢复
+                else if (e.keyCode == 89 && e.ctrlKey) {
+                    me.execCommand('redo');
+                }
+                else {
+                    me.mode.keydown && me.mode.keydown.call(me, e);
+                }
+            });
+
 
             render.keyCapture.on('keydown', function(e) {
                 if (me.contextMenu.visible()) {

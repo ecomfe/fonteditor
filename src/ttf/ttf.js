@@ -71,6 +71,32 @@ define(
         }
 
         /**
+         * 关联glyf相关的信息
+         */
+        function resolveGlyf(ttf) {
+            var chars = ttf.chars;
+            var glyf = ttf.glyf;
+
+            Object.keys(chars).forEach(function(c) {
+                var i = chars[c];
+                glyf[i].unicode = +c;
+            });
+
+            if (ttf.post && 2 == ttf.post.format) {
+                var nameIndex = ttf.post.glyphNameIndex;
+                var names = ttf.post.names;
+                nameIndex.forEach(function(name, i) {
+                    if (name <= 257) {
+                        glyf[i].name = name;
+                    }
+                    else {
+                        glyf[i].name = names[name - 258] || '';
+                    }
+                });
+            }
+        }
+
+        /**
          * ttf读取函数
          * 
          * @constructor
@@ -79,6 +105,7 @@ define(
         function TTF(ttf) {
             this.ttf = ttf;
             this.ttf.chars = readWindowsAllChars(ttf);
+            resolveGlyf.call(this, this.ttf);
         }
 
         /**
