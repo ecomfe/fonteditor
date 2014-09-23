@@ -17,7 +17,7 @@ define(
          * @param {number} a a系数
          * @param {number} b b系数
          * @param {number} c c系数
-         * @return {Array} 系数解
+         * @return {Array|boolean} 系数解
          */
         function bezierQ2Equation(a, b, c) {
             var result = quadraticEquation(a, b, c);

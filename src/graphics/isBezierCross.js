@@ -13,7 +13,6 @@ define(
         var isBoundingBoxCross = require('./isBoundingBoxCross');
         var bezierQ2Equation = require('../math/bezierQ2Equation');
         var bezierQ4Equation = require('../math/bezierQ4Equation');
-        var bezierCubeEquation = require('../math/bezierCubeEquation');
         var ceilPoint = require('./util').ceilPoint;
 
         var matrix = require('./matrix');
@@ -23,6 +22,14 @@ define(
 
         /**
          * 求两个bezier曲线的交点
+         * 
+         * @param {Object} p0 bezier1 p0
+         * @param {Object} p1 bezier1 p1
+         * @param {Object} p2 bezier1 p2
+         * @param {Object} t0 bezier2 p0
+         * @param {Object} t1 bezier2 p1
+         * @param {Object} t2 bezier2 p2
+         * @return {Array|boolean} 交点数组或false
          */
         function isBezierCross(p0, p1, p2, t0, t1, t2) {
             // t二项式系数

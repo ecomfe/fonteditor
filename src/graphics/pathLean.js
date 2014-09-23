@@ -17,7 +17,8 @@ define(
          * @param {number} angle 角度
          * @param {number} offsetX x偏移
          * @param {number} offsetY y偏移
-         * @return {number} contour 坐标点
+         * 
+         * @return {Object} contour 坐标点
          */
         function pathLean(contour, angle, offsetX, offsetY) {
             var angle = angle == undefined ? 0 : angle;

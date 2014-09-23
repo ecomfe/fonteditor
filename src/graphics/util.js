@@ -14,6 +14,7 @@ define(
          * 将点进行误差舍入
          * 
          * @param {Object} p 点对象
+         * 
          * @return {Object} 点
          */
         function ceilPoint(p) {
@@ -26,6 +27,7 @@ define(
          * 将数值进行误差舍入
          * 
          * @param {Object} x 数值
+         * 
          * @return {number} 点
          */
         function ceil(x) {
@@ -36,6 +38,7 @@ define(
          * 判断点是否在bounding box内部
          * @param {Object} bound bounding box对象
          * @param {Object} p 点对象
+         * 
          * @return {boolean} 是否
          */
         function isPointInBound(bound, p, fixed) {

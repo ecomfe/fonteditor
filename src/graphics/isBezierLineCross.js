@@ -20,7 +20,7 @@ define(
          * @param {Object} p2 终点
          * @param {Object} s0 直线点1
          * @param {Object} s1 直线点2
-         * @return {boolean|Object} 是否相交
+         * @return {Array.<Object>|boolean} 交点数组或者false
          */
         function isBezierLineCross(p0, p1, p2, s0, s1) {
 

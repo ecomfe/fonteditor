@@ -17,6 +17,10 @@ define(
 
         /**
          * 计算包围盒
+         * 
+         * @param {Array} points 点集
+         * 
+         * @return {Object} bounding box
          */
         function computeBoundingBox(points) {
             if (points.length === 0) {

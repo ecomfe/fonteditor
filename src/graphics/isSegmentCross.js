@@ -18,7 +18,15 @@ define(
         var plus = matrix.plus;
 
         /**
-         * 过滤相交重叠线段上的点
+         * 过滤重叠线段上的点
+         * 
+         * @param {Object} s0 线段1点1
+         * @param {Object} s1 线段1点2
+         * @param {Object} t0 线段2点1
+         * @param {Object} t1 线段2点2
+         * @param {string} axis 坐标轴 x or y
+         * 
+         * @return {Array} 交点集合
          */
         function filter(s0, s1, t0, t1, axis) {
             var sorted = [s0, s1, t0, t1].sort(function(a, b) {
@@ -47,11 +55,12 @@ define(
         /**
          * 线段是否相交
          * 
-         * @param {Object} s0 点1
-         * @param {Object} s1 点2
-         * @param {Object} t0 点1
-         * @param {Object} t1 点2
-         * @return {boolean|Object} 是否相交
+         * @param {Object} s0 线段1点1
+         * @param {Object} s1 线段1点2
+         * @param {Object} t0 线段2点1
+         * @param {Object} t1 线段2点2
+         * 
+         * @return {Array|boolean} 交点集合或者false
          */
         function isSegmentCross(s0, s1, t0, t1) {
             var p, x, y;

@@ -18,7 +18,8 @@ define(
          * @param {number} scaleY y缩放比例
          * @param {number} offsetX x偏移
          * @param {number} offsetY y偏移
-         * @return {number} contour 坐标点
+         * 
+         * @return {Object} contour 坐标点
          */
         function pathAdjust(contour, scaleX, scaleY, offsetX, offsetY) {
             var scaleX = scaleX == undefined ? 1 : scaleX;

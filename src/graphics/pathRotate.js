@@ -17,7 +17,8 @@ define(
          * @param {number} angle 角度
          * @param {number} centerX x偏移
          * @param {number} centerY y偏移
-         * @return {number} contour 坐标点
+         * 
+         * @return {Object} contour 坐标点
          */
         function pathRotate(contour, angle, centerX, centerY) {
             var angle = angle == undefined ? 0 : angle;

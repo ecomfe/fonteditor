@@ -21,7 +21,7 @@ define(
          * @param {Object} p2 终点
          * @param {Object} s0 线段点1
          * @param {Object} s1 线段点2
-         * @return {boolean|Object} 是否相交
+         * @return {Array.<Object>|boolean} 交点数组或者false
          */
         function isBezierSegmentCross(p0, p1, p2, s0, s1) {
             var b1 = computeBoundingBox.quadraticBezier(p0, p1, p2);

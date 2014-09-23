@@ -15,10 +15,10 @@ define(
         /**
          * boundingbox和线段的关系
          * 
-         * @param {Object} bound bounding 1
+         * @param {Object} bound bounding box
          * @param {Object} s0 线段点1
          * @param {Object} s1 线段点2
-         * @return {number} 包含关系
+         * @return {boolean} 是否相交
          */
         function isBoundingBoxSegmentCross(bound, s0, s1) {
             if (isPointInBound(bound, s0) || isPointInBound(bound, s1)) {

@@ -16,7 +16,7 @@ define(
         /**
          * 判断x轴射线是否与贝塞尔曲线相交
          * 
-         * @return {boolean} 是否
+         * @return {Array|boolean} 交点数组或者false
          */
         function isBezierRayCross(p0, p1, p2, p) {
             
@@ -25,7 +25,7 @@ define(
                 return false;
             }
 
-            var result = isBezierLineCross(p0, p1, p2, p, {x: 10000, y: p.y});
+            var result = isBezierLineCross(p0, p1, p2, p, {x: 100000, y: p.y});
             if (result) {
                 var filter = result.filter(function(item) {
                     return item.x >= p.x;

@@ -15,6 +15,10 @@ define(
 
         /**
          * 多边形包含判断, 射线法
+         * 
+         * @param {Array} points 多边形点
+         * @param {Object} p 点
+         * @return {boolean} 是否包含
          */
         function isInsidePolygon(points, p) {
 

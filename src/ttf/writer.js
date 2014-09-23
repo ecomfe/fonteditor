@@ -228,7 +228,7 @@ define(
                 if(undefined == offset) {
                     offset = this.offset;
                 }
-                this.writeInt32(Math.ceil(value * 65536), offset);
+                this.writeInt32(Math.round(value * 65536), offset);
 
                 return this;
             },

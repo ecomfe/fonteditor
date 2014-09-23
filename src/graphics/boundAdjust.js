@@ -18,6 +18,7 @@ define(
          * @param {number} scaleY y缩放比例
          * @param {number} offsetX x偏移
          * @param {number} offsetY y偏移
+         * 
          * @return {number} bound数据结构
          */
         function boundAdjust(bound, scaleX, scaleY, offsetX, offsetY) {

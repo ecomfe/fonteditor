@@ -19,6 +19,10 @@ define(
          * @param {Object} b1 bounding 1
          * @param {Object} b2 bounding 2
          * @return {number} 包含关系
+         * 
+         * 2 :  b2 包含 b1
+         * 3 :  b2 包含 b3
+         * 1 :  有交点
          */
         function isBoundingBoxCross(b1, b2) {
             var b1_lt = isPointInBound(b2, b1, true); // 左上

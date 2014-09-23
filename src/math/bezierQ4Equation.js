@@ -12,14 +12,14 @@ define(
         var quarticEquation = require('./quarticEquation');
 
         /**
-         * 求解二次方程
+         * 求解四次方程
          * 
          * @param {number} a a系数
          * @param {number} b b系数
          * @param {number} c c系数
          * @param {number} d d系数
          * @param {number} e e系数
-         * @return {Array} 系数解
+         * @return {Array|boolean} 系数解
          */
         function bezierQuarticEquation(a, b, c, d, e) {
             var result = quarticEquation(a, b, c, d, e);
