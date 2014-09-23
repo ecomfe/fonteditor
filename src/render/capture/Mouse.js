@@ -35,21 +35,6 @@ define(
         }
 
         /**
-         * 键盘按键
-         * @param {MouseEvent} e 事件
-         * 
-         * @return {Object} 按键列表
-         */
-        function getKey(e) {
-            return {
-                ctrlKey: e.ctrlKey,
-                metaKey: e.metaKey,
-                altKey: e.altKey,
-                shiftKey: e.shiftKey
-            };
-        }
-
-        /**
          * 获取事件参数
          * @param {MouseEvent} e 事件
          * 
@@ -74,7 +59,7 @@ define(
         function prevent(e) {
             e.stopPropagation();
             if (e.preventDefault) {
-                e.preventDefault()
+                e.preventDefault();
             }
             else {
                 e.returnValue = false;

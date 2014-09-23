@@ -10,10 +10,9 @@
 
 define(
     function(require) {
-        var lang = require('common/lang');
+
         var computeBoundingBox = require('../../graphics/computeBoundingBox');
         var isPathCross = require('../../graphics/isPathCross');
-        var pathAdjust = require('graphics/pathAdjust');
 
         /**
          * 从待选的shape中选择一个，作为选中的shape

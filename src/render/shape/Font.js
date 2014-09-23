@@ -9,8 +9,8 @@
 
 define(
     function(require) {
+        
         var ShapeConstructor = require('./Shape');
-        var glyfDraw = require('../glyf/draw');
         var isInsidePath = require('../../graphics/isInsidePath');
         var pathAdjust = require('graphics/pathAdjust');
         var drawPath = require('../util/drawPath');
@@ -35,7 +35,7 @@ define(
                 for (var i = 0, l = contours.length; i < l; i++) {
                     pathAdjust(contours[i], ratio, ratio, -x, -y);
                     pathAdjust(contours[i], 1, 1, x, y);
-                };
+                }
 
                 return shape;
 

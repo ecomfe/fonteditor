@@ -9,7 +9,7 @@
 
 define(
     function(require) {
-        var lang = require('common/lang');
+
         var selectShape = require('./util/selectShape');
         
         /**

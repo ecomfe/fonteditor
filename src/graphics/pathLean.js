@@ -21,13 +21,12 @@ define(
          * @return {Object} contour 坐标点
          */
         function pathLean(contour, angle, offsetX, offsetY) {
-            var angle = angle == undefined ? 0 : angle;
+            var angle = angle === undefined ? 0 : angle;
             var x = offsetX || 0;
-            var y = offsetY || 0;
             var tan = Math.tan(angle);
             var p;
             // x 平移
-            if (x == 0) {
+            if (x === 0) {
                 for (var i = 0, l = contour.length; i < l; i++) {
                     p = contour[i];
                     p.x += tan * (p.y - offsetY);

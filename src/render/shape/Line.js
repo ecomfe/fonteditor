@@ -25,7 +25,6 @@ define(
             adjust: function(shape, camera) {
                 var center = camera.center;
                 var ratio = camera.ratio;
-                var scale = camera.scale;
 
                 if(undefined !== shape.p0.x) {
                     shape.p0.x = ratio * (shape.p0.x - center.x) + center.x;

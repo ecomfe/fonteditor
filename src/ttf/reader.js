@@ -47,12 +47,12 @@ define(
         function read(type, offset, littleEndian) {
             
             // 使用当前位移
-            if(undefined == offset) {
+            if(undefined === offset) {
                 offset = this.offset;
             }
 
             // 使用小尾
-            if(undefined == littleEndian) {
+            if(undefined === littleEndian) {
                 littleEndian = this.littleEndian;
             }
 
@@ -157,7 +157,7 @@ define(
              * @return {Object} this
              */
             seek: function (offset) {
-                if (undefined == offset) {
+                if (undefined === offset) {
                     this.offset = 0;
                 }
 
@@ -191,7 +191,7 @@ define(
              * @return {number} float
              */
             readFixed: function(offset) {
-                if(undefined == offset) {
+                if(undefined === offset) {
                     offset = this.offset;
                 }
                 var val = this.readInt32(offset, false) / 65536.0;
@@ -205,7 +205,7 @@ define(
              * @return {Date} Date对象
              */
             readLongDateTime: function(offset) {
-                if(undefined == offset) {
+                if(undefined === offset) {
                     offset = this.offset;
                 }
                 var delta = -2077545600000;// new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();

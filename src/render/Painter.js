@@ -358,7 +358,7 @@ define(
                 return {
                     width: this.width,
                     height: this.height
-                }
+                };
             },
 
             /**

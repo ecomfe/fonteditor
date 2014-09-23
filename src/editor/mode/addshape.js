@@ -28,7 +28,7 @@ define(
                             x: p.x,
                             y: p.y,
                             onCurve: true
-                        }
+                        };
                     });
 
                     var shape = this.fontLayer.addShape('path', {
@@ -46,7 +46,7 @@ define(
                         y: e.y
                     });
 
-                    if(this.points.length == 0) {
+                    if(this.points.length === 0) {
                         point.style = {
                             strokeColor: 'red'
                         };

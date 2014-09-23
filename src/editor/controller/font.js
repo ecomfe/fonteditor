@@ -9,10 +9,10 @@
 
 define(
     function(require) {
+        
         var initAxis = require('./initAxis');
         var lang = require('common/lang');
         var pathAdjust = require('graphics/pathAdjust');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
         var guid = require('render/util/guid');
 
         /**
@@ -35,7 +35,6 @@ define(
             // 构造形状集合
             var shapes = contours.map(function(path) {
                 var shape = {};
-                var bound = computeBoundingBox.computePath(path);
                 path = pathAdjust(path, 1, -1);
                 shape.points = pathAdjust(path, 1, 1, offsetX, offsetY);
                 return shape;

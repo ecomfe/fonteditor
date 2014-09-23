@@ -9,9 +9,8 @@
 
 define(
     function(require) {
-        var computeBoundingBox = require('./computeBoundingBox');
+
         var isBezierLineCross = require('./isBezierLineCross');
-        var isPointInBound = require('./util').isPointInBound;
 
         /**
          * 判断x轴射线是否与贝塞尔曲线相交
@@ -21,7 +20,7 @@ define(
         function isBezierRayCross(p0, p1, p2, p) {
             
             // 3点都在同一侧
-            if(!((p0.y > p.y) + (p1.y > p.y) + (p2.y > p.y)) % 3) {
+            if(0 === ((p0.y > p.y) + (p1.y > p.y) + (p2.y > p.y)) % 3) {
                 return false;
             }
 

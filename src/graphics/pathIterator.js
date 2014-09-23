@@ -28,7 +28,7 @@ define(
                 nextPoint =  i === l - 1 ? contour[0] : contour[i + 1];
 
                 // 起始坐标
-                if (i == 0) {
+                if (i === 0) {
                     if (curPoint.onCurve) {
                         cursorPoint = curPoint;
                     }

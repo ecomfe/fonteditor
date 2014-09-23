@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file componentFlag.js
  * @author mengke01
  * @date 

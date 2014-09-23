@@ -58,10 +58,12 @@ define(
                     x = reader.readUint8();
 
                     //标志位5
-                    // This flag has two meanings, depending on how the x-Short Vector flag is set. If x-Short Vector is set, this
+                    // This flag has two meanings, depending on how the x-Short Vector flag is set. 
+                    // If x-Short Vector is set, this
                     // bit describes the sign of the value, with 1 equalling
                     // positive and 0 negative. If the x-Short Vector bit is
-                    // not set and this bit is set, then the current x-coordinate is the same as the previous x-coordinate.
+                    // not set and this bit is set, then the current x-coordinate is 
+                    // the same as the previous x-coordinate.
                     // If the x-Short Vector bit is not set and this bit is also
                     // not set, the current x-coordinate is a signed 16-bit
                     // delta vector

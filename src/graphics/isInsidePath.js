@@ -30,7 +30,7 @@ define(
             pathIterator(path, function (c, p0, p1, p2) {
                 if (c === 'L') {
 
-                    if(joint = isSegmentRayCross(p0, p1, p)) {
+                    if((joint = isSegmentRayCross(p0, p1, p))) {
                         // 在直线上
                         if(joint[0].x == p.x) {
                             zCount = 1;
@@ -47,9 +47,11 @@ define(
                 }
                 else if(c === 'Q') {
 
-                    var ps = pe = null; // 确定贝塞尔曲线的方向点
-
-                    if(joint = isBezierRayCross(p0, p1, p2, p)) {
+                    var ps = null;
+                    var pe = null; 
+                    
+                    // 确定贝塞尔曲线的方向点
+                    if((joint = isBezierRayCross(p0, p1, p2, p))) {
 
                         // 在曲线上
                         if(joint[0].x == p.x || joint[1] && joint[1].x == p.x) {

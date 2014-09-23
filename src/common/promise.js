@@ -69,7 +69,7 @@ define(function () {
             res = setImmediate;
         }
         // for modern browser
-        else if (Observer = window.MutationObserver 
+        else if ((Observer = window.MutationObserver) 
             || window.webKitMutationObserver
         ) {
             var observer = new Observer(function (mutations) {
@@ -282,7 +282,7 @@ define(function () {
         nextTick(
             function () {
                 var item;
-                while (item = items.shift()) {
+                while ((item = items.shift())) {
                     item(resolver.data);
                 }
             }

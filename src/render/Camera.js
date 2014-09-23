@@ -37,8 +37,9 @@ define(
          * 注销Camera
          */
         Camera.prototype.dispose = function() {
-            this.center = this.ratio = this.scale = null
-        }
+            this.center = this.ratio = this.scale = null;
+        };
+        
         return Camera;
     }
 );

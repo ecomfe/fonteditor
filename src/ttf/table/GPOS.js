@@ -18,9 +18,8 @@
 
 define(
     function(require) {
+
         var table = require('./table');
-        var struct = require('./struct');
-        var ScriptList = require('./ScriptList');
 
         var GPOS = table.create(
             'GPOS', 

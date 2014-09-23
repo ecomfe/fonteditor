@@ -15,7 +15,7 @@
 define(
     function(require) {
         var table = require('./table');
-        var struct = require('./struct');
+
         var hmtx = table.create(
             'hmtx', 
             [

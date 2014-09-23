@@ -10,8 +10,6 @@
 define(
     function(require) {
 
-        var lang = require('common/lang');
-
         var mode = {
 
             /**

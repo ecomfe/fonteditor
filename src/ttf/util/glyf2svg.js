@@ -38,7 +38,7 @@ define(
                 pathArray.push(contour2svg(contours[i]));
             }
 
-            return pathArray.join(" ");
+            return pathArray.join(' ');
         }
 
 

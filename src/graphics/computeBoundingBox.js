@@ -51,7 +51,7 @@ define(
                 y: top,
                 width: right - left,
                 height: bottom - top
-            }
+            };
         }
 
         /**
@@ -110,6 +110,22 @@ define(
          */
         function computePathBoundingBox(path) {
 
+            function iterator(c, p0, p1, p2) {
+                if (c === 'L') {
+                    points.push(p0);
+                    points.push(p1);
+                }
+                else if(c === 'Q') {
+                    var bound = computeQuadraticBezierBoundingBox(p0, p1, p2);
+
+                    points.push(bound);
+                    points.push({
+                        x: bound.x + bound.width,
+                        y: bound.y + bound.height
+                    });
+                }
+            }
+
             var points = [];
             if (arguments.length === 1) {
                 pathIterator(path, function (c, p0, p1, p2) {
@@ -130,21 +146,7 @@ define(
             }
             else {
                 for (var i = 0, l = arguments.length; i < l; i++) {
-                    pathIterator(arguments[i], function (c, p0, p1, p2) {
-                        if (c === 'L') {
-                            points.push(p0);
-                            points.push(p1);
-                        }
-                        else if(c === 'Q') {
-                            var bound = computeQuadraticBezierBoundingBox(p0, p1, p2);
-
-                            points.push(bound);
-                            points.push({
-                                x: bound.x + bound.width,
-                                y: bound.y + bound.height
-                            });
-                        }
-                    });
+                    pathIterator(arguments[i], iterator);
                 }
             }
 
@@ -177,7 +179,7 @@ define(
             computeBounding: computeBoundingBox,
             quadraticBezier: computeQuadraticBezierBoundingBox,
             computePath: computePathBoundingBox,
-            computePathBox: computePathBox,
+            computePathBox: computePathBox
         };
     }
 );

@@ -13,9 +13,9 @@
 
 define(
     function(require) {
-        var directory = require('./table/directory');
+        var Directory = require('./table/directory');
         var supportTables = require('./table/support');
-        var reader = require('./reader');
+        var Reader = require('./reader');
 
         /**
          * 初始化
@@ -39,7 +39,7 @@ define(
             // rengeShift
             ttf.rengeShift = reader.readUint16();
 
-            ttf.tables = new directory(reader.offset).read(reader, ttf);
+            ttf.tables = new Directory(reader.offset).read(reader, ttf);
 
             // 读取支持的表数据
             Object.keys(supportTables).forEach(function(tableName) {
@@ -63,7 +63,7 @@ define(
          * @return {Object} ttf文档
          */
         TTFReader.prototype.read = function(buffer) {
-            this.reader = new reader(buffer, 0, buffer.byteLength, false);
+            this.reader = new Reader(buffer, 0, buffer.byteLength, false);
             this.ttf = {};
             init.call(this);
             return this.ttf;

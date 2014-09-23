@@ -36,7 +36,7 @@ define(
                         {x: bound.x,y:bound.y},
                         {x: bound.x + bound.width, y:bound.y},
                         {x: bound.x + bound.width, y:bound.y + bound.height},
-                        {x: bound.x, y:bound.y + bound.height},
+                        {x: bound.x, y:bound.y + bound.height}
                     ]
                 },
 
@@ -53,7 +53,7 @@ define(
                 {x: bound.x + bound.width / 2, y: bound.y, pos: 5},
                 {x: bound.x + bound.width, y: bound.y + bound.height / 2, pos: 6},
                 {x: bound.x + bound.width / 2, y: bound.y + bound.height, pos: 7},
-                {x: bound.x, y: bound.y + bound.height / 2, pos: 8},
+                {x: bound.x, y: bound.y + bound.height / 2, pos: 8}
             ];
 
             var mode = this.mode;

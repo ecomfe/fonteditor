@@ -31,7 +31,6 @@ define(
             adjust: function(shape, camera) {
                 var center = camera.center;
                 var ratio = camera.ratio;
-                var scale = camera.scale;
 
                 if(typeof shape.x === 'number') {
                     shape.x = ratio * (shape.x - center.x) + center.x;
@@ -130,7 +129,7 @@ define(
             Constructor.constructor = Shape;
             lang.extend(Constructor.prototype, Shape.prototype, prototype);
             return Constructor;
-        }
+        };
 
         /**
          * 克隆一个shape对象

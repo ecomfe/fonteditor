@@ -11,7 +11,6 @@ define(
     function(require) {
 
         var guid = require('./util/guid');
-        var ShapeConstructor = require('./shape/Shape');
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
 
@@ -37,20 +36,7 @@ define(
             context.fillStyle = options.fillColor || 'black';
             context.strokeStyle = options.strokeColor || 'black';
             context.lineWidth = options.lineWidth || 1;
-            context.font = options.font || "normal 10px arial";
-        }
-
-        /**
-         * 对shape进行camera调整
-         * 
-         * @return {Array} 调整后的shape
-         */
-        function adjustCamera(shapes, camera) {
-            var newShapes = [];
-
-            newShapes = shapes.slice();
-
-            return newShapes;
+            context.font = options.font || 'normal 10px arial';
         }
 
         /**
@@ -109,7 +95,7 @@ define(
                         return;
                     }
 
-                    if(drawer = support[shape.type]) {
+                    if ((drawer = support[shape.type])) {
                         if(camera.ratio != 1) {
                             drawer.adjust(shape, camera);
                         }
@@ -301,7 +287,7 @@ define(
                 for (var i = 0, l = shapes.length; i < l; i++) {
 
                     shape = shapes[i];
-                    if(drawer = support[shape.type]) {
+                    if ((drawer = support[shape.type])) {
                         if(camera.ratio != 1) {
                             drawer.adjust(shape, camera);
                         }
@@ -336,7 +322,7 @@ define(
                 for (var i = 0, l = shapes.length; i < l; i++) {
 
                     shape = shapes[i];
-                    if(drawer = support[shape.type]) {
+                    if ((drawer = support[shape.type])) {
                         drawer.move(shape, x, y);
                     }
 
@@ -374,7 +360,7 @@ define(
 
                     for (var i = 0, l = shapes.length; i < l; i++) {
                         shape = shapes[i];
-                        if(drawer = support[shape.type]) {
+                        if ((drawer = support[shape.type])) {
                             drawer.move(shape, mx, my);
                         }
                     }
@@ -391,7 +377,7 @@ define(
             getBound: function(shapes) {
                 shapes = shapes || this.shapes;
 
-                if (shapes.length == 0) {
+                if (shapes.length === 0) {
                     return false;
                 }
 
@@ -401,8 +387,8 @@ define(
                 for (var i = 0, l = shapes.length; i < l; i++) {
                     shape = shapes[i];
 
-                    if(drawer = support[shape.type]) {
-                        if(undefined != shape.x && undefined != shape.y) {
+                    if ((drawer = support[shape.type])) {
+                        if (undefined !== shape.x && undefined !== shape.y) {
                             boundPoints.push(shape);
                         }
                         else {

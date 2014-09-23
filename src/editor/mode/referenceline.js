@@ -53,7 +53,7 @@ define(
                             this.render.setCursor('n-resize');
                         }
 
-                        this._dragMode == mode.dragLine
+                        this._dragMode == mode.dragLine;
                     }
                 }
             },

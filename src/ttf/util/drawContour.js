@@ -26,7 +26,7 @@ define(
                 nextPoint =  i === l - 1 ? contour[0] : contour[i + 1];
 
                 // 起始坐标
-                if (i == 0) {
+                if (i === 0) {
                     if (curPoint.onCurve) {
                         ctx.moveTo(curPoint.x, curPoint.y);
                     }
@@ -49,7 +49,10 @@ define(
                         ctx.quadraticCurveTo(curPoint.x, curPoint.y, nextPoint.x, nextPoint.y);
                     }
                     else {
-                        ctx.quadraticCurveTo(curPoint.x, curPoint.y, (curPoint.x + nextPoint.x) / 2, (curPoint.y + nextPoint.y) / 2);
+                        ctx.quadraticCurveTo(
+                            curPoint.x, curPoint.y, 
+                            (curPoint.x + nextPoint.x) / 2, (curPoint.y + nextPoint.y) / 2
+                        );
                     }
                 }
             }

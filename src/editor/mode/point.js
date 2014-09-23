@@ -10,8 +10,6 @@
 define(
     function(require) {
 
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('graphics/pathAdjust');
         var lang = require('common/lang');
 
         // 移动步频
@@ -34,7 +32,7 @@ define(
             }
 
             this.fire('command', e);
-            if(e.returnValue == false) {
+            if(e.returnValue === false) {
                 return;
             }
 
@@ -60,7 +58,7 @@ define(
                     x: (cur.x + next.x) / 2,
                     y: (cur.y + next.y) / 2,
                     onCurve: true
-                }
+                };
 
                 points.splice(pointId + 1, 0, p);
             }
@@ -101,13 +99,13 @@ define(
                         shapeId: shape.id
                     };
 
-                    if (index == 0) {
+                    if (index === 0) {
                         cpoint.style = {
                             fillColor: 'green',
                             strokeWidth: 2
                         };
                     }
-                    else if (index == last) {
+                    else if (index === last) {
                         cpoint.style = {
                             fillColor: 'red',
                             strokeWidth: 2

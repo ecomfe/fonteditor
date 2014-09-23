@@ -10,8 +10,6 @@
 define(
     function(require) {
 
-        var lang = require('common/lang');
-        var selectShape = require('render/util/selectShape');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var isBoundingBoxCross = require('graphics/isBoundingBoxCross');
 
@@ -40,7 +38,7 @@ define(
              * 按下事件
              */
             down: function(e) {
-                if(1 == e.which) {
+                if (1 == e.which) {
                     mode.begin.call(this, e);
                 }
             },
@@ -49,7 +47,7 @@ define(
              * 拖动事件
              */
             drag: function(e) {
-                if(1 == e.which) {
+                if (1 == e.which) {
                     if (this.selectionBox) {
                         var camera = this.render.camera;
                         this.selectionBox.width = camera.x - this.selectionBox.x;
@@ -64,18 +62,18 @@ define(
              * 鼠标弹起
              */
             up: function(e) {
-                if(1 == e.which) {
-                    if(this.selectionBox) {
+                if (1 == e.which) {
+                    if (this.selectionBox) {
                         var bound = {
                             x: Math.min(this.selectionBox.x, this.selectionBox.x + this.selectionBox.width),
                             y: Math.min(this.selectionBox.y, this.selectionBox.y + this.selectionBox.height),
                             width: Math.abs(this.selectionBox.width),
-                            height: Math.abs(this.selectionBox.height),
-                        }
+                            height: Math.abs(this.selectionBox.height)
+                        };
                         // 对shape进行多选
-                        if(bound.width >= 20 && bound.height >= 20) {
+                        if (bound.width >= 20 && bound.height >= 20) {
                             var shapes;
-                            if(shapes = selectShapes.call(this, bound)) {
+                            if ((shapes = selectShapes.call(this, bound))) {
                                 this.setMode('shapes', shapes);
                                 return;
                             }

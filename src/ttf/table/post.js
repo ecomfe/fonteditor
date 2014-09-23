@@ -13,7 +13,7 @@ define(
     function(require) {
         var table = require('./table');
         var struct = require('./struct');
-        var posthead = table.create(
+        var Posthead = table.create(
             'posthead', 
             [
                 ['format', struct.Fixed],
@@ -57,8 +57,7 @@ define(
             {
                 read: function(reader, ttf) {
                     // 读取表头
-                    var tbl = new posthead(this.offset).read(reader, ttf);
-                    var offset = reader.offset;
+                    var tbl = new Posthead(this.offset).read(reader, ttf);
 
                     // format2
                     if(tbl.format == 2) {

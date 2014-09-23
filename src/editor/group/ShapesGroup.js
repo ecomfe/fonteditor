@@ -137,4 +137,4 @@ define(
 
         return ShapesGroup;
     }
-)
+);

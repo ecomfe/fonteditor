@@ -21,7 +21,7 @@ define(
             XSAME: 0x10, //This x is same (Positive x-Short vector)
             YSAME: 0x20, //This y is same (Positive y-Short vector)
             Reserved1: 0x40,
-            Reserved2: 0x80,
+            Reserved2: 0x80
         };
 
         return glyFlag;

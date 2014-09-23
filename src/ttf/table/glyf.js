@@ -8,9 +8,9 @@
 
 define(
     function(require) {
+        
         var table = require('./table');
-        var struct = require('./struct');
-        var ttfglyf = require('./ttfglyf');
+        var TTFglyf = require('./ttfglyf');
 
         var glyf = table.create(
             'glyf', 
@@ -24,7 +24,7 @@ define(
                     var loca = ttf.loca;
                     var numGlyphs = ttf.maxp.numGlyphs;
                     var glyf = [];
-                    var glyfPath = new ttfglyf();
+                    var glyfPath = new TTFglyf();
 
                     reader.seek(glyfOffset);
 
@@ -34,7 +34,7 @@ define(
 
                         // 空路径
                         if(i + 1 < l && loca[i] === loca[i + 1]) {
-                            glyf[i] = ttfglyf.empty();
+                            glyf[i] = TTFglyf.empty();
                         }
                         else {
                             glyfPath.offset = offset;

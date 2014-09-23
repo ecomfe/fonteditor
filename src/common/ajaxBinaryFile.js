@@ -55,7 +55,7 @@ define(
             }
 
             xhr.open(method, options.url, true);
-            xhr.responseType = "arraybuffer";
+            xhr.responseType = 'arraybuffer';
             xhr.send(null);
         }
 

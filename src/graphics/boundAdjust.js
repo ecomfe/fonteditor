@@ -23,8 +23,8 @@ define(
          */
         function boundAdjust(bound, scaleX, scaleY, offsetX, offsetY) {
 
-            var scaleX = scaleX == undefined ? 1 : scaleX;
-            var scaleY = scaleY == undefined ? 1 : scaleY;
+            var scaleX = scaleX === undefined ? 1 : scaleX;
+            var scaleY = scaleY === undefined ? 1 : scaleY;
             var x = offsetX || 0;
             var y = offsetY || 0;
 

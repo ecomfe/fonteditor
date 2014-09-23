@@ -46,16 +46,16 @@ define(
 
 
             var originGap = config.graduation.gap;
-
+            var scale, gap, markSize, axis;
             if (originGap >= config.gap) {
-                var scale = originGap / config.gap;
-                var gap = Math.floor(scale) * originGap / 20; // 每个格子大小
-                var markSize = originGap / 20 * Math.floor(scale) /  scale;
+                scale = originGap / config.gap;
+                gap = Math.floor(scale) * originGap / 20; // 每个格子大小
+                markSize = originGap / 20 * Math.floor(scale) /  scale;
             }
             else {
 
-                var scale = config.gap / originGap;
-                var gap = Math.floor(originGap / 20 / scale); // 每个格子大小, 5的倍数
+                scale = config.gap / originGap;
+                gap = Math.floor(originGap / 20 / scale); // 每个格子大小, 5的倍数
                 
                 if (gap >= 2) {
                     gap = Math.floor(gap / 2) * 2;
@@ -64,19 +64,19 @@ define(
                     gap = 1;
                 }
 
-                var markSize = gap * scale;
+                markSize = gap * scale;
             }
 
             ctx.fillStyle = ctx.strokeStyle;
 
 
             // 横轴线
-            for(var axis = x, i = 0; axis < width; i++, axis += markSize) {
+            for(axis = x, i = 0; axis < width; i++, axis += markSize) {
                 ctx.moveTo(axis, thickness - (i % 5 ? markHeight : 2 * markHeight));
                 ctx.lineTo(axis, thickness);
             }
 
-            for(var axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
+            for(axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
                 ctx.moveTo(axis, thickness - (i % 5 ? markHeight : 2 * markHeight));
                 ctx.lineTo(axis, thickness);
             }
@@ -84,12 +84,12 @@ define(
 
             // 纵轴线
             var textOffset = 0; // 文本偏移
-            for(var axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
+            for(axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
                 ctx.moveTo(thickness - (i % 5 ? markHeight : 2 * markHeight), axis);
                 ctx.lineTo(thickness, axis);
             }         
 
-            for(var axis = y, i = 0; axis < height; i++, axis += markSize) {
+            for(axis = y, i = 0; axis < height; i++, axis += markSize) {
                 ctx.moveTo(thickness - (i % 5 ? markHeight : 2 * markHeight), axis);
                 ctx.lineTo(thickness, axis);
             }
@@ -100,28 +100,28 @@ define(
             ctx.fillStyle = config.graduation.color || '#000';
             ctx.scale(0.8, 0.8);
             var textOffset = thickness - 8; // 文本偏移
-            for(var axis = x, i = 0; axis < width; i++, axis += markSize) {
-                if (0 == i % 10) {
+            for(axis = x, i = 0; axis < width; i++, axis += markSize) {
+                if (0 === i % 10) {
                     ctx.fillText( gap * i, axis * 1.25 - 3, textOffset * 1.25);
                 }
             }
 
-            for(var axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
-                if (0 == i % 10) {
+            for(axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
+                if (0 === i % 10) {
                     ctx.fillText( -gap * i, axis * 1.25 - 3, textOffset * 1.25);
                 }
             }
 
             // 纵轴线
             var textOffset = 0; // 文本偏移
-            for(var axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
-                if (0 == i % 10) {
+            for(axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
+                if (0 === i % 10) {
                     ctx.fillText(gap * i, textOffset * 1.25, axis * 1.25 + 3);
                 }
             }         
 
-            for(var axis = y, i = 0; axis < height; i++, axis += markSize) {
-                if (0 == i % 10) {
+            for(axis = y, i = 0; axis < height; i++, axis += markSize) {
+                if (0 === i % 10) {
                     ctx.fillText( -gap * i, textOffset * 1.25, axis * 1.25 + 3);
                 }
             }

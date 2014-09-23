@@ -32,15 +32,15 @@ function(require) {
      */
 
     function cubeEquation(a, b, c, d) {
-        if (a == 0) {
+        if (a === 0) {
             return quadraticEquation(b, c, d);
         }
 
-        if (d == 0) {
+        if (d === 0) {
             return quadraticEquation(a, b, c);
         }
 
-        if(a != 1) {
+        if(a !== 1) {
             b /= a;
             c /= a;
             d /= a; 
@@ -74,10 +74,11 @@ function(require) {
         // The remaining options are all real
         // i2 = 0;
         // i3 = 0;
-        if (disc == 0) { // All roots real, at least two are equal.
+        if (disc === 0) { // All roots real, at least two are equal.
             r13 = ((r < 0) ? -Math.pow(-r, (1.0 / 3.0)) : Math.pow(r, (1.0 / 3.0)));
             var r1 = -term1 + 2.0 * r13;
-            var r2 = r3 = -(r13 + term1);
+            var r2 = -(r13 + term1);
+            var r3 = r2;
             return r1 == r2 ? r1 : [r1, r2];
         }
 

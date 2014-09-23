@@ -96,7 +96,7 @@ define(
                             Math.round(points[i].x), Math.round(points[i].y), 
                             Math.round(points[i+1].x), Math.round(points[i+1].y)
                         );
-                    };
+                    }
                     dashedLineTo(ctx, 
                         Math.round(points[l-1].x), Math.round(points[l-1].y), 
                         Math.round(points[0].x), Math.round(points[0].y)
@@ -109,7 +109,7 @@ define(
                         ctx.lineTo( 
                             Math.round(points[i].x), Math.round(points[i].y)
                         );
-                    };
+                    }
                     ctx.lineTo(
                         Math.round(points[0].x), Math.round(points[0].y)
                     );

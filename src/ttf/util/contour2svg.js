@@ -27,7 +27,7 @@ define(
                 nextPoint =  i === l - 1 ? contour[0] : contour[i + 1];
 
                 // 起始坐标
-                if (i == 0) {
+                if (i === 0) {
                     if (curPoint.onCurve) {
                         pathArr.push('M' + curPoint.x + ' ' + curPoint.y);
                     }
@@ -36,7 +36,8 @@ define(
                             pathArr.push('M' + prevPoint.x + ' ' + prevPoint.y);
                         }
                         else {
-                            pathArr.push('M' + ((prevPoint.x + curPoint.x) / 2) + ' ' + ((prevPoint.y + curPoint.y) / 2));
+                            pathArr.push('M' + ((prevPoint.x + curPoint.x) / 2) 
+                                + ' ' + ((prevPoint.y + curPoint.y) / 2));
                         }
                     }
                 }
@@ -47,7 +48,8 @@ define(
                 }
                 else if (!curPoint.onCurve) {
                     if (nextPoint.onCurve) {
-                        pathArr.push('Q' + curPoint.x + ' ' + curPoint.y + ' ' + nextPoint.x + ' ' + nextPoint.y);
+                        pathArr.push('Q' + curPoint.x + ' ' + curPoint.y 
+                            + ' ' + nextPoint.x + ' ' + nextPoint.y);
                     }
                     else {
                         pathArr.push('Q' + curPoint.x + ' ' + curPoint.y + ' '

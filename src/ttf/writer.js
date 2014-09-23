@@ -225,7 +225,7 @@ define(
              * @return {number} float
              */
             writeFixed: function(value, offset) {
-                if(undefined == offset) {
+                if(undefined === offset) {
                     offset = this.offset;
                 }
                 this.writeInt32(Math.round(value * 65536), offset);
@@ -242,7 +242,7 @@ define(
              * @return {Date} Date对象
              */
             writeLongDateTime: function(value, offset) {
-                if(undefined == offset) {
+                if(undefined === offset) {
                     offset = this.offset;
                 }
 

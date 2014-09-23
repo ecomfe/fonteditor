@@ -73,7 +73,7 @@ define(
                         -bound.width, camera.y - camera.startY
                     );
                     return matrix;
-            };
+            }
 
             return matrix;
         }

@@ -19,12 +19,12 @@ define(
          */
         function quadraticEquation(a, b, c) {
 
-            if(a == 0) {
+            if(a === 0) {
                 return [-c / b];
             }
 
-            if(b == 0) {
-                if(c == 0) {
+            if(b === 0) {
+                if(c === 0) {
                     return [0];
                 }
 
@@ -37,7 +37,7 @@ define(
                 }
             }
 
-            if(c == 0) {
+            if(c === 0) {
                 return [0, -b / a];
             }
 
@@ -46,7 +46,7 @@ define(
             if(b4ac >= 0) {
                 var x1  =  (-b + Math.sqrt(b4ac, 2)) / a / 2;
                 var x2 = (-b - Math.sqrt(b4ac, 2)) / a / 2;
-                if(x1 == x2) {
+                if(x1 === x2) {
                     return [x1];
                 }
                 else {

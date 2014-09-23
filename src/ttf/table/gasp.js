@@ -10,7 +10,6 @@
 define(
     function(require) {
         var table = require('./table');
-        var struct = require('./struct');
 
         var gasp = table.create(
             'gasp', 
@@ -34,7 +33,7 @@ define(
                         GASPRange.rangeMaxPPEM = reader.readUint16();
                         GASPRange.rangeGaspBehavior = reader.readUint16();
                         GASPRangeTbl.push(GASPRange);
-                    };
+                    }
                     gasp.GASPRangeTbl = GASPRangeTbl;
                     
                     return gasp;

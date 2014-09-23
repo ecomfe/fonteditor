@@ -27,7 +27,7 @@ define(
                 p0 = points[i];
                 p1 = points[i === l - 1 ? 0 : i + 1];
 
-                if (result = isSegmentRayCross(p0, p1, p)) {
+                if ((result = isSegmentRayCross(p0, p1, p))) {
                     // 在线段上
                     if (result.y == p.y) {
                         return true;

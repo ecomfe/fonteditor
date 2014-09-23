@@ -9,7 +9,7 @@
 
 define(
     function(require) {
-        var ShapeConstructor = require('./Shape');
+
         var isInsidePath = require('../../graphics/isInsidePath');
         var pathAdjust = require('graphics/pathAdjust');
         var drawPath = require('../util/drawPath');

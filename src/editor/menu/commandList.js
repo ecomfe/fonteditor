@@ -11,169 +11,169 @@ define(
     function(require) {
 
         // 点编辑命令
-        var point_command = {
-            add: {
+        var pointCommand = {
+            'add': {
                 title: '添加点'
             },
 
-            remove: {
+            'remove': {
                 title: '删除点'
             },
 
-            onCurve: {
+            'onCurve': {
                 title: '在曲线上'
             },
 
-            offCurve: {
+            'offCurve': {
                 title: '远离曲线'
             },
 
-            asStart: {
+            'asStart': {
                 title: '作为开始点'
             }
         };
 
         // 路径编辑命令
-        var shape_command = {
+        var shapeCommand = {
 
-            remove: {
+            'remove': {
                 title: '删除轮廓'
             },
 
-            reverse_point: {
+            'reverse_point': {
                 title: '改变方向'
             },
 
-            cut: {
+            'cut': {
                 title: '剪切'
             },
 
-            copy: {
+            'copy': {
                 title: '复制'
             },
 
-            top: {
+            'top': {
                 title: '置前'
             },
 
-            bottom: {
+            'bottom': {
                 title: '置后'
             },
 
-            up: {
+            'up': {
                 title: '上移一层'
             },
 
-            down: {
+            'down': {
                 title: '下移一层'
             },
 
-            rotate_left: {
+            'rotate_left': {
                 title: '向左旋转'
             },
 
-            rotate_right: {
+            'rotate_right': {
                 title: '向右旋转'
             },
 
-            reverse_shapes: {
+            'reverse_shapes': {
                 title: '翻转'
             },
 
-            mirror_shapes: {
+            'mirror_shapes': {
                 title: '镜像'
             },
             
-            add_referenceline: {
+            'add_referenceline': {
                 title: '添加边界参考线'
             }
         };
 
-        var shapes_command = {
+        var shapesCommand = {
 
-            addshape: {
+            'addshape': {
                 title: '添加轮廓'
             },
 
-            remove: {
+            'remove': {
                 title: '删除轮廓'
             },
             
-            cut: {
+            'cut': {
                 title: '剪切'
             },
 
-            copy: {
+            'copy': {
                 title: '复制'
             },
 
 
-            rotate_left: {
+            'rotate_left': {
                 title: '向左旋转'
             },
 
-            rotate_right: {
+            'rotate_right': {
                 title: '向右旋转'
             },
 
-            reverse_shapes: {
+            'reverse_shapes': {
                 title: '翻转'
             },
 
-            mirror_shapes: {
+            'mirror_shapes': {
                 title: '镜像'
             },
 
-            add_referenceline: {
+            'add_referenceline': {
                 title: '添加边界参考线'
             }
-        }
+        };
 
 
-        var editor_command = {
+        var editorCommand = {
 
-            addshape: {
+            'addshape': {
                 title: '添加轮廓'
             },
 
-            addrect: {
+            'addrect': {
                 title: '添加矩形'
             },
 
-            addcircle: {
+            'addcircle': {
                 title: '添加圆'
             },
 
-            undo: {
+            'undo': {
                 title: '撤销'
             },
 
-            redo: {
+            'redo': {
                 title: '恢复'
             },
 
-            paste: {
+            'paste': {
                 title: '粘贴'
             },
 
-            add_referenceline: {
+            'add_referenceline': {
                 title: '添加参考线'
             },
             
-            clearreferenceline: {
+            'clearreferenceline': {
                 title: '清除参考线'
             },
 
-            rescale: {
+            'rescale': {
                 title: '重置缩放'
             }
         };
 
         return {
-            point: point_command,
-            shape: shape_command,
-            shapes: shapes_command,
-            editor: editor_command
+            point: pointCommand,
+            shape: shapeCommand,
+            shapes: shapesCommand,
+            editor: editorCommand
         };
     }
 );

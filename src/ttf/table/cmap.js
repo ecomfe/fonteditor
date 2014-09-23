@@ -8,9 +8,8 @@
 
 define(
     function(require) {
-        var table = require('./table');
-        var struct = require('./struct');
 
+        var table = require('./table');
 
         /**
          * 读取子表

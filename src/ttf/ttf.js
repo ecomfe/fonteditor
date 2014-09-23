@@ -42,7 +42,7 @@ define(
                         ++start
                     ) {
                         // range offset = 0
-                        if(format4.idRangeOffset[i] == 0) {
+                        if(format4.idRangeOffset[i] === 0) {
                             chars[start] = (start + format4.idDelta[i]) % 65536;
                         }
                         // rely on to glyphIndexArray
@@ -52,7 +52,7 @@ define(
                                 - graphIdArrayIndexOffset;
 
                             var graphId = format4.glyphIdArray[index];
-                            if(graphId != 0) {
+                            if(graphId !== 0) {
                                 chars[start] = (graphId + format4.idDelta[i]) % 65536;
                             }
                             else {

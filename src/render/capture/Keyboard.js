@@ -31,21 +31,8 @@ define(
             47: 'help',
             20: 'caps',
             9: 'tab'
-        }
+        };
 
-        /**
-         * 阻止事件传递
-         * @param {MouseEvent} e 事件
-         */
-        function prevent(e) {
-            e.stopPropagation();
-            if (e.preventDefault) {
-                e.preventDefault()
-            }
-            else {
-                e.returnValue = false;
-            }
-        }
 
         /**
          * 键盘按键
@@ -113,7 +100,7 @@ define(
                 this.handlers = {
                     keydown: lang.bind(keydetect, this, 'down'),
                     keyup: lang.bind(keydetect, this, 'up'),
-                    keypress: lang.bind(keydetect, this, 'press'),
+                    keypress: lang.bind(keydetect, this, 'press')
                 };
 
                 target.addEventListener('keydown', this.handlers.keydown, false);

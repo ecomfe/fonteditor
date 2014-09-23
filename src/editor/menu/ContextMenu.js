@@ -41,7 +41,7 @@ define(
             this.commands = {};
 
             var me = this;
-            me.main.addEventListener('click', me._command_click = function(e) {
+            me.main.addEventListener('click', me['_command_click'] = function(e) {
                 var key = e.target.getAttribute('data-key');
                 if (key) {
                     var event = {
@@ -53,7 +53,7 @@ define(
                 }
             } , false);
 
-            me._hide_click = function(e) {
+            me['_hide_click'] = function(e) {
                 me.hide();
             };
         }
@@ -99,7 +99,7 @@ define(
                 this.main.style.top = y + 'px';
                 this.pos = p;
 
-                this.container.addEventListener('click', this._hide_click);
+                this.container.addEventListener('click', this['_hide_click']);
             },
 
             /**
@@ -110,7 +110,7 @@ define(
             hide: function() {
                 this.main.style.display = 'none';
                 this.onClick = null;
-                this.container.removeEventListener('click', this._hide_click);
+                this.container.removeEventListener('click', this['_hide_click']);
             },
 
             /**
@@ -129,11 +129,11 @@ define(
              */
             dispose: function() {
                 this.hide();
-                this.main.removeEventListener('click', this._command_click, false);
-                this.container.removeEventListener('click', this._hide_click, false);
+                this.main.removeEventListener('click', this['_command_click'], false);
+                this.container.removeEventListener('click', this['_hide_click'], false);
                 this.main.remove();
                 this.main = this.container = this.pos = null;
-                this._command_click = this._hide_click = null;
+                this['_command_click'] = this['_hide_click'] = null;
                 this.onClick = null;
             }
         });

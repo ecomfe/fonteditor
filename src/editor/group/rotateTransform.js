@@ -59,7 +59,7 @@ define(
                     {x: bound.x,y:bound.y},
                     {x: bound.x + bound.width, y:bound.y},
                     {x: bound.x + bound.width, y:bound.y + bound.height},
-                    {x: bound.x, y:bound.y + bound.height},
+                    {x: bound.x, y:bound.y + bound.height}
                 ], 
                 matrix[2], matrix[0], matrix[1]
             );

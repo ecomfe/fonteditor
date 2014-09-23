@@ -21,7 +21,7 @@ define(
          * @return {Object} contour 坐标点
          */
         function pathRotate(contour, angle, centerX, centerY) {
-            var angle = angle == undefined ? 0 : angle;
+            var angle = angle === undefined ? 0 : angle;
             var x = centerX || 0;
             var y = centerY || 0;
             var cos = Math.cos(angle);

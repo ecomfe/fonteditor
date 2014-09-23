@@ -27,15 +27,15 @@ function(require) {
      */
     function quarticEquation(a, b, c, d, e) {
 
-        if (a == 0) {
+        if (a === 0) {
             return cubeEquation(b, c, d, e);
         }
 
-        if (e == 0) {
+        if (e === 0) {
             return cubeEquation(a, b, c, d);
         }
 
-        if (a != 1) {
+        if (a !== 1) {
             b /= a;
             c /= a;
             d /= a;
@@ -51,13 +51,14 @@ function(require) {
         cc = -4.0 * e + d * b;
         cd = -(b * b * e + d * d) + 4.0 * c * e;
 
-        if (cd == 0) {
-            // TODO
-        }
+        // if (cd === 0) {
+        //     // TODO
+        // }
 
         q = (3.0 * cc - (cb * cb)) / 9.0;
         r = -(27.0 * cd) + cb * (9.0 * cc - 2.0 * (cb * cb));
         r /= 54.0;
+
         discrim = q * q * q + r * r;
         term1 = (cb / 3.0);
 
@@ -70,7 +71,7 @@ function(require) {
             y1 = -term1 + s + t;
         }
         else {
-            if (discrim == 0) {
+            if (discrim === 0) {
                 r13 = ((r < 0) ? -Math.pow(-r, (1.0 / 3.0)) : Math.pow(r, (1.0 / 3.0)));
                 y1 = -term1 + 2.0 * r13;
             }
@@ -89,7 +90,7 @@ function(require) {
         RRe = RIm = DRe = DIm = ERe = EIm = z1Re = z1Im = z2Re = 0;
 
         if (sqR >= 0) {
-            if (sqR == 0) {
+            if (sqR === 0) {
                 dum1 = -(4.0 * e) + y1 * y1;
                 //D and E will be complex
                 if (dum1 < 0) {
@@ -117,7 +118,7 @@ function(require) {
         z2Re += -(2.0 * c + sqR) + 3.0 * b * term1;
 
         //At this point, z1 and z2 should be the terms under the square root for D and E
-        if (z1Im == 0) { // Both z1 and z2 real
+        if (z1Im === 0) { // Both z1 and z2 real
             if (z1Re >= 0) {
                 DRe = Math.sqrt(z1Re);
             }
@@ -156,19 +157,19 @@ function(require) {
 
         var real = [];
         // check virtual root
-        if(0 == RIm + DIm) {
+        if(0 === RIm + DIm) {
             real.push(-term1 + (RRe + DRe) / 2);
         }
 
-        if(0 == -DIm + RIm) {
+        if(0 === -DIm + RIm) {
             real.push(-(term1 + DRe / 2) + RRe / 2);
         }
 
-        if(0 == -RIm + EIm) {
+        if(0 === -RIm + EIm) {
             real.push(-(term1 + RRe / 2) + ERe / 2);
         }
 
-        if(0 == RIm + EIm) {
+        if(0 === RIm + EIm) {
             real.push(-(term1 + (RRe + ERe) / 2));
         }
 

@@ -41,11 +41,11 @@ define(
                 pathAdjust(shape.points, matrix[2], matrix[3], -matrix[0], -matrix[1]);
                 pathAdjust(shape.points, 1, 1, matrix[0], matrix[1]);
 
-                if (matrix[2] < 0 && !matrix[3] < 0) {
+                if (matrix[2] < 0 && matrix[3] >= 0) {
                     shape.points = shape.points.reverse();
                 }
 
-                if (matrix[3] < 0 && !matrix[2] < 0) {
+                if (matrix[3] < 0 && matrix[2] >= 0) {
                     shape.points = shape.points.reverse();
                 }
 
@@ -74,7 +74,7 @@ define(
                     {x: bound.x,y:bound.y},
                     {x: bound.x + bound.width, y:bound.y},
                     {x: bound.x + bound.width, y:bound.y + bound.height},
-                    {x: bound.x, y:bound.y + bound.height},
+                    {x: bound.x, y:bound.y + bound.height}
                 ], 
                 matrix[2], matrix[3], -matrix[0], -matrix[1]
             );

@@ -94,7 +94,7 @@ define(
             };
             this.fire('command', event);
 
-            if(event.returnValue == false) {
+            if(event.returnValue === false) {
                 return false;
             }
 

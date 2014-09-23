@@ -77,7 +77,7 @@ define(
                     matrix[0] = bound.x + bound.width;
                     matrix[2] = -(camera.x - matrix[0]) / bound.width;
                     break;
-            };
+            }
 
             return matrix;
         }

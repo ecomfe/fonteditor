@@ -8,7 +8,7 @@
 define(
     function(require) {
         var table = require('./table');
-        var struct = require('./struct');
+
         var name = table.create(
             'name', 
             [], {
@@ -33,7 +33,7 @@ define(
                         nameRecord.length = reader.readUint16();
                         nameRecord.offset = reader.readUint16();
                         nameRecordTbl.push(nameRecord);
-                    };
+                    }
 
 
                     //nameTbl.name = reader.readString(reader.offset, nameTbl.stringOffset);

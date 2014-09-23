@@ -10,11 +10,8 @@
 define(
     function(require) {
 
-        var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
         var referenceline = require('./referenceline');
-        var POS_CUSOR = require('./cursor');
-
         var mode = {
             
             /**
@@ -28,9 +25,6 @@ define(
                         this.setMode('referenceline', referenceline.newLine, e.x, e.y);
                         return;
                     }
-
-
-                    var camera = this.render.camera;
 
                     // 字体模式
                     var result = this.fontLayer.getShapeIn(e);

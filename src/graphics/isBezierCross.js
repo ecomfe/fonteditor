@@ -60,11 +60,11 @@ define(
                 var tResult = false;
 
                 // 二次系数不为0
-                if(xmatrix[3] != 0 && ymatrix[3] != 0) {
+                if(xmatrix[3] !== 0 && ymatrix[3] !== 0) {
                     tmatrix = minus(multi(xmatrix, ymatrix[3]), multi(ymatrix, xmatrix[3]));
 
                     // 退化成一元二次方程
-                    if(tmatrix[4] == 0) {
+                    if(tmatrix[4] === 0) {
                         tResult = bezierQ2Equation.apply(this, tmatrix);
                     }
                     // 高次方程 1
@@ -92,17 +92,17 @@ define(
 
                 }
                 // 二次系数都为0 ，曲线2退化成直线
-                else if(xmatrix[3] == 0 && ymatrix[3] == 0){
+                else if(xmatrix[3] === 0 && ymatrix[3] === 0){
 
-                    if(xmatrix[4] != 0 && ymatrix[4] != 0) {
+                    if(xmatrix[4] !== 0 && ymatrix[4] !== 0) {
                         tmatrix = minus(multi(xmatrix, ymatrix[4]), multi(ymatrix, xmatrix[4]));
                         tResult = bezierQ2Equation.apply(this, tmatrix);
                     }
                     // xmatrix[4] 系数为0, 曲线2退化成垂直线
-                    else if(xmatrix[4] == 0) {
+                    else if(xmatrix[4] === 0) {
                         tResult = bezierQ2Equation.apply(this, xmatrix);
                     }
-                    else if(ymatrix[4] == 0) {
+                    else if(ymatrix[4] === 0) {
                         tResult = bezierQ2Equation.apply(this, ymatrix);
 
                         // 保证ymatrix可解
@@ -115,14 +115,14 @@ define(
                 else {
                     // 代入法
                     // 置换矩阵, 保持xmatrix[3]为 0
-                    if (ymatrix[3] == 0) {
+                    if (ymatrix[3] === 0) {
                         tmatrix = xmatrix;
                         xmatrix = ymatrix;
                         ymatrix = tmatrix;
                     }
                     
                     // 退化成一元二次方程
-                    if(xmatrix[4] == 0) {
+                    if(xmatrix[4] === 0) {
                         tResult = bezierQ2Equation.apply(this, xmatrix);
                     }
                     // 同高次方程1
