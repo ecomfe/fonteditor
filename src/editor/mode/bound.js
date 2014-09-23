@@ -12,7 +12,7 @@ define(
 
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
-
+        var referenceline = require('./referenceline');
         var POS_CUSOR = require('./cursor');
 
         var mode = {
@@ -22,6 +22,14 @@ define(
              */
             down: function(e) {
                 if (1 === e.which) {
+
+                    // 是否在边界拉出参考线
+                    if (e.x <= 20 || e.y <= 20) {
+                        this.setMode('referenceline', referenceline.newLine, e.x, e.y);
+                        return;
+                    }
+
+
                     var camera = this.render.camera;
 
                     // 字体模式
@@ -40,7 +48,7 @@ define(
                     var result = this.axisLayer.getShapeIn(e);
                     if(result) {
                         var line = result[0];
-                        this.setMode('referenceline', line);
+                        this.setMode('referenceline', referenceline.dragLine, line, e);
                         return;
                     }
 

@@ -14,13 +14,9 @@ define(
 
         var mode = {
 
-            /**
-             * 按下事件
-             */
-            down: function(e) {
-                if(1 == e.which) {
-                }
-            },
+            newLine: 1, // 拖出新参考线模式
+
+            dragLine: 2, // 拖动参考线模式
 
             /**
              * 拖动事件
@@ -37,6 +33,27 @@ define(
                             line.p0.y += camera.my;
                         }
                         this.axisLayer.refresh();
+                    }
+                    else if (this._dragMode === mode.newLine) {
+
+                        if (e.startX <= 20 && e.x > 20) {
+                            this.currentLine = this.axisLayer.addShape('line', {
+                                p0: {
+                                    x: e.x
+                                }
+                            });
+                            this.render.setCursor('e-resize');
+                        }
+                        else if (e.startY <= 20 && e.y > 20) {
+                            this.currentLine = this.axisLayer.addShape('line', {
+                                p0: {
+                                    y: e.y
+                                }
+                            });
+                            this.render.setCursor('n-resize');
+                        }
+
+                        this._dragMode == mode.dragLine
                     }
                 }
             },
@@ -71,23 +88,31 @@ define(
             /**
              * 开始模式
              */
-            begin: function(line) {
-                if(undefined !== line.p0.x) {
-                    this.render.setCursor('e-resize');
-                }
-                else {
-                    this.render.setCursor('n-resize');
+            begin: function(m) {
+
+                if (m === mode.dragLine) {
+                    var line = arguments[1];
+                    if(undefined !== line.p0.x) {
+                        this.render.setCursor('e-resize');
+                    }
+                    else {
+                        this.render.setCursor('n-resize');
+                    }
+
+                    this.currentLine = line;
+                    this.p0 = lang.clone(line.p0);
                 }
 
-                this.currentLine = line;
-                this.p0 = lang.clone(line.p0);
+                this._dragMode = m;
             },
 
             /**
              * 结束模式
              */
             end: function() {
-                this.currentLine = this.p0 = null;
+                delete this._dragMode;
+                delete this.currentLine;
+                delete this.p0;
                 this.render.setCursor('default');
             }
         };

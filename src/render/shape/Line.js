@@ -88,8 +88,8 @@ define(
 
                 // 单点模式
                 if(undefined === shape.p1) {
-                    return  undefined !== shape.p0.x && Math.abs(shape.p0.x - x) < 3
-                        || undefined !== shape.p0.y && Math.abs(shape.p0.y - y) < 3;
+                    return  undefined !== shape.p0.x && Math.abs(shape.p0.x - x) < 4
+                        || undefined !== shape.p0.y && Math.abs(shape.p0.y - y) < 4;
                 }
                 else {
                     var x0 = shape.p0.x;
