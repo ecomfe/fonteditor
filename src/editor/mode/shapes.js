@@ -31,7 +31,7 @@ define(
          * @param {string} command 命令
          */
         function onContextMenu(e) {
-            if(this.currentGroup.shapes.length !== 1) {
+            if(this.currentGroup.shapes.length === 0) {
                 return;
             }
 
