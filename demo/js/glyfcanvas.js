@@ -29,11 +29,11 @@ define(
         function showTTFGlyf(ttfData) {
 
             ttf = new TTF(ttfData);
-            var chars = ttf.chars();
+            var codes = ttf.codes();
 
             var str = '';
             // 获取unicode字符
-            chars.forEach(function(item) {
+            codes.forEach(function(item) {
                 str += '<li data-code="'+ item +'">'
                     + '<span class="i-font">'+ String.fromCharCode(item) +'</span>'
                     +   (item > 255 ? '\\u' + Number(item).toString(16) : item) 
@@ -44,7 +44,7 @@ define(
         }
 
         function showGlyf(charcode) {
-            var glyfData = ttf.getCharGlyf(charcode);
+            var glyfData = ttf.getCodeGlyf(charcode);
 
             var glyf = {
                 xMin: glyfData.xMin,
@@ -86,7 +86,9 @@ define(
                 var binaryData = e.target.result;
                 setFont(binaryData);
 
-                var ttfData = new ttfreader().read(binaryData);
+                var ttfReander = new ttfreader();
+                ttfReander.read(binaryData);
+                var ttfData = ttfReander.resolve();
                 showTTFGlyf(ttfData);
             }
 
@@ -110,7 +112,9 @@ define(
                     onSuccess: function(binaryData) {
                         setFont(binaryData);
 
-                        var ttfData = new ttfreader().read(binaryData);
+                        var ttfReander = new ttfreader();
+                        ttfReander.read(binaryData);
+                        var ttfData = ttfReander.resolve();
                         showTTFGlyf(ttfData);
                     },
                     onError: function() {

@@ -39,7 +39,9 @@ define(
                 ajaxBinaryFile({
                     url: '../font/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
-                        var ttfData = new ttfreader().read(binaryData);
+                        var ttfReader = new ttfreader();
+                        ttfReader.read(binaryData);
+                        var ttfData = ttfReader.resolve();
                         console.log(ttfData);
                         
                         var ttf = new TTF(ttfData);
