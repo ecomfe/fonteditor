@@ -14,6 +14,7 @@ define(
     function(require) {
         var glyFlag = require('../enum/glyFlag');
         var table = require('./table');
+        var componentFlag = require('../enum/componentFlag');
 
         function readSimpleGlyf(reader, ttf, offset, val) {
 
@@ -179,11 +180,48 @@ define(
                         delete val.endPtsOfContours;
                     }
                     else {
-                        val.Compound = true;
+                        val.compound = true;
+                        val.glyf = [];
                         // 读取复杂字形
-                        //throw 'not support Compound  glyf';
-                        console.error('not support Compound  glyf', val);
-                    }
+                        do {
+                            var glyf = {};
+                            var flags = glyf.flags = reader.readUint16();
+                            val.glyphIndex = reader.readUint16();
+                            var arg1, arg2, scaleX = 1, scaleY = 1;
+                            if (componentFlag.ARG_1_AND_2_ARE_WORDS & flags) {
+                                if (componentFlag.ARGS_ARE_XY_VALUES & flags) {
+                                    arg1 = reader.readUint16();
+                                    arg2 = reader.readUint16();
+                                }
+                                else {
+                                    arg1 = reader.readInt16();
+                                    arg2 = reader.readInt16();
+                                }
+
+                            }
+                            else {
+                                if (componentFlag.ARGS_ARE_XY_VALUES & flags) {
+                                    arg1 = reader.readUint8();
+                                    arg2 = reader.readUint8();
+                                }
+                                else {
+                                    arg1 = reader.readInt8();
+                                    arg2 = reader.readInt8();
+                                }
+                            }
+
+                            if (componentFlag.ROUND_XY_TO_GRID & flags) {
+                                arg1 = Math.round(arg1);
+                                arg2 = Math.round(arg2);
+                            }
+                            glyf.x = arg1;
+                            glyf.y = arg2;
+
+                            val.glyf.push(glyf);
+
+                        }
+                        while(componentFlag.MORE_COMPONENTS & flags);
+                    } 
 
                     return val;
                 }

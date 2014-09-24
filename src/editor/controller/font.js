@@ -45,7 +45,7 @@ define(
             // 重置形状
             this.render.reset();
 
-            var rightSideBearing = offsetX + font.advanceWidth + font.xMin;
+            var rightSideBearing = offsetX + font.advanceWidth;
             initAxis.call(this, {
                 x: offsetX, 
                 y: offsetY,
