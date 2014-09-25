@@ -62,7 +62,7 @@ define(
                 height = height * scale;
             }
 
-            ctx.clearRect(0, 0, 1000, 1000);
+            ctx.clearRect(0, 0, 600, 600);
 
             glyf2canvas(glyf, ctx, {
                 stroke: 0,

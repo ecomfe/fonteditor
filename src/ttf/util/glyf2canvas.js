@@ -38,8 +38,12 @@ define(
             }
 
             var height = glyf.yMax;
-            ctx.translate(options.x || 0, height + (options.y || 0));
-            ctx.scale(options.scale || 1, -(options.scale || 1));
+            var x = options.x || 0;
+            var y = height + (options.y || 0);
+            var scale = options.scale || 1;
+
+            ctx.scale(scale, -scale);
+            ctx.translate(x, -y);
 
             // 处理glyf轮廓
             ctx.beginPath();
