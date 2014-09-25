@@ -11,7 +11,6 @@ define(
     function(require) {
 
         var drawContour = require('./drawContour');
-        var glyfAdjust = require('./glyfAdjust');
 
         /**
          * glyf canvas绘制
