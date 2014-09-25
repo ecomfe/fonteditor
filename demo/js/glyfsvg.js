@@ -15,6 +15,9 @@ define(
         var ajaxBinaryFile = require('common/ajaxBinaryFile');
         var glyf2svg = require('ttf/util/glyf2svg');
         var setFontface = require('./setFontface');
+        var lang = require('common/lang');
+
+
         var ttf = null;
 
         // 设置字体
@@ -26,7 +29,7 @@ define(
 
         // 查看ttf glyf
         function showTTFGlyf(ttfData) {
-            console.log(ttfData);
+
             ttf = new TTF(ttfData);
             var codes = ttf.codes();
 
@@ -53,11 +56,10 @@ define(
                 +   '</g>'
                 +  '</svg>';
             var svg = $(tpl);
-            var glyf = ttf.getCodeGlyf(charcode);
-            var lang = require('common/lang');
-
+            var glyf = lang.clone(ttf.getCodeGlyf(charcode));
+            
             // 调整大小
-            var width =  glyf.xMax - glyf.xMin;
+            var width =  glyf.xMax;
             var height =  glyf.yMax - glyf.yMin;
             var scale = 1;
 

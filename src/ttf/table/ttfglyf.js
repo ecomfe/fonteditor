@@ -149,26 +149,29 @@ define(
                     val.xMax = reader.readInt16();
                     val.yMax = reader.readInt16();
 
-                    // endPtsOfConturs
-                    var endPtsOfContours = [];
-                    if (numberOfContours >= 0) {
-                        for ( var i = 0; i < numberOfContours; i++) {
-                            endPtsOfContours.push(reader.readUint16());
-                        }
-                        val.endPtsOfContours = endPtsOfContours;
-                    }
-
-                    // instructions
-                    var length = reader.readUint16();
-                    var instructions = [];
-                    for ( var i = 0; i < length; ++i) {
-                        instructions.push(reader.readUint8());
-                    }
-
-                    val.instructions = instructions;
-
                     // 读取简单字形
                     if (numberOfContours >= 0) {
+
+                        // endPtsOfConturs
+                        var endPtsOfContours = [];
+                        if (numberOfContours >= 0) {
+                            for ( var i = 0; i < numberOfContours; i++) {
+                                endPtsOfContours.push(reader.readUint16());
+                            }
+                            val.endPtsOfContours = endPtsOfContours;
+                        }
+
+                        // instructions
+                        var length = reader.readUint16();
+                        if (length) {
+                            var instructions = [];
+                            for ( var i = 0; i < length; ++i) {
+                                instructions.push(reader.readUint8());
+                            }
+                            val.instructions = instructions;
+                        }
+
+
                         readSimpleGlyf.call(
                             this,
                             reader,
@@ -181,47 +184,77 @@ define(
                     }
                     else {
                         val.compound = true;
-                        val.glyf = [];
+                        val.glyfs = [];
+                        var flags;
                         // 读取复杂字形
                         do {
                             var glyf = {};
-                            var flags = glyf.flags = reader.readUint16();
-                            val.glyphIndex = reader.readUint16();
-                            var arg1, arg2, scaleX = 1, scaleY = 1;
+                            flags = glyf.flags = reader.readUint16();
+                            glyf.glyphIndex = reader.readUint16();
+
+                            var arg1 = 0, arg2 = 0, scaleX = 16384, scaleY = 16384,
+                                scale01 = 0, scale10 = 0;
+
                             if (componentFlag.ARG_1_AND_2_ARE_WORDS & flags) {
-                                if (componentFlag.ARGS_ARE_XY_VALUES & flags) {
-                                    arg1 = reader.readUint16();
-                                    arg2 = reader.readUint16();
-                                }
-                                else {
-                                    arg1 = reader.readInt16();
-                                    arg2 = reader.readInt16();
-                                }
+                                arg1 = reader.readInt16();
+                                arg2 = reader.readInt16();
 
                             }
                             else {
-                                if (componentFlag.ARGS_ARE_XY_VALUES & flags) {
-                                    arg1 = reader.readUint8();
-                                    arg2 = reader.readUint8();
-                                }
-                                else {
-                                    arg1 = reader.readInt8();
-                                    arg2 = reader.readInt8();
-                                }
+                                arg1 = reader.readInt8();
+                                arg2 = reader.readInt8();
                             }
 
                             if (componentFlag.ROUND_XY_TO_GRID & flags) {
                                 arg1 = Math.round(arg1);
                                 arg2 = Math.round(arg2);
                             }
-                            glyf.x = arg1;
-                            glyf.y = arg2;
 
-                            val.glyf.push(glyf);
+                            if (componentFlag.WE_HAVE_A_SCALE & flags) {
+                                scaleX = reader.readInt16();
+                                scaleY = scaleX;
+                            }
+                            else if (componentFlag.WE_HAVE_AN_X_AND_Y_SCALE & flags) {
+                                scaleX = reader.readInt16();
+                                scaleY = reader.readInt16();
+                            }
+                            else if (componentFlag.WE_HAVE_A_TWO_BY_TWO & flags) {
+                                scaleX = reader.readInt16();
+                                scale01 = reader.readInt16();
+                                scale10 = reader.readInt16();
+                                scaleY = reader.readInt16();
+                            }
+
+                            if (componentFlag.ARGS_ARE_XY_VALUES & flags) {
+
+                                glyf.transform = {
+                                    a: Math.round(10000 * scaleX / 16384) / 10000,
+                                    b: Math.round(10000 * scale01 / 16384) / 10000,
+                                    c: Math.round(10000 * scale10 / 16384) / 10000,
+                                    d: Math.round(10000 * scaleY / 16384) / 10000,
+                                    e: arg1,
+                                    f: arg2
+                                };
+                            }
+                            else {
+                                console.error('not support !ARGS_ARE_XY_VALUES!');
+                            }
+
+                            val.glyfs.push(glyf);
 
                         }
                         while(componentFlag.MORE_COMPONENTS & flags);
-                    } 
+
+                        if (componentFlag.WE_HAVE_INSTRUCTIONS & flags) {
+                            var length = reader.readUint16();
+                            var instructions = [];
+                            for ( var i = 0; i < length; ++i) {
+                                instructions.push(reader.readUint8());
+                            }
+                            val.instructions = instructions;
+                        }
+
+                    }
 
                     return val;
                 }

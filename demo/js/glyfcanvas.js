@@ -15,6 +15,7 @@ define(
         var ajaxBinaryFile = require('common/ajaxBinaryFile');
         var setFontface = require('./setFontface');
         var glyf2canvas = require('ttf/util/glyf2canvas');
+        var lang = require('common/lang');
 
         var ttf = null;
 
@@ -44,15 +45,8 @@ define(
         }
 
         function showGlyf(charcode) {
-            var glyfData = ttf.getCodeGlyf(charcode);
-
-            var glyf = {
-                xMin: glyfData.xMin,
-                xMax: glyfData.xMax,
-                yMin: glyfData.yMin,
-                yMax: glyfData.yMax,
-                contours: glyfData.contours
-            };
+            
+            var glyf = lang.clone(ttf.getCodeGlyf(charcode));
 
 
             var canvas = $('#glyf-canvas').get(0);

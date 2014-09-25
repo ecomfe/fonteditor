@@ -28,6 +28,8 @@ define(
             
             options = options || {};
 
+            ctx.save();
+
             if(options.stroke) {
                 ctx.strokeWidth = options.strokeWidth || 1;
                 ctx.strokeStyle = options.strokeStyle || 'black';
@@ -36,16 +38,43 @@ define(
                 ctx.fillStyle = options.fillStyle || 'black';
             }
 
+            var height = glyf.yMax;
+            ctx.translate(options.x || 0, height + (options.y || 0));
+            ctx.scale(options.scale || 1, -(options.scale || 1));
 
-            // 对轮廓进行反向，以及坐标系调整，取整
-            glyf = glyfAdjust(glyf, options.scale, options.x, options.y);
-
-            var contours = glyf.contours;
-            
             // 处理glyf轮廓
             ctx.beginPath();
-            for ( var i = 0, l = contours.length; i < l; i++) {
-                drawContour(ctx, contours[i]);
+
+            if (!glyf.compound) {
+
+                var contours = glyf.contours;
+                for ( var i = 0, l = contours.length; i < l; i++) {
+                    drawContour(ctx, contours[i]);
+                }
+            }
+            // 复合图元绘制
+            else {
+                var glyfs = glyf.glyfs;
+                glyfs.forEach(function(g) {
+
+                    ctx.save();
+                    var transform = g.transform;
+                    ctx.transform (
+                        transform.a,
+                        transform.b,
+                        transform.c,
+                        transform.d,
+                        transform.e,
+                        transform.f
+                    );
+
+                    var contours = g.glyf.contours;
+                    for ( var i = 0, l = contours.length; i < l; i++) {
+                        drawContour(ctx, contours[i]);
+                    }
+
+                    ctx.restore();
+                });
             }
 
             if(false !== options.stroke) {
@@ -55,6 +84,7 @@ define(
             if (false !== options.fill) {
                 ctx.fill();
             }
+            ctx.restore();
         }
 
 

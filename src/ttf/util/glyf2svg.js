@@ -14,7 +14,8 @@
 define(
     function(require) {
         var contour2svg = require('./contour2svg');
-        var glyfAdjust = require('ttf/util/glyfAdjust');
+        var pathAdjust = require('graphics/pathAdjust');
+        var matrixTransform = require('graphics/transform');
 
         /**
          * glyf转换svg 
@@ -27,15 +28,39 @@ define(
                 return null;
             }
             var pathArray = [];
-
-
-            // 对轮廓进行反向，以及坐标系调整，取整
-            glyf = glyfAdjust(glyf, options.scale, options.x, options.y);
-
             var contours = glyf.contours;
-            
-            for ( var i = 0, l = contours.length; i < l; i++) {
-                pathArray.push(contour2svg(contours[i]));
+            var height = glyf.yMax;
+            var x = options.x || 0;
+            var y = height + (options.y || 0);
+            var scale = options.scale || 1;
+
+
+            if (!glyf.compound) {
+                for ( var i = 0, l = contours.length; i < l; i++) {
+                    pathAdjust(contours[i], 1, -1);
+                    pathAdjust(contours[i], scale, scale, x, y);
+                    pathArray.push(contour2svg(contours[i]));
+                }
+            }
+            else {
+                var glyfs = glyf.glyfs;
+                glyfs.forEach(function(g) {
+                    var contours = g.glyf.contours;
+                    var transform = g.transform;
+                    for ( var i = 0, l = contours.length; i < l; i++) {
+                        matrixTransform(contours[i], 
+                            transform.a,
+                            transform.b,
+                            transform.c,
+                            transform.d,
+                            transform.e,
+                            transform.f
+                        );
+                        pathAdjust(contours[i], 1, -1);
+                        pathAdjust(contours[i], scale, scale, x, y);
+                        pathArray.push(contour2svg(contours[i]));
+                    }
+                });
             }
 
             return pathArray.join(' ');

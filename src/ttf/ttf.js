@@ -50,8 +50,28 @@ define(
          */
         TTF.prototype.getCodeGlyf = function(c) {
             var glyfIndex = this.getCodeGlyfIndex(c);
-            return this.ttf.glyf[glyfIndex];
+            return this.getIndexGlyf(glyfIndex);
         };
+
+        /**
+         * 获取字符的glyf信息
+         * @param {number} glyfIndex glyf的索引
+         * 
+         * @return {?Object} 返回glyf对象
+         */
+        TTF.prototype.getIndexGlyf = function(glyfIndex) {
+            var glyfList = this.ttf.glyf;
+            var glyf = glyfList[glyfIndex];
+            // 如果是复合图元, 则把相关的glyf代入
+            if(glyf.compound) {
+                glyf.glyfs.forEach(function(g) {
+                    g.glyf = glyfList[g.glyphIndex];
+                });
+            }
+
+            return glyf;
+        };
+
 
         return TTF;
     }
