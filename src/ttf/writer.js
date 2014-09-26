@@ -252,6 +252,14 @@ define(
                 this.writeUint32(time, offset + 4);
 
                 return this;
+            },
+            /**
+             * 获取缓存的byte数组
+             * 
+             * @return {ArrayBuffer}
+             */
+            getBuffer: function(begin, end) {
+                return this.view.buffer;
             }
         };
 

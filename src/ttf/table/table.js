@@ -14,10 +14,10 @@ define(
 
 
         /**
-         * 读取一个表结构
+         * 读取表结构
          * 
          * @param {Object} reader reader对象
-         * @param {Object} reader 已解析的ttf对象
+         * @param {Object} ttf 已解析的ttf对象
          * @return {Object} 当前对象
          */
         function read(reader, ttf) {
@@ -72,6 +72,63 @@ define(
             return this.valueOf();
         }
 
+        /**
+         * 写表结构
+         * 
+         * @param {Object} writer writer对象
+         * @param {Object} ttf 已解析的ttf对象
+         * 
+         * @return {Writer} 返回writer对象
+         */
+        function write(writer, ttf) {
+            var table = ttf[this.name];
+            
+            if (!table) {
+                throw 'can not find ttf table' + this.name;
+            }
+
+            this.struct.forEach(function(item){
+                var name = item[0];
+                var type = item[1];
+
+                switch (type) {
+                    case struct.Int8:
+                    case struct.Uint8:
+                    case struct.Int16:
+                    case struct.Uint16:
+                    case struct.Int32:
+                    case struct.Uint32:
+                        var typeName = struct.names[type];
+                        writer.write(typeName, table[name]);
+                        break;
+
+                    case struct.Fixed:
+                        writer.writeFixed(table[name]);
+                        break;
+
+                    case struct.LongDateTime:
+                        writer.writeLongDateTime(table[name]);
+                        break;
+
+                    case struct.Byte:
+                        writer.writeByte(table[name], item[2] || 0);
+                        break;
+
+                    case struct.Char:
+                        writer.writeChar(table[name]);
+                        break;
+
+                    case struct.String:
+                        writer.writeString(table[name]);
+                        break;
+
+                    default:
+                        throw 'unknown type:' + name + ':' + type;
+                }
+            });
+
+            return writer;
+        }
 
         /**
          * 获取对象的值
@@ -106,6 +163,7 @@ define(
                 }
 
                 Table.prototype.read = read;
+                Table.prototype.write = write;
                 Table.prototype.valueOf = valueOf;
 
                 extend(Table.prototype, prototype);

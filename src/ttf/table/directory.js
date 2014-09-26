@@ -33,6 +33,18 @@ define(
                     }
 
                     return tables;
+                },
+                write: function(writer, ttf) {
+                    
+                    var tables = ttf.tables;
+                    for (var i = 0, l = tables.length; i < l; i++) {
+                        writer.writeString(tables[i].name);
+                        writer.writeUint32(tables[i].checkSum);
+                        writer.writeUint32(tables[i].offset);
+                        writer.writeUint32(tables[i].length);
+                    }
+
+                    return writer;
                 }
             }
         );
