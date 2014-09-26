@@ -12,7 +12,6 @@ define(
         var render = require('render/main');
         var shape_baidu = require('./shape-baidu');
         var shape_bdjk = require('./shape-bdjk');
-        var glyfAdjust = require('ttf/util/glyfAdjust');
         var lang = require('common/lang');
 
         var currentRender;
