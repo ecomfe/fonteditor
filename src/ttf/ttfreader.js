@@ -44,8 +44,10 @@ define(
             // 读取支持的表数据
             Object.keys(supportTables).forEach(function(tableName) {
                 // console.log(tableName);
-                var offset = ttf.tables[tableName].offset;
-                ttf[tableName] = new supportTables[tableName](offset).read(reader, ttf);
+                if (ttf.tables[tableName]) {
+                    var offset = ttf.tables[tableName].offset;
+                    ttf[tableName] = new supportTables[tableName](offset).read(reader, ttf);
+                }
             });
 
         }
