@@ -49,6 +49,10 @@ define(
 
                     return hMetrics;
 
+                },
+
+                write: function(writer, ttf) {
+                    return writer;
                 }
             }
         );

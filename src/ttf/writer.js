@@ -246,8 +246,14 @@ define(
                     offset = this.offset;
                 }
 
+                if (typeof value.getTime === 'function') {
+                    value = value.getTime();
+                }
+                else {
+                    value = Date.parse(value);
+                }
                 var delta = -2077545600000; // new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();
-                var time = Math.round((value.getTime() - delta) / 1000);
+                var time = Math.round((value - delta) / 1000);
                 this.writeUint32(0, offset);
                 this.writeUint32(time, offset + 4);
 

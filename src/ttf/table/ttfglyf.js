@@ -205,10 +205,10 @@ define(
                                 arg2 = reader.readInt8();
                             }
 
-                            if (componentFlag.ROUND_XY_TO_GRID & flags) {
-                                arg1 = Math.round(arg1);
-                                arg2 = Math.round(arg2);
-                            }
+                            // if (componentFlag.ROUND_XY_TO_GRID & flags) {
+                            //     arg1 = Math.round(arg1);
+                            //     arg2 = Math.round(arg2);
+                            // }
 
                             if (componentFlag.WE_HAVE_A_SCALE & flags) {
                                 scaleX = reader.readInt16();
@@ -226,6 +226,8 @@ define(
                             }
 
                             if (componentFlag.ARGS_ARE_XY_VALUES & flags) {
+                                glyf.useMyMetrics = !!flags & componentFlag.USE_MY_METRICS;
+                                glyf.overlapCompound = !!flags & componentFlag.OVERLAP_COMPOUND;
 
                                 glyf.transform = {
                                     a: Math.round(10000 * scaleX / 16384) / 10000,

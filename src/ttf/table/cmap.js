@@ -167,6 +167,10 @@ define(
                     tcmap.tables = subTables;
 
                     return tcmap;
+                },
+
+                write: function(writer, ttf) {
+                    return writer;
                 }
             }
         );

@@ -195,7 +195,7 @@ define(
             ttf = ttf || this.ttf;
             ttf.codes = readWindowsAllCodes(ttf);
             resolveGlyf.call(this, ttf);
-            cleanTables.call(this, ttf);
+            //cleanTables.call(this, ttf);
             return ttf;
         };
 

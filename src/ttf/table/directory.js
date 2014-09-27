@@ -45,6 +45,9 @@ define(
                     }
 
                     return writer;
+                },
+                size: function(ttf) {
+                    return ttf.numTables * 16;
                 }
             }
         );

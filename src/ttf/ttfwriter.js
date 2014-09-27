@@ -12,9 +12,10 @@ define(
 
         var Writer = require('./writer');
         var Directory = require('./table/directory');
+        var supportTables = require('./table/support');
 
         // 支持写的表, 注意表顺序
-        var supportTables = [
+        var tableList = [
             'OS/2',
             'cmap',
             'glyf',
@@ -33,18 +34,10 @@ define(
          */
         function resolve() {
             var ttf = this.ttf;
-            ttf.numTables = supportTables.length;
-            ttf.entrySelector = Math.floor(Math.log(supportTables.length)/Math.LN2);
+            ttf.numTables = tableList.length;
+            ttf.entrySelector = Math.floor(Math.log(tableList.length)/Math.LN2);
             ttf.searchRange = Math.pow(2, ttf.entrySelector) * 16;
-            ttf.rangeShift = supportTables.length * 16 - ttf.searchRange;
-            ttf.tables = supportTables.map(function(table) {
-                return {
-                    name: table,
-                    checkSum: 0,
-                    offset: 0,
-                    length: 10
-                };
-            });
+            ttf.rangeShift = tableList.length * 16 - ttf.searchRange;
         }
 
 
@@ -53,22 +46,50 @@ define(
          */
         function write() {
             var ttf = this.ttf;
-            var buffer = {};
 
-            // 写头部
-            var headSize = 20 + ttf.numTables * 16;
-            var writer = new Writer(new ArrayBuffer(headSize));
-            writer.writeFixed(ttf.version);
-            writer.writeUint16(ttf.numTables);
-            writer.writeUint16(ttf.searchRange);
-            writer.writeUint16(ttf.entrySelector);
-            writer.writeUint16(ttf.rangeShift);
+            // 用来做写入缓存的对象，用完后删掉
+            ttf.support = {};
 
-            !new Directory(writer.offset).write(writer, ttf);
+            // 写入glyf
+            var glyfTbl = new supportTables['glyf']();
+            var glyfWriter = new Writer(new ArrayBuffer(glyfTbl.size(ttf)));
+            glyfTbl.write(glyfWriter, ttf);
 
-            buffer.tables = writer.getBuffer();
+            // 写入loca
+            var locaTbl = new supportTables['glyf']();
+            var locaWriter = new Writer(new ArrayBuffer(locaTbl.size(ttf)));
+            locaTbl.write(locaWriter, ttf);
 
-            return buffer.tables;
+
+
+
+            // var ttfSize = 20 + tableList.length * 16;
+            // ttf.tables = [];
+            // tableList.forEach(function(tableName) {
+            //     var size = new supportTables[tableName]().size(ttf);
+            //     ttfSize += size;
+            //     ttf.tables.push({
+            //         name: tableName,
+            //         checkSum: 0,
+            //         offset: 0,
+            //         length: size
+            //     });
+            // });
+
+            // var writer = new Writer(new ArrayBuffer(ttfSize));
+            // writer.writeFixed(ttf.version);
+            // writer.writeUint16(ttf.numTables);
+            // writer.writeUint16(ttf.searchRange);
+            // writer.writeUint16(ttf.entrySelector);
+            // writer.writeUint16(ttf.rangeShift);
+            // new Directory().write(writer, ttf);
+
+            // // 读取支持的表数据
+            // tableList.forEach(function(tableName) {
+            //     new supportTables[tableName]().write(writer, ttf);
+            // });
+
+            return new ArrayBuffer(10);
         }
 
 

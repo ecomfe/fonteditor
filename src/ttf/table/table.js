@@ -84,7 +84,7 @@ define(
             var table = ttf[this.name];
             
             if (!table) {
-                throw 'can not find ttf table' + this.name;
+                throw 'can not find table:' + this.name;
             }
 
             this.struct.forEach(function(item){
@@ -131,6 +131,63 @@ define(
         }
 
         /**
+         * 获取ttf表的size大小
+         * 
+         * @param {string} name 表名
+         * @param {Object} ttf ttf数据结构
+         * @return {number} 表大小
+         */
+        function size(ttf) {
+
+            if (!ttf[this.name]) {
+                return 0;
+            }
+
+            var sz = 0;
+            this.struct.forEach(function(item) {
+                var type = item[1];
+                switch (type) {
+                    case struct.Int8:
+                    case struct.Uint8:
+                        sz += 1;
+                        break;
+
+                    case struct.Int16:
+                    case struct.Uint16:
+                        sz += 2;
+                        break;
+
+                    case struct.Int32:
+                    case struct.Uint32:
+                    case struct.Fixed:
+                        sz += 4;
+                        break;
+
+                    case struct.LongDateTime:
+                        sz += 8;
+                        break;
+
+                    case struct.Byte:
+                        sz += item[2] || 0;
+                        break;
+
+                    case struct.Char:
+                        sz += 1;
+                        break;
+
+                    case struct.String:
+                        sz += item[2] || 0;
+                        break;
+
+                    default:
+                        throw 'unknown type:' + name + ':' + type;
+                }
+            });
+
+            return sz;
+        }
+
+        /**
          * 获取对象的值
          * 
          * @return {*} 当前对象的值
@@ -146,6 +203,10 @@ define(
         }
 
         var exports = {
+            read: read,
+            write: write,
+            size: size,
+            valueOf: valueOf,
 
             /**
              * 创建一个表结构
@@ -157,13 +218,14 @@ define(
              */
             create: function(name, struct, prototype) {
                 function Table(offset) {
-                    this._name = name;
+                    this.name = name;
                     this.struct = struct;
                     this.offset = offset;
                 }
 
                 Table.prototype.read = read;
                 Table.prototype.write = write;
+                Table.prototype.size = size;
                 Table.prototype.valueOf = valueOf;
 
                 extend(Table.prototype, prototype);

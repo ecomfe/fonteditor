@@ -35,6 +35,10 @@ define(
                     }
                     
                     return wordOffset;
+                },
+
+                write: function(writer, ttf) {
+                    return writer;
                 }
             }
         );
