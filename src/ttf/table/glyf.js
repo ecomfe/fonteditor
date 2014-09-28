@@ -114,21 +114,29 @@ define(
 
                     if (-0xFF <= x && x <= 0xFF) {
                         flag += glyFlag.XSHORT;
-                        if (x == 0 && !first) {
+                        if (x == 0) {
                             if (xCoord[xCoord.length - 1] >= 0 ) {
                                 flag += glyFlag.XSAME;
                             }
                         }
+                        else if(x >= 0) {
+                            flag += glyFlag.XSAME;
+                        }
+                        x = Math.abs(x);
                     }
 
 
                     if (-0xFF <= y && y <= 0xFF) {
                         flag += glyFlag.YSHORT;
-                        if (y == 0 && !first) {
+                        if (y == 0) {
                             if (yCoord[yCoord.length - 1] >= 0 ) {
                                 flag += glyFlag.YSAME;
                             }
                         }
+                        else if(y >= 0) {
+                            flag += glyFlag.YSAME;
+                        }
+                        y = Math.abs(y);
                     }
 
 
@@ -140,11 +148,11 @@ define(
                         prevFlag = flag;
                         prev = p;
 
-                        if (0 == (flag & glyFlag.XSAME)) {
+                        if (first || 0 != x && xCoord[xCoord.length - 1] != x) {
                             xCoord.push(x);
                         }
 
-                        if (0 == (flag & glyFlag.YSAME)) {
+                        if (first || 0 != y && yCoord[yCoord.length - 1] != y) {
                             yCoord.push(y);
                         }
                     }
