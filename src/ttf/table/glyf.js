@@ -22,7 +22,7 @@ define(
          * @param {Object} glyf glyf对象
          * @return {number} 大小
          */
-        function sizeof(glyf, flags) {
+        function sizeof(glyf, glyfSupport) {
             if (!glyf.contours.length) {
                 return 0;
             }
@@ -31,11 +31,16 @@ define(
             var result = 10
                 + 2
                 + (glyf.instructions ? glyf.instructions.length : 0) 
-                + glyf.contours.length * 2;
+                + glyf.contours.length * 2
+                + glyfSupport.flags.length;
 
-            flags.forEach(function(flag) {
-                result += flag & glyFlag.XSHORT ? 1 : 2;
-                result += flag & glyFlag.YSHORT ? 1 : 2;
+            
+            glyfSupport.xCoord.forEach(function(x) {
+                result += -0xFF <= x && x <= 0xFF ? 1 : 2;
+            });
+
+            glyfSupport.yCoord.forEach(function(y) {
+                result += -0xFF <= y && y <= 0xFF ? 1 : 2;
             });
 
             return result;
@@ -86,46 +91,73 @@ define(
          * @param {Object} glyf glyf对象
          * @return {Array}
          */
-        function getFlags(glyf) {
+        function getFlags(glyf, glyfSupport) {
             var flags = [];
+            var prevFlag = -1;
             var prev = {};
+            var xCoord = [];
+            var yCoord = [];
+            var first = true;
+            var x, y, flag;
             glyf.contours.forEach(function(contour) {
                 contour.forEach(function(p) {
-                    var flag = p.onCurve ? glyFlag.ONCURVE : 0;
+                    flag = p.onCurve ? glyFlag.ONCURVE : 0;
 
-                    if (-0xFF <= p.x && p.x <= 0xFF) {
+                    if (first) {
+                        x = p.x;
+                        y = p.y
+                    }
+                    else {
+                        x = p.x - prev.x;
+                        y = p.y - prev.y;
+                    }
+
+                    if (-0xFF <= x && x <= 0xFF) {
                         flag += glyFlag.XSHORT;
+                        if (x == 0 && !first) {
+                            if (xCoord[xCoord.length - 1] >= 0 ) {
+                                flag += glyFlag.XSAME;
+                            }
+                        }
                     }
 
-                    if (p.x == prev.x) {
-                        flag += glyFlag.XSAME;
-                    }
 
-                    if (-0xFF <= p.y && p.y <= 0xFF) {
+                    if (-0xFF <= y && y <= 0xFF) {
                         flag += glyFlag.YSHORT;
+                        if (y == 0 && !first) {
+                            if (yCoord[yCoord.length - 1] >= 0 ) {
+                                flag += glyFlag.YSAME;
+                            }
+                        }
                     }
 
-                    if (p.y == prev.y) {
-                        flag += glyFlag.YSAME;
+
+                    if (prevFlag == flag) {
+                        flags[flags.length - 1] |= glyFlag.REPEAT;
+                    }
+                    else {
+                        flags.push(flag);
+                        prevFlag = flag;
+                        prev = p;
+
+                        if (0 == (flag & glyFlag.XSAME)) {
+                            xCoord.push(x);
+                        }
+
+                        if (0 == (flag & glyFlag.YSAME)) {
+                            yCoord.push(y);
+                        }
                     }
 
-                    flags.push(flag);
+                    first = false;
                 });
             });
+            
+            glyfSupport.flags = flags;
+            glyfSupport.xCoord = xCoord;
+            glyfSupport.yCoord = yCoord;
 
-            // remove repeating flags
-            var result = [], prev = -1;
-            flags.forEach(function(flag) {
-                if (prev == flag) {
-                    result[result.length - 1] |= glyFlag.REPEAT;
-                }
-                else {
-                    prev = flag;
-                    result.push(flag);
-                }
-            });
-
-            return result;
+            return glyfSupport;
         }
 
 
@@ -277,29 +309,25 @@ define(
                                 writer.writeUint8(flags[i]);
                             }
 
-                            // //write x coord
-                            // glyf.contours.forEach(function(contour) {
-                            //     contour.forEach(function(p) {
-                            //         if (-0xFF <= p.x && p.x <= 0xFF) {
-                            //             writer.writeUint8(Math.abs(p.x));
-                            //         }
-                            //         else {
-                            //             writer.writeInt16(p.x);
-                            //         }
-                            //     });
-                            // });
+                            var xCoord = ttf.support.glyf[index].xCoord;
+                            for (var i = 0, l = xCoord.length; i < l; i++) {
+                                if (-0xFF <= xCoord[i] && xCoord[i] <= 0xFF) {
+                                    writer.writeUint8(xCoord[i]);
+                                }
+                                else {
+                                    writer.writeInt16(xCoord[i]);
+                                }
+                            }
 
-                            // //write y coord
-                            // glyf.contours.forEach(function(contour) {
-                            //     contour.forEach(function(p) {
-                            //         if (-0xFF <= p.y && p.y <= 0xFF) {
-                            //             writer.writeUint8(Math.abs(p.y));
-                            //         }
-                            //         else {
-                            //             writer.writeInt16(p.y);
-                            //         }
-                            //     });
-                            // });
+                            var yCoord = ttf.support.glyf[index].yCoord;
+                            for (var i = 0, l = yCoord.length; i < l; i++) {
+                                if (-0xFF <= yCoord[i] && yCoord[i] <= 0xFF) {
+                                    writer.writeUint8(yCoord[i]);
+                                }
+                                else {
+                                    writer.writeInt16(yCoord[i]);
+                                }
+                            }
                         }
 
                         // 4字节对齐
@@ -318,10 +346,10 @@ define(
                     ttf.support.glyf = [];
                     var tableSize = 0;
                     ttf.glyf.forEach(function(glyf) {
-
-                        var flags = glyf.compound ? [] : getFlags(glyf);
-                        var contours = glyf.compound ? sizeofCompound(glyf) : sizeof(glyf, flags);
-                        var size = contours + flags.length;
+                        var glyfSupport = {};
+                        var glyfSupport = glyf.compound ? [] : getFlags(glyf, glyfSupport);
+                        var contoursSize = glyf.compound ? sizeofCompound(glyf) : sizeof(glyf, glyfSupport);
+                        var size = contoursSize;
 
                         // 记录实际size, 用于4字节对齐
                         var glyfSize = size;
@@ -331,11 +359,10 @@ define(
                             size += 4 - size % 4;
                         }
 
-                        ttf.support.glyf.push({
-                            flags: flags,
-                            size: size,
-                            glyfSize: glyfSize
-                        });
+                        glyfSupport.glyfSize = glyfSize;
+                        glyfSupport.size = size;
+
+                        ttf.support.glyf.push(glyfSupport);
 
                         tableSize += size;
                     });

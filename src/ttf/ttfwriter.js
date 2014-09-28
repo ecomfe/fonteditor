@@ -52,6 +52,7 @@ define(
 
             // 写入glyf
             var glyfTbl = new supportTables['glyf']();
+            console.log(glyfTbl.size(ttf));
             var glyfWriter = new Writer(new ArrayBuffer(glyfTbl.size(ttf)));
             glyfTbl.write(glyfWriter, ttf);
 
