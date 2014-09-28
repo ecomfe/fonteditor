@@ -126,6 +126,11 @@ define(
                     contours.push(coordinates.slice(endPtsOfContours[i - 1] + 1, endPtsOfContours[i] + 1));
                 }
                 val.contours = contours;
+
+                // FIXME for test
+                val.flags = flags;
+                val.xCoordinates = xCoordinates;
+                val.yCoordinates = yCoordinates;
             }
         }
 

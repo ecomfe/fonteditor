@@ -31,6 +31,10 @@ define(
             ],
             {
                 write: function(writer, ttf) {
+                    table.write.call(this, writer, ttf.maxp);
+                    return writer;
+                },
+                size: function(ttf) {
                     var maxPoints = 0,  maxContours = 0, maxCompositePoints = 0,
                         maxCompositeContours = 0;
                     ttf.glyf.forEach(function(glyf) {
@@ -49,29 +53,27 @@ define(
 
                     });
 
-                    var mock = {
-                        maxp: {
-                            version: 1.0,
-                            numGlyphs: ttf.glyf.length,
-                            maxPoints: maxPoints,
-                            maxContours: maxContours,
-                            maxCompositePoints: maxCompositePoints,
-                            maxCompositeContours: maxCompositeContours,
-                            maxZones: 2,
-                            maxTwilightPoints: 0,
-                            // It is unclear how to calculate maxStorage, maxFunctionDefs and maxInstructionDefs.
-                            // These are magic constants now, with values exceeding values from FontForge
-                            // see svg2ttf on github
-                            maxStorage: 10,
-                            maxFunctionDefs: 10,
-                            maxStackElements: 255,
-                            maxSizeOfInstructions: 0,
-                            maxComponentElements: 0,
-                            maxComponentDepth: 0
-                        }
+                    ttf.maxp = {
+                        version: 1.0,
+                        numGlyphs: ttf.glyf.length,
+                        maxPoints: maxPoints,
+                        maxContours: maxContours,
+                        maxCompositePoints: maxCompositePoints,
+                        maxCompositeContours: maxCompositeContours,
+                        maxZones: 2,
+                        maxTwilightPoints: 0,
+                        // It is unclear how to calculate maxStorage, maxFunctionDefs and maxInstructionDefs.
+                        // These are magic constants now, with values exceeding values from FontForge
+                        // see svg2ttf on github
+                        maxStorage: 10,
+                        maxFunctionDefs: 10,
+                        maxStackElements: 255,
+                        maxSizeOfInstructions: 0,
+                        maxComponentElements: 0,
+                        maxComponentDepth: 0
                     };
-                    table.write.call(this, writer, mock);
-                    return writer;
+
+                    return table.size.call(this, ttf);
                 }
             }
         );

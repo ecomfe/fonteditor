@@ -57,6 +57,7 @@ define(
             glyf.glyfs.forEach(function(g) {
                 // flags + glyfIndex
                 size += 4;
+
                 // a, b, c, d, e
                 // xy values or points
                 if(g.e >= -0xFF && g.e <= 0xFF && g.f >= 0xFF && g.f <= 0xFF) {
@@ -92,20 +93,25 @@ define(
          * @return {Array}
          */
         function getFlags(glyf, glyfSupport) {
+
+            if (!glyf.contours.length) {
+                return glyfSupport;
+            }
+
             var flags = [];
             var prevFlag = -1;
             var prev = {};
             var xCoord = [];
             var yCoord = [];
             var first = true;
-            var x, y, flag;
+            var x, y, flag, repeatPoint = -1;
             glyf.contours.forEach(function(contour) {
                 contour.forEach(function(p) {
                     flag = p.onCurve ? glyFlag.ONCURVE : 0;
 
                     if (first) {
                         x = p.x;
-                        y = p.y
+                        y = p.y;
                     }
                     else {
                         x = p.x - prev.x;
@@ -113,50 +119,70 @@ define(
                     }
 
                     if (-0xFF <= x && x <= 0xFF) {
-                        flag += glyFlag.XSHORT;
-                        if (x == 0) {
-                            if (xCoord[xCoord.length - 1] >= 0 ) {
+                        
+                        if (!first && x == 0) {
+                            if (xCoord[xCoord.length - 1] > 0 ) {
                                 flag += glyFlag.XSAME;
                             }
+                            else {
+                                flag += glyFlag.XSHORT;
+                            }
                         }
-                        else if(x >= 0) {
-                            flag += glyFlag.XSAME;
+                        else {
+                            flag += glyFlag.XSHORT;
+                            if(x > 0) {
+                                flag += glyFlag.XSAME;
+                            }
                         }
                         x = Math.abs(x);
                     }
 
 
                     if (-0xFF <= y && y <= 0xFF) {
-                        flag += glyFlag.YSHORT;
-                        if (y == 0) {
-                            if (yCoord[yCoord.length - 1] >= 0 ) {
+                        if (!first && y == 0) {
+                            if (yCoord[yCoord.length - 1] > 0 ) {
                                 flag += glyFlag.YSAME;
                             }
+                            else {
+                                flag += glyFlag.YSHORT;
+                            }
                         }
-                        else if(y >= 0) {
-                            flag += glyFlag.YSAME;
+                        else {
+                            flag += glyFlag.YSHORT;
+                            if(y > 0) {
+                                flag += glyFlag.YSAME;
+                            }
                         }
                         y = Math.abs(y);
                     }
 
 
                     if (prevFlag == flag) {
-                        flags[flags.length - 1] |= glyFlag.REPEAT;
+                        // 记录重复个数
+                        if (-1 == repeatPoint) {
+                            repeatPoint = flags.length - 1;
+                            flags[repeatPoint] |= glyFlag.REPEAT;
+                            flags.push(1);
+                        }
+                        else {
+                            ++flags[repeatPoint + 1];
+                        }
                     }
                     else {
+                        repeatPoint = -1;
                         flags.push(flag);
                         prevFlag = flag;
-                        prev = p;
-
-                        if (first || 0 != x && xCoord[xCoord.length - 1] != x) {
-                            xCoord.push(x);
-                        }
-
-                        if (first || 0 != y && yCoord[yCoord.length - 1] != y) {
-                            yCoord.push(y);
-                        }
                     }
 
+                    if (first || 0 != x) {
+                        xCoord.push(x);
+                    }
+
+                    if (first || 0 != y) {
+                        yCoord.push(y);
+                    }
+
+                    prev = p;
                     first = false;
                 });
             });
@@ -203,6 +229,10 @@ define(
                 write: function(writer, ttf) {
                     
                     ttf.glyf.forEach(function(glyf, index) {
+
+                        if (!glyf.compound && 0 == glyf.contours.length) {
+                            return;
+                        }
 
                         // header
                         writer.writeUint16(glyf.compound ? -1 : glyf.contours.length);
@@ -319,7 +349,7 @@ define(
 
                             var xCoord = ttf.support.glyf[index].xCoord;
                             for (var i = 0, l = xCoord.length; i < l; i++) {
-                                if (-0xFF <= xCoord[i] && xCoord[i] <= 0xFF) {
+                                if (0 <= xCoord[i] && xCoord[i] <= 0xFF) {
                                     writer.writeUint8(xCoord[i]);
                                 }
                                 else {
@@ -329,7 +359,7 @@ define(
 
                             var yCoord = ttf.support.glyf[index].yCoord;
                             for (var i = 0, l = yCoord.length; i < l; i++) {
-                                if (-0xFF <= yCoord[i] && yCoord[i] <= 0xFF) {
+                                if (0 <= yCoord[i] && yCoord[i] <= 0xFF) {
                                     writer.writeUint8(yCoord[i]);
                                 }
                                 else {
@@ -355,7 +385,7 @@ define(
                     var tableSize = 0;
                     ttf.glyf.forEach(function(glyf) {
                         var glyfSupport = {};
-                        var glyfSupport = glyf.compound ? [] : getFlags(glyf, glyfSupport);
+                        var glyfSupport = glyf.compound ? glyfSupport : getFlags(glyf, glyfSupport);
                         var contoursSize = glyf.compound ? sizeofCompound(glyf) : sizeof(glyf, glyfSupport);
                         var size = contoursSize;
 
@@ -375,7 +405,32 @@ define(
                         tableSize += size;
                     });
 
-                    return tableSize;
+                    ttf.support.glyf.tableSize = tableSize;
+
+                    // 设置其他表的信息
+                    var xMin = 16384, yMin = 16384, xMax = -16384, yMax = -16384;
+                    ttf.glyf.forEach(function(glyf) {
+                        if (glyf.xMin < xMin) {
+                            xMin = glyf.xMin;
+                        }
+                        if (glyf.yMin < yMin) {
+                            yMin = glyf.yMin;
+                        }
+                        if (glyf.xMax > xMax) {
+                            xMax = glyf.xMax;
+                        }
+                        if (glyf.yMax > yMax) {
+                            yMax = glyf.yMax;
+                        }
+                    });
+
+                    ttf.head.xMin = xMin;
+                    ttf.head.yMin = yMin;
+                    ttf.head.xMax = xMax;
+                    ttf.head.yMax = yMax;
+                    ttf.head.indexToLocFormat = tableSize > 65536 ? 1 : 0;
+
+                    return ttf.support.glyf.tableSize;
                 }
             }
         );

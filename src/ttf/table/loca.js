@@ -38,7 +38,27 @@ define(
                 },
 
                 write: function(writer, ttf) {
+                    var glyfSupport = ttf.support.glyf;
+                    var offset = ttf.support.glyf.offset || 0;
+                    var indexToLocFormat = ttf.head.indexToLocFormat;
+                    var sizeRatio = (indexToLocFormat === 0) ? 0.5 : 1;
+                    var numGlyphs = ttf.glyf.length;
+
+                    for (var i = 0; i < numGlyphs; ++i) {
+                        if (indexToLocFormat) {
+                            writer.writeUint32(offset);
+                        }
+                        else {
+                            writer.writeUint16(offset);
+                        }
+                        offset += glyfSupport[i].size * sizeRatio;
+                    }
+
                     return writer;
+                },
+                size: function(ttf) {
+                    var numGlyphs = ttf.glyf.length;
+                    return ttf.head.indexToLocFormat ? numGlyphs * 4 : numGlyphs * 2;
                 }
             }
         );

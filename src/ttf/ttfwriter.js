@@ -10,6 +10,7 @@
 define(
     function(require) {
 
+        var Reader = require('./reader');
         var Writer = require('./writer');
         var Directory = require('./table/directory');
         var supportTables = require('./table/support');
@@ -50,19 +51,35 @@ define(
             // 用来做写入缓存的对象，用完后删掉
             ttf.support = {};
 
+
+            // 写入maxp
+            var maxpTbl = new supportTables['maxp']();
+            var size = maxpTbl.size(ttf);
+
             // 写入glyf
             var glyfTbl = new supportTables['glyf']();
-            console.log(glyfTbl.size(ttf));
-            var glyfWriter = new Writer(new ArrayBuffer(glyfTbl.size(ttf)));
+            var size = glyfTbl.size(ttf);
+
+            var glyfWriter = new Writer(new ArrayBuffer(size));
             glyfTbl.write(glyfWriter, ttf);
 
             // 写入loca
-            var locaTbl = new supportTables['glyf']();
+            var locaTbl = new supportTables['loca']();
             var locaWriter = new Writer(new ArrayBuffer(locaTbl.size(ttf)));
             locaTbl.write(locaWriter, ttf);
 
 
 
+            // 读取测试
+            var locaReader = new Reader(locaWriter.getBuffer());
+            locaTbl.offset = 0;
+            ttf.loca = locaTbl.read(locaReader, ttf);
+
+            var glyfReader = new Reader(glyfWriter.getBuffer());
+            glyfTbl.offset = 0;
+            ttf.glyfReaded = glyfTbl.read(glyfReader, ttf);
+
+            console.log(ttf.glyfReaded);
 
             // var ttfSize = 20 + tableList.length * 16;
             // ttf.tables = [];
