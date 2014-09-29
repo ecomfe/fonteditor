@@ -1,5 +1,5 @@
 /**
- * @file ttfglyf.js
+ * @file glyfcontour.js
  * @author mengke01
  * @date 
  * @description
@@ -134,16 +134,16 @@ define(
             }
         }
 
-        var ttfglyf = table.create(
-            'ttfglyf', 
+        var glyfcontour= table.create(
+            'contour', 
             [], 
             {
                 /**
-                 * 解析ttfglyfl表
+                 * 解析contour表
                  */
                 read: function(reader, ttf) {
                     var offset = this.offset;
-                    var val = ttfglyf.empty();
+                    var val = glyfcontour.empty();
 
                     reader.seek(offset);
 
@@ -269,12 +269,12 @@ define(
         );
 
         // 空路径
-        ttfglyf.empty = function() {
+        glyfcontour.empty = function() {
             var val = {};
             val.contours = [];
             return val;
         };
 
-        return ttfglyf;
+        return glyfcontour;
     }
 );

@@ -204,7 +204,7 @@ define(
                 delta = e.wheelDelta / 120;
             }
             else if (e.detail) {
-                delta = e.detail / 3;
+                delta = -e.detail / 3;
             }
 
             var event = getEvent(e);
