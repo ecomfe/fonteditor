@@ -17,7 +17,12 @@ define(
             var file = e.target.files[0];
             var reader = new FileReader();
             reader.onload = function(e) {
-                var ttf = new ttfreader().read(e.target.result);
+
+                var ttfReader = new ttfreader();
+                ttfReader.read(e.target.result);
+                var ttfData = ttfReader.resolve();
+                console.log(ttfData);
+
             }
 
             reader.onerror = function(e) {

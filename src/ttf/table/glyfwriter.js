@@ -50,14 +50,15 @@ define(
          * @return {number} 大小
          */
         function sizeofCompound(glyf) {
-            var size = 10;
+            var size = 10, t;
             glyf.glyfs.forEach(function(g) {
+                t = g.transform;
                 // flags + glyfIndex
                 size += 4;
 
                 // a, b, c, d, e
                 // xy values or points
-                if(g.e >= -0xFF && g.e <= 0xFF && g.f >= 0xFF && g.f <= 0xFF) {
+                if(t.e >= -0xFF && t.e <= 0xFF && t.f >= 0xFF && t.f <= 0xFF) {
                     size += 2;
                 }
                 else {
@@ -65,12 +66,12 @@ define(
                 }
 
                 // scale
-                if (g.a != 1 || g.d != 1) {
-                    size += g.a == g.d ? 2 : 4;
+                if (t.a != 1 || t.d != 1) {
+                    size += t.a == t.d ? 2 : 4;
                 }
 
                 // 01 , 10
-                if (g.b || g.c) {
+                if (t.b || t.c) {
                     size += 4;
                 }
             });
@@ -230,7 +231,7 @@ define(
                     }
 
                     // header
-                    writer.writeUint16(glyf.compound ? -1 : glyf.contours.length);
+                    writer.writeInt16(glyf.compound ? -1 : glyf.contours.length);
                     writer.writeInt16(glyf.xMin);
                     writer.writeInt16(glyf.yMin);
                     writer.writeInt16(glyf.xMax);
@@ -239,9 +240,10 @@ define(
                     // 复合图元
                     if (glyf.compound) {
                         
-                        for (var i = 0, l = glyf.glyfs; i < l; i++) {
+                        for (var i = 0, l = glyf.glyfs.length; i < l; i++) {
 
-                            var flags = componentFlag.ARGS_ARE_XY_VALUES; // xy values
+                            var flags = componentFlag.ARGS_ARE_XY_VALUES
+                                + componentFlag.ROUND_XY_TO_GRID; // xy values
 
                             // more components
                             if (i < l - 1) {
@@ -257,15 +259,16 @@ define(
                             // overlap compound
                             flags += g.overlapCompound ? componentFlag.OVERLAP_COMPOUND : 0;
 
-                            var a = g.a;
-                            var b = g.b;
-                            var c = g.c;
-                            var d = g.d;
-                            var e = g.e;
-                            var f = g.f;
+                            var transform = g.transform;
+                            var a = transform.a;
+                            var b = transform.b;
+                            var c = transform.c;
+                            var d = transform.d;
+                            var e = transform.e;
+                            var f = transform.f;
 
                             // xy values or points
-                            if(e < -0xFF || e > 0xFF || f < 0xFF || f > 0xFF) {
+                            if(e < -0xFF || e > 0xFF || f < -0xFF || f > 0xFF) {
                                 flags += componentFlag.ARG_1_AND_2_ARE_WORDS;
                             }
 
@@ -281,7 +284,8 @@ define(
                                 }
                             }
 
-                            writer.writeUint16(e);
+                            writer.writeUint16(flags);
+                            writer.writeUint16(g.glyphIndex);
 
                             if (componentFlag.ARG_1_AND_2_ARE_WORDS & flags) {
                                 writer.writeInt16(e);
@@ -404,6 +408,7 @@ define(
 
                 // 设置其他表的信息
                 var xMin = 16384, yMin = 16384, xMax = -16384, yMax = -16384;
+
                 ttf.glyf.forEach(function(glyf) {
                     if (glyf.xMin < xMin) {
                         xMin = glyf.xMin;

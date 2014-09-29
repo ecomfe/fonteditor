@@ -26,7 +26,18 @@ define(
             var i;
 
             // 双字节编码，非紧凑排列
-            if(subTable.format == 4) {
+            if (subTable.format == 0) {
+                var format4 = subTable;
+                // 跳过format字段
+                format4.length = reader.readUint16();
+                format4.language = reader.readUint16();
+                var glyphIdArray = [];
+                for (var i = 0, l = format4.length - 6; i < l; i++) {
+                    glyphIdArray.push(reader.readUint8());
+                }
+                format4.glyphIdArray = glyphIdArray;
+            }
+            else if(subTable.format == 4) {
                 var format4 = subTable;
                 // 跳过format字段
                 format4.length = reader.readUint16();

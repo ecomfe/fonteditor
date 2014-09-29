@@ -79,7 +79,7 @@ define(
             glyfTbl.offset = 0;
             ttf.glyfReaded = glyfTbl.read(glyfReader, ttf);
 
-            console.log(ttf.glyfReaded);
+            //console.log(ttf.glyfReaded);
 
             // var ttfSize = 20 + tableList.length * 16;
             // ttf.tables = [];
