@@ -31,7 +31,7 @@ define(
             ],
             {
                 write: function(writer, ttf) {
-                    table.write.call(this, writer, ttf.maxp);
+                    table.write.call(this, writer, ttf.support);
                     return writer;
                 },
                 size: function(ttf) {
@@ -53,7 +53,7 @@ define(
 
                     });
 
-                    ttf.maxp = {
+                    ttf.support.maxp = {
                         version: 1.0,
                         numGlyphs: ttf.glyf.length,
                         maxPoints: maxPoints,
@@ -73,7 +73,7 @@ define(
                         maxComponentDepth: 0
                     };
 
-                    return table.size.call(this, ttf);
+                    return table.size.call(this, ttf.support);
                 }
             }
         );

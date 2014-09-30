@@ -56,6 +56,9 @@ define(
             var maxpTbl = new supportTables['maxp']();
             var size = maxpTbl.size(ttf);
 
+            var maxpWriter = new Writer(new ArrayBuffer(size));
+            maxpTbl.write(maxpWriter, ttf);
+
             // 写入glyf
             var glyfTbl = new supportTables['glyf']();
             var size = glyfTbl.size(ttf);
@@ -69,8 +72,18 @@ define(
             locaTbl.write(locaWriter, ttf);
 
 
+            // 写入cmap
+            var cmapTbl = new supportTables['cmap']();
+            var cmapWriter = new Writer(new ArrayBuffer(cmapTbl.size(ttf)));
+            cmapTbl.write(cmapWriter, ttf);
+
 
             // 读取测试
+
+            var maxpReader = new Reader(maxpWriter.getBuffer());
+            maxpTbl.offset = 0;
+            ttf.maxp = maxpTbl.read(maxpReader, ttf);
+
             var locaReader = new Reader(locaWriter.getBuffer());
             locaTbl.offset = 0;
             ttf.loca = locaTbl.read(locaReader, ttf);
@@ -79,7 +92,14 @@ define(
             glyfTbl.offset = 0;
             ttf.glyfReaded = glyfTbl.read(glyfReader, ttf);
 
-            //console.log(ttf.glyfReaded);
+
+            var cmapReader = new Reader(cmapWriter.getBuffer());
+            cmapTbl.offset = 0;
+            ttf.cmap = cmapTbl.read(cmapReader, ttf);
+
+            console.log(ttf);
+
+            throw 'test';
 
             // var ttfSize = 20 + tableList.length * 16;
             // ttf.tables = [];

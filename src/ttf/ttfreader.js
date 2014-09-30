@@ -122,7 +122,10 @@ define(
             // unicode
             Object.keys(codes).forEach(function(c) {
                 var i = codes[c];
-                glyf[i].unicode = +c;
+                if (!glyf[i].unicode) {
+                    glyf[i].unicode = [];
+                }
+                glyf[i].unicode.push(+c);
             });
 
             // advanceWidth
@@ -136,7 +139,7 @@ define(
                 var nameIndex = ttf.post.glyphNameIndex;
                 var names = ttf.post.names;
                 nameIndex.forEach(function(name, i) {
-                    if (name <= 257) {
+                    if (name < 256) {
                         glyf[i].name = String.fromCharCode(name);
                     }
                     else {
