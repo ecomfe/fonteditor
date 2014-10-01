@@ -77,6 +77,11 @@ define(
             var cmapWriter = new Writer(new ArrayBuffer(cmapTbl.size(ttf)));
             cmapTbl.write(cmapWriter, ttf);
 
+            // 写入hmtx
+            var hmtxTbl = new supportTables['hmtx']();
+            var hmtxWriter = new Writer(new ArrayBuffer(hmtxTbl.size(ttf)));
+            hmtxTbl.write(hmtxWriter, ttf);
+
 
             // 读取测试
 
@@ -87,18 +92,28 @@ define(
             var locaReader = new Reader(locaWriter.getBuffer());
             locaTbl.offset = 0;
             ttf.loca = locaTbl.read(locaReader, ttf);
+            console.log('loca readed');
+            console.log(ttf.loca);
 
             var glyfReader = new Reader(glyfWriter.getBuffer());
             glyfTbl.offset = 0;
-            ttf.glyfReaded = glyfTbl.read(glyfReader, ttf);
-
+            var glyf = glyfTbl.read(glyfReader, ttf);
+            console.log('glyf readed');
+            console.log(glyf);
 
             var cmapReader = new Reader(cmapWriter.getBuffer());
             cmapTbl.offset = 0;
             ttf.cmap = cmapTbl.read(cmapReader, ttf);
-
             var readWindowsAllCodes = require('./util/readWindowsAllCodes');
+            console.log('cmap readed');
             console.log(readWindowsAllCodes(ttf));
+
+
+            var hmtxReader = new Reader(hmtxWriter.getBuffer());
+            hmtxTbl.offset = 0;
+            var hmtx = hmtxTbl.read(hmtxReader, ttf);
+            console.log('hmtx readed');
+            console.log(hmtx);
 
             throw 'test';
 

@@ -13,6 +13,8 @@ define(
     function(require) {
         var table = require('./table');
         var struct = require('./struct');
+        var string = require('../util/string');
+
         var Posthead = table.create(
             'posthead', 
             [
@@ -28,27 +30,6 @@ define(
                 ['maxMemType1', struct.Uint32]
             ]
         );
-
-        /**
-         * 读取poststring
-         * 
-         * @param {Array.<byte>} byteArray byte数组
-         * @return {Array.<string>} 读取后的字符串数组
-         */
-        function readPascalString(byteArray) {
-            var strArray = [];
-            var i = 0;
-            var l = byteArray.length;
-            while(i < l) {
-                var strLength = byteArray[i];
-                var str = '';
-                while(strLength-- >= 0 && i < l) {
-                    str += String.fromCharCode(byteArray[++i]);
-                }
-                strArray.push(str);
-            }
-            return strArray;
-        }
 
         var post = table.create(
             'post', 
@@ -73,7 +54,7 @@ define(
                         var pascalStringOffset = reader.offset;
                         var pascalStringLength = ttf.tables.post.length - (pascalStringOffset - this.offset);
                         var pascalStringBytes = reader.readBytes(reader.offset, pascalStringLength);
-                        tbl.names = readPascalString(pascalStringBytes);
+                        tbl.names = string.readPascalString(pascalStringBytes);
                     }
 
                     return tbl;

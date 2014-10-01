@@ -52,7 +52,39 @@ define(
                 },
 
                 write: function(writer, ttf) {
+
+                    var numOfLongHorMetrics = ttf.hhea.numOfLongHorMetrics;
+                    for (var i = 0; i < numOfLongHorMetrics; ++i) {
+                        writer.writeUint16(ttf.glyf[i].advanceWidth);
+                        writer.writeInt16(ttf.glyf[i].leftSideBearing);
+                    }
+
+                    // 最后一个宽度
+                    var advanceWidth = ttf.glyf[numOfLongHorMetrics - 1].advanceWidth;
+                    var numOfLast = ttf.glyf.length - numOfLongHorMetrics;
+
+                    for (var i = 0; i < numOfLast; ++i) {
+                        writer.writeInt16(ttf.glyf[numOfLongHorMetrics + i].leftSideBearing);
+                    }
+
                     return writer;
+                },
+                size: function(ttf) {
+                    // 计算同最后一个advanceWidth相等的元素个数
+                    var numOfLast = 0;
+                    var advanceWidth = ttf.glyf[ttf.glyf.length - 1].advanceWidth; // 最后一个advanceWidth
+                    for(var i = ttf.glyf.length - 2; i >= 0; i--) {
+                        if (advanceWidth == ttf.glyf[i].advanceWidth) {
+                            numOfLast++;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+
+                    ttf.hhea.numOfLongHorMetrics = ttf.glyf.length - numOfLast;
+
+                    return 4 * ttf.hhea.numOfLongHorMetrics + 2 * numOfLast;
                 }
             }
         );
