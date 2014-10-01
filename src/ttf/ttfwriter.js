@@ -97,7 +97,8 @@ define(
             cmapTbl.offset = 0;
             ttf.cmap = cmapTbl.read(cmapReader, ttf);
 
-            console.log(ttf);
+            var readWindowsAllCodes = require('./util/readWindowsAllCodes');
+            console.log(readWindowsAllCodes(ttf));
 
             throw 'test';
 

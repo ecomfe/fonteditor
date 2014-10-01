@@ -151,7 +151,6 @@ define(
          * -0x10000..-0x7FFF values are stored with offset.
          * 
          * @param {number} delta delta
-         * 
          * @return {number} 
          */
         function encodeDelta(delta) {
@@ -168,43 +167,46 @@ define(
          * @return {Array} 码表
          */
         function getSegments(unicodes, bound) {
+
             var prevGlyph = null;
             var result = [];
             var segment = {};
 
-            var delta;
-            var prevEndCode = 0;
-            var prevDelta = -1;
-
             unicodes.forEach(function (glyph) {
 
                 if (bound === undefined || glyph.unicode <= bound) {
-                    // Initialize first segment or add new segment if code "hole" is found
-                   if (prevGlyph === null || glyph.unicode !== prevGlyph.unicode + 1) {
+                    // 初始化编码头部，这里unicode和graph id 都必须连续
+                    if (prevGlyph === null 
+                        || glyph.unicode !== prevGlyph.unicode + 1
+                        || glyph.id !== prevGlyph.id + 1
+                    ) {
                         if (prevGlyph !== null) {
                             segment.end = prevGlyph.unicode;
-                            delta = prevEndCode - segment.start + prevDelta + 1;
-                            segment.delta = encodeDelta(delta);
-                            prevEndCode = segment.end;
-                            prevDelta = delta;
                             result.push(segment);
-                            segment = {};
+                            segment = {
+                                start: glyph.unicode,
+                                startId: glyph.id,
+                                delta: encodeDelta(glyph.id - glyph.unicode)
+                            };
                         }
-                        segment.start = glyph.unicode;
-                   }
-                   prevGlyph = glyph;
+                        else {
+                            segment.start = glyph.unicode;
+                            segment.startId = glyph.id;
+                            segment.delta = encodeDelta(glyph.id - glyph.unicode);
+                        }
+                    }
+ 
+                    prevGlyph = glyph;
                 }
             });
 
             // Need to finish the last segment
             if (prevGlyph !== null) {
                 segment.end = prevGlyph.unicode;
-                delta = prevEndCode - segment.start + prevDelta + 1;
-                segment.delta = delta > 0x7FFF 
-                    ? delta - 0x10000 
-                    : (delta < -0x7FFF ? delta + 0x10000 : delta);
                 result.push(segment);
             }
+
+            // 返回编码范围
             return result;
         }
 
@@ -318,13 +320,10 @@ define(
             writer.writeUint32(0); // language
             writer.writeUint32(segments.length); // nGroups
 
-            var startCode = 0;
-
             segments.forEach(function(segment) {
                 writer.writeUint32(segment.start);
                 writer.writeUint32(segment.end);
-                writer.writeUint32(startCode);
-                startCode += segment.end - segment.start + 1;
+                writer.writeUint32(segment.startId);
             });
 
             return writer;
@@ -440,6 +439,9 @@ define(
                         }
                     });
 
+                    unicodes = unicodes.sort(function(a, b) {
+                        return a.unicode - b.unicode;
+                    });
 
                     ttf.support.cmap.unicodes = unicodes;
                     ttf.support.cmap.format4Segments = getSegments(unicodes, 0xFFFF);
