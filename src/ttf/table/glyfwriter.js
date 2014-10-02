@@ -268,6 +268,7 @@ define(
                             var f = transform.f;
 
                             // xy values or points
+                            // int 8 放不下，则用int16放
                             if(e < -0xFF || e > 0xFF || f < -0xFF || f > 0xFF) {
                                 flags += componentFlag.ARG_1_AND_2_ARE_WORDS;
                             }

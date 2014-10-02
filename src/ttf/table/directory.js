@@ -36,7 +36,7 @@ define(
                 },
                 write: function(writer, ttf) {
                     
-                    var tables = ttf.tables;
+                    var tables = ttf.support.tables;
                     for (var i = 0, l = tables.length; i < l; i++) {
                         writer.writeString(tables[i].name);
                         writer.writeUint32(tables[i].checkSum);

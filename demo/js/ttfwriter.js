@@ -27,10 +27,10 @@ define(
                     var ttfData = reader.read(buffer);
                     console.log(ttfData);
 
-                    // var base64str = 'data:font/ttf;charset=utf-8;base64,' + ttf2base64(buffer.slice(0, 54));
-                    // var saveBtn = $('.saveas');
-                    // saveBtn.attr('href', base64str);
-                    // saveBtn.attr('download', 'save.ttf');
+                    var base64str = 'data:font/ttf;charset=utf-8;base64,' + ttf2base64(buffer);
+                    var saveBtn = $('.saveas');
+                    saveBtn.attr('href', base64str);
+                    saveBtn.attr('download', 'save.ttf');
                 });
             }
         };

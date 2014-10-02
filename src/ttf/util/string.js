@@ -58,7 +58,7 @@ define(
             },
             
             /**
-             * 读取poststring
+             * 读取 pascal string
              * 
              * @param {Array.<byte>} byteArray byte数组
              * @return {Array.<string>} 读取后的字符串数组
@@ -68,14 +68,30 @@ define(
                 var i = 0;
                 var l = byteArray.length;
                 while(i < l) {
-                    var strLength = byteArray[i];
+                    var strLength = byteArray[i++];
                     var str = '';
-                    while(strLength-- >= 0 && i < l) {
-                        str += String.fromCharCode(byteArray[++i]);
+                    while(strLength-- > 0 && i < l) {
+                        str += String.fromCharCode(byteArray[i++]);
                     }
                     strArray.push(str);
                 }
                 return strArray;
+            },
+
+            /**
+             * 获取pascal string 字节数组
+             * 
+             * @return {Array.<byte>} byteArray byte数组
+             */
+            getPascalStringBytes: function(str) {
+                var bytes = [];
+                var length = str ? (str.length < 256 ? str.length : 255) : 0;
+                bytes.push(length);
+                for (var i = 0; i < length; i ++) {
+                    var c = str.charCodeAt(i);
+                    bytes.push(c < 128 ? c : 42); //non-ASCII characters are substituted with '*'
+                }
+              return bytes;
             }
 
         };

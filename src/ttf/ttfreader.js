@@ -16,6 +16,7 @@ define(
         var Directory = require('./table/directory');
         var supportTables = require('./table/support');
         var Reader = require('./reader');
+        var postName = require('./enum/postName');
 
         /**
          * 初始化
@@ -78,12 +79,12 @@ define(
             if (ttf.post && 2 == ttf.post.format) {
                 var nameIndex = ttf.post.glyphNameIndex;
                 var names = ttf.post.names;
-                nameIndex.forEach(function(name, i) {
-                    if (name < 256) {
-                        glyf[i].name = String.fromCharCode(name);
+                nameIndex.forEach(function(nameIndex, i) {
+                    if (nameIndex <= 257) {
+                        glyf[i].name = postName[nameIndex];
                     }
                     else {
-                        glyf[i].name = names[name - 258] || '';
+                        glyf[i].name = names[nameIndex - 258] || '';
                     }
                 });
             }
@@ -136,7 +137,7 @@ define(
         TTFReader.prototype.resolve = function(ttf) {
             ttf = ttf || this.ttf;
             resolveGlyf.call(this, ttf);
-            cleanTables.call(this, ttf);
+            //cleanTables.call(this, ttf);
             return ttf;
         };
 

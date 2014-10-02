@@ -10,6 +10,7 @@
 define(
     function(require) {
         
+
         /**
          * table校验
          * 
@@ -29,7 +30,7 @@ define(
             var sum = 0, i = 0;
 
             while (i < nLongs) {
-                sum += view.getUInt32(i * 4, false);
+                sum += view.getUint32(4 * i++, false);
             }
 
             var leftBytes = length - nLongs * 4;
@@ -41,7 +42,7 @@ define(
                     leftBytes--;
                 }
             }
-            return sum;
+            return sum % 0x100000000;
         }
 
 
