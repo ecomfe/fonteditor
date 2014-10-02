@@ -27,7 +27,7 @@ define(
          * @return {Object} 字符信息
          */
         TTF.prototype.codes = function() {
-            return Object.keys(this.ttf.codes);
+            return Object.keys(this.ttf.cmap);
         };
 
         /**
@@ -38,7 +38,7 @@ define(
          */
         TTF.prototype.getCodeGlyfIndex = function(c) {
             var charCode = typeof c == 'number' ? c : c.charCodeAt(0);
-            var glyfIndex = this.ttf.codes[charCode] || 0;
+            var glyfIndex = this.ttf.cmap[charCode] || 0;
             return glyfIndex;
         };
 

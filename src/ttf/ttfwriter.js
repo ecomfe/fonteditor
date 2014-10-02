@@ -82,6 +82,11 @@ define(
             var hmtxWriter = new Writer(new ArrayBuffer(hmtxTbl.size(ttf)));
             hmtxTbl.write(hmtxWriter, ttf);
 
+            // 写入name
+            var nameTbl = new supportTables['name']();
+            var nameWriter = new Writer(new ArrayBuffer(nameTbl.size(ttf)));
+            nameTbl.write(nameWriter, ttf);
+
 
             // 读取测试
 
@@ -103,10 +108,9 @@ define(
 
             var cmapReader = new Reader(cmapWriter.getBuffer());
             cmapTbl.offset = 0;
-            ttf.cmap = cmapTbl.read(cmapReader, ttf);
-            var readWindowsAllCodes = require('./util/readWindowsAllCodes');
+            var cmap = cmapTbl.read(cmapReader, ttf);
             console.log('cmap readed');
-            console.log(readWindowsAllCodes(ttf));
+            console.log(cmap);
 
 
             var hmtxReader = new Reader(hmtxWriter.getBuffer());
@@ -114,6 +118,13 @@ define(
             var hmtx = hmtxTbl.read(hmtxReader, ttf);
             console.log('hmtx readed');
             console.log(hmtx);
+
+
+            var nameReader = new Reader(nameWriter.getBuffer());
+            nameTbl.offset = 0;
+            var name = nameTbl.read(nameReader, ttf);
+            console.log('name readed');
+            console.log(name);
 
             throw 'test';
 

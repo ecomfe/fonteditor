@@ -17,9 +17,9 @@ define(
          * 
          * @see https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6cmap.html
          */
-        function readWindowsAllCodes(ttf) {
+        function readWindowsAllCodes(tables) {
             // 读取windows unicode 编码段
-            var usc2Arr = ttf.cmap.tables.filter(function(item) {
+            var usc2Arr = tables.filter(function(item) {
                 return item.platformID == 3 && item.encodingID == 1 && item.format == 4;
             });
 

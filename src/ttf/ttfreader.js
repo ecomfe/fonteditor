@@ -16,7 +16,6 @@ define(
         var Directory = require('./table/directory');
         var supportTables = require('./table/support');
         var Reader = require('./reader');
-        var readWindowsAllCodes  =require('./util/readWindowsAllCodes');
 
         /**
          * 初始化
@@ -57,7 +56,7 @@ define(
          * 关联glyf相关的信息
          */
         function resolveGlyf(ttf) {
-            var codes = ttf.codes;
+            var codes = ttf.cmap;
             var glyf = ttf.glyf;
 
             // unicode
@@ -99,7 +98,6 @@ define(
             delete ttf.GDEF;
             delete ttf.GPOS;
             delete ttf.GSUB;
-            delete ttf.cmap;
             delete ttf.gasp;
             delete ttf.hmtx;
             delete ttf.loca;
@@ -137,9 +135,8 @@ define(
          */
         TTFReader.prototype.resolve = function(ttf) {
             ttf = ttf || this.ttf;
-            ttf.codes = readWindowsAllCodes(ttf);
             resolveGlyf.call(this, ttf);
-            //cleanTables.call(this, ttf);
+            cleanTables.call(this, ttf);
             return ttf;
         };
 
