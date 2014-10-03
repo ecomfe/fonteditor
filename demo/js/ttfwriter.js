@@ -18,13 +18,14 @@ define(
              * 初始化
              */
             init: function () {
-                $.getJSON('./js/baiduHealth.json', function(ttf) {
+                $.getJSON('./js/iconfont.json', function(ttf) {
 
                     var reader = new TTFReader();
                     var writer = new TTFWriter();
                     var buffer = writer.write(ttf);
 
-                    var ttfData = reader.read(buffer);
+                    reader.read(buffer);
+                    var ttfData = reader.resolve();
                     console.log(ttfData);
 
                     var base64str = 'data:font/ttf;charset=utf-8;base64,' + ttf2base64(buffer);

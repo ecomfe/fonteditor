@@ -8,7 +8,7 @@
 define(
     function(require) {
         var table = require('./table');
-        var nameId = require('../enum/nameId');
+        var nameIdTbl = require('../enum/nameId');
         var string = require('../util/string');
 
         var name = table.create(
@@ -31,7 +31,7 @@ define(
                         nameRecord.platformID = reader.readUint16();
                         nameRecord.platformSpecificID = reader.readUint16();
                         nameRecord.languageID = reader.readUint16();
-                        nameRecord.nameID = reader.readUint16();
+                        nameRecord.nameId = reader.readUint16();
                         nameRecord.length = reader.readUint16();
                         nameRecord.offset = reader.readUint16();
                         nameRecordTbl.push(nameRecord);
@@ -54,8 +54,8 @@ define(
                         var nameRecord = nameRecordTbl[i];
                         if (nameRecord.platformID == platformID
                             && nameRecord.platformSpecificID == platformSpecificID
-                            && nameId[nameRecord.nameID]) {
-                            names[nameId[nameRecord.nameID]] = decodeURIComponent(nameRecord.name);
+                            && nameIdTbl[nameRecord.nameId]) {
+                            names[nameIdTbl[nameRecord.nameId]] = decodeURIComponent(nameRecord.name);
                         }
                     }
 
@@ -75,7 +75,7 @@ define(
                         writer.writeUint16(nameRecord.platformID);
                         writer.writeUint16(nameRecord.platformSpecificID);
                         writer.writeUint16(nameRecord.languageID); 
-                        writer.writeUint16(nameRecord.nameID);
+                        writer.writeUint16(nameRecord.nameId);
                         writer.writeUint16(nameRecord.name.length);
                         writer.writeUint16(offset); // offset
                         offset += nameRecord.name.length;
@@ -83,7 +83,7 @@ define(
 
                     // write name tbl strings
                     nameRecordTbl.forEach(function(nameRecord) {
-                        writer.writeString(nameRecord.name);
+                        writer.writeBytes(nameRecord.name);
                     });
 
                     return writer;
@@ -98,30 +98,46 @@ define(
                     // 中文编码字符将被转化成url encode
                     var size = 6;
                     Object.keys(names).forEach(function(name) {
-                        var id = nameId.names[name];
-                        var nameStr = encodeURIComponent(names[name] || '').replace(/%00/g, '');
+                        var id = nameIdTbl.names[name];
+
+                        var utf8Bytes = string.toUTF8Bytes(names[name]);
+                        var usc2Bytes = string.toUCS2Bytes(names[name]);
+
                         if (undefined !== id) {
                             // mac
                             nameRecordTbl.push({
-                                nameID: id,
+                                nameId: id,
                                 platformID: 1,
                                 platformSpecificID: 0,
                                 languageID: 0,
-                                name: nameStr
+                                name: utf8Bytes
                             });
 
                             // windows  
                             nameRecordTbl.push({
-                                nameID: id,
+                                nameId: id,
                                 platformID: 3,
                                 platformSpecificID: 1,
                                 languageID: 0, //
-                                name: nameStr
+                                name: usc2Bytes
                             });
 
                             // 子表大小
-                            size += 12 * 2 + nameStr.length * 2;
+                            size += 12 * 2 + utf8Bytes.length + usc2Bytes.length;
                         }
+                    });
+                    
+                    var namingOrder = ['platformID', 'platformSpecificID', 'languageID', 'nameId'];
+                    nameRecordTbl = nameRecordTbl.sort(function(a, b) {
+                        var l = 0;
+                        namingOrder.some(function(name) {
+                            var o = a[name] - b[name];
+                            if (o) {
+                                l = o;
+                                return true;
+                            }
+                        });
+                        return l;
                     });
 
                     // 保存预处理信息

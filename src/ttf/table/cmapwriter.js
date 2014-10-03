@@ -258,17 +258,22 @@ define(
                 ttf.glyf.forEach(function(glyph, index) {
                     if (lang.isArray(glyph.unicode)) {
                         glyph.unicode.forEach(function(unicode) {
-                            unicodes.push({
-                                unicode: unicode,
-                                id: index
-                            });
+                            if (unicode !== 0xFFFF) {
+                                unicodes.push({
+                                    unicode: unicode,
+                                    id: index
+                                });
+                            }
+
                         });
                     }
                     else if (typeof glyph.unicode == 'number') {
-                        unicodes.push({
-                            unicode: glyph.unicode,
-                            id: index
-                        });
+                        if (glyph.unicode !== 0xFFFF) {
+                            unicodes.push({
+                                unicode: glyph.unicode,
+                                id: index
+                            });
+                        }
                     }
                 });
 
@@ -277,18 +282,23 @@ define(
                 });
 
                 ttf.support.cmap.unicodes = unicodes;
-                ttf.support.cmap.format4Segments = getSegments(unicodes, 0xFFFF);
+
+                var unicodes2Bytes = unicodes.filter(function(a) {
+                    return a.unicode > 29;
+                });
+
+                ttf.support.cmap.format4Segments = getSegments(unicodes2Bytes, 0xFFFF);
                 ttf.support.cmap.format4Size = 24 
                     + ttf.support.cmap.format4Segments.length * 8;
 
                 // We need subtable 12 only if found unicodes with > 2 bytes.
-                var hasGLyphsOver2Bytes = unicodes.some(function(glyph) {
+                var hasGLyphsOver2Bytes = unicodes2Bytes.some(function(glyph) {
                     return glyph.unicode > 0xFFFF;
                 });
 
                 if (hasGLyphsOver2Bytes) {
                     ttf.support.cmap.hasGLyphsOver2Bytes = hasGLyphsOver2Bytes;
-                    ttf.support.cmap.format12Segments = getSegments(unicodes);
+                    ttf.support.cmap.format12Segments = getSegments(unicodes2Bytes);
                     ttf.support.cmap.format12Size = 16 
                         + ttf.support.cmap.format12Segments.length * 12
                 }

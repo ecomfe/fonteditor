@@ -42,7 +42,7 @@ define(
                 upFile.addEventListener('change', onUpFileChange);
 
                 ajaxBinaryFile({
-                    url: '../font/baiduHealth.ttf',
+                    url: '../font/iconfont.ttf',
                     onSuccess: function(binaryData) {
                         var ttfReader = new ttfreader();
                         ttfReader.read(binaryData);

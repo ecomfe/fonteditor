@@ -45,7 +45,41 @@ define(
             return sum % 0x100000000;
         }
 
+        function ulong(t) {
+            /*jshint bitwise:false*/
+            t &= 0xffffffff;
+            if (t < 0) {
+                t += 0x100000000;
+            }
+            return t;
+        }
 
-        return checkSum;
+        function calc_checksum(buffer, offset, length) {
+
+            var offset = offset || 0;
+            var length = length || buffer.byteLength;
+            var view = new DataView(buffer, offset, length);
+
+            var sum = 0;
+            var nlongs = Math.floor(length / 4);
+
+            for (var i = 0; i < nlongs; ++i) {
+                var t = view.getUint32(i * 4, false);
+                sum = ulong(sum + t);
+            }
+
+            var leftBytes = length - nlongs * 4; //extra 1..3 bytes found, because table is not aligned. Need to include them in checksum too.
+            if (leftBytes > 0) {
+                var leftRes = 0;
+                for (i = 0; i < 4; i++) {
+                    /*jshint bitwise:false*/
+                    leftRes = (leftRes << 8) + ((i < leftBytes) ? view.getUint8(nlongs * 4 + i, false) : 0);
+                }
+                sum = ulong(sum + leftRes);
+            }
+            return sum;
+        }
+
+        return calc_checksum;
     }
 );

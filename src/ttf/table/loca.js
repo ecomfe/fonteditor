@@ -54,11 +54,19 @@ define(
                         offset += glyfSupport[i].size * sizeRatio;
                     }
 
+                    // write extra
+                    if (indexToLocFormat) {
+                        writer.writeUint32(offset);
+                    }
+                    else {
+                        writer.writeUint16(offset);
+                    }
+
                     return writer;
                 },
                 size: function(ttf) {
-                    var numGlyphs = ttf.glyf.length;
-                    return ttf.head.indexToLocFormat ? numGlyphs * 4 : numGlyphs * 2;
+                    var locaCount = ttf.glyf.length + 1;
+                    return ttf.head.indexToLocFormat ? locaCount * 4 : locaCount * 2;
                 }
             }
         );

@@ -23,7 +23,7 @@ define(
 
                     for (var i = offset, l = numTables * 16; i < l; i += 16) {
                         var name = reader.readString(i, 4);
-                        
+                        //console.log(name);
                         tables[name] = {
                             name : name,
                             checkSum : reader.readUint32(i + 4),

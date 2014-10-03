@@ -36,21 +36,42 @@ define(
                 },
                 size: function(ttf) {
                     var maxPoints = 0,  maxContours = 0, maxCompositePoints = 0,
-                        maxCompositeContours = 0;
+                        maxCompositeContours = 0, maxSizeOfInstructions = 0;
                     ttf.glyf.forEach(function(glyf) {
                         // 复合图元
                         if (glyf.compound) {
-                            maxCompositePoints++;
-                            maxCompositeContours += glyf.glyfs.length;
+
+                            var compositeContours = 0;
+                            var compositePoints = 0;
+                            glyf.glyfs.forEach(function(g) {
+                                var cglyf = ttf.glyf[g.glyphIndex];
+                                compositeContours += cglyf.contours ? cglyf.contours.length : 0;
+
+                                if (cglyf.contours && cglyf.contours.length) {
+                                    cglyf.contours.forEach(function(contour) {
+                                        compositePoints += contour.length;
+                                    });
+                                }
+
+                            });
+
+                            maxCompositePoints = Math.max(maxCompositePoints, compositePoints);
+                            maxCompositeContours = Math.max(maxCompositeContours, compositeContours);
+
                         }
                         // 简单图元
                         else {
-                            maxContours += glyf.contours.length;
+                            maxContours = Math.max(maxContours, glyf.contours.length);
+                            
+                            var points = 0, twilightPoints = 0;
                             glyf.contours.forEach(function(contour) {
-                                maxPoints += contour.length;
+                                points += contour.length;
                             });
-                        }
 
+                            maxPoints = Math.max(maxPoints, points);
+                        }
+                        
+                        maxSizeOfInstructions += glyf.instructions ? glyf.instructions.length : 0;
                     });
 
                     ttf.support.maxp = {
@@ -61,14 +82,14 @@ define(
                         maxCompositePoints: maxCompositePoints,
                         maxCompositeContours: maxCompositeContours,
                         maxZones: 2,
-                        maxTwilightPoints: 0,
+                        maxTwilightPoints: 255,
                         // It is unclear how to calculate maxStorage, maxFunctionDefs and maxInstructionDefs.
                         // These are magic constants now, with values exceeding values from FontForge
                         // see svg2ttf on github
                         maxStorage: 10,
                         maxFunctionDefs: 10,
                         maxStackElements: 255,
-                        maxSizeOfInstructions: 0,
+                        maxSizeOfInstructions: maxSizeOfInstructions,
                         maxComponentElements: 0,
                         maxComponentDepth: 0
                     };

@@ -128,9 +128,9 @@ define(
                 val.contours = contours;
 
                 // FIXME for test
-                val.flags = flags;
-                val.xCoordinates = xCoordinates;
-                val.yCoordinates = yCoordinates;
+                //val.flags = flags;
+                //val.xCoordinates = xCoordinates;
+                //val.yCoordinates = yCoordinates;
             }
         }
 

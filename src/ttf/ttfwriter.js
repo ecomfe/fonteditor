@@ -88,8 +88,8 @@ define(
                     name: tableName,
                     checkSum: 0,
                     offset: offset,
-                    length: size,
-                    tableSize: tableSize
+                    length: tableSize,
+                    size: size
                 });
 
                 ttfSize += size;
@@ -112,16 +112,18 @@ define(
 
                 var tableStart = writer.offset;
                 !new supportTables[table.name]().write(writer, ttf);
+                
+                console.log(writer.offset - tableStart - table.length);
 
-                if (table.tableSize % 4) {
+                if (table.length % 4) {
                     // 对齐字节
-                    for (var i = 0, l = 4 - table.tableSize % 4; i < l; i++) {
+                    for (var i = 0, l = 4 - table.length % 4; i < l; i++) {
                         writer.writeUint8(0);
                     }
                 }
 
                 // 计算校验和
-                table.checkSum = checkSum(writer.getBuffer(), tableStart, table.tableSize);
+                table.checkSum = checkSum(writer.getBuffer(), tableStart, table.size);
 
             });
 
@@ -136,6 +138,8 @@ define(
             // 写入总校验和
             var ttfCheckSum = (0xB1B0AFBA - checkSum(writer.getBuffer()) + 0x100000000) % 0x100000000;
             writer.writeUint32(ttfCheckSum, ttfHeadOffset + 8);
+
+            delete ttf.support;
 
             return writer.getBuffer();
         }

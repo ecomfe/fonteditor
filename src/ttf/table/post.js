@@ -19,7 +19,6 @@ define(
         var Posthead = table.create(
             'posthead', 
             [
-                ['format', struct.Fixed],
                 ['italicAngle', struct.Fixed],
                 ['postoints', struct.Uint16],
                 ['underlinePosition', struct.Int16],
@@ -38,11 +37,16 @@ define(
             ],
             {
                 read: function(reader, ttf) {
-                    // 读取表头
-                    var tbl = new Posthead(this.offset).read(reader, ttf);
+                    var tbl = null;
+                    var format = reader.readFixed(this.offset);
 
                     // format2
-                    if(tbl.format == 2) {
+                    if(format == 2) {
+
+                        // 读取表头
+                        tbl = new Posthead(reader.offset).read(reader, ttf);
+                        tbl.format = format;
+
                         var numberOfGlyphs = ttf.maxp.numGlyphs;
 
                         var glyphNameIndex = [];
@@ -56,6 +60,11 @@ define(
                         var pascalStringLength = ttf.tables.post.length - (pascalStringOffset - this.offset);
                         var pascalStringBytes = reader.readBytes(reader.offset, pascalStringLength);
                         tbl.names = string.readPascalString(pascalStringBytes);
+                    }
+                    else {
+                        tbl = {
+                            format: format
+                        };
                     }
 
                     return tbl;
@@ -99,15 +108,25 @@ define(
                         // 这里需要注意，"" 有可能是"\3" length不为0，但是是空字符串
                         if (glyf.name && glyf.name.charCodeAt(0) > 31) {
 
+
+                            if (glyf.name == '.notdef') {
+                                nameIndexs.push(0);
+                            }
+                            else if (glyf.name == '.null') {
+                                nameIndexs.push(1);
+                            }
+                            else if (glyf.name == 'nonmarkingreturn') {
+                                nameIndexs.push(2);
+                            }
                             // 这里需要注意
                             // unicode如果小于258，并且glyph名字与默认的名字相等，
                             // 则不需要放入name tbl
-                            if (glyf.unicode 
-                                && glyf.unicode[0] < 258
-                                && postName[glyf.unicode[0]] == glyf.name
+                            else if (glyf.unicode 
+                                && glyf.unicode[0] - 29 < 258
+                                && postName[glyf.unicode[0] - 29] == glyf.name
                             )
                             {
-                                nameIndexs.push(glyf.unicode[0]);
+                                nameIndexs.push(glyf.unicode[0] - 29);
                             }
                             else {
                                 nameIndexs.push(258 + nameIndex++);
@@ -119,8 +138,8 @@ define(
 
                         }
                         // 如果代码点有名字，则按默认的名字
-                        else if (glyf.unicode && glyf.unicode[0] < 258) {
-                            nameIndexs.push(glyf.unicode[0]);
+                        else if (glyf.unicode && glyf.unicode[0] - 29 < 258) {
+                            nameIndexs.push(glyf.unicode[0] - 29);
                         }
                         // 否则命名为 .notdef
                         else {

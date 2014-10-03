@@ -28,15 +28,15 @@ define(
             var i;
             // 0～256 紧凑排列
             if (subTable.format == 0) {
-                var format4 = subTable;
+                var format0 = subTable;
                 // 跳过format字段
-                format4.length = reader.readUint16();
-                format4.language = reader.readUint16();
+                format0.length = reader.readUint16();
+                format0.language = reader.readUint16();
                 var glyphIdArray = [];
-                for (var i = 0, l = format4.length - 6; i < l; i++) {
+                for (var i = 0, l = format0.length - 6; i < l; i++) {
                     glyphIdArray.push(reader.readUint8());
                 }
-                format4.glyphIdArray = glyphIdArray;
+                format0.glyphIdArray = glyphIdArray;
             }
             // 双字节编码，非紧凑排列
             else if(subTable.format == 4) {
@@ -136,12 +136,12 @@ define(
                 // 读取字符分组
                 for (i = 0; i < nGroups; ++i){
                     var group = {};
-                    group.startCharCode = reader.readUint32();
-                    group.endCharCode = reader.readUint32();
-                    group.startGlyphID = reader.readUint32();
-                    groups.push(groups);
+                    group.start = reader.readUint32();
+                    group.end = reader.readUint32();
+                    group.startId = reader.readUint32();
+                    groups.push(group);
                 }
-
+                format12.groups = groups;
             }
         }
 
