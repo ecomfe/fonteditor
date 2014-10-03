@@ -412,46 +412,7 @@ define(
 
                 ttf.support.glyf.tableSize = tableSize;
 
-                // 设置其他表的信息
-                var xMin = 16384, yMin = 16384, xMax = -16384, yMax = -16384;
-                var advanceWidthMax = -1, minLeftSideBearing = 16384, minRightSideBearing = 16384, xMaxExtent = -16384;
-                ttf.glyf.forEach(function(glyf) {
-
-                    // 如果没有轮廓
-                    if (!glyf.compound && 0 == glyf.contours.length) {
-                        return;
-                    }
-
-                    advanceWidthMax = Math.max(advanceWidthMax, glyf.advanceWidth);
-                    minLeftSideBearing = Math.min(minLeftSideBearing, glyf.leftSideBearing);
-                    minRightSideBearing = Math.min(minRightSideBearing, glyf.advanceWidth - glyf.xMax);
-                    xMaxExtent = Math.max(xMaxExtent, glyf.xMax);
-
-                    if (glyf.xMin < xMin) {
-                        xMin = glyf.xMin;
-                    }
-                    if (glyf.yMin < yMin) {
-                        yMin = glyf.yMin;
-                    }
-                    if (glyf.xMax > xMax) {
-                        xMax = glyf.xMax;
-                    }
-                    if (glyf.yMax > yMax) {
-                        yMax = glyf.yMax;
-                    }
-                });
-
-                // rewrite hhea
-                ttf.hhea.advanceWidthMax = advanceWidthMax;
-                ttf.hhea.minLeftSideBearing = minLeftSideBearing;
-                ttf.hhea.minRightSideBearing = minRightSideBearing;
-                ttf.hhea.xMaxExtent = xMaxExtent;
-
-                // rewrite head
-                ttf.head.xMin = xMin;
-                ttf.head.yMin = yMin;
-                ttf.head.xMax = xMax;
-                ttf.head.yMax = yMax;
+                //写header的indexToLocFormat
                 ttf.head.indexToLocFormat = tableSize > 65536 ? 1 : 0;
 
                 return ttf.support.glyf.tableSize;

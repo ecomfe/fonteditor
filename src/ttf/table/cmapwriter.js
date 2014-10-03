@@ -254,36 +254,33 @@ define(
             size: function(ttf) {
                 ttf.support.cmap = {};
 
-                var unicodes = [];
+                var glyfUnicodes = [];
                 ttf.glyf.forEach(function(glyph, index) {
-                    if (lang.isArray(glyph.unicode)) {
-                        glyph.unicode.forEach(function(unicode) {
+
+                    var unicodes = glyph.unicode;
+                    if (typeof glyph.unicode == 'number') {
+                        unicodes = [glyph.unicode];
+                    }
+
+                    if (lang.isArray(unicodes)) {
+                        unicodes.forEach(function(unicode) {
                             if (unicode !== 0xFFFF) {
-                                unicodes.push({
+                                glyfUnicodes.push({
                                     unicode: unicode,
                                     id: index
                                 });
                             }
-
                         });
-                    }
-                    else if (typeof glyph.unicode == 'number') {
-                        if (glyph.unicode !== 0xFFFF) {
-                            unicodes.push({
-                                unicode: glyph.unicode,
-                                id: index
-                            });
-                        }
                     }
                 });
 
-                unicodes = unicodes.sort(function(a, b) {
+                glyfUnicodes = glyfUnicodes.sort(function(a, b) {
                     return a.unicode - b.unicode;
                 });
 
-                ttf.support.cmap.unicodes = unicodes;
+                ttf.support.cmap.unicodes = glyfUnicodes;
 
-                var unicodes2Bytes = unicodes.filter(function(a) {
+                var unicodes2Bytes = glyfUnicodes.filter(function(a) {
                     return a.unicode > 29;
                 });
 

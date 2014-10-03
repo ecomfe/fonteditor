@@ -21,13 +21,15 @@ define(
              * @return {Array.<byte>} 字节数组
              */
             toUTF8Bytes: function(str) {
+                // 将unicode编码转换成js内部编码
+                str = decodeURIComponent(encodeURIComponent(str).replace(/%00([\x00-\x7f])/g, '$1'));
                 var byteArray = [];
                 for (var i = 0; i < str.length; i++) {
                     if (str.charCodeAt(i) <= 0x7F) {
                         byteArray.push(str.charCodeAt(i));
                     }
                     else {
-                        var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
+                        var h = encodeURIComponent(str.charAt(i)).slice(1).split('%');
                         for (var j = 0; j < h.length; j++) {
                             byteArray.push(parseInt(h[j], 16));
                         }
@@ -43,6 +45,7 @@ define(
              * @return {Array.<byte>} 字节数组
              */
             toUCS2Bytes: function(str) {
+                str = decodeURIComponent(encodeURIComponent(str).replace(/%00([\x00-\x7f])/g, '$1'));
                 // Code is taken here:
                 // http://stackoverflow.com/questions/6226189/how-to-convert-a-string-to-bytearray
                 var byteArray = [];

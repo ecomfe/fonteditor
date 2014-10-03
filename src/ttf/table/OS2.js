@@ -11,6 +11,8 @@ define(
     function(require) {
         var table = require('./table');
         var struct = require('./struct');
+        var lang = require('common/lang');
+
         var OS2 = table.create(
             'OS/2', 
             [
@@ -78,7 +80,152 @@ define(
                 ['usDefaultChar', struct.Uint16],
                 ['usBreakChar', struct.Uint16],
                 ['usMaxContext', struct.Uint16]
-            ]
+            ],
+
+            {
+                size: function(ttf) {
+
+                    //更新其他表的统计信息
+
+                    // header
+                    var xMin = 16384,
+                        yMin = 16384,
+                        xMax = -16384,
+                        yMax = -16384;
+
+                    //hhea
+                     var advanceWidthMax = -1,
+                        minLeftSideBearing = 16384,
+                        minRightSideBearing = 16384,
+                        xMaxExtent = -16384;
+
+                    // os2 count
+                    var xAvgCharWidth = 0,
+                        ulUnicodeRange1 = 0,
+                        ulUnicodeRange2 = 0x10000000,
+                        usFirstCharIndex = 0xFFFF,
+                        usLastCharIndex = -1;
+
+                    // maxp
+                    var maxPoints = 0,
+                        maxContours = 0,
+                        maxCompositePoints = 0,
+                        maxCompositeContours = 0,
+                        maxSizeOfInstructions = 0,
+                        maxComponentElements = 0;
+
+                    var glyfNotEmpty = 0; // 非空glyf
+
+                    ttf.glyf.forEach(function(glyf) {
+
+                        // 统计control point信息
+                        if (glyf.compound) {
+                            var compositeContours = 0;
+                            var compositePoints = 0;
+                            glyf.glyfs.forEach(function(g) {
+                                var cglyf = ttf.glyf[g.glyphIndex];
+                                compositeContours += cglyf.contours ? cglyf.contours.length : 0;
+                                if (cglyf.contours && cglyf.contours.length) {
+                                    cglyf.contours.forEach(function(contour) {
+                                        compositePoints += contour.length;
+                                    });
+                                }
+
+                            });
+
+                            maxComponentElements ++;
+                            maxCompositePoints = Math.max(maxCompositePoints, compositePoints);
+                            maxCompositeContours = Math.max(maxCompositeContours, compositeContours);
+                        }
+                        // 简单图元
+                        else if (glyf.contours && glyf.contours.length) {
+                            maxContours = Math.max(maxContours, glyf.contours.length);
+                            
+                            var points = 0, twilightPoints = 0;
+                            glyf.contours.forEach(function(contour) {
+                                points += contour.length;
+                            });
+                            maxPoints = Math.max(maxPoints, points);
+                        }
+
+                        // 统计边界信息
+                        if (glyf.compound || glyf.contours && glyf.contours.length) {
+
+                            if (glyf.xMin < xMin) {
+                                xMin = glyf.xMin;
+                            }
+                            if (glyf.yMin < yMin) {
+                                yMin = glyf.yMin;
+                            }
+                            if (glyf.xMax > xMax) {
+                                xMax = glyf.xMax;
+                            }
+                            if (glyf.yMax > yMax) {
+                                yMax = glyf.yMax;
+                            }
+                            advanceWidthMax = Math.max(advanceWidthMax, glyf.advanceWidth);
+                            minLeftSideBearing = Math.min(minLeftSideBearing, glyf.leftSideBearing);
+                            minRightSideBearing = Math.min(minRightSideBearing, glyf.advanceWidth - glyf.xMax);
+                            xMaxExtent = Math.max(xMaxExtent, glyf.xMax);
+
+                            xAvgCharWidth += glyf.advanceWidth;
+
+                            glyfNotEmpty++;
+                        }
+
+                        var unicodes = glyf.unicode;
+                        if (typeof glyf.unicode == 'number') {
+                            unicodes = [glyf.unicode];
+                        }
+
+                        if (lang.isArray(unicodes)) {
+                            unicodes.forEach(function(unicode) {
+                                if (unicode !== 0xFFFF) {
+                                    usFirstCharIndex = Math.min(usFirstCharIndex, unicode);
+                                    usLastCharIndex = Math.max(usLastCharIndex, unicode);
+                                }
+                            });
+                        }
+                    });
+
+                    // os2
+                    ttf['OS/2'].xAvgCharWidth = xAvgCharWidth / (glyfNotEmpty || 1);
+                    ttf['OS/2'].ulUnicodeRange2 = 268435456;
+                    ttf['OS/2'].usFirstCharIndex = usFirstCharIndex;
+                    ttf['OS/2'].usLastCharIndex = usLastCharIndex;
+
+                    // rewrite hhea
+                    ttf.hhea.advanceWidthMax = advanceWidthMax;
+                    ttf.hhea.minLeftSideBearing = minLeftSideBearing;
+                    ttf.hhea.minRightSideBearing = minRightSideBearing;
+                    ttf.hhea.xMaxExtent = xMaxExtent;
+
+                    // rewrite head
+                    ttf.head.xMin = xMin;
+                    ttf.head.yMin = yMin;
+                    ttf.head.xMax = xMax;
+                    ttf.head.yMax = yMax;
+
+                    ttf.support.maxp = {
+                        version: 1.0,
+                        numGlyphs: ttf.glyf.length,
+                        maxPoints: maxPoints,
+                        maxContours: maxContours,
+                        maxCompositePoints: maxCompositePoints,
+                        maxCompositeContours: maxCompositeContours,
+                        maxZones: 2,
+                        maxTwilightPoints: 0,
+                        maxStorage: 0,
+                        maxFunctionDefs: 0,
+                        maxStackElements: 0,
+                        maxSizeOfInstructions: maxSizeOfInstructions,
+                        maxComponentElements: maxComponentElements,
+                        maxComponentDepth: maxComponentElements ? 1 : 0
+                    };
+
+                    return table.size.call(this, ttf);
+                }
+            }
         );
 
         return OS2;

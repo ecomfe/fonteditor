@@ -10,6 +10,8 @@ define(
         var table = require('./table');
         var nameIdTbl = require('../enum/nameId');
         var string = require('../util/string');
+        var platformTbl = require('../enum/platform');
+        var encodingTbl = require('../enum/encoding');
 
         var name = table.create(
             'name', 
@@ -28,9 +30,9 @@ define(
                     var count = nameTbl.count;
                     for (var i = 0; i < count; ++i) {
                         var nameRecord = {};
-                        nameRecord.platformID = reader.readUint16();
-                        nameRecord.platformSpecificID = reader.readUint16();
-                        nameRecord.languageID = reader.readUint16();
+                        nameRecord.platform = reader.readUint16();
+                        nameRecord.encoding = reader.readUint16();
+                        nameRecord.language = reader.readUint16();
                         nameRecord.nameId = reader.readUint16();
                         nameRecord.length = reader.readUint16();
                         nameRecord.offset = reader.readUint16();
@@ -47,13 +49,13 @@ define(
                     var names = {};
                     
                     // 读取windows下的name records
-                    var platformID = 3;
-                    var platformSpecificID = 1;
+                    var platform = platformTbl.Microsoft;
+                    var encoding = encodingTbl.win.UCS2;
 
                     for (var i = 0; i < count; ++i) {
                         var nameRecord = nameRecordTbl[i];
-                        if (nameRecord.platformID == platformID
-                            && nameRecord.platformSpecificID == platformSpecificID
+                        if (nameRecord.platform == platform
+                            && nameRecord.encoding == encoding
                             && nameIdTbl[nameRecord.nameId]) {
                             names[nameIdTbl[nameRecord.nameId]] = decodeURIComponent(nameRecord.name);
                         }
@@ -72,9 +74,9 @@ define(
                     // write name tbl header
                     var offset = 0;
                     nameRecordTbl.forEach(function(nameRecord) {
-                        writer.writeUint16(nameRecord.platformID);
-                        writer.writeUint16(nameRecord.platformSpecificID);
-                        writer.writeUint16(nameRecord.languageID); 
+                        writer.writeUint16(nameRecord.platform);
+                        writer.writeUint16(nameRecord.encoding);
+                        writer.writeUint16(nameRecord.language); 
                         writer.writeUint16(nameRecord.nameId);
                         writer.writeUint16(nameRecord.name.length);
                         writer.writeUint16(offset); // offset
@@ -107,18 +109,18 @@ define(
                             // mac
                             nameRecordTbl.push({
                                 nameId: id,
-                                platformID: 1,
-                                platformSpecificID: 0,
-                                languageID: 0,
+                                platform: 1,
+                                encoding: 0,
+                                language: 0,
                                 name: utf8Bytes
                             });
 
                             // windows  
                             nameRecordTbl.push({
                                 nameId: id,
-                                platformID: 3,
-                                platformSpecificID: 1,
-                                languageID: 0, //
+                                platform: 3,
+                                encoding: 1,
+                                language: 1033,
                                 name: usc2Bytes
                             });
 
@@ -127,7 +129,7 @@ define(
                         }
                     });
                     
-                    var namingOrder = ['platformID', 'platformSpecificID', 'languageID', 'nameId'];
+                    var namingOrder = ['platform', 'encoding', 'language', 'nameId'];
                     nameRecordTbl = nameRecordTbl.sort(function(a, b) {
                         var l = 0;
                         namingOrder.some(function(name) {

@@ -137,7 +137,7 @@ define(
         TTFReader.prototype.resolve = function(ttf) {
             ttf = ttf || this.ttf;
             resolveGlyf.call(this, ttf);
-            //cleanTables.call(this, ttf);
+            cleanTables.call(this, ttf);
             return ttf;
         };
 

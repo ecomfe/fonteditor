@@ -12,9 +12,9 @@ define(
 
         var platform = {
             Unicode: 0,
-            Macintosh: 1,
+            Macintosh: 1, // mac
             reserved: 2,
-            Microsoft: 3
+            Microsoft: 3 // win
         };
 
         return platform;

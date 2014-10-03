@@ -113,7 +113,7 @@ define(
                 var tableStart = writer.offset;
                 !new supportTables[table.name]().write(writer, ttf);
                 
-                console.log(writer.offset - tableStart - table.length);
+                //console.log(table.name, writer.offset - tableStart - table.length);
 
                 if (table.length % 4) {
                     // 对齐字节
