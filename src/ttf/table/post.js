@@ -20,7 +20,7 @@ define(
             'posthead', 
             [
                 ['italicAngle', struct.Fixed],
-                ['postoints', struct.Uint16],
+                ['postoints', struct.Uint16], // 不知道干嘛用，文档里面没有
                 ['underlinePosition', struct.Int16],
                 ['underlineThickness', struct.Int16],
                 ['isFixedPitch', struct.Uint32],
@@ -54,11 +54,11 @@ define(
                             glyphNameIndex.push(reader.readUint16());
                         }
 
-                        tbl.glyphNameIndex = glyphNameIndex;
-
                         var pascalStringOffset = reader.offset;
                         var pascalStringLength = ttf.tables.post.length - (pascalStringOffset - this.offset);
                         var pascalStringBytes = reader.readBytes(reader.offset, pascalStringLength);
+
+                        tbl.glyphNameIndex = glyphNameIndex;
                         tbl.names = string.readPascalString(pascalStringBytes);
                     }
                     else {
@@ -72,17 +72,19 @@ define(
                 write: function(writer, ttf) {
 
                     var numberOfGlyphs = ttf.glyf.length; 
+                    var post = ttf.post || {};
+
                     // write header
                     writer.writeFixed(2); // format
-                    writer.writeFixed(0); // italicAngle
-                    writer.writeUint16(0); // postoints
-                    writer.writeInt16(0); // underlinePosition
-                    writer.writeInt16(0); // underlineThickness
-                    writer.writeUint32(0); // isFixedPitch
-                    writer.writeUint32(0); // minMemType42
-                    writer.writeUint32(0); // maxMemType42
-                    writer.writeUint32(0); // minMemType1
-                    writer.writeUint32(numberOfGlyphs); // maxMemType1
+                    writer.writeFixed(post.italicAngle || 0); // italicAngle
+                    writer.writeUint16(post.postoints || 0); // postoints
+                    writer.writeInt16(post.underlinePosition || 0); // underlinePosition
+                    writer.writeInt16(post.underlineThickness || 0); // underlineThickness
+                    writer.writeUint32(post.isFixedPitch || 0); // isFixedPitch
+                    writer.writeUint32(post.minMemType42 || 0); // minMemType42
+                    writer.writeUint32(post.maxMemType42 || 0); // maxMemType42
+                    writer.writeUint32(post.minMemType1 || 0); // minMemType1
+                    writer.writeUint32(post.maxMemType1 || numberOfGlyphs); // maxMemType1
 
                     // write glyphNameIndex
                     var nameIndexs = ttf.support.post.nameIndexs;
@@ -101,6 +103,7 @@ define(
                     var nameIndexs = [];
                     var size = 34 + numberOfGlyphs * 2; // header + nameIndex
                     var nameIndex = 0;
+
                     // 获取 name的大小
                     for(var i = 0; i < numberOfGlyphs; i++) {
                         var glyf = ttf.glyf[i];
@@ -130,8 +133,7 @@ define(
                             }
                             else {
                                 nameIndexs.push(258 + nameIndex++);
-                                var str = encodeURIComponent(ttf.glyf[i].name).replace(/%00/g, '');
-                                var bytes = string.getPascalStringBytes(str); //pascal string bytes
+                                var bytes = string.getPascalStringBytes(ttf.glyf[i].name); //pascal string bytes
                                 glyphNames.push(bytes);
                                 size += bytes.length;
                             }
@@ -146,6 +148,9 @@ define(
                             nameIndexs.push(0);
                         }
                     }
+
+                    ttf.post = ttf.post || {};
+                    ttf.post.maxMemType1 = numberOfGlyphs;
 
                     ttf.support.post = {
                         nameIndexs: nameIndexs,

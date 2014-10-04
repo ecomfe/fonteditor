@@ -1,9 +1,9 @@
-/**
+ï»¿/**
  * @file nameId.js
  * @author mengke01
  * @date 
  * @description
- * Ãû×Ö±àÂë±í
+ * åå­—ç¼–ç è¡¨
  */
 
 
@@ -32,7 +32,7 @@ define(
             19: 'sampleText'
         };
 
-        // ·´×ªnames
+        // åè½¬names
         var nameIdHash = {};
         Object.keys(nameId).forEach(function(id) {
             nameIdHash[nameId[id]] = +id;

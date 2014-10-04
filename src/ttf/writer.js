@@ -94,6 +94,9 @@ define(
         }
 
         Writer.prototype = {
+
+            constructor: Writer,
+
             write: write,
 
             /**
@@ -200,6 +203,13 @@ define(
              */
             head: function() {
                 this.offset = this._offset || 0;
+            },
+            
+            /**
+             * 注销
+             */
+            dispose: function() {
+                delete this.view;
             }
         };
 

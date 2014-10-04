@@ -57,7 +57,7 @@ define(
                         if (nameRecord.platform == platform
                             && nameRecord.encoding == encoding
                             && nameIdTbl[nameRecord.nameId]) {
-                            names[nameIdTbl[nameRecord.nameId]] = decodeURIComponent(nameRecord.name);
+                            names[nameIdTbl[nameRecord.nameId]] = string.stringify(nameRecord.name);
                         }
                     }
 

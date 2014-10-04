@@ -81,8 +81,7 @@ define(
                 setFont(binaryData);
 
                 var ttfReander = new ttfreader();
-                ttfReander.read(binaryData);
-                var ttfData = ttfReander.resolve();
+                var ttfData = ttfReander.read(binaryData);
                 showTTFGlyf(ttfData);
             }
 
@@ -107,8 +106,7 @@ define(
                         setFont(binaryData);
 
                         var ttfReander = new ttfreader();
-                        ttfReander.read(binaryData);
-                        var ttfData = ttfReander.resolve();
+                        var ttfData = ttfReander.read(binaryData);
                         showTTFGlyf(ttfData);
                     },
                     onError: function() {

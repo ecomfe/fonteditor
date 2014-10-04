@@ -24,8 +24,8 @@ define(
                     var writer = new TTFWriter();
                     var buffer = writer.write(ttf);
 
-                    reader.read(buffer);
-                    var ttfData = reader.resolve();
+                    var ttfData = reader.read(buffer);
+
                     console.log(ttfData);
 
                     var base64str = ttf2base64(buffer);

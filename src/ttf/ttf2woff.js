@@ -26,6 +26,34 @@ define(
          * metadata 转换成XML
          * 
          * @param {Object} metadata metadata
+         * 
+         * @example 
+         * metadata json:
+         * 
+         *    {
+         *        "uniqueid": "",
+         *        "vendor": {
+         *            "name": "",
+         *            "url": ""
+         *        },
+         *        "credit": [
+         *            {
+         *                "name": "",
+         *                "url": "",
+         *                "role": ""
+         *            }
+         *        ],
+         *        "description": "",
+         *        "license": {
+         *            "id": "",
+         *            "url": "",
+         *            "text": ""
+         *        },
+         *        "copyright": "",
+         *        "trademark": "",
+         *        "licensee": ""
+         *    }
+         * 
          * @return {string} xml字符串
          */
         function metadata2xml(metadata) {

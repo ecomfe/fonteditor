@@ -94,6 +94,9 @@ define(
         }
 
         Reader.prototype = {
+
+            constructor: Reader,
+
             read: read,
 
             /**
@@ -168,6 +171,13 @@ define(
                 this.offset = offset;
 
                 return this;
+            },
+
+            /**
+             * 注销
+             */
+            dispose: function() {
+                delete this.view;
             }
         };
 

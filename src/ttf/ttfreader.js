@@ -21,9 +21,11 @@ define(
         /**
          * 初始化
          */
-        function read() {
-            var reader = this.reader;
-            var ttf = this.ttf;
+        function read(buffer) {
+
+            var reader = new Reader(buffer, 0, buffer.byteLength, false);;
+
+            var ttf = {};
 
             // version
             ttf.version = reader.readFixed(0);
@@ -50,13 +52,17 @@ define(
                     ttf[tableName] = new supportTables[tableName](offset).read(reader, ttf);
                 }
             });
+            
+            reader.dispose();
 
+            return ttf;
         }
 
         /**
          * 关联glyf相关的信息
          */
         function resolveGlyf(ttf) {
+
             var codes = ttf.cmap;
             var glyf = ttf.glyf;
 
@@ -102,7 +108,8 @@ define(
             delete ttf.gasp;
             delete ttf.hmtx;
             delete ttf.loca;
-            delete ttf.post;
+            delete ttf.post.glyphNameIndex;
+            delete ttf.post.names;
             delete ttf.maxp;
         }
 
@@ -121,26 +128,18 @@ define(
          * @return {Object} ttf文档
          */
         TTFReader.prototype.read = function(buffer) {
-            this.reader = new Reader(buffer, 0, buffer.byteLength, false);
-            this.ttf = {};
-            read.call(this);
+            this.ttf = read.call(this, buffer);
+            resolveGlyf.call(this, this.ttf);
+            cleanTables.call(this, this.ttf);
             return this.ttf;
         };
-
+        
         /**
-         * 对ttf文件做进一步解析处理
-         * 
-         * @param {Object} ttf ttf格式文件
-         * 
-         * @return {Object} 解析后的格式
+         * 注销
          */
-        TTFReader.prototype.resolve = function(ttf) {
-            ttf = ttf || this.ttf;
-            resolveGlyf.call(this, ttf);
-            cleanTables.call(this, ttf);
-            return ttf;
+        TTFReader.prototype.dispose = function() {
+            delete this.ttf;
         };
-
 
         return TTFReader;
     }

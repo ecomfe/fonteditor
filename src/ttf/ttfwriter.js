@@ -33,9 +33,10 @@ define(
 
         /**
          * 处理ttf结构，以便于写
+         * 
+         * @param {ttfObject} ttf ttf数据结构
          */
-        function resolve() {
-            var ttf = this.ttf;
+        function resolve(ttf) {
 
             // 头部信息
             ttf.numTables = tableList.length;
@@ -53,14 +54,17 @@ define(
                     glyf.unicode = glyf.unicode.sort();
                 }
             });
+
         }
 
 
         /**
          * 写ttf文件
+         * 
+         * @param {ttfObject} ttf ttf数据结构
+         * @return {ArrayBuffer} 字节流
          */
-        function write() {
-            var ttf = this.ttf;
+        function write(ttf) {
 
             // 用来做写入缓存的对象，用完后删掉
             ttf.support = {};
@@ -141,7 +145,10 @@ define(
 
             delete ttf.support;
 
-            return writer.getBuffer();
+            var buffer = writer.getBuffer();
+            writer.dispose();
+
+            return buffer;
         }
 
 
@@ -159,10 +166,15 @@ define(
          * @return {ArrayBuffer} 缓冲数组
          */
         TTFWriter.prototype.write = function(ttf) {
-            this.ttf = ttf;
-            resolve.call(this);
-            var buffer = write.call(this);
+            resolve.call(this, ttf);
+            var buffer = write.call(this, ttf);
             return buffer;
+        };
+
+        /**
+         * 注销
+         */
+        TTFWriter.prototype.dispose = function() {
         };
 
         return TTFWriter;

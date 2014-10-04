@@ -9,12 +9,10 @@
 define(
     function(require) {
         var ajaxBinaryFile = require('common/ajaxBinaryFile');
-        var ttf2woff = require('ttf/ttf2woff');
-        var woff2base64 = require('ttf/woff2base64');
+        var ttf2svg = require('ttf/ttf2svg');
+        var svg2base64 = require('ttf/svg2base64');
         var TTFReader = require('ttf/ttfreader');
-        var TTFWriter = require('ttf/ttfwriter');
         var TTF = require('ttf/ttf');
-        var deflate = require('deflate').deflate;
 
         // 设置字体
         function setFont(base64str) {
@@ -23,7 +21,7 @@ define(
                 + 'font-family:\'truetype\';'
                 + 'src:url('
                 +   base64str 
-                + ') format(\'woff\');'
+                + ') format(\'svg\');'
                 + '}';
             document.getElementById('font-face').innerHTML = str;
         }
@@ -44,27 +42,6 @@ define(
             $('#font-list').html(str);
         }
 
-        var ttf2woffoptions = {
-            metadata: {
-                vendor: {
-                    name: 'mk',
-                    url: 'http://www.baidu.com'
-                },
-                credit: {
-                    name: 'mk',
-                    url: 'http://www.baidu.com'
-                },
-                description: 'font editor ver 1.0',
-                license:  {
-                    url: 'http://www.baidu.com',
-                    id: 'id',
-                    text: 'font editor ver 1.0' 
-                },
-                copyright: '"m;k"',
-                trademark: 'trademark',
-                licensee: 'http://www.baidu.com'
-            }
-        };
 
 
         function write() {
@@ -72,17 +49,17 @@ define(
                 url: '../font/iconfont.ttf',
                 onSuccess: function(buffer) {
 
-                    var woffBuffer = ttf2woff(buffer, ttf2woffoptions);
+                    var svgBuffer = ttf2svg(buffer, {
+                        metadata: 'fonteditor V0.1'
+                    });
 
-                    var base64str = woff2base64(woffBuffer);
+                    var base64str = svg2base64(svgBuffer);
                     setFont(base64str);
 
 
                     var saveBtn = $('.saveas');
                     saveBtn.attr('href', base64str);
-                    saveBtn.attr('download', 'save.woff');
-
-
+                    saveBtn.attr('download', 'save.svg');
 
                     var ttfReader = new TTFReader();
                     var ttfData = ttfReader.read(buffer);
@@ -95,42 +72,12 @@ define(
             });
         }
 
-        function readAndWrite() {
-            $.getJSON('./js/iconfont.json', function(ttf) {
-
-                var reader = new TTFReader();
-                var writer = new TTFWriter();
-                var buffer = writer.write(ttf);
-
-                var woffBuffer = ttf2woff(buffer, ttf2woffoptions);
-
-                var base64str = woff2base64(woffBuffer);
-                setFont(base64str);
-
-
-                var saveBtn = $('.saveas');
-                saveBtn.attr('href', base64str);
-                saveBtn.attr('download', 'save.woff');
-
-
-                var ttfReader = new TTFReader();
-                var ttfData = ttfReader.read(buffer);
-                showTTFGlyf(ttfData);
-
-            });
-        }
-
-
         var entry = {
 
             /**
              * 初始化
              */
             init: function () {
-
-                ttf2woffoptions.deflate = deflate;
-                
-                readAndWrite();
                 write();
             }
         };

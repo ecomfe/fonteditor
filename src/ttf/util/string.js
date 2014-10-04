@@ -1,9 +1,9 @@
-/**
+ï»¿/**
  * @file string.js
  * @author mengke01
  * @date 
  * @description
- * string¹¤¾ßÏä
+ * stringå·¥å…·ç®±
  * 
  * see svg2ttf @ github
  */
@@ -11,18 +11,27 @@
 define(
     function(require) {
 
+        /**
+         * å°†unicodeç¼–ç è½¬æ¢æˆjså†…éƒ¨ç¼–ç 
+         * 
+         * @param {string} str strå­—ç¬¦ä¸²
+         * @return {string} è½¬æ¢åå­—ç¬¦ä¸²
+         */
+        function stringify(str) {
+            return decodeURIComponent(encodeURIComponent(str).replace(/%00([\x00-\x7f])/g, '$1'));
+        }
 
         var string = {
-            
+
+            stringify: stringify,
             /**
-             * ×ª»»³Éutf8µÄ×Ö½ÚÊı×é
+             * è½¬æ¢æˆutf8çš„å­—èŠ‚æ•°ç»„
              * 
-             * @param {string} str ×Ö·û´®
-             * @return {Array.<byte>} ×Ö½ÚÊı×é
+             * @param {string} str å­—ç¬¦ä¸²
+             * @return {Array.<byte>} å­—èŠ‚æ•°ç»„
              */
             toUTF8Bytes: function(str) {
-                // ½«unicode±àÂë×ª»»³ÉjsÄÚ²¿±àÂë
-                str = decodeURIComponent(encodeURIComponent(str).replace(/%00([\x00-\x7f])/g, '$1'));
+                str = stringify(str);
                 var byteArray = [];
                 for (var i = 0; i < str.length; i++) {
                     if (str.charCodeAt(i) <= 0x7F) {
@@ -39,13 +48,13 @@ define(
             },
 
             /**
-             * ×ª»»³Éusc2µÄ×Ö½ÚÊı×é
+             * è½¬æ¢æˆusc2çš„å­—èŠ‚æ•°ç»„
              * 
-             * @param {string} str ×Ö·û´®
-             * @return {Array.<byte>} ×Ö½ÚÊı×é
+             * @param {string} str å­—ç¬¦ä¸²
+             * @return {Array.<byte>} å­—èŠ‚æ•°ç»„
              */
             toUCS2Bytes: function(str) {
-                str = decodeURIComponent(encodeURIComponent(str).replace(/%00([\x00-\x7f])/g, '$1'));
+                str = stringify(str);
                 // Code is taken here:
                 // http://stackoverflow.com/questions/6226189/how-to-convert-a-string-to-bytearray
                 var byteArray = [];
@@ -61,10 +70,10 @@ define(
             },
             
             /**
-             * ¶ÁÈ¡ pascal string
+             * è¯»å– pascal string
              * 
-             * @param {Array.<byte>} byteArray byteÊı×é
-             * @return {Array.<string>} ¶ÁÈ¡ºóµÄ×Ö·û´®Êı×é
+             * @param {Array.<byte>} byteArray byteæ•°ç»„
+             * @return {Array.<string>} è¯»å–åçš„å­—ç¬¦ä¸²æ•°ç»„
              */
             readPascalString: function (byteArray) {
                 var strArray = [];
@@ -76,15 +85,18 @@ define(
                     while(strLength-- > 0 && i < l) {
                         str += String.fromCharCode(byteArray[i++]);
                     }
+                    // è¿™é‡Œéœ€è¦å°†unicodeè½¬æ¢æˆjsç¼–ç 
+                    str = stringify(str);
                     strArray.push(str);
                 }
+
                 return strArray;
             },
 
             /**
-             * »ñÈ¡pascal string ×Ö½ÚÊı×é
+             * è·å–pascal string å­—èŠ‚æ•°ç»„
              * 
-             * @return {Array.<byte>} byteArray byteÊı×é
+             * @return {Array.<byte>} byteArray byteæ•°ç»„
              */
             getPascalStringBytes: function(str) {
                 var bytes = [];
