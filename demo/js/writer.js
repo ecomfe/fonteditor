@@ -11,7 +11,6 @@ define(
 
         var Writer = require('ttf/writer');
         var Reader = require('ttf/reader');
-        var ttf2base64 = require('ttf/ttf2base64');
 
         var entry = {
 
@@ -60,12 +59,6 @@ define(
                 console.log(reader.readFixed());
                 console.log(reader.readBytes(3));
                 console.log(reader.readFixed(50));
-
-                var base64str = 'data:font/ttf;charset=utf-8;base64,' + ttf2base64(buffer.slice(0, 54));
-
-                var saveBtn = $('.saveas');
-                saveBtn.attr('href', base64str);
-                saveBtn.attr('download', 'save.ttf');
 
             }
         };

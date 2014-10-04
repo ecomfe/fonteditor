@@ -28,7 +28,7 @@ define(
                     var ttfData = reader.resolve();
                     console.log(ttfData);
 
-                    var base64str = 'data:font/ttf;charset=utf-8;base64,' + ttf2base64(buffer);
+                    var base64str = ttf2base64(buffer);
                     var saveBtn = $('.saveas');
                     saveBtn.attr('href', base64str);
                     saveBtn.attr('download', 'save.ttf');

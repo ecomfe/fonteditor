@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>测试math函数</title>
+    <title>测试deflate函数</title>
     <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
 </head>
@@ -12,13 +12,14 @@
             baseUrl: '../src',
             paths: {
                 demo: '../demo/js',
+                deflate: '../dep/pako_deflate.min'
             }
         });
         define('jquery', $);
     </script>
 
     <script>
-        require(['demo/math']);
+        require(['demo/testDeflate']);
     </script>
 
 </body>

@@ -53,6 +53,9 @@ define(
             ttf.support = {};
 
 
+            var OS2Tbl = new supportTables['OS/2']();
+            var size = OS2Tbl.size(ttf);
+
             // 写入maxp
             var maxpTbl = new supportTables['maxp']();
             var size = maxpTbl.size(ttf);

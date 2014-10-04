@@ -1,5 +1,5 @@
 /**
- * @file ttf2base64.js
+ * @file woff2base64.js
  * @author mengke01
  * @date 
  * @description
@@ -18,10 +18,10 @@ define(
          * @param {Array} arrayBuffer ArrayBuffer对象
          * @return {string} base64编码
          */
-        function ttf2base64(arrayBuffer) {
-            return 'data:font/ttf;charset=utf-8;base64,' + bytes2base64(arrayBuffer);
+        function woff2base64(arrayBuffer) {
+            return 'data:font/woff;charset=utf-8;base64,' + bytes2base64(arrayBuffer);
         }
 
-        return ttf2base64;
+        return woff2base64;
     }
 );

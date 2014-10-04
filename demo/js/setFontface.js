@@ -20,7 +20,7 @@ define(
             var str = ''
                 + '@font-face {'
                 + 'font-family:\'' + name + '\';'
-                + 'src:url(data:font/ttf;charset=utf-8;base64,' 
+                + 'src:url('
                 +   ttfBase64 
                 + ') format(\'truetype\');'
                 + '}';
