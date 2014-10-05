@@ -21,7 +21,7 @@ define(
          */
         function sizeof(glyf, glyfSupport) {
             
-            if (!glyf.contours.length) {
+            if (!glyf.contours || 0 === glyf.contours.length) {
                 return 0;
             }
 
@@ -96,7 +96,7 @@ define(
          */
         function getFlags(glyf, glyfSupport) {
 
-            if (!glyf.contours.length) {
+            if (!glyf.contours || 0 === glyf.contours.length) {
                 return glyfSupport;
             }
 
@@ -231,7 +231,8 @@ define(
 
                     var writerOffset = writer.offset;
 
-                    if (!glyf.compound && 0 == glyf.contours.length) {
+                    // 非复合图元没有轮廓则不写
+                    if (!glyf.compound && (!glyf.contours || 0 == glyf.contours.length)) {
                         return;
                     }
 

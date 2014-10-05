@@ -14,7 +14,7 @@ define(
 
         var string = require('common/string');
         var TTFReader = require('./ttfreader');
-        var contour2svg = require('./util/contour2svg');
+        var contours2svg = require('./util/contours2svg');
 
         // svg font id
         var SVG_FONT_ID = 'fonteditor';
@@ -37,19 +37,6 @@ define(
 
         // glyph 模板
         var GLYPH_TPL = '<glyph glyph-name="${name}" unicode="${unicode}" d="${d}" />';
-
-
-        /**
-         * glyf轮廓转svgpath
-         * 
-         * @param {Array} contours 轮廓list
-         * @return {string} path字符串
-         */
-        function glyf2svg(contours) {
-            return contours.map(function(contour) {
-                return contour2svg(contour);
-            }).join('');
-        }
 
         /**
          * unicode 转xml编码格式
@@ -104,7 +91,7 @@ define(
             xmlObject.missing = {};
             xmlObject.missing.advanceWidth = ttf.glyf[0].advanceWidth || 0;
             xmlObject.missing.d = ttf.glyf[0].contours && ttf.glyf[0].contours.length 
-                ? glyf2svg(ttf.glyf[0].contours) : '';
+                ? contours2svg(ttf.glyf[0].contours) : '';
 
             // glyf 信息
             var glyphList = '';
@@ -116,7 +103,7 @@ define(
                     var glyfObject = {
                         name: glyf.name,
                         unicode: unicode2xml(glyf.unicode),
-                        d: glyf2svg(glyf.contours)
+                        d: contours2svg(glyf.contours)
                     }
                     glyphList += string.format(GLYPH_TPL, glyfObject);
                 }

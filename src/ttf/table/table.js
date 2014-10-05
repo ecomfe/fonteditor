@@ -119,7 +119,7 @@ define(
                         break;
 
                     case struct.String:
-                        writer.writeString(table[name]);
+                        writer.writeString(table[name], item[2] || 0);
                         break;
 
                     default:

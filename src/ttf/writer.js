@@ -107,12 +107,13 @@ define(
              * @param {number} length 长度
              * @return {this}
              */
-            writeString: function(str, offset) {
-
+            writeString: function(str, length, offset) {
+                str = str || '';
                 if(undefined === offset) {
                     offset = this.offset;
                 }
-                var length  = str.replace(/[^\x00-\xff]/g, '11').length;
+                var length  = length || str.replace(/[^\x00-\xff]/g, '11').length;
+
                 if(length < 0 || offset + length > this.length) {
                     throw 'length out of range:' + offset + ',' + length;
                 }
@@ -120,7 +121,7 @@ define(
                 this.seek(offset);
                 
                 for (var i = 0, l = str.length, charCode; i < l; ++i) {
-                    charCode = str.charCodeAt(i);
+                    charCode = str.charCodeAt(i) || 0;
                     if (charCode > 127) {
                         // unicode编码可能会超出2字节, 写入与编码有关系，此处不做处理
                         // FIXME
@@ -156,6 +157,7 @@ define(
 
                 // ArrayBuffer
                 this.seek(offset);
+
                 if (value instanceof ArrayBuffer) {
                     var view = new DataView(value, 0, length);
                     var littleEndian = this.littleEndian;
@@ -256,13 +258,18 @@ define(
                     offset = this.offset;
                 }
 
-                if (typeof value.getTime === 'function') {
+                var delta = -2077545600000; // new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();
+                
+                if (typeof value === 'undefined') {
+                    value = delta;
+                }
+                else if (typeof value.getTime === 'function') {
                     value = value.getTime();
                 }
                 else {
                     value = Date.parse(value);
                 }
-                var delta = -2077545600000; // new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();
+
                 var time = Math.round((value - delta) / 1000);
                 this.writeUint32(0, offset);
                 this.writeUint32(time, offset + 4);
