@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TTF文件管理</title>
+    <link rel="stylesheet" type="text/css" href="./dep/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/ttf.css">
+</head>
+<body>
+
+    <div class="navbar navbar-inverse" role="navigation">
+        <button data-action="open" type="button" class="btn btn-primary btn-sm">打开</button>
+        <button data-action="svg" type="button" class="btn btn-primary btn-sm">导入svg</button>
+        <a id="export-btn" href="#" data-action="export" class="btn btn-primary btn-sm">导出ttf</a>
+        <a id="export-btn-woff" href="#" data-action="export" class="btn btn-primary btn-sm">导出woff</a>
+        <button data-action="save" type="button" class="btn btn-primary btn-sm">保存</button>
+        <button data-action="setting" type="button" class="btn btn-primary btn-sm">设置</button>
+    </div>
+
+    <div class="sidebar">
+        <dl class="project-list">
+            <dt>项目列表</dt>
+            <dd>baiduhealth.ttf</dd>
+            <dd>baiduhealth1.ttf</dd>
+        </dl>
+    </div>
+    <div class="main">
+        <div id="glyf-list" class="glyf-list">
+        </div>
+    </div>
+
+    <div id="loading" class="loading">正在加载...</div>
+
+    <script src="./dep/esl.js"></script>
+    <script src="./dep/jquery.min.js"></script>
+    <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        require.config({
+            baseUrl: './src'
+        });
+        define('jquery', $);
+        require(['fonteditor/ttf/main'])
+    </script>
+    <form id="font-form"><input id="font-import" type="file"></form>
+</body>
+</html>

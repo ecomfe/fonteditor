@@ -1,0 +1,66 @@
+
+
+@import './common.less';
+@import './util.less';
+@import './ico.less';
+
+.project-list {
+    dd {
+        padding-left: 10px;
+    }
+    dd:hover {
+        color: red;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+
+.glyf-list {
+    >.glyf-item {
+
+        float: left;
+        margin: 10px;
+        width: 86px;
+        border: 1px solid #CCC;
+        box-shadow: 1px 1px 1px #EEE;
+        border-radius: 6px;
+        cursor: pointer;
+
+        .unicode,
+        .name {
+            font-size: 12px;
+            line-height: 20px;
+            height: 20px;
+            padding-left: 4px;
+            .ellipsis();
+        }
+        
+        .unicode {
+            color: green;
+            border-top: 1px solid #CCC;
+        }
+
+        .glyf {
+            width: 60px;
+            height: 60px;
+            margin: 10px;
+            .path {
+                fill: green;
+            }
+        }
+    }
+
+    >.glyf-item:hover {
+        background: #EFEFEF;
+        .path {
+            fill: darkgreen;
+        }
+    }
+
+    >.new {
+        .path {
+            fill: blue!important;
+        }
+    }
+}

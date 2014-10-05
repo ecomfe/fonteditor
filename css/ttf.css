@@ -1,0 +1,128 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 5px solid transparent;
+}
+::-webkit-scrollbar-track {
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
+}
+::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) inset;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+.navbar {
+  border-radius: 0;
+  margin: 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+.navbar .btn {
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.navbar .btn:first-child {
+  margin-left: 10px;
+}
+#export-btn {
+  margin-right: 10px;
+  margin-top: 10px;
+  display: inline-block;
+}
+#export-btn .btn {
+  margin: 0;
+}
+.container {
+  display: flex;
+  flex: 1;
+}
+.sidebar {
+  position: fixed;
+  width: 200px;
+  top: 50px;
+  bottom: 0;
+  background: #FCFCFC;
+  padding: 4px;
+  border-right: 1px solid #DDD;
+}
+.main {
+  margin-left: 200px;
+  margin-top: 50px;
+  padding: 4px;
+}
+.loading {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  width: 200px;
+  margin-left: -100px;
+  line-height: 24px;
+  text-align: center;
+  display: none;
+}
+@font-face {
+  font-family: 'fonteditor';
+  src: url('../font/iconfont.ttf') format('truetype');
+}
+.project-list dd {
+  padding-left: 10px;
+}
+.project-list dd:hover {
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.glyf-list > .glyf-item {
+  float: left;
+  margin: 10px;
+  width: 86px;
+  border: 1px solid #CCC;
+  box-shadow: 1px 1px 1px #EEE;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.glyf-list > .glyf-item .unicode,
+.glyf-list > .glyf-item .name {
+  font-size: 12px;
+  line-height: 20px;
+  height: 20px;
+  padding-left: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.glyf-list > .glyf-item .unicode {
+  color: green;
+  border-top: 1px solid #CCC;
+}
+.glyf-list > .glyf-item .glyf {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+}
+.glyf-list > .glyf-item .glyf .path {
+  fill: green;
+}
+.glyf-list > .glyf-item:hover {
+  background: #EFEFEF;
+}
+.glyf-list > .glyf-item:hover .path {
+  fill: darkgreen;
+}
+.glyf-list > .new .path {
+  fill: blue!important;
+}

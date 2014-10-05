@@ -1,0 +1,14 @@
+
+
+.ellipsis() {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ellipsis(@width) when (@width > 0px) {
+    width: @width;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
