@@ -10,6 +10,53 @@
 define(
     function(require) {
 
+        var bezierCubic2Q2 = require('math/bezierCubic2Q2');
+
+        function cubic2Points(cubicList, contour) {
+            // 三次贝塞尔转二次
+            var q2List = [];
+            cubicList.forEach(function(c) {
+                q2List = q2List.concat(bezierCubic2Q2(c[0], c[1], c[2], c[3]));
+            });
+
+            var q2, prevq2;
+            for (var i = 0, l = q2List.length; i < l; i++) {
+                q2 = q2List[i];
+                if (i == 0) {
+                    contour.push({
+                        x: q2[1].x,
+                        y: q2[1].y
+                    });
+                    contour.push({
+                        x: q2[2].x,
+                        y: q2[2].y,
+                        onCurve: true
+                    });
+                }
+                else {
+                    prevq2 = q2List[i - 1];
+                    // 检查是否存在切线点
+                    if (prevq2[1].x + q2[1].x == 2 * q2[0].x && prevq2[1].y + q2[1].y == 2 * q2[0].y) {
+                        contour.pop();
+                    }
+                    contour.push({
+                        x: q2[1].x,
+                        y: q2[1].y
+                    });
+                }
+            }
+
+            contour.push({
+                x: q2[2].x,
+                y: q2[2].y,
+                onCurve: true
+            });
+
+            return contour;
+        }
+
+
+
         /**
          * svg path 转 contours
          * 
@@ -65,7 +112,7 @@ define(
             segments.push({cmd:'Z'});
 
             // 解析segments
-            var contours = [], contour = [], prevX = 0, prevY = 0;
+            var contours = [], contour = [], prevX = 0, prevY = 0, prevc1;
             for (var i = 0, l = segments.length;i < l; i++) {
                 segment = segments[i];
 
@@ -147,14 +194,79 @@ define(
                         y: prevY,
                         onCurve: true
                     });
+
                 }
                 // 三次贝塞尔
                 else if (segment.cmd === 'C') {
-                    throw 'not support cubic bezier';
+                    
+                    // 这里可能会连续绘制，最后一个是终点
+                    var q = 0, ql = segment.args.length - 2;
+                    var cubicList = [];
+
+                    for (; q < ql ; q += 4) {
+                        var cubic = [];
+                        var c1 = {
+                            x: prevX + segment.args[q],
+                            y: prevY + segment.args[q + 1]
+                        };
+                        var c2 = {
+                            x: prevX + segment.args[q + 2],
+                            y: prevY + segment.args[q + 3]
+                        };
+
+                        // 计算中间点
+                        if (q == 0) {
+                            cubic.push({x: prevX, y: prevY});
+                            cubic.push(c1);
+                            cubic.push(c2);
+                        }
+                        else {
+                            var prevC2 = cubicList[cubicList.length - 1][2];
+                            var p1 = {
+                                x: (prevC2.x + c1.x) / 2,
+                                y: (prevC2.y + c1.y) / 2
+                            }
+                            cubicList[cubicList.length - 1][3] = p1;
+
+                            cubic.push(p1);
+                            cubic.push(c1);
+                            cubic.push(c2);
+                        }
+
+                        cubicList.push(cubic);
+                    }
+
+                    prevX += segment.args[ql];
+                    prevY += segment.args[ql + 1];
+
+                    cubicList[cubicList.length - 1].push({x: prevX, y: prevY});
+                    cubic2Points(cubicList, contour);
+                    prevc1 = cubicList[cubicList.length - 1][2];
                 }
                 // 三次贝塞尔平滑
                 else if (segment.cmd === 'S') {
-                    throw 'not support cubic bezier';
+                    
+                    // 这里需要移除上一个曲线的终点
+                    var p1 = contour.pop();
+                    var c1 = {
+                        x: 2 * p1.x - prevc1.x,
+                        y: 2 * p1.y - prevc1.y
+                    };
+                    var c2 = {
+                        x: prevX + segment.args[0],
+                        y: prevX + segment.args[1]
+                    };
+
+                    prevX += segment.args[2];
+                    prevY += segment.args[3];
+
+                    var p2 = {
+                        x: prevX,
+                        y: prevY
+                    };
+
+                    cubic2Points([[p1, c1, c2, p2]], contour);
+                    prevc1 = c2;
                 }
                 // 圆弧
                 else if (segment.cmd === 'A') {
