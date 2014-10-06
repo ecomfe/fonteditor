@@ -174,7 +174,7 @@ define(
                 else if (cmd === 'L') {
 
                     // 这里可能会连续绘制，最后一个是终点
-                    var q = 0, ql = segment.args.length - 2, px = 0, py = 0;
+                    var q = 0, ql = segment.args.length, px = 0, py = 0;
 
                     if (relative) {
                         px = prevX;
@@ -189,6 +189,8 @@ define(
                         });
                     }
 
+                    ql = segment.args.length - 2;
+                    
                     if (relative) {
                         prevX += segment.args[ql];
                         prevY += segment.args[ql + 1];
@@ -197,12 +199,6 @@ define(
                         prevX = segment.args[ql];
                         prevY = segment.args[ql + 1];
                     }
-
-                    contour.push({
-                        x: prevX,
-                        y: prevY,
-                        onCurve: true
-                    });
                 }
                 // 二次贝塞尔
                 else if (cmd === 'Q') {

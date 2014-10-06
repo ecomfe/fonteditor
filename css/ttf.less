@@ -4,16 +4,26 @@
 @import './util.less';
 @import './ico.less';
 
-.project-list {
-    dd {
-        padding-left: 10px;
+
+.project {
+    .project-title {
+        font-weight: bold;
     }
-    dd:hover {
-        color: red;
-        text-decoration: underline;
-        cursor: pointer;
+    .project-list {
+        line-height: 20px;
+        
+        div {
+            padding-left: 10px;
+        }
+        div:hover {
+            color: red;
+            text-decoration: underline;
+            cursor: pointer;
+        }
     }
 }
+
+
 
 
 .glyf-list {

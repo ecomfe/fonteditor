@@ -9,132 +9,53 @@
 define(
     function(require) {
 
+        var GLYFViewer = require('../widget/glyfviewer');
+        var loader = require('../widget/loader');
+        var exporter = require('../widget/exporter');
+        var project = require('../widget/project');
+        var ProjectViewer = require('../widget/projectviewer');
+        var ttfmanager = require('../widget/ttfmanager');
         var program = require('../program');
-        var TTFReader = require('ttf/ttfreader');
-        var glyf2svg = require('ttf/util/glyf2svg');
-        var svg2ttfobject = require('ttf/svg2ttfobject');
         var string = require('common/string');
-        var pathAdjust = require('graphics/pathAdjust');
-        var TTFWriter = require('ttf/ttfwriter');
-        var ttf2woff = require('ttf/ttf2woff');
-        var woff2ttf = require('ttf/woff2ttf');
-        var ttf2base64 = require('ttf/ttf2base64');
-        var woff2base64 = require('ttf/woff2base64');
-
-        var woffOptions = {
-            inflate: require('inflate').inflate
-        };
-
-        var GLYF_ITEM_TPL = ''
-            + '<div data-index="${index}" class="glyf-item ${modify}">'
-            +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}"><g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) "><path class="path" ${d}/></g></svg>'
-            +   '<div class="unicode" title="${unicode}">${unicode}</div><div class="name" title="${name}">${name}</div>'
-            + '</div>';
-
+        
         var actions = {
+            new: function() {
+                if (program.data.ttf && !window.confirm('是否放弃保存当前项目?')) {
+                    return;
+                }
+                newEmpty();
+            },            
             open: function() {
                 $('#font-import').click();
             },
-            svg: function() {
+            import: function() {
                 $('#font-import').click();
             },
             export: function() {
-                //$(this).attr('href', '#');
+            },
+            save: function() {
+                saveProj();
             }
         };
 
-        // 显示glyf
-        function showGLYF(ttf) {
-            var unitsPerEm = ttf.head.unitsPerEm;
-            var descent = unitsPerEm + ttf.hhea.descent;
-            var glyfStr = '', d = '';
-            ttf.glyf.forEach(function(glyf, index) {
-                var g = {
-                    index: index,
-                    modify: glyf.modify,
-                    unitsPerEm: unitsPerEm,
-                    descent: descent,
-                    unicode: (glyf.unicode || []).map(function(u) {
-                        return '$' + u.toString(16).toUpperCase();
-                    }).join(','),
-                    name: glyf.name
-                };
 
-                if (d = glyf2svg(glyf, ttf)) {
-                    g.d = 'd="'+ d +'"';
+        // 保存项目
+        function saveProj() {
+            if (program.data.ttf) {
+                var name = '';
+                if(name = window.prompt('请输入项目名称：')) {
+                    var list = project.add(string.encodeHTML(name), program.data.ttf);
+                    program.projectViewer.show(list);
                 }
-
-                glyfStr += string.format(GLYF_ITEM_TPL, g);
-            });
-
-            $('#glyf-list').get(0).innerHTML = glyfStr;
+            }
         }
 
-        // 加载ttf
-        function loadSFNT(file, type) {
-            program.loading.show();
-            var fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                var buffer = e.target.result;
-
-                if (type == 'woff') {
-                    buffer = woff2ttf(buffer, woffOptions);
-                }
-
-                var ttfReader = new TTFReader();
-                program.data.ttf = ttfReader.read(buffer);
-                showGLYF(program.data.ttf);
-                ttfReader.dispose();
-                fileReader = null;
-                program.loading.hide();
-            }
-
-            fileReader.onerror = function(e) {
-                program.loading.hide();
-                alert('读取文件出错!');
-                fileReader = null;
-            };
-            fileReader.readAsArrayBuffer(file);
-        }
-
-        // 加载svg
-        function loadSVG(file) {
-            program.loading.show();
-            var fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                var buffer = e.target.result;
-                var imported = svg2ttfobject(buffer);
-                var ttf = program.data.ttf;
-                var scale = 1;
-
-                // 对导入的轮廓进行缩放处理
-                if (imported.head.unitsPerEm && imported.head.unitsPerEm != ttf.head.unitsPerEm) {
-                    scale = ttf.head.unitsPerEm / imported.head.unitsPerEm;
-                }
-
-                imported.glyf.forEach(function(g) {
-                    if (g.contours && g.contours.length) {
-                        if (scale !== 1) {
-                            g.contours.forEach(function(contour) {
-                                pathAdjust(contour, scale, scale);
-                            });
-                        }
-                        g.modify = 'new';
-                        ttf.glyf.push(g);
-                    }
-                });
-
-                showGLYF(program.data.ttf);
-                fileReader = null;
-                program.loading.hide();
-            }
-
-            fileReader.onerror = function(e) {
-                program.loading.hide();
-                alert('读取文件出错!');
-                fileReader = null;
-            };
-            fileReader.readAsText(file);
+        // 新建空白
+        function newEmpty() {
+            $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
+                program.data.ttf = imported;
+                program.viewer.show(imported);
+            })
         }
 
         // 打开文件
@@ -143,39 +64,43 @@ define(
 
             if (program.action == 'open' && file.name.match(/(\.ttf|\.woff)$/)) {
                 program.data.file = file.name;
-                loadSFNT(file, file.name.slice(file.name.lastIndexOf('.') + 1));
+                loader.load(file, {
+                    type: file.name.slice(file.name.lastIndexOf('.') + 1),
+                    success: function(imported) {
+                        program.data.ttf = imported;
+                        program.viewer.show(imported);
+                    }
+                });
             }
-            else if (program.action == 'svg' && file.name.match(/\.svg$/)) {
+            else if (program.action == 'import' && file.name.match(/(\.ttf|\.woff|\.svg)$/)) {
                 if (program.data.ttf) {
-                    loadSVG(file);
-                }
-                else {
-                    alert('没有要编辑的文件!');
+                    loader.load(file, {
+                        type: file.name.slice(file.name.lastIndexOf('.') + 1),
+                        success: function(imported) {
+                            if (imported.glyf.length) {
+                                ttfmanager.combine(program.data.ttf, imported, {scale: true});
+                                program.viewer.show(program.data.ttf);
+                            }
+                        }
+                    });
                 }
             }
             else {
                 alert('无法识别文件类型!');
             }
+
             e.target.value = '';
         }
 
-        function exportTTF(e) {
+        function exportFile(e) {
             var ttf = program.data.ttf;
             if (ttf) {
-                var buffer = new TTFWriter().write(ttf);
                 var target = $(e.target);
-                target.attr('download', (ttf.name.fontFamily || 'export') + '.ttf');
-                target.attr('href', ttf2base64(buffer));
+                exporter.export(ttf, {
+                    type: target.attr('data-type'),
+                    target: target
+                });
             }
-        }
-
-        function exportWOFF(e) {
-            var ttf = program.data.ttf;
-            if (ttf) {
-                var buffer = ttf2woff(new TTFWriter().write(ttf));
-                e.target.download = (ttf.name.fontFamily || 'export') + '.woff';
-                e.target.href = ttf2base64(buffer);
-            } 
         }
 
         // 绑定组件
@@ -188,8 +113,9 @@ define(
                 }
             });
 
-            $('#export-btn').on('mouseup', exportTTF);
-            $('#export-btn-woff').on('mouseup', exportWOFF);
+            $('#export-btn').on('mouseup', exportFile);
+            $('#export-btn-woff').on('mouseup', exportFile);
+            $('#export-btn-svg').on('mouseup', exportFile);
 
             document.getElementById('font-import').addEventListener('change', onUpFile);
         }
@@ -201,6 +127,22 @@ define(
              */
             init: function () {
                 bindEvent();
+
+                program.viewer = new GLYFViewer($('#glyf-list'));
+
+                program.projectViewer = new ProjectViewer($('#project-list'));
+                program.projectViewer.on('open', function(e) {
+                    var imported = project.get(e.projectName);
+                    if (imported) {
+                        if (program.data.ttf && !window.confirm('是否放弃保存当前项目?')) {
+                            return;
+                        }
+                        program.data.ttf = imported;
+                        program.viewer.show(imported);
+                    }
+                });
+                program.projectViewer.show(project.items());
+
             }
         };
 

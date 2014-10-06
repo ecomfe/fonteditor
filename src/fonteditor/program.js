@@ -19,21 +19,7 @@ define(
              */
             data: {},
 
-            /**
-             * loading动画
-             * 
-             * @type {Object}
-             */
-            loading: {
-
-                show: function(text) {
-                    $('#loading').html(text || '正在加载...').show();
-                },
-                
-                hide: function() {
-                    $('#loading').hide();
-                }
-            }
+            loading: require('./widget/loading')
         };
 
         return program;

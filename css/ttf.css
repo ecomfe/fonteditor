@@ -78,10 +78,16 @@ html {
   font-family: 'fonteditor';
   src: url('../font/iconfont.ttf') format('truetype');
 }
-.project-list dd {
+.project .project-title {
+  font-weight: bold;
+}
+.project .project-list {
+  line-height: 20px;
+}
+.project .project-list div {
   padding-left: 10px;
 }
-.project-list dd:hover {
+.project .project-list div:hover {
   color: red;
   text-decoration: underline;
   cursor: pointer;

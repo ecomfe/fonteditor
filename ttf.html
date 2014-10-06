@@ -8,26 +8,28 @@
 </head>
 <body>
 
-    <div class="navbar navbar-inverse" role="navigation">
+    <section class="navbar navbar-inverse" role="navigation">
+        <button data-action="new" type="button" class="btn btn-primary btn-sm">新建</button>
         <button data-action="open" type="button" class="btn btn-primary btn-sm">打开</button>
-        <button data-action="svg" type="button" class="btn btn-primary btn-sm">导入svg</button>
-        <a id="export-btn" href="#" data-action="export" class="btn btn-primary btn-sm">导出ttf</a>
-        <a id="export-btn-woff" href="#" data-action="export" class="btn btn-primary btn-sm">导出woff</a>
+        <button data-action="import" type="button" class="btn btn-primary btn-sm">导入</button>
+        <a id="export-btn" href="javascript:void(0)" data-action="export" data-type="ttf" class="btn btn-primary btn-sm">导出ttf</a>
+        <a id="export-btn-woff" href="javascript:void(0)" data-action="export" data-type="woff" class="btn btn-primary btn-sm">导出woff</a>
+        <a id="export-btn-svg" href="javascript:void(0)" data-action="export" data-type="svg" class="btn btn-primary btn-sm">导出svg</a>
         <button data-action="save" type="button" class="btn btn-primary btn-sm">保存</button>
         <button data-action="setting" type="button" class="btn btn-primary btn-sm">设置</button>
-    </div>
+    </section>
 
-    <div class="sidebar">
-        <dl class="project-list">
-            <dt>项目列表</dt>
-            <dd>baiduhealth.ttf</dd>
-            <dd>baiduhealth1.ttf</dd>
-        </dl>
-    </div>
-    <div class="main">
+    <section class="sidebar">
+        <div class="project">
+            <div class="project-title">项目列表</div>
+            <div id="project-list" class="project-list"></div>
+        </div>
+    </section>
+
+    <section class="main">
         <div id="glyf-list" class="glyf-list">
         </div>
-    </div>
+    </section>
 
     <div id="loading" class="loading">正在加载...</div>
 
