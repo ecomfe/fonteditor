@@ -36,7 +36,11 @@
     <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
     <script>
         require.config({
-            baseUrl: './src'
+            baseUrl: './src',
+            paths: {
+                deflate: '../dep/pako_deflate.min',
+                inflate: '../dep/pako_inflate.min'
+            }
         });
         define('jquery', $);
         require(['fonteditor/ttf/main'])

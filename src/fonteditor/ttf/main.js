@@ -11,18 +11,22 @@ define(
 
         var program = require('../program');
         var TTFReader = require('ttf/ttfreader');
-        var contours2svg = require('ttf/util/contours2svg');
+        var glyf2svg = require('ttf/util/glyf2svg');
         var svg2ttfobject = require('ttf/svg2ttfobject');
         var string = require('common/string');
         var pathAdjust = require('graphics/pathAdjust');
         var TTFWriter = require('ttf/ttfwriter');
         var ttf2woff = require('ttf/ttf2woff');
+        var woff2ttf = require('ttf/woff2ttf');
         var ttf2base64 = require('ttf/ttf2base64');
         var woff2base64 = require('ttf/woff2base64');
 
+        var woffOptions = {
+            inflate: require('inflate').inflate
+        };
 
         var GLYF_ITEM_TPL = ''
-            + '<div class="glyf-item ${modify}">'
+            + '<div data-index="${index}" class="glyf-item ${modify}">'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}"><g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) "><path class="path" ${d}/></g></svg>'
             +   '<div class="unicode" title="${unicode}">${unicode}</div><div class="name" title="${name}">${name}</div>'
             + '</div>';
@@ -35,7 +39,7 @@ define(
                 $('#font-import').click();
             },
             export: function() {
-                $(this).attr('href', '#');
+                //$(this).attr('href', '#');
             }
         };
 
@@ -43,18 +47,23 @@ define(
         function showGLYF(ttf) {
             var unitsPerEm = ttf.head.unitsPerEm;
             var descent = unitsPerEm + ttf.hhea.descent;
-            var glyfStr = '';
-            ttf.glyf.forEach(function(glyf) {
+            var glyfStr = '', d = '';
+            ttf.glyf.forEach(function(glyf, index) {
                 var g = {
+                    index: index,
                     modify: glyf.modify,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
                     unicode: (glyf.unicode || []).map(function(u) {
                         return '$' + u.toString(16).toUpperCase();
                     }).join(','),
-                    name: glyf.name,
-                    d: glyf.contours && glyf.contours.length ? 'd="'+ contours2svg(glyf.contours) +'"': ''
+                    name: glyf.name
                 };
+
+                if (d = glyf2svg(glyf, ttf)) {
+                    g.d = 'd="'+ d +'"';
+                }
+
                 glyfStr += string.format(GLYF_ITEM_TPL, g);
             });
 
@@ -62,11 +71,16 @@ define(
         }
 
         // 加载ttf
-        function loadTTF(file) {
+        function loadSFNT(file, type) {
             program.loading.show();
             var fileReader = new FileReader();
             fileReader.onload = function(e) {
                 var buffer = e.target.result;
+
+                if (type == 'woff') {
+                    buffer = woff2ttf(buffer, woffOptions);
+                }
+
                 var ttfReader = new TTFReader();
                 program.data.ttf = ttfReader.read(buffer);
                 showGLYF(program.data.ttf);
@@ -127,9 +141,9 @@ define(
         function onUpFile(e) {
             var file = e.target.files[0];
 
-            if (program.action == 'open' && file.name.match(/\.ttf$/)) {
+            if (program.action == 'open' && file.name.match(/(\.ttf|\.woff)$/)) {
                 program.data.file = file.name;
-                loadTTF(file);
+                loadSFNT(file, file.name.slice(file.name.lastIndexOf('.') + 1));
             }
             else if (program.action == 'svg' && file.name.match(/\.svg$/)) {
                 if (program.data.ttf) {
@@ -149,8 +163,9 @@ define(
             var ttf = program.data.ttf;
             if (ttf) {
                 var buffer = new TTFWriter().write(ttf);
-                e.target.download = (ttf.name.fontFamily || 'export') + '.ttf';
-                e.target.href = ttf2base64(buffer);
+                var target = $(e.target);
+                target.attr('download', (ttf.name.fontFamily || 'export') + '.ttf');
+                target.attr('href', ttf2base64(buffer));
             }
         }
 

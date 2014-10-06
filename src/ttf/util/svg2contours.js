@@ -71,9 +71,10 @@ define(
 
             // 获取segments
             var segments = [];
-            var cmd, lastIndex, args, segReg = /\-?\d+(?:\.\d+)?\b/g;
+            var cmd, relative = false, c, r, lastIndex, args, segReg = /\-?\d+(?:\.\d+)?\b/g;
             for (var i = 0, l = path.length;i < l; i++) {
-                var c = path.charAt(i).toUpperCase();
+                c = path[i].toUpperCase();
+                r = c != path[i];
                 switch (c) {
                     case 'M':
                         if (i == 0) {
@@ -97,6 +98,7 @@ define(
                             args = path.slice(lastIndex, i);
                             segments.push({
                                 cmd: cmd,
+                                relative: relative,
                                 args: args.match(segReg).map(function(d) {
                                     return +d.trim();
                                 })
@@ -104,6 +106,7 @@ define(
                         }
 
                         cmd = c;
+                        relative = r;
                         lastIndex = i + 1;
                         break;
                 }
@@ -115,39 +118,86 @@ define(
             var contours = [], contour = [], prevX = 0, prevY = 0, prevc1;
             for (var i = 0, l = segments.length;i < l; i++) {
                 segment = segments[i];
+                cmd = segment.cmd;
+                relative = segment.relative;
 
-                if (segment.cmd === 'Z') {
+                if (cmd === 'Z') {
                     contours.push(contour);
                     contour = [];
                 }
-                else if (segment.cmd === 'M') {
-                    prevX = segment.args[0];
-                    prevY = segment.args[1];
+                else if (cmd === 'M') {
+                    if (relative) {
+                        prevX += segment.args[0];
+                        prevY += segment.args[1];
+                    }
+                    else {
+                        prevX = segment.args[0];
+                        prevY = segment.args[1];
+                    }
+
                     contour.push({
                         x: prevX,
                         y: prevY,
                         onCurve: true
                     });
                 }
-                else if (segment.cmd === 'H') {
-                    prevX += segment.args[0];
+                else if (cmd === 'H') {
+
+                    if (relative) {
+                        prevX += segment.args[0];
+                    }
+                    else {
+                        prevX = segment.args[0];
+                    }
+
                     contour.push({
                         x: prevX,
                         y: prevY,
                         onCurve: true
                     });
                 }
-                else if (segment.cmd === 'V') {
-                    prevY += segment.args[0];
+                else if (cmd === 'V') {
+
+                    if (relative) {
+                        prevY += segment.args[0];
+                    }
+                    else {
+                        prevY = segment.args[0];
+                    }
+
                     contour.push({
                         x: prevX,
                         y: prevY,
                         onCurve: true
                     });
                 }
-                else if (segment.cmd === 'L') {
-                    prevX += segment.args[0];
-                    prevY += segment.args[1];
+                else if (cmd === 'L') {
+
+                    // 这里可能会连续绘制，最后一个是终点
+                    var q = 0, ql = segment.args.length - 2, px = 0, py = 0;
+
+                    if (relative) {
+                        px = prevX;
+                        py = prevY;
+                    }
+
+                    for (; q < ql ; q += 2) {
+                        contour.push({
+                            x: px + segment.args[q],
+                            y: py + segment.args[q + 1],
+                            onCurve: true
+                        });
+                    }
+
+                    if (relative) {
+                        prevX += segment.args[ql];
+                        prevY += segment.args[ql + 1];
+                    }
+                    else {
+                        prevX = segment.args[ql];
+                        prevY = segment.args[ql + 1];
+                    }
+
                     contour.push({
                         x: prevX,
                         y: prevY,
@@ -155,40 +205,78 @@ define(
                     });
                 }
                 // 二次贝塞尔
-                else if (segment.cmd === 'Q') {
+                else if (cmd === 'Q') {
                     // 这里可能会连续绘制，最后一个是终点
-                    var q = 0, ql = segment.args.length - 2;
-                    for (; q < ql ; q += 2) {
+                    var q = 0, ql = segment.args.length, px = 0, py = 0;
+
+                    if (relative) {
+                        px = prevX;
+                        py = prevY;
+                    }
+
+                    for (; q < ql ; q += 4) {
                         contour.push({
-                            x: prevX + segment.args[q],
-                            y: prevY + segment.args[q + 1]
+                            x: px + segment.args[q],
+                            y: py + segment.args[q + 1]
+                        });
+                        contour.push({
+                            x: px + segment.args[q + 2],
+                            y: py + segment.args[q + 3],
+                            onCurve: true
                         });
                     }
 
-                    prevX += segment.args[ql];
-                    prevY += segment.args[ql + 1];
-
-                    contour.push({
-                        x: prevX,
-                        y: prevY,
-                        onCurve: true
-                    });
+                    ql = segment.args.length - 2;
+                    if (relative) {
+                        prevX += segment.args[ql];
+                        prevY += segment.args[ql + 1];
+                    }
+                    else {
+                        prevX = segment.args[ql];
+                        prevY = segment.args[ql + 1];
+                    }
                 }
                 // 二次贝塞尔平滑
-                else if (segment.cmd === 'T') {
+                else if (cmd === 'T') {
 
-                    var pc = contour[contour.length - 2];
-                    
                     // 这里需要移除上一个曲线的终点
-                    contour.pop();
+                    var last = contour.pop();
+
+                    var pc = contour[contour.length - 1];
 
                     contour.push({
-                        x: 2 * prevX - pc.x,
-                        y: 2 * prevY - pc.y
+                        x: 2 * last.x - pc.x,
+                        y: 2 * last.y - pc.y
                     });
 
-                    prevX += segment.args[0];
-                    prevY += segment.args[1];
+                    var q = 0, ql = segment.args.length - 2, px = 0, py = 0;
+
+                    if (relative) {
+                        px = prevX;
+                        py = prevY;
+                    }
+
+                    for (; q < ql ; q += 2) {
+                        pc = contour[contour.length - 1];
+                        last = {
+                            x: px + segment.args[q],
+                            y: py + segment.args[q + 1]
+                        };
+                        contour.push({
+                            x: 2 * last.x - pc.x,
+                            y: 2 * last.y - pc.y
+                        });
+                    }
+
+                    if (relative) {
+                        prevX += segment.args[ql];
+                        prevY += segment.args[ql + 1];
+                    }
+                    else {
+                        prevX = segment.args[ql];
+                        prevY = segment.args[ql + 1];
+                    }
+
                     contour.push({
                         x: prevX,
                         y: prevY,
@@ -197,21 +285,26 @@ define(
 
                 }
                 // 三次贝塞尔
-                else if (segment.cmd === 'C') {
+                else if (cmd === 'C') {
                     
                     // 这里可能会连续绘制，最后一个是终点
-                    var q = 0, ql = segment.args.length - 2;
+                    var q = 0, ql = segment.args.length - 2, px = 0, py = 0;
                     var cubicList = [];
+
+                    if (relative) {
+                        px = prevX;
+                        py = prevY;
+                    }
 
                     for (; q < ql ; q += 4) {
                         var cubic = [];
                         var c1 = {
-                            x: prevX + segment.args[q],
-                            y: prevY + segment.args[q + 1]
+                            x: px + segment.args[q],
+                            y: py + segment.args[q + 1]
                         };
                         var c2 = {
-                            x: prevX + segment.args[q + 2],
-                            y: prevY + segment.args[q + 3]
+                            x: px + segment.args[q + 2],
+                            y: py + segment.args[q + 3]
                         };
 
                         // 计算中间点
@@ -236,29 +329,53 @@ define(
                         cubicList.push(cubic);
                     }
 
-                    prevX += segment.args[ql];
-                    prevY += segment.args[ql + 1];
+                    if (relative) {
+                        prevX += segment.args[ql];
+                        prevY += segment.args[ql + 1];
+                    }
+                    else {
+                        prevX = segment.args[ql];
+                        prevY = segment.args[ql + 1];
+                    }
 
                     cubicList[cubicList.length - 1].push({x: prevX, y: prevY});
                     cubic2Points(cubicList, contour);
                     prevc1 = cubicList[cubicList.length - 1][2];
                 }
                 // 三次贝塞尔平滑
-                else if (segment.cmd === 'S') {
+                else if (cmd === 'S') {
                     
+                    // TODO 这里没有支持连续的情况，有时间再搞
+                    if (segment.args.length > 4) {
+                        throw 'not support svg "S" command continuous!'
+                    }
+
                     // 这里需要移除上一个曲线的终点
                     var p1 = contour.pop();
                     var c1 = {
                         x: 2 * p1.x - prevc1.x,
                         y: 2 * p1.y - prevc1.y
                     };
+
+                    var px = 0, py = 0;
+
+                    if (relative) {
+                        px = prevX;
+                        py = prevY;
+                    }
                     var c2 = {
-                        x: prevX + segment.args[0],
-                        y: prevX + segment.args[1]
+                        x: px + segment.args[0],
+                        y: py + segment.args[1]
                     };
 
-                    prevX += segment.args[2];
-                    prevY += segment.args[3];
+                    if (relative) {
+                        prevX += segment.args[2];
+                        prevY += segment.args[3];
+                    }
+                    else {
+                        prevX = segment.args[2];
+                        prevY = segment.args[3];
+                    }
 
                     var p2 = {
                         x: prevX,
@@ -269,7 +386,7 @@ define(
                     prevc1 = c2;
                 }
                 // 圆弧
-                else if (segment.cmd === 'A') {
+                else if (cmd === 'A') {
                     throw 'not support arc';
                 }
             }

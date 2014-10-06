@@ -76,7 +76,7 @@ define(
             ttf.head.xMax = Math.round(ttf.head.xMax);
             ttf.head.yMin = Math.round(ttf.head.yMin);
             ttf.head.yMax = Math.round(ttf.head.yMax);
-            ttf.head.unitsPerEm = Math.round(ttf.head.unitsPerEm || 1024);
+            ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 0;
 
             return ttf;
         }
@@ -145,6 +145,14 @@ define(
                         OS2.usFirstCharIndex = Number('0x' + a); 
                         OS2.usLastCharIndex = b ? Number('0x' + b.slice(1)) : 0xFFFFFFFF;
                     });
+                }
+            }
+
+            // 如果没有定义unitsPerEm，可以用viewBox代替
+            if (!ttf.head.unitsPerEm && svgNode.getAttribute('viewBox')) {
+                var bound = svgNode.getAttribute('viewBox').split(' ');
+                if (bound.length == 4) {
+                    ttf.head.unitsPerEm = +bound[2];
                 }
             }
 

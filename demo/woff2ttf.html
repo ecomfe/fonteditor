@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>woff2ttf</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+</head>
+<body>
+
+<a class="saveas" href="" download="">保存</a>
+
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+            inflate: '../dep/pako_inflate.min'
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>
+    require(['demo/woff2ttf']);
+</script>
+
+</body>
+</html>

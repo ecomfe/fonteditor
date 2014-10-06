@@ -19,7 +19,6 @@ define(
     function(require) {
         var Reader = require('./reader');
         var Writer = require('./writer');
-        var checkSum = require('./util/checkSum');
         var string = require('common/string');
 
         /**
@@ -134,6 +133,7 @@ define(
          * @param {ArrayBuffer} ttfBuffer ttf缓冲数组
          * @param {Object} options 选项
          * @param {Object} options.metadata 字体相关的信息
+         * @param {Object} options.deflate 压缩相关函数
          * 
          * @return {ArrayBuffer} woff格式byte流
          */
