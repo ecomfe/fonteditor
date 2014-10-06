@@ -1,3 +1,35 @@
+.modal-dialog {
+  margin-top: 100px;
+}
+.modal-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background: #327EC0;
+  color: #FFF;
+}
+.modal-header .close {
+  margin-top: 3px;
+}
+.modal-header .modal-title {
+  font-size: 14px;
+  line-height: 25px;
+}
+.modal-footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.modal-body {
+  min-height: 100px;
+}
+.modal-content {
+  border-color: rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+.dropdown-menu a {
+  cursor: pointer;
+}
 body,
 html {
   margin: 0;
@@ -28,6 +60,7 @@ html {
   border-radius: 0;
   margin: 0;
   position: fixed;
+  z-index: 10;
   width: 100%;
   top: 0;
 }
@@ -35,7 +68,7 @@ html {
   margin-right: 10px;
   margin-top: 10px;
 }
-.navbar .btn:first-child {
+.navbar > .btn:first-child {
   margin-left: 10px;
 }
 #export-btn {
@@ -74,26 +107,64 @@ html {
   text-align: center;
   display: none;
 }
+.selection-range {
+  position: absolute;
+  z-index: 6;
+  display: none;
+  border: 1px solid #CCC;
+  background: rgba(222, 222, 222, 0.5);
+  pointer-events: none;
+}
 @font-face {
   font-family: 'fonteditor';
   src: url('../font/iconfont.ttf') format('truetype');
+}
+.i-edit,
+.i-del {
+  display: inline-block;
+  font-family: 'fonteditor';
+  font-size: 12px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.1px;
+}
+.i-edit:hover,
+.i-del:hover {
+  cursor: pointer;
+  color: blue;
+}
+.i-edit:before {
+  content: '\e605';
+}
+.i-del:before {
+  content: '\e611';
 }
 .project .project-title {
   font-weight: bold;
 }
 .project .project-list {
-  line-height: 20px;
+  line-height: 24px;
 }
 .project .project-list div {
-  padding-left: 10px;
+  padding: 0 10px;
 }
 .project .project-list div:hover {
-  color: red;
-  text-decoration: underline;
-  cursor: pointer;
+  background: #EFEFEF;
+}
+.project .project-list div:hover .i-del {
+  display: block;
+}
+.project .project-list .i-del {
+  float: right;
+  display: none;
+}
+.glyf-list {
+  padding-bottom: 40px;
+  overflow: hidden;
 }
 .glyf-list > .glyf-item {
   float: left;
+  position: relative;
   margin: 10px;
   width: 86px;
   border: 1px solid #CCC;
@@ -123,12 +194,34 @@ html {
 .glyf-list > .glyf-item .glyf .path {
   fill: green;
 }
+.glyf-list > .glyf-item .i-del,
+.glyf-list > .glyf-item .i-edit {
+  position: absolute;
+  right: 2px;
+  display: none;
+}
+.glyf-list > .glyf-item .i-edit {
+  right: 20px;
+}
 .glyf-list > .glyf-item:hover {
   background: #EFEFEF;
 }
 .glyf-list > .glyf-item:hover .path {
   fill: darkgreen;
 }
+.glyf-list > .glyf-item:hover .i-del,
+.glyf-list > .glyf-item:hover .i-edit {
+  display: block;
+}
+.glyf-list > .compound .path {
+  fill: lightgreen!important;
+}
 .glyf-list > .new .path {
   fill: blue!important;
+}
+.glyf-list > .selected {
+  background: #EBFFC2!important;
+}
+.glyf-list.no-hover .glyf-item {
+  pointer-events: none;
 }

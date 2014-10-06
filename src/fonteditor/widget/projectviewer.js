@@ -22,7 +22,18 @@ define(
             this.main = $(main);
 
             var me = this;
-            this.main.delegate('[data-name]', 'click', function(e) {
+
+            me.main.delegate('[data-action]', 'click', function(e) {
+                e.stopPropagation();
+                var the = $(this);
+                me.fire(the.attr('data-action'), {
+                    projectName: the.parent().attr('data-name')
+                });
+            });
+
+            me.main.delegate('[data-name]', 'click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 me.fire('open', {
                     projectName: $(this).attr('data-name')
                 });
@@ -32,7 +43,7 @@ define(
         ProjectViewer.prototype.show = function(projects) {
             var str = '';
             (projects || []).forEach(function(proj) {
-                str += '<div data-name="'+ proj.name +'" data-id="'+ proj.id +'"><a href="javascript:;">'+ proj.name +'</a></div>';
+                str += '<div data-name="'+ proj.name +'" data-id="'+ proj.id +'"><i title="删除" data-action="del" class="i-del"></i><a href="#">'+ proj.name +'</a></div>';
             });
 
             this.main.html(str);

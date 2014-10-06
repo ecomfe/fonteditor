@@ -48,7 +48,8 @@ define(
                 ctrlKey: e.ctrlKey,
                 metaKey: e.metaKey,
                 altKey: e.altKey,
-                shiftKey: e.shiftKey
+                shiftKey: e.shiftKey,
+                originEvent: e
             };
         }
 
@@ -73,11 +74,12 @@ define(
          */
         function mousedown(e) {
 
-            prevent(e);
 
             if(false === this.events.mousedown) {
                 return;
             }
+
+            prevent(e);
 
             var event = getEvent(e);
 
@@ -117,11 +119,12 @@ define(
          * @param {Object} e 事件参数
          */
         function mousemove(e) {
-            prevent(e);
 
             if(false === this.events.mousemove) {
                 return;
             }
+
+            prevent(e);
 
             var event = getEvent(e);
 
@@ -155,11 +158,12 @@ define(
          */
         function mouseup(e) {
 
-            prevent(e);
 
             if(false === this.events.mouseup) {
                 return;
             }
+
+            prevent(e);
 
             var event = getEvent(e);
             event.time = Date.now() - this.startTime;
@@ -193,11 +197,11 @@ define(
          */
         function mousewheel(e) {
 
-            prevent(e);
-
             if(false === this.events.mousewheel) {
                 return;
             }
+
+            prevent(e);
 
             var delta = 0;
             if (e.wheelDelta) {
@@ -220,10 +224,13 @@ define(
          * @param {Object} e 事件参数
          */
         function mouseover(e) {
-            prevent(e);
+            
             if(false === this.events.mouseover) {
                 return;
             }
+            
+            prevent(e);
+
             this.fire('over');
         }
 
@@ -233,10 +240,13 @@ define(
          * @param {Object} e 事件参数
          */
         function mouseout(e) {
-            prevent(e);
+
             if(false === this.events.mouseout) {
                 return;
             }
+            
+            prevent(e);
+
             this.fire('out');
         }
 

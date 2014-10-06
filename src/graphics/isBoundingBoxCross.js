@@ -21,7 +21,7 @@ define(
          * @return {number} 包含关系
          * 
          * 2 :  b2 包含 b1
-         * 3 :  b2 包含 b3
+         * 3 :  b1 包含 b2
          * 1 :  有交点
          */
         function isBoundingBoxCross(b1, b2) {

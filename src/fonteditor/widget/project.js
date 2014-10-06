@@ -33,11 +33,22 @@ define(
              */
             add: function(projectName, ttf) {
                 var list = this.items();
-                var id = Date.now();
-                list.push({
-                    name: projectName,
-                    id: id
+                var exist = list.filter(function(l) {
+                    return l.name == projectName;
                 });
+
+                var id;
+                if (exist.length) {
+                    id = exist[0].id;
+                }
+                else {
+                    id = Date.now();
+                    list.push({
+                        name: projectName,
+                        id: id
+                    });
+                }
+
                 storage.setItem('project-list', JSON.stringify(list));
                 storage.setItem(id, JSON.stringify(ttf));
                 return list;
@@ -58,6 +69,8 @@ define(
                     }
                 }
                 storage.setItem('project-list', JSON.stringify(list));
+                
+                return list;
             },
 
             /**

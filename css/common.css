@@ -1,3 +1,35 @@
+.modal-dialog {
+  margin-top: 100px;
+}
+.modal-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background: #327EC0;
+  color: #FFF;
+}
+.modal-header .close {
+  margin-top: 3px;
+}
+.modal-header .modal-title {
+  font-size: 14px;
+  line-height: 25px;
+}
+.modal-footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.modal-body {
+  min-height: 100px;
+}
+.modal-content {
+  border-color: rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+.dropdown-menu a {
+  cursor: pointer;
+}
 body,
 html {
   margin: 0;
@@ -28,6 +60,7 @@ html {
   border-radius: 0;
   margin: 0;
   position: fixed;
+  z-index: 10;
   width: 100%;
   top: 0;
 }
@@ -35,7 +68,7 @@ html {
   margin-right: 10px;
   margin-top: 10px;
 }
-.navbar .btn:first-child {
+.navbar > .btn:first-child {
   margin-left: 10px;
 }
 #export-btn {
@@ -73,4 +106,12 @@ html {
   line-height: 24px;
   text-align: center;
   display: none;
+}
+.selection-range {
+  position: absolute;
+  z-index: 6;
+  display: none;
+  border: 1px solid #CCC;
+  background: rgba(222, 222, 222, 0.5);
+  pointer-events: none;
 }
