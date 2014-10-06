@@ -24,7 +24,7 @@ define(
 
         var actions = {
             'new': function() {
-                if (program.ttfmanager.get() && !window.confirm('是否放弃保存当前项目?')) {
+                if (program.ttfmanager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                     return;
                 }
                 newEmpty();
@@ -79,8 +79,10 @@ define(
             if (program.ttfmanager.get()) {
                 var name = '';
                 if(name = window.prompt('请输入项目名称：')) {
-                    var list = project.add(string.encodeHTML(name), program.ttfmanager.get());
+                    name = string.encodeHTML(name);
+                    var list = project.add(name, program.ttfmanager.get());
                     program.projectViewer.show(list);
+                    program.data.projectName = name;
                 }
             }
         }
@@ -172,10 +174,11 @@ define(
                 program.projectViewer.on('open', function(e) {
                     var imported = project.get(e.projectName);
                     if (imported) {
-                        if (program.ttfmanager.get() && !window.confirm('是否放弃保存当前项目?')) {
+                        if (program.ttfmanager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                             return;
                         }
                         program.ttfmanager.set(imported);
+                        program.data.projectName = e.projectName;
                     }
                 });
                 program.projectViewer.on('del', function(e) {

@@ -35,11 +35,13 @@ define(
                 scale = ttf.head.unitsPerEm / imported.head.unitsPerEm;
             }
 
-            imported.glyf.filter(function(g, index) {
+            var list = imported.glyf.filter(function(g, index) {
                 return g.contours && g.contours.length //简单轮廓
                     && g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn'; // 非预定义字形
                     
-            }).forEach(function(g) {
+            });
+
+            list.forEach(function(g) {
                 if (scale !== 1) {
                     g.contours.forEach(function(contour) {
                         pathAdjust(contour, scale, scale);
@@ -49,7 +51,7 @@ define(
                 ttf.glyf.push(g);
             });
 
-            return ttf;
+            return list.length;
         }
 
         /**
@@ -60,6 +62,7 @@ define(
          */
         function Manager(ttf) {
             this.ttf = ttf;
+            this.changed = false; // ttf是否被改过
         }
 
         /**
@@ -69,9 +72,9 @@ define(
          * @return {this}
          */
         Manager.prototype.set = function(ttf) {
-
             if (this.ttf !== ttf) {
                 this.ttf = ttf;
+                this.changed = false; 
                 this.fire('change', {
                     ttf: this.ttf
                 });
@@ -98,6 +101,7 @@ define(
          */
         Manager.prototype.addglyf = function(glyf) {
             this.ttf.glyf.push(glyf);
+            this.changed = true;
             this.fire('change', {
                 ttf: this.ttf
             });
@@ -114,10 +118,13 @@ define(
          * @return {this}
          */
         Manager.prototype.combine = function(imported, options) {
-            combine(this.ttf, imported, options);
-            this.fire('change', {
-                ttf: this.ttf
-            });
+            var count = combine(this.ttf, imported, options);
+            if (count) {
+                this.changed = true;
+                this.fire('change', {
+                    ttf: this.ttf
+                });
+            }
             return this;
         };
 
@@ -131,13 +138,14 @@ define(
         Manager.prototype.delglyf = function(indexList) {
             var glyf = this.ttf.glyf, count = 0;
             for(var i = glyf.length - 1; i >= 0; i--) {
-                if (indexList.indexOf(i) >= 0) {
+                if (indexList.indexOf(i) >= 0 && glyf[i].name != '.notdef') {
                     glyf.splice(i, 1);
                     count++;
                 }
             }
 
             if (count) {
+                this.changed = true;
                 this.fire('change', {
                     ttf: this.ttf
                 });
@@ -166,7 +174,7 @@ define(
             }
 
             list = list.filter(function(g) {
-                return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn';
+                return g.name != '.notdef';
             });
 
             if (list.length) {
@@ -179,12 +187,22 @@ define(
                     unicode++;
                 });
 
+                this.changed = true;
                 this.fire('change', {
                     ttf: this.ttf
                 });
             }
 
             return this;
+        };
+
+
+        /**
+         * ttf是否被改变
+         * @return {boolean}
+         */
+        Manager.prototype.isChanged = function() {
+            return !!this.changed;
         };
 
         /**
