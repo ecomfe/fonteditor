@@ -14,6 +14,18 @@ define(
         var pathAdjust = require('graphics/pathAdjust');
         var History = require('editor/util/History'); 
 
+        /**
+         * 清除glyf编辑状态
+         * 
+         * @param {Array} glyfList glyf列表
+         * @return {Array} glyf列表
+         */
+        function clearGlyfTag(glyfList) {
+            glyfList.forEach(function(g) {
+                delete g.modify;
+            });
+            return glyfList;
+        }
 
         /**
          * 合并两个ttfObject，此处仅合并简单字形
@@ -119,6 +131,7 @@ define(
          * @return {this}
          */
         Manager.prototype.addGlyf = function(glyf) {
+            glyf.modify = 'new';
             this.ttf.glyf.push(glyf);
             this.fireChange(true);
             return this;
@@ -220,6 +233,9 @@ define(
                 glyfList = glyfList.slice(l);
             }
             if (glyfList.length) {
+                glyfList.forEach(function(g) {
+                    g.modify = 'new';
+                });
                 Array.prototype.splice.apply(glyf, [glyf.length, 0].concat(glyfList));
             }
 
@@ -282,6 +298,18 @@ define(
         Manager.prototype.isChanged = function() {
             return !!this.changed;
         };
+
+        /**
+         * 设置状态
+         * @return {this}
+         */
+        Manager.prototype.setState = function(state) {
+            if (state == 'new') {
+                this.changed = false;
+            }
+        };
+
+        Manager.prototype.clearGlyfTag = clearGlyfTag;
 
         /**
          * 注销

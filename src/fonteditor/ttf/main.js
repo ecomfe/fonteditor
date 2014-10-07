@@ -16,7 +16,7 @@ define(
         var ProjectViewer = require('../widget/projectviewer');
         var TTFManager = require('../widget/ttfmanager');
         var program = require('../widget/program');
-        var clipboard = require('../widget/clipboard');
+        var controller = require('../widget/controller/default');
         
         var string = require('common/string');
 
@@ -100,6 +100,7 @@ define(
                     var list = project.add(name, program.ttfmanager.get());
                     program.projectViewer.show(list);
                     program.data.projectName = name;
+                    program.ttfmanager.setState('new');
                 }
             }
 
@@ -180,58 +181,18 @@ define(
 
                 // 查看器
                 program.viewer = new GLYFViewer($('#glyf-list'));
+
                 // 项目管理
+                program.project = project;
                 program.projectViewer = new ProjectViewer($('#project-list'));
+
                 // ttf管理
                 program.ttfmanager = new TTFManager();
 
+                controller.init(program);
 
-                program.viewer.on('del', function(e) {
-                    if (e.list) {
-                        program.ttfmanager.removeGlyf(e.list);
-                    }
-                }).on('copy', function(e) {
-                    var list = program.ttfmanager.getGlyf(e.list);
-                    clipboard.set(list, 'glyf');
-                }).on('cut', function(e) {
-                    var list = program.ttfmanager.getGlyf(e.list);
-                    clipboard.set(list, 'glyf');
-                    program.ttfmanager.removeGlyf(e.list);
-                }).on('paste', function(e) {
-                    var glyfList = clipboard.get('glyf');
-                    if (glyfList && glyfList.length) {
-                        program.ttfmanager.appendGlyf(glyfList, e.list);
-                    }
-                }).on('undo', function(e) {
-                    program.ttfmanager.undo();
-                }).on('redo', function(e) {
-                    program.ttfmanager.redo();
-                });
-
-                program.projectViewer.on('open', function(e) {
-                    var imported = project.get(e.projectName);
-                    if (imported) {
-                        if (program.ttfmanager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
-                            return;
-                        }
-                        program.ttfmanager.set(imported);
-                        program.data.projectName = e.projectName;
-                        program.viewer.focus();
-                    }
-                }).on('del', function(e) {
-                    if (e.projectName && window.confirm('是否删除项目?')) {
-                        program.projectViewer.show(project.remove(e.projectName));
-                    }
-                    program.viewer.focus();
-                })
-
+                // 加载项目
                 program.projectViewer.show(project.items());
-
-
-                program.ttfmanager.on('change', function(e) {
-                    program.viewer.show(e.ttf);
-                });
-
             }
         };
 

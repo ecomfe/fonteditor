@@ -10,7 +10,7 @@
 define(
     function(require) {
 
-        var storage = window.sessionStorage;
+        var storage = window.localStorage;
 
         var storageName = 'clipboard.default';
 
@@ -40,12 +40,19 @@ define(
                 if (null !== data) {
                     data = JSON.parse(data);
                     if (data.type == type) {
-                        storage.removeItem(storageName);
+                        //storage.removeItem(storageName);
                         return data.data;
                     }
                 }
                 
                 return null;
+            },
+
+            /**
+             * 清空
+             */
+            clear: function() {
+                storage.removeItem(storageName);
             }
         };
 

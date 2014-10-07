@@ -16,8 +16,10 @@ define(
         var GLYF_ITEM_TPL = ''
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify}">'
             +   '<i data-action="del" class="i-del" title="删除"></i>'
-            +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}"><g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) "><path class="path" ${d}/></g></svg>'
-            +   '<div data-field="unicode" class="unicode" title="${unicode}">${unicode}</div><div data-field="name" class="name" title="${name}">${name}</div>'
+            +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
+            +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) "><path class="path" ${d}/></g></svg>'
+            +   '<div data-field="unicode" class="unicode" title="${unicode}">${unicode}</div>'
+            +   '<div data-field="name" class="name" title="${name}">${name}</div>'
             + '</div>';
 
         var keyMap = {
@@ -93,16 +95,10 @@ define(
 
 
             var me = this;
-            
-            // 绑定键盘事件
-            me.listener = function(e) {
-
-                // 取消选中
-                if (27 === e.keyCode) {
-                    e.stopPropagation();
-                    me.main.children().removeClass('selected');
-                }
-                else if (65 === e.keyCode && e.ctrlKey) {
+            me.downlistener = function(e) {
+                // 阻止ctrl+A默认事件
+                 if (65 === e.keyCode && e.ctrlKey) {
+                    e.preventDefault();
                     e.stopPropagation();
                     me.main.children().addClass('selected');
                 }
@@ -115,6 +111,11 @@ define(
                 else if(e.keyCode == 89 && e.ctrlKey) {
                     e.stopPropagation();
                     me.fire('redo');
+                }
+                // 取消选中
+                else if (27 === e.keyCode) {
+                    e.stopPropagation();
+                    me.main.children().removeClass('selected');
                 }
                 // 其他操作
                 else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
@@ -211,13 +212,13 @@ define(
 
         GlyfViewer.prototype.focus = function() {
             if (!this.listening) {
-                document.body.addEventListener('keyup', this.listener, false);
+                document.body.addEventListener('keydown', this.downlistener);
                 this.listening = true;
             }
         };
 
         GlyfViewer.prototype.blur = function() {
-            document.body.removeEventListener('keyup', this.listener);
+            document.body.removeEventListener('keydown', this.downlistener);
             this.listening = false;
         };
 
