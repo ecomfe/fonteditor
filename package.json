@@ -1,0 +1,24 @@
+{
+    "name": "fonteditor",
+    "version": "0.0.1",
+    "description": "ttf font editor",
+    "dependencies": {
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/kekee000/fonteditor.git"
+    },
+    "bugs": {
+        "url": "https://github.com/kekee000/fonteditor/issues"
+    },
+    "contributors": [
+        {
+            "name": "kekee000",
+            "email": "kekee000@163.com"
+        }
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+    }
+}

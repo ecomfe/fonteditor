@@ -19,7 +19,7 @@ define(
              */
             data: {},
 
-            loading: require('./widget/loading')
+            loading: require('./loading')
         };
 
         return program;

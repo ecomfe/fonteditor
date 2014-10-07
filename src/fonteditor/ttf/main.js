@@ -15,9 +15,10 @@ define(
         var project = require('../widget/project');
         var ProjectViewer = require('../widget/projectviewer');
         var TTFManager = require('../widget/ttfmanager');
-        var program = require('../program');
-        var string = require('common/string');
+        var program = require('../widget/program');
         var clipboard = require('../widget/clipboard');
+        
+        var string = require('common/string');
 
 
         var setting = {
