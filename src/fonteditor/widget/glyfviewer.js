@@ -12,7 +12,6 @@ define(
         var string = require('common/string');
         var lang = require('common/lang');
         var MouseCapture = require('render/capture/Mouse');
-        var isBoundingBoxCross = require('graphics/isBoundingBoxCross');
 
         var GLYF_ITEM_TPL = ''
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify}">'
@@ -136,22 +135,25 @@ define(
             });
 
             // 选择范围内元素
-            function selectRangeItem(bound, toggle, remove) {
+            function selectRangeItem(bound, toggle, append) {
+
+                if (!toggle && !append) {
+                    me.main.children().removeClass('selected');
+                }
+
                 me.main.children().each(function(i, element) {
                     var item = $(element);
                     var pos = item.offset();
-                    var b = {
-                        x: pos.left,
-                        y: pos.top,
-                        width: item.width(),
-                        height: item.height()
+                    var p = {
+                        x: pos.left + item.width() / 2,
+                        y: pos.top + item.height() / 2
                     }
-                    if (3 === isBoundingBoxCross(bound, b)) {
+
+                    if (p.x >= bound.x && p.x <= bound.x + bound.width 
+                        && p.y >= bound.y && p.y <= bound.y + bound.height
+                    ) {
                         if (toggle) {
                             item.toggleClass('selected');
-                        }
-                        else if (remove) {
-                            item.removeClass('selected')
                         }
                         else {
                             item.addClass('selected')
