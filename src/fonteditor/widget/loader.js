@@ -30,7 +30,7 @@ define(
          * @param {Function} options.success 成功回调
          * @param {Function} options.error 失败回调
          */
-        function loadSFNT(file, options) {
+        function loadSFNTFile(file, options) {
             loading.show();
             var fileReader = new FileReader();
             fileReader.onload = function(e) {
@@ -55,6 +55,28 @@ define(
                 options.error && options.error(e);
             };
             fileReader.readAsArrayBuffer(file);
+        }
+
+
+        /**
+         * 加载sfnt结构字体
+         * 
+         * @param {ArrayBuffer} buffer 二进制流
+         * @param {Object} options 参数
+         * @param {Object} options.type 文件类型
+         * @param {Function} options.success 成功回调
+         * @param {Function} options.error 失败回调
+         */
+        function loadSFNTBinary(buffer, options) {
+            loading.show();
+            if (options.type == 'woff') {
+                buffer = woff2ttf(buffer, woffOptions);
+            }
+            var ttfReader = new TTFReader();
+            var ttf = ttfReader.read(buffer);
+            ttfReader.dispose();
+            loading.hide();
+            options.success && options.success(ttf);
         }
 
         /**
@@ -104,7 +126,12 @@ define(
                     loadSVG(file, options);
                 }
                 else if (options.type == 'ttf' || options.type == 'woff'){
-                    loadSFNT(file, options);
+                    if (file instanceof ArrayBuffer) {
+                        loadSFNTBinary(file, options);
+                    }
+                    else {
+                        loadSFNTFile(file, options);
+                    }
                 }
                 else {
                     options.error && options.error({

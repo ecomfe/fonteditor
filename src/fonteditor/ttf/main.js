@@ -17,13 +17,15 @@ define(
         var TTFManager = require('../widget/ttfmanager');
         var program = require('../widget/program');
         var controller = require('../widget/controller/default');
-        
+        var ajaxBinaryFile = require('common/ajaxBinaryFile');
+
         var string = require('common/string');
 
 
         var setting = {
             'unicode': require('../dialog/setting-unicode'),
-            'name': require('../dialog/setting-name')
+            'name': require('../dialog/setting-name'),
+            'online': require('../dialog/font-online')
         }
 
         var actions = {
@@ -55,6 +57,19 @@ define(
                 });
             },
 
+            'add-online': function() {
+                var dlg = new setting.online({
+                    onChange: function(url) {
+                        // 此处延迟处理
+                        setTimeout(function(){
+                            loadOnline(url);
+                        }, 20);
+                    }
+                });
+
+                dlg.show();
+            },
+
             'setting-unicode': function() {
                 var dlg = new setting.unicode({
                     onChange: function(unicode) {
@@ -80,6 +95,32 @@ define(
                 }
             }
         };
+
+        // 加载在线字体
+        function loadOnline(url) {
+            ajaxBinaryFile({
+                url: url,
+                onSuccess: function(buffer) {
+                    loader.load(buffer, {
+                        type: 'ttf',
+                        success: function(imported) {
+                            if (program.ttfmanager.get()) {
+                                program.ttfmanager.merge(imported, {
+                                    scale: true
+                                });
+                            }
+                            else {
+                                program.ttfmanager.set(imported);
+                            }
+
+                        }
+                    });
+                },
+                onError: function() {
+                    alert('加载文件错误!');
+                }
+            });
+        }
 
         // 设置unicode
         function setUnicode(unicode) {
@@ -131,7 +172,7 @@ define(
                         type: file.name.slice(file.name.lastIndexOf('.') + 1),
                         success: function(imported) {
                             if (imported.glyf.length) {
-                                program.ttfmanager.combine(imported, {scale: true});
+                                program.ttfmanager.merge(imported, {scale: true});
                             }
                         }
                     });

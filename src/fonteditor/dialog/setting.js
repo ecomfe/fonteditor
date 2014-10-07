@@ -25,8 +25,16 @@ define(
             dlg.find('.modal-title').html(this.title || '设置');
             dlg.find('.modal-body').html(this.getTpl());
 
+            if (this.nofooter) {
+                dlg.find('.modal-footer').hide();
+            }
+            else {
+                dlg.find('.modal-footer').show();
+            }
+
             dlg.on('hidden.bs.modal', lang.bind(function (e) {
                 if (dlg) {
+                    this.onDispose && this.onDispose();
                     delete this.options;
                     dlg.off('hidden.bs.modal');
                     dlg.find('.btn-confirm').off('click');

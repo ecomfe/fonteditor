@@ -37,7 +37,7 @@ define(
          * 
          * @return {Object} 合并后的ttfObject
          */
-        function combine(ttf, imported, options) {
+        function merge(ttf, imported, options) {
             options = options || {};
 
             // 调整glyf以适应打开的文件
@@ -146,8 +146,8 @@ define(
          * 
          * @return {this}
          */
-        Manager.prototype.combine = function(imported, options) {
-            var count = combine(this.ttf, imported, options);
+        Manager.prototype.merge = function(imported, options) {
+            var count = merge(this.ttf, imported, options);
             if (count) {
                 this.fireChange(true);
             }
