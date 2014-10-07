@@ -74,11 +74,31 @@ define(
         };
 
         /**
+         * 是否在头部
+         * 
+         * @return {boolean}
+         */
+        History.prototype.atFirst = function() {
+            return this.index === 0;
+        };
+
+        /**
+         * 是否尾部
+         * 
+         * @return {boolean}
+         */
+        History.prototype.atLast = function() {
+            var l = this.queue.length;
+            return l === 0 || this.index === l - 1;
+        };
+
+        /**
          * 重置
          * 
          * @return {this}
          */
         History.prototype.reset = function() {
+            delete this.queue;
             this.queue = [];
             this.index = 0;
         };

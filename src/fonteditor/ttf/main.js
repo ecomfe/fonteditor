@@ -17,7 +17,9 @@ define(
         var TTFManager = require('../widget/ttfmanager');
         var program = require('../program');
         var string = require('common/string');
-        
+        var clipboard = require('../widget/clipboard');
+
+
         var setting = {
             'unicode': require('../dialog/setting-unicode')
         }
@@ -45,7 +47,7 @@ define(
             },
 
             'add-new': function() {
-                program.ttfmanager.addglyf({
+                program.ttfmanager.addGlyf({
                     name: '',
                     unicode:[]
                 });
@@ -67,6 +69,7 @@ define(
 
         // 设置unicode
         function setUnicode(unicode) {
+
             if (program.ttfmanager.get()) {
                 var glyfList = program.viewer.getSelected();
                 program.ttfmanager.setUnicode(unicode, glyfList);
@@ -85,13 +88,14 @@ define(
                     program.data.projectName = name;
                 }
             }
+
         }
 
         // 新建空白
         function newEmpty() {
             $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
                 program.ttfmanager.set(imported);
-            })
+            });
         }
 
         // 打开文件
@@ -162,15 +166,34 @@ define(
 
                 // 查看器
                 program.viewer = new GLYFViewer($('#glyf-list'));
-                program.viewer.on('del', function(e) {
-                    if (e.list) {
-                        program.ttfmanager.delglyf(e.list);
-                    }
-                });
-
-
                 // 项目管理
                 program.projectViewer = new ProjectViewer($('#project-list'));
+                // ttf管理
+                program.ttfmanager = new TTFManager();
+
+
+                program.viewer.on('del', function(e) {
+                    if (e.list) {
+                        program.ttfmanager.removeGlyf(e.list);
+                    }
+                }).on('copy', function(e) {
+                    var list = program.ttfmanager.getGlyf(e.list);
+                    clipboard.set(list, 'glyf');
+                }).on('cut', function(e) {
+                    var list = program.ttfmanager.getGlyf(e.list);
+                    clipboard.set(list, 'glyf');
+                    program.ttfmanager.removeGlyf(e.list);
+                }).on('paste', function(e) {
+                    var glyfList = clipboard.get('glyf');
+                    if (glyfList && glyfList.length) {
+                        program.ttfmanager.appendGlyf(glyfList, e.list);
+                    }
+                }).on('undo', function(e) {
+                    program.ttfmanager.undo();
+                }).on('redo', function(e) {
+                    program.ttfmanager.redo();
+                });
+
                 program.projectViewer.on('open', function(e) {
                     var imported = project.get(e.projectName);
                     if (imported) {
@@ -179,17 +202,18 @@ define(
                         }
                         program.ttfmanager.set(imported);
                         program.data.projectName = e.projectName;
+                        program.viewer.focus();
                     }
-                });
-                program.projectViewer.on('del', function(e) {
+                }).on('del', function(e) {
                     if (e.projectName && window.confirm('是否删除项目?')) {
                         program.projectViewer.show(project.remove(e.projectName));
                     }
-                });
+                    program.viewer.focus();
+                })
+
                 program.projectViewer.show(project.items());
 
-                // ttf管理
-                program.ttfmanager = new TTFManager();
+
                 program.ttfmanager.on('change', function(e) {
                     program.viewer.show(e.ttf);
                 });

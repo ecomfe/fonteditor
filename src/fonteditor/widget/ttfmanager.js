@@ -9,10 +9,10 @@
 
 define(
     function(require) {
-
+        var lang = require('common/lang');
         var postName = require('ttf/enum/postName');
         var pathAdjust = require('graphics/pathAdjust');
-
+        var History = require('editor/util/History'); 
 
 
         /**
@@ -63,7 +63,23 @@ define(
         function Manager(ttf) {
             this.ttf = ttf;
             this.changed = false; // ttf是否被改过
+            this.history = new History();
         }
+
+        /**
+         * 触发change
+         * 
+         * @param {boolean} pushHistory 是否存入history列表
+         * @return {this}
+         */
+        Manager.prototype.fireChange = function(pushHistory) {
+            pushHistory && this.history.add(lang.clone(this.ttf.glyf));
+            this.changed = true;
+            this.fire('change', {
+                ttf: this.ttf
+            });
+            return this;
+        };
 
         /**
          * 设置ttf
@@ -72,9 +88,12 @@ define(
          * @return {this}
          */
         Manager.prototype.set = function(ttf) {
+
             if (this.ttf !== ttf) {
                 this.ttf = ttf;
-                this.changed = false; 
+                this.history.reset();
+                this.history.add(lang.clone(this.ttf.glyf));
+                this.changed = false;
                 this.fire('change', {
                     ttf: this.ttf
                 });
@@ -99,12 +118,9 @@ define(
          * 
          * @return {this}
          */
-        Manager.prototype.addglyf = function(glyf) {
+        Manager.prototype.addGlyf = function(glyf) {
             this.ttf.glyf.push(glyf);
-            this.changed = true;
-            this.fire('change', {
-                ttf: this.ttf
-            });
+            this.fireChange(true);
             return this;
         };
 
@@ -120,10 +136,7 @@ define(
         Manager.prototype.combine = function(imported, options) {
             var count = combine(this.ttf, imported, options);
             if (count) {
-                this.changed = true;
-                this.fire('change', {
-                    ttf: this.ttf
-                });
+                this.fireChange(true);
             }
             return this;
         };
@@ -135,7 +148,7 @@ define(
          * @param {Array} indexList 索引列表
          * @return {this}
          */
-        Manager.prototype.delglyf = function(indexList) {
+        Manager.prototype.removeGlyf = function(indexList) {
             var glyf = this.ttf.glyf, count = 0;
             for(var i = glyf.length - 1; i >= 0; i--) {
                 if (indexList.indexOf(i) >= 0 && glyf[i].name != '.notdef') {
@@ -145,10 +158,7 @@ define(
             }
 
             if (count) {
-                this.changed = true;
-                this.fire('change', {
-                    ttf: this.ttf
-                });
+                this.fireChange(true);
             }
 
             return this;
@@ -187,15 +197,70 @@ define(
                     unicode++;
                 });
 
-                this.changed = true;
-                this.fire('change', {
-                    ttf: this.ttf
-                });
+                this.fireChange(true);
             }
 
             return this;
         };
 
+        /**
+         * 添加并体替换指定的glyf
+         * 
+         * @param {Array} glyfList 添加的列表
+         * @param {Array} indexList 需要替换的索引列表
+         * @return {Array} glyflist
+         */
+        Manager.prototype.appendGlyf = function(glyfList, indexList) {
+            var glyf = this.ttf.glyf;
+            if (indexList && indexList.length) {
+                var l = Math.min(glyfList.length, indexList.length);
+                for (var i = 0; i < l; i++) {
+                    glyf[indexList[i]] = glyfList[i];
+                }
+                glyfList = glyfList.slice(l);
+            }
+            if (glyfList.length) {
+                Array.prototype.splice.apply(glyf, [glyf.length, 0].concat(glyfList));
+            }
+
+            this.fireChange(true);
+        };
+
+        /**
+         * 获取glyfList
+         * 
+         * @param {Array} indexList 索引列表
+         * @return {Array} glyflist
+         */
+        Manager.prototype.getGlyf = function(indexList) {
+            var glyf = this.ttf.glyf;
+            return indexList.map(function(item) {
+                return glyf[item];
+            });
+        };
+
+        /**
+         * 撤销
+         * @return {this}
+         */
+        Manager.prototype.undo = function() {
+            if (!this.history.atFirst()) {
+                this.ttf.glyf = this.history.back();
+                this.fireChange(false);
+            }
+        };
+
+
+        /**
+         * 重做
+         * @return {this}
+         */
+        Manager.prototype.redo = function() {
+            if (!this.history.atLast()) {
+                this.ttf.glyf = this.history.forward();
+                this.fireChange(false);
+            }
+        };
 
         /**
          * ttf是否被改变

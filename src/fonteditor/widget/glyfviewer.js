@@ -16,11 +16,17 @@ define(
 
         var GLYF_ITEM_TPL = ''
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify}">'
-            +   '<i data-action="edit" class="i-edit" title="编辑"></i><i data-action="del" class="i-del" title="删除"></i>'
+            +   '<i data-action="del" class="i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}"><g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) "><path class="path" ${d}/></g></svg>'
             +   '<div data-field="unicode" class="unicode" title="${unicode}">${unicode}</div><div data-field="name" class="name" title="${name}">${name}</div>'
             + '</div>';
 
+        var keyMap = {
+            46: 'del',
+            67: 'copy',
+            88: 'cut',
+            86: 'paste'
+        };
 
         // 显示glyf
         function showGLYF(ttf) {
@@ -88,37 +94,45 @@ define(
 
 
             var me = this;
+            
             // 绑定键盘事件
             me.listener = function(e) {
 
-                // 删除
-                if (46 === e.keyCode) {
+                // 取消选中
+                if (27 === e.keyCode) {
+                    e.stopPropagation();
+                    me.main.children().removeClass('selected');
+                }
+                else if (65 === e.keyCode && e.ctrlKey) {
+                    e.stopPropagation();
+                    me.main.children().addClass('selected');
+                }
+                // 撤销
+                else if(e.keyCode == 90 && e.ctrlKey) {
+                    e.stopPropagation();
+                     me.fire('undo');
+                }
+                // 重做
+                else if(e.keyCode == 89 && e.ctrlKey) {
+                    e.stopPropagation();
+                    me.fire('redo');
+                }
+                // 其他操作
+                else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
                     e.stopPropagation();
                     var selected = me.getSelected();
-                    if (selected.length) {
-                        me.fire('del', {
+                    if (e.keyCode == 86 || selected.length) {
+                        me.fire(keyMap[e.keyCode], {
                             list: selected
                         });
                     }
                 }
-                // 取消选中
-                else if (27 === e.keyCode) {
-                    me.main.children().removeClass('selected');
-                }
-
             };
 
             
             $(document.body).on('click', function(e) {
                 var focused = me.main.get(0) === e.target || me.main.get(0).contains(e.target);
-                if (focused && !me.listening) {
-                    document.body.addEventListener('keyup', me.listener,false);
-                    me.listening = true;
-                }
-                else if (!focused){
-                    document.body.removeEventListener('keyup', me.listener);
-                    me.listening = false;
-                }
+                focused ? me.focus() : me.blur();
             });
 
             // 选择范围内元素
@@ -147,7 +161,7 @@ define(
             }
 
 
-            me.capture = new MouseCapture(me.main.get(0), {
+            me.capture = new MouseCapture(me.main.parent().get(0), {
                 events: {
                     dblclick: false,
                     mousewheel: false,
@@ -192,6 +206,18 @@ define(
             });
 
         }
+
+        GlyfViewer.prototype.focus = function() {
+            if (!this.listening) {
+                document.body.addEventListener('keyup', this.listener, false);
+                this.listening = true;
+            }
+        };
+
+        GlyfViewer.prototype.blur = function() {
+            document.body.removeEventListener('keyup', this.listener);
+            this.listening = false;
+        };
 
         GlyfViewer.prototype.show = function(ttf) {
             showGLYF.call(this, ttf);
