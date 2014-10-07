@@ -25,15 +25,16 @@ define(
 
         return require('./setting').derive({
             
+            title: '设置代码点',
+
             getTpl: function() {
                 return tpl;
             },
-            onConfirm: function() {
+
+            validate: function() {
                 var unicode = $('#setting-text-unicode').val();
                 if (unicode.match(/^\$[A-E0-9]+$/i)) {
-                    this.fire('change', {
-                        unicode: unicode
-                    });
+                    return this.setting = unicode;
                 }
                 else {
                     alert('代码点设置不正确');

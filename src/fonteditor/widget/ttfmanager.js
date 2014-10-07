@@ -184,7 +184,7 @@ define(
             }
 
             list = list.filter(function(g) {
-                return g.name != '.notdef';
+                return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn';
             });
 
             if (list.length) {
@@ -237,6 +237,19 @@ define(
             return indexList.map(function(item) {
                 return glyf[item];
             });
+        };
+
+        /**
+         * 撤销
+         * @return {this}
+         */
+        Manager.prototype.setName = function(name) {
+            if (name) {
+                name.fontFamily = name.fontFamily || 'fonteditor';
+                name.fontSubFamily = name.fontSubFamily || 'Medium';
+                name.fullName = name.fontFamily;
+                this.ttf.name  = name;
+            }
         };
 
         /**

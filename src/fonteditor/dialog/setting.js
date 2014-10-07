@@ -17,20 +17,17 @@ define(
          * 
          * @constructor
          */
-        function Setting() {
-        }
+        function Setting(options) {
 
-        /**
-         * 初始化绑定事件
-         */
-        Setting.prototype.preInit = function() {
+            this.options = options || {};
+
             var dlg = $('#model-dialog');
-            dlg.find('.modal-title').html(this.title);
+            dlg.find('.modal-title').html(this.title || '设置');
             dlg.find('.modal-body').html(this.getTpl());
 
             dlg.on('hidden.bs.modal', lang.bind(function (e) {
                 if (dlg) {
-                    this.un();
+                    delete this.options;
                     dlg.off('hidden.bs.modal');
                     dlg.find('.btn-confirm').off('click');
                     dlg = null;
@@ -38,11 +35,14 @@ define(
             }, this));
 
             dlg.find('.btn-confirm').on('click', lang.bind(function() {
-                if (false !== this.onConfirm()) {
+                var setting = this.validate();
+                if (false !== setting) {
+                    this.options.onChange && this.options.onChange.call(this, setting);
                     dlg.modal('hide');
                 }
             }, this));
-        };
+        }
+
 
         /**
          * 获取模板
@@ -54,20 +54,52 @@ define(
         };
 
         /**
-         * 确定事件
+         * 获取dialog对象
          * 
-         * @return {boolean=} 是否关闭对话框
+         * @return {Object} dialog对象
          */
-        Setting.prototype.onConfirm = function() {
+        Setting.prototype.getDialog = function() {
+            return $('#model-dialog');
+        };
+
+        /**
+         * 验证设置
+         * 
+         * @return {boolean}
+         */
+        Setting.prototype.validate = function() {
+            return true;
         };
 
         /**
          * 显示
+         * @param {Object} setting 设置选项
          */
-        Setting.prototype.show = function() {
+        Setting.prototype.show = function(setting) {
             $('#model-dialog').modal('show');
+            this.set(setting);
             return this;
         };
+
+
+        /**
+         * 设置设置选项
+         * 
+         * @return {this}
+         */
+        Setting.prototype.set = function(setting) {
+            this.setting = setting;
+        };
+
+        /**
+         * 获取设置选项
+         * 
+         * @return {Object} 设置选项
+         */
+        Setting.prototype.get = function() {
+            return this.setting;
+        };
+
 
         /**
          * 注销
@@ -75,7 +107,6 @@ define(
         Setting.prototype.dispose = function() {
             $('#model-dialog').modal('hide');
         };
-
 
         /**
          * 派生一个setting
@@ -87,14 +118,11 @@ define(
 
             function Class() {
                 Setting.apply(this, arguments);
-                this.preInit();
                 this.initialize && this.initialize();
             }
 
-            Class.prototype = new Setting();
+            lang.extend(Class.prototype, Setting.prototype, proto);
             Class.prototype.constructor = Setting;
-            lang.extend(Class.prototype, proto);
-            observable.mixin(Class.prototype);
 
             return Class;
         };

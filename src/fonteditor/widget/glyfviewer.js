@@ -161,7 +161,7 @@ define(
             }
 
 
-            me.capture = new MouseCapture(me.main.parent().get(0), {
+            me.capture = new MouseCapture(me.main.get(0), {
                 events: {
                     dblclick: false,
                     mousewheel: false,

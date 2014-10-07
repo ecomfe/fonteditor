@@ -21,7 +21,8 @@ define(
 
 
         var setting = {
-            'unicode': require('../dialog/setting-unicode')
+            'unicode': require('../dialog/setting-unicode'),
+            'name': require('../dialog/setting-name')
         }
 
         var actions = {
@@ -53,17 +54,29 @@ define(
                 });
             },
 
-            'setting-unicode': function(e) {
-                var dlg = new setting.unicode();
-
-                dlg.on('change', function(e) {
-                    // 此处延迟处理
-                    setTimeout(function(){
-                        setUnicode(e.unicode);
-                    }, 20);
+            'setting-unicode': function() {
+                var dlg = new setting.unicode({
+                    onChange: function(unicode) {
+                        // 此处延迟处理
+                        setTimeout(function(){
+                            setUnicode(unicode);
+                        }, 20);
+                    }
                 });
 
                 dlg.show();
+            },
+
+            'setting-name': function() {
+                var ttf = program.ttfmanager.get();
+                if (ttf) {
+                    var dlg = new setting.name({
+                        onChange: function(setting) {
+                            program.ttfmanager.setName(setting);
+                        }
+                    });
+                    dlg.show(ttf.name);
+                }
             }
         };
 

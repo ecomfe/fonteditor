@@ -30,6 +30,9 @@
 .dropdown-menu a {
   cursor: pointer;
 }
+.input-group {
+  margin-bottom: 10px;
+}
 body,
 html {
   margin: 0;

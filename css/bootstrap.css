@@ -1,0 +1,35 @@
+.modal-dialog {
+  margin-top: 100px;
+}
+.modal-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background: #327EC0;
+  color: #FFF;
+}
+.modal-header .close {
+  margin-top: 3px;
+}
+.modal-header .modal-title {
+  font-size: 14px;
+  line-height: 25px;
+}
+.modal-footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.modal-body {
+  min-height: 100px;
+}
+.modal-content {
+  border-color: rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+.dropdown-menu a {
+  cursor: pointer;
+}
+.input-group {
+  margin-bottom: 10px;
+}
