@@ -163,8 +163,8 @@ define(
          */
         Manager.prototype.removeGlyf = function(indexList) {
             var glyf = this.ttf.glyf, count = 0;
-            for(var i = glyf.length - 1; i >= 0; i--) {
-                if (indexList.indexOf(i) >= 0 && glyf[i].name != '.notdef') {
+            for(var i = glyf.length - 1; i > 0; i--) {
+                if (indexList.indexOf(i) >= 0) {
                     glyf.splice(i, 1);
                     count++;
                 }

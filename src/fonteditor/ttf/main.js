@@ -25,6 +25,7 @@ define(
         var setting = {
             'unicode': require('../dialog/setting-unicode'),
             'name': require('../dialog/setting-name'),
+            'adjust': require('../dialog/setting-adjust'),
             'online': require('../dialog/font-online')
         }
 
@@ -93,6 +94,28 @@ define(
                     });
                     dlg.show(ttf.name);
                 }
+            },
+            'setting-adjust': function() {
+                var ttf = program.ttfmanager.get();
+                if (ttf) {
+                    var dlg = new setting.adjust({
+                        onChange: function(setting) {
+                            program.ttfmanager.adjustGlyf(setting);
+                        }
+                    });
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    if (selected.length === 1) {
+                        var glyf = program.ttfmanager.getGlyf(selected)[0];
+                        dlg.show({
+                            leftSideBearing: glyf.leftSideBearing || '',
+                            rightSideBearing: glyf.advanceWidth - glyf.xMax || ''
+                        });
+                    }
+                    else {
+                        dlg.show();
+                    }
+                }
             }
         };
 
@@ -158,18 +181,18 @@ define(
         function onUpFile(e) {
             var file = e.target.files[0];
 
-            if (program.action == 'open' && file.name.match(/(\.ttf|\.woff)$/)) {
+            if (program.action == 'open' && file.name.match(/(\.ttf|\.woff)$/i)) {
                 loader.load(file, {
-                    type: file.name.slice(file.name.lastIndexOf('.') + 1),
+                    type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                     success: function(imported) {
                         program.ttfmanager.set(imported);
                     }
                 });
             }
-            else if (program.action == 'import' && file.name.match(/(\.ttf|\.woff|\.svg)$/)) {
+            else if (program.action == 'import' && file.name.match(/(\.ttf|\.woff|\.svg)$/i)) {
                 if (program.ttfmanager.get()) {
                     loader.load(file, {
-                        type: file.name.slice(file.name.lastIndexOf('.') + 1),
+                        type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                         success: function(imported) {
                             if (imported.glyf.length) {
                                 program.ttfmanager.merge(imported, {scale: true});
