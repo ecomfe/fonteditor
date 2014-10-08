@@ -30,27 +30,58 @@ define(
         }
 
         var actions = {
+
+            // 新建
             'new': function() {
                 if (program.ttfmanager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                     return;
                 }
-                newEmpty();
+                $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
+                    program.ttfmanager.set(imported);
+                });
             },
+
+            // 打开
             'open': function() {
                 $('#font-import').click();
             },
 
+            // 导入
             'import': function() {
                 $('#font-import').click();
             },
 
+            // 导出
             'export': function() {
+
             },
 
+            // 导出文件
+            'export-file': function(e) {
+                if (program.ttfmanager.get()) {
+                    var target = $(e.target);
+                    exporter.export(program.ttfmanager.get(), {
+                        type: target.attr('data-type'),
+                        target: target
+                    });
+                }
+            },
+
+            // 保存项目
             'save': function() {
-                saveProj();
+                if (program.ttfmanager.get()) {
+                    var name = '';
+                    if(name = window.prompt('请输入项目名称：')) {
+                        name = string.encodeHTML(name);
+                        var list = project.add(name, program.ttfmanager.get());
+                        program.projectViewer.show(list);
+                        program.data.projectName = name;
+                        program.ttfmanager.setState('new');
+                    }
+                }
             },
 
+            // 添加新字形
             'add-new': function() {
                 program.ttfmanager.addGlyf({
                     name: '',
@@ -58,12 +89,34 @@ define(
                 });
             },
 
+            // 添加在线字形
             'add-online': function() {
                 var dlg = new setting.online({
                     onChange: function(url) {
                         // 此处延迟处理
                         setTimeout(function(){
-                            loadOnline(url);
+                            ajaxBinaryFile({
+                                url: url,
+                                onSuccess: function(buffer) {
+                                    loader.load(buffer, {
+                                        type: 'ttf',
+                                        success: function(imported) {
+                                            if (program.ttfmanager.get()) {
+                                                program.ttfmanager.merge(imported, {
+                                                    scale: true
+                                                });
+                                            }
+                                            else {
+                                                program.ttfmanager.set(imported);
+                                            }
+
+                                        }
+                                    });
+                                },
+                                onError: function() {
+                                    alert('加载文件错误!');
+                                }
+                            });
                         }, 20);
                     }
                 });
@@ -71,12 +124,16 @@ define(
                 dlg.show();
             },
 
+            // 设置unicode
             'setting-unicode': function() {
                 var dlg = new setting.unicode({
                     onChange: function(unicode) {
                         // 此处延迟处理
                         setTimeout(function(){
-                            setUnicode(unicode);
+                            if (program.ttfmanager.get()) {
+                                var glyfList = program.viewer.getSelected();
+                                program.ttfmanager.setUnicode(unicode, glyfList);
+                            }
                         }, 20);
                     }
                 });
@@ -84,6 +141,7 @@ define(
                 dlg.show();
             },
 
+            // 设置字体名称
             'setting-name': function() {
                 var ttf = program.ttfmanager.get();
                 if (ttf) {
@@ -95,14 +153,19 @@ define(
                     dlg.show(ttf.name);
                 }
             },
+
+            // 调整字形
             'setting-adjust': function() {
                 var ttf = program.ttfmanager.get();
                 if (ttf) {
                     var dlg = new setting.adjust({
                         onChange: function(setting) {
-                            program.ttfmanager.adjustGlyf(setting);
+                            setTimeout(function() {
+                                program.ttfmanager.adjustGlyf(setting, selected);
+                            }, 20);
                         }
                     });
+
                     // 如果仅选择一个字形，则填充现有值
                     var selected = program.viewer.getSelected();
                     if (selected.length === 1) {
@@ -118,64 +181,6 @@ define(
                 }
             }
         };
-
-        // 加载在线字体
-        function loadOnline(url) {
-            ajaxBinaryFile({
-                url: url,
-                onSuccess: function(buffer) {
-                    loader.load(buffer, {
-                        type: 'ttf',
-                        success: function(imported) {
-                            if (program.ttfmanager.get()) {
-                                program.ttfmanager.merge(imported, {
-                                    scale: true
-                                });
-                            }
-                            else {
-                                program.ttfmanager.set(imported);
-                            }
-
-                        }
-                    });
-                },
-                onError: function() {
-                    alert('加载文件错误!');
-                }
-            });
-        }
-
-        // 设置unicode
-        function setUnicode(unicode) {
-
-            if (program.ttfmanager.get()) {
-                var glyfList = program.viewer.getSelected();
-                program.ttfmanager.setUnicode(unicode, glyfList);
-            }
-
-        }
-
-        // 保存项目
-        function saveProj() {
-            if (program.ttfmanager.get()) {
-                var name = '';
-                if(name = window.prompt('请输入项目名称：')) {
-                    name = string.encodeHTML(name);
-                    var list = project.add(name, program.ttfmanager.get());
-                    program.projectViewer.show(list);
-                    program.data.projectName = name;
-                    program.ttfmanager.setState('new');
-                }
-            }
-
-        }
-
-        // 新建空白
-        function newEmpty() {
-            $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
-                program.ttfmanager.set(imported);
-            });
-        }
 
         // 打开文件
         function onUpFile(e) {
@@ -208,16 +213,6 @@ define(
             e.target.value = '';
         }
 
-        function exportFile(e) {
-            if (program.ttfmanager.get()) {
-                var target = $(e.target);
-                exporter.export(program.ttfmanager.get(), {
-                    type: target.attr('data-type'),
-                    target: target
-                });
-            }
-        }
-
         // 绑定组件
         function bindEvent() {
             $('.navbar').delegate('[data-action]', 'click',  function(e) {
@@ -228,9 +223,9 @@ define(
                 }
             });
 
-            $('#export-btn').on('mouseup', exportFile);
-            $('#export-btn-woff').on('mouseup', exportFile);
-            $('#export-btn-svg').on('mouseup', exportFile);
+            $('#export-btn').on('mouseup', actions['export-file']);
+            $('#export-btn-woff').on('mouseup', actions['export-file']);
+            $('#export-btn-svg').on('mouseup', actions['export-file']);
 
             document.getElementById('font-import').addEventListener('change', onUpFile);
         }

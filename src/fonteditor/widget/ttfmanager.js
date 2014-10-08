@@ -12,7 +12,9 @@ define(
         var lang = require('common/lang');
         var postName = require('ttf/enum/postName');
         var pathAdjust = require('graphics/pathAdjust');
+        var pathCeil = require('graphics/pathCeil');
         var History = require('editor/util/History'); 
+        var computeBoundingBox = require('graphics/computeBoundingBox');
 
         /**
          * 清除glyf编辑状态
@@ -57,6 +59,7 @@ define(
                 if (scale !== 1) {
                     g.contours.forEach(function(contour) {
                         pathAdjust(contour, scale, scale);
+                        pathCeil(contour);
                     });
                 }
                 g.modify = 'new';
@@ -240,6 +243,101 @@ define(
             }
 
             this.fireChange(true);
+        };
+
+        /**
+         * 调整glyf
+         * 
+         * @param {Object} setting 选项
+         * @param {Array} indexList 索引列表
+         * @return {boolean}
+         */
+        Manager.prototype.adjustGlyf = function(setting, indexList) {
+            
+            var glyfList = indexList && indexList.length ?  this.getGlyf(indexList) : this.ttf.glyf;
+            var changed = false;
+
+            // 缩放到embox
+            if (setting.ajdustToEmBox) {
+
+                changed = true;
+
+                var dencent = this.ttf.hhea.descent;
+                var unitsPerEm = this.ttf.head.unitsPerEm;
+                var ajdustToEmPadding = 2 * (setting.ajdustToEmPadding || 0);
+
+                glyfList.forEach(function(g) {
+                    if (g.contours && g.contours.length) {
+                        var bound = computeBoundingBox.computePath.apply(this, g.contours);
+                        var scale = (unitsPerEm - ajdustToEmPadding) / bound.height;
+                        if (scale != 1) {
+                            var yOffset = (unitsPerEm / 2 + dencent) -  (bound.y + bound.height / 2) * scale;
+                            g.contours.forEach(function(contour) {
+                                pathAdjust(contour, scale, scale);
+                                pathAdjust(contour, 1, 1, 0, yOffset);
+                                pathCeil(contour);
+                            });
+                        }
+                    }
+                });
+            }
+
+            // 左右边轴
+            if (undefined !== setting.leftSideBearing || undefined !== setting.rightSideBearing) {
+
+                changed = true;
+
+                glyfList.forEach(function(g) {
+
+                    // 设置左边轴
+                    if (undefined !== setting.leftSideBearing && g.leftSideBearing != setting.leftSideBearing) {
+                        var offset = setting.leftSideBearing - g.leftSideBearing;
+                        g.xMax += offset;
+                        g.advanceWidth += offset;
+                        g.leftSideBearing = g.xMin = setting.leftSideBearing;
+                        if (g.contours && g.contours.length) {
+                            g.contours.forEach(function(contour) {
+                                pathAdjust(contour, 1, 1, offset);
+                            }); 
+                        }
+                    }
+
+                    if (undefined !== setting.rightSideBearing) {
+                        g.advanceWidth = g.xMax + setting.rightSideBearing;
+                    }
+                });
+            }
+
+            // 基线高度
+            if (undefined !== setting.verticalAlign) {
+
+                changed = true;
+
+                verticalAlign = setting.verticalAlign || 0;
+                glyfList.forEach(function(g) {
+                    if (g.contours && g.contours.length) {
+                        var bound = computeBoundingBox.computePath.apply(this, g.contours);
+                        var offset = verticalAlign - bound.y;
+                        
+                        g.yMin += offset;
+                        g.yMax += offset;
+
+                        if (g.contours && g.contours.length) {
+                            g.contours.forEach(function(contour) {
+                                pathAdjust(contour, 1, 1, 0, offset);
+                            });
+                        }
+                    }
+                });
+
+            }
+
+
+            if (changed) {
+                this.fireChange(true);
+            }
+
+            return this;
         };
 
         /**

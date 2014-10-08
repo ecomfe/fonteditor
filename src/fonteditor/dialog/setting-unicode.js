@@ -10,7 +10,6 @@ define(
     function(require) {
 
         var tpl = ''
-            + '<div class="col-lg-6">'
             +   '<div class="input-group">'
             +     '<div class="input-group-btn">'
             +       '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">起始代码点 <span class="caret"></span></button>'
@@ -20,8 +19,7 @@ define(
             +       '</ul>'
             +     '</div>'
             +     '<input id="setting-text-unicode" type="text" class="form-control" value="$E001">'
-            +   '</div>'
-            + '</div>';
+            +   '</div>';
 
         return require('./setting').derive({
             
