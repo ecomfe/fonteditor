@@ -112,6 +112,12 @@ define(
                     e.stopPropagation();
                     me.fire('redo');
                 }
+                // 保存
+                else if (83 === e.keyCode && e.ctrlKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    me.fire('save');
+                }
                 // 取消选中
                 else if (27 === e.keyCode) {
                     e.stopPropagation();

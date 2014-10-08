@@ -12,7 +12,8 @@ define(
 
         var clipboard = require('../clipboard');
         var lang = require('common/lang');
-
+        var string = require('common/string');
+        
         return {
 
             /**
@@ -41,6 +42,24 @@ define(
                     program.ttfmanager.undo();
                 }).on('redo', function(e) {
                     program.ttfmanager.redo();
+                }).on('save', function(e) {
+                    // 保存项目
+                    if (program.ttfmanager.get()) {
+                        if (program.data.projectName) {
+                            program.project.add(program.data.projectName, program.ttfmanager.get());
+                            program.ttfmanager.setState('new');
+                        }
+                        else {
+                            var name = '';
+                            if(name = window.prompt('请输入项目名称：')) {
+                                name = string.encodeHTML(name);
+                                var list = program.project.add(name, program.ttfmanager.get());
+                                program.projectViewer.show(list);
+                                program.data.projectName = name;
+                                program.ttfmanager.setState('new');
+                            }
+                        }
+                    }
                 });
 
                 program.projectViewer.on('open', function(e) {

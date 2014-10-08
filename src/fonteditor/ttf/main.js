@@ -38,6 +38,7 @@ define(
                 }
                 $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
                     program.ttfmanager.set(imported);
+                    program.data.projectName = null;
                 });
             },
 
@@ -108,6 +109,7 @@ define(
                                             }
                                             else {
                                                 program.ttfmanager.set(imported);
+                                                program.data.projectName = null;
                                             }
 
                                         }
@@ -191,6 +193,7 @@ define(
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                     success: function(imported) {
                         program.ttfmanager.set(imported);
+                        program.data.projectName = null;
                     }
                 });
             }
