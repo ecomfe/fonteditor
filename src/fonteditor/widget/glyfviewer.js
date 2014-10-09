@@ -79,6 +79,83 @@ define(
             });
         }
 
+
+        // 选择范围内元素
+        function selectRangeItem(bound, toggle, append) {
+
+            if (!toggle && !append) {
+                this.main.children().removeClass('selected');
+            }
+
+            this.main.children().each(function(i, element) {
+                var item = $(element);
+                var pos = item.offset();
+                var p = {
+                    x: pos.left + item.width() / 2,
+                    y: pos.top + item.height() / 2
+                }
+
+                if (p.x >= bound.x && p.x <= bound.x + bound.width 
+                    && p.y >= bound.y && p.y <= bound.y + bound.height
+                ) {
+                    if (toggle) {
+                        item.toggleClass('selected');
+                    }
+                    else {
+                        item.addClass('selected')
+                    }
+                }
+            });
+        }
+
+        // 按下事件
+        function downlistener(e) {
+            var me = this;
+
+            // 保存
+            if (83 === e.keyCode && e.ctrlKey) {
+                e.preventDefault();
+                e.stopPropagation();
+                me.fire('save');
+            }
+            // 处理其他事件，需要focus
+            else {
+                if (me.listening) {
+                    // 阻止ctrl+A默认事件
+                     if (65 === e.keyCode && e.ctrlKey) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        me.main.children().addClass('selected');
+                    }
+                    // 撤销
+                    else if(e.keyCode == 90 && e.ctrlKey) {
+                        e.stopPropagation();
+                         me.fire('undo');
+                    }
+                    // 重做
+                    else if(e.keyCode == 89 && e.ctrlKey) {
+                        e.stopPropagation();
+                        me.fire('redo');
+                    }
+                    // 取消选中
+                    else if (27 === e.keyCode) {
+                        e.stopPropagation();
+                        me.main.children().removeClass('selected');
+                    }
+                    // 其他操作
+                    else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
+                        e.stopPropagation();
+                        var selected = me.getSelected();
+                        if (e.keyCode == 86 || selected.length) {
+                            me.fire(keyMap[e.keyCode], {
+                                list: selected
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
         /**
          * glyf查看器
          * 
@@ -95,80 +172,14 @@ define(
 
 
             var me = this;
-            me.downlistener = function(e) {
-                // 阻止ctrl+A默认事件
-                 if (65 === e.keyCode && e.ctrlKey) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    me.main.children().addClass('selected');
-                }
-                // 撤销
-                else if(e.keyCode == 90 && e.ctrlKey) {
-                    e.stopPropagation();
-                     me.fire('undo');
-                }
-                // 重做
-                else if(e.keyCode == 89 && e.ctrlKey) {
-                    e.stopPropagation();
-                    me.fire('redo');
-                }
-                // 保存
-                else if (83 === e.keyCode && e.ctrlKey) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    me.fire('save');
-                }
-                // 取消选中
-                else if (27 === e.keyCode) {
-                    e.stopPropagation();
-                    me.main.children().removeClass('selected');
-                }
-                // 其他操作
-                else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
-                    e.stopPropagation();
-                    var selected = me.getSelected();
-                    if (e.keyCode == 86 || selected.length) {
-                        me.fire(keyMap[e.keyCode], {
-                            list: selected
-                        });
-                    }
-                }
-            };
+            me.downlistener = lang.bind(downlistener, this);
 
-            
+            document.body.addEventListener('keydown', this.downlistener);
+
             $(document.body).on('click', function(e) {
                 var focused = me.main.get(0) === e.target || me.main.get(0).contains(e.target);
-                focused ? me.focus() : me.blur();
+                me.listening = focused;
             });
-
-            // 选择范围内元素
-            function selectRangeItem(bound, toggle, append) {
-
-                if (!toggle && !append) {
-                    me.main.children().removeClass('selected');
-                }
-
-                me.main.children().each(function(i, element) {
-                    var item = $(element);
-                    var pos = item.offset();
-                    var p = {
-                        x: pos.left + item.width() / 2,
-                        y: pos.top + item.height() / 2
-                    }
-
-                    if (p.x >= bound.x && p.x <= bound.x + bound.width 
-                        && p.y >= bound.y && p.y <= bound.y + bound.height
-                    ) {
-                        if (toggle) {
-                            item.toggleClass('selected');
-                        }
-                        else {
-                            item.addClass('selected')
-                        }
-                    }
-                });
-            }
-
 
             me.capture = new MouseCapture(me.main.get(0), {
                 events: {
@@ -217,14 +228,10 @@ define(
         }
 
         GlyfViewer.prototype.focus = function() {
-            if (!this.listening) {
-                document.body.addEventListener('keydown', this.downlistener);
-                this.listening = true;
-            }
+            this.listening = true;
         };
 
         GlyfViewer.prototype.blur = function() {
-            document.body.removeEventListener('keydown', this.downlistener);
             this.listening = false;
         };
 

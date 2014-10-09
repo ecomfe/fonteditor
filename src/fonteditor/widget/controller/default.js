@@ -36,7 +36,7 @@ define(
                 }).on('paste', function(e) {
                     var glyfList = clipboard.get('glyf');
                     if (glyfList && glyfList.length) {
-                        program.ttfmanager.appendGlyf(glyfList);
+                        program.ttfmanager.appendGlyf(glyfList, program.viewer.getSelected());
                     }
                 }).on('undo', function(e) {
                     program.ttfmanager.undo();
@@ -48,6 +48,7 @@ define(
                         if (program.data.projectName) {
                             program.project.add(program.data.projectName, program.ttfmanager.get());
                             program.ttfmanager.setState('new');
+                            program.loading.show('保存成功..', 400);
                         }
                         else {
                             var name = '';
@@ -57,9 +58,12 @@ define(
                                 program.projectViewer.show(list);
                                 program.data.projectName = name;
                                 program.ttfmanager.setState('new');
+                                program.loading.show('保存成功..', 400);
                             }
                         }
                     }
+
+
                 });
 
                 program.projectViewer.on('open', function(e) {

@@ -2,36 +2,36 @@
 @import './bootstrap.less';
 
 body, html {
-  margin: 0;
-  padding: 0;
-  font-size: 13px;
-  height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    height: 100%;
 }
 
 // scroll bar
 ::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
+    width: 14px;
+    height: 14px;
 }
 
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  border: 5px solid transparent;
+    border-radius: 999px;
+    border: 5px solid transparent;
 }
 
 ::-webkit-scrollbar-track {
-  box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;
 }
 
 ::-webkit-scrollbar-thumb {
-  min-height: 20px;
-  background-clip: content-box;
-  box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;
+    min-height: 20px;
+    background-clip: content-box;
+    box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;
 }
 
 ::-webkit-scrollbar-corner {
-  background: transparent;
+    background: transparent;
 }
 
 .navbar {
@@ -85,22 +85,31 @@ body, html {
 
 // loading 动画
 .loading {
-  position: fixed;
-  left: 50%;
-  top: 30%;
-  width: 200px;
-  margin-left: -100px;
-  line-height: 24px;
-  text-align: center;
-  display: none;
+    position: fixed;
+    left: 50%;
+    top: 30%;
+    width: 200px;
+    margin-left: -100px;
+    line-height: 24px;
+    text-align: center;
+    display: none;
+    
+    span {
+        display: inline-block;
+        padding: 0 6px;
+        background: rgba(84, 114, 93, 0.8);
+        color: #FFF;
+        border: 1px solid #DDD;
+    }
+
 }
 
 
 .selection-range {
-  position: absolute;
-  z-index: 6;
-  display: none;
-  border: 1px solid #CCC;
-  background: rgba(222, 222, 222, 0.5);
-  pointer-events: none;
+    position: absolute;
+    z-index: 6;
+    display: none;
+    border: 1px solid #CCC;
+    background: rgba(222, 222, 222, 0.5);
+    pointer-events: none;
 }

@@ -79,6 +79,51 @@ define(
             return true;
         };
 
+
+        /**
+         * 设置field字段值
+         * 
+         * @return {boolean}
+         */
+        Setting.prototype.setFields = function(setting) {
+            this.getDialog().find('[data-field]').each(function(i, item) {
+
+                if (item.type == 'checkbox') {
+                    item.checked = setting[item.getAttribute('data-field')] ? 'checked' : '';
+                }
+                else {
+                    item = $(item);
+                    item.val(setting[item.attr('data-field')]);
+                }
+            });
+            return this;
+        };
+
+        /**
+         * 获取field字段值
+         * 
+         * @return {Object}
+         */
+        Setting.prototype.getFields = function() {
+            var setting = {};
+            this.getDialog().find('[data-field]').each(function(i, item) {
+
+                if (item.type == 'checkbox') {
+                    if (item.checked) {
+                        setting[item.getAttribute('data-field')] = true;
+                    }
+                }
+                else {
+                    item = $(item);
+                    var val = item.val().trim();
+                    if (val) {
+                        setting[item.attr('data-field')] = item.attr('data-ceil') ? Math.floor(val) : +val ;
+                    }
+                }
+            });
+            return setting;
+        };
+
         /**
          * 显示
          * @param {Object} setting 设置选项

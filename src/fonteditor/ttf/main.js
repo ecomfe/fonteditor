@@ -25,7 +25,8 @@ define(
         var setting = {
             'unicode': require('../dialog/setting-unicode'),
             'name': require('../dialog/setting-name'),
-            'adjust': require('../dialog/setting-adjust'),
+            'adjust-pos': require('../dialog/setting-adjust-pos'),
+            'adjust-glyf': require('../dialog/setting-adjust-glyf'),
             'online': require('../dialog/font-online')
         }
 
@@ -96,12 +97,14 @@ define(
                     onChange: function(url) {
                         // 此处延迟处理
                         setTimeout(function(){
+                            program.loading.show('正在加载..', 1000);
                             ajaxBinaryFile({
                                 url: url,
                                 onSuccess: function(buffer) {
                                     loader.load(buffer, {
                                         type: 'ttf',
                                         success: function(imported) {
+                                            program.loading.hide();
                                             if (program.ttfmanager.get()) {
                                                 program.ttfmanager.merge(imported, {
                                                     scale: true
@@ -156,14 +159,14 @@ define(
                 }
             },
 
-            // 调整字形
-            'setting-adjust': function() {
+            // 调整字形位置
+            'setting-adjust-pos': function() {
                 var ttf = program.ttfmanager.get();
                 if (ttf) {
-                    var dlg = new setting.adjust({
+                    var dlg = new setting['adjust-pos']({
                         onChange: function(setting) {
                             setTimeout(function() {
-                                program.ttfmanager.adjustGlyf(setting, selected);
+                                program.ttfmanager.adjustGlyfPos(setting, selected);
                             }, 20);
                         }
                     });
@@ -180,6 +183,22 @@ define(
                     else {
                         dlg.show();
                     }
+                }
+            },
+
+            // 调整字形
+            'setting-adjust-glyf': function() {
+                var ttf = program.ttfmanager.get();
+                if (ttf) {
+                    var dlg = new setting['adjust-glyf']({
+                        onChange: function(setting) {
+                            setTimeout(function() {
+                                program.ttfmanager.adjustGlyf(setting, program.viewer.getSelected());
+                            }, 20);
+                        }
+                    });
+                    
+                    dlg.show();
                 }
             }
         };
