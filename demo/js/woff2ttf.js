@@ -17,7 +17,7 @@ define(
         function write() {
 
             ajaxBinaryFile({
-                url: '../font/iconfont.woff',
+                url: '../test/iconfont.woff',
                 onSuccess: function(buffer) {
 
                     var ttfBuffer = woff2ttf(buffer, {

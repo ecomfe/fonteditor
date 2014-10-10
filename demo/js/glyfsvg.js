@@ -49,6 +49,7 @@ define(
         }
 
         function showGlyf(charcode) {
+
             var tpl = ''
                 + '<svg class="glyf">'
                 + ' <g>'
@@ -57,6 +58,10 @@ define(
                 +  '</svg>';
             var svg = $(tpl);
             var glyf = lang.clone(ttf.getCodeGlyf(charcode));
+            
+            if (glyf.compound) {
+                return;
+            }
             
             // 调整大小
             var width =  glyf.xMax;
@@ -113,7 +118,7 @@ define(
                 upFile.addEventListener('change', onUpFileChange);
 
                 ajaxBinaryFile({
-                    url: '../font/baiduHealth.ttf',
+                    url: '../test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
                         setFont(binaryData);
 

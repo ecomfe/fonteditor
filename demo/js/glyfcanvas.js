@@ -47,7 +47,9 @@ define(
         function showGlyf(charcode) {
             
             var glyf = lang.clone(ttf.getCodeGlyf(charcode));
-
+            if (glyf.compound) {
+                return;
+            }
 
             var canvas = $('#glyf-canvas').get(0);
             var ctx = canvas.getContext('2d');
@@ -101,7 +103,7 @@ define(
                 upFile.addEventListener('change', onUpFileChange);
 
                 ajaxBinaryFile({
-                    url: '../font/baiduHealth.ttf',
+                    url: '../test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
                         setFont(binaryData);
 
