@@ -15,7 +15,7 @@ define(
             +   '<input data-field="fontFamily" type="text" class="form-control">'
             + '</div>'
             + '<div class="input-group input-group-sm">'
-            +   '<span class="input-group-addon">字体子家族</span>'
+            +   '<span class="input-group-addon">子字体家族</span>'
             +   '<input data-field="fontSubFamily" type="text" class="form-control">'
             + '</div>'
             + '<div class="input-group input-group-sm">'
@@ -29,34 +29,36 @@ define(
             + '<div class="input-group input-group-sm">'
             +   '<span class="input-group-addon">PostScript名称</span>'
             +   '<input data-field="postScriptName" type="text" class="form-control">'
+            + '</div>'
+            + '<div class="input-group input-group-sm">'
+            +   '<span class="input-group-addon">em框大小</span>'
+            +   '<input data-field="unitsPerEm" type="number" min="64" max="16384" class="form-control" placeholder="1024~16384">'
+            + '</div>'
+            + '<div class="input-group input-group-sm">'
+            +   '<span class="input-group-addon">最小可读尺寸</span>'
+            +   '<input data-field="lowestRecPPEM" type="number" min="8" max="16384" class="form-control" placeholder="8~16384">'
+            + '</div>'
+            + '<div class="input-group input-group-sm">'
+            +   '<span class="input-group-addon">创建日期</span>'
+            +   '<input data-field="created" type="datetime-local" class="form-control">'
             + '</div>';
 
 
         return require('./setting').derive({
             
-            title: '命名信息',
+            title: '字体信息',
 
             getTpl: function() {
                 return tpl;
             },
 
             set: function(setting) {
-                this.getDialog().find('[data-field]').each(function(i, item) {
-                    item = $(item);
-                    item.val(setting[item.attr('data-field')] || '');
-                });
+                this.setFields(setting);
             },
             
             validate: function() {
-                var name = {};
-                this.getDialog().find('[data-field]').each(function(i, item) {
-                    item = $(item);
-                    var val = item.val().trim();
-                    if (val) {
-                        name[item.attr('data-field')] = val;
-                    }
-                });
-                return name;
+                var setting = this.getFields();
+                return setting;          
             }
 
         });

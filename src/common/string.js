@@ -102,6 +102,7 @@ define(
              * @return {string} 字符串
              */
             pad: function(str, size, ch) {
+                str = String(str);
                 if(str.length > size) {
                     return str.slice(str.length - size);
                 }

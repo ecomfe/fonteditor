@@ -234,12 +234,22 @@ define(
         };
 
         /**
-         * 撤销
+         * 设置名字和头部信息
          * @return {this}
          */
-        Manager.prototype.setName = function(name) {
-           this.ttf.setName(name);
-           return this;
+        Manager.prototype.setInfo = function(info) {
+            var changed = false;
+            if (this.ttf.get().head.unitsPerEm != info.unitsPerEm) {
+                changed = true;
+            }
+            this.ttf.setName(info);
+            this.ttf.setHead(info);
+
+            if (changed) {
+                this.fireChange(false);
+            }
+            
+            return this;
         };
 
         /**

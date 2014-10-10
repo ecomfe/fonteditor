@@ -260,11 +260,14 @@ define(
 
                 var delta = -2077545600000; // new Date(1970, 1, 1).getTime() - new Date(1904, 1, 1).getTime();
                 
-                if (typeof value === 'undefined') {
+                if (typeof(value) === 'undefined') {
                     value = delta;
                 }
-                else if (typeof value.getTime === 'function') {
+                else if (typeof(value.getTime) === 'function') {
                     value = value.getTime();
+                }
+                else if (/^\d+$/.test(value)){
+                    value = +value;
                 }
                 else {
                     value = Date.parse(value);

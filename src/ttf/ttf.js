@@ -430,6 +430,26 @@ define(
             return this.ttf.name;
         };
 
+        /**
+         * 设置head信息
+         * 
+         * @return {Object} 头对象
+         */
+        TTF.prototype.setHead = function(head) {
+            if (head) {
+                
+                // unitsperem
+                if (head.unitsPerEm && head.unitsPerEm >= 64 && head.unitsPerEm <= 16384) {
+                    this.ttf.head.unitsPerEm = head.unitsPerEm;
+                }
+
+                // lowestrecppem
+                if (head.lowestRecPPEM && head.lowestRecPPEM >= 8 && head.lowestRecPPEM <= 16384) {
+                    this.ttf.head.lowestRecPPEM = head.lowestRecPPEM;
+                }            }
+            return this.ttf.head;
+        };
+
         return TTF;
     }
 );

@@ -11,6 +11,7 @@ define(
     function(require) {
         var lang = require('common/lang');
         var observable = require('common/observable');
+        var pad = require('common/string').pad;
 
         /**
          * 设置框函数
@@ -91,6 +92,21 @@ define(
                 if (item.type == 'checkbox') {
                     item.checked = setting[item.getAttribute('data-field')] ? 'checked' : '';
                 }
+                else if (item.type == 'datetime-local') {
+                    var val = setting[item.getAttribute('data-field')];
+                    var date;
+                    if (typeof(val) === 'string') {
+                        date = new Date(Date.parse(val));
+                    }
+                    else if(/^\d+$/.test(val)) {
+                        date = new Date(+val);
+                    }
+                    else {
+                        date = val;
+                    }
+                    item.value = date.getFullYear() + '-' + pad(date.getMonth() + 1, 2) + '-' + pad(date.getDate(), 2)
+                        + 'T' + pad(date.getHours(), 2) + ':' + pad(date.getMinutes(), 2);
+                }
                 else {
                     item = $(item);
                     item.val(setting[item.attr('data-field')]);
@@ -113,11 +129,26 @@ define(
                         setting[item.getAttribute('data-field')] = true;
                     }
                 }
+                else if (item.type == 'datetime-local') {
+                    if (item.value) {
+                        setting[item.getAttribute('data-field')] = Date.parse(item.value.replace('T', ' '));
+                    }
+                }
+                else if (item.type == 'number') {
+                    if (item.value) {
+                        var val = +item.value;
+                        if (item.getAttribute('data-ceil')) {
+                            val = Math.floor(val);
+                        }
+                        setting[item.getAttribute('data-field')] = val;
+                    }
+                }
+
                 else {
                     item = $(item);
                     var val = item.val().trim();
                     if (val) {
-                        setting[item.attr('data-field')] = item.attr('data-ceil') ? Math.floor(val) : +val ;
+                        setting[item.attr('data-field')] =  val;
                     }
                 }
             });

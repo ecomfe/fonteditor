@@ -25,8 +25,8 @@ define(
         var setting = {
             'unicode': require('../dialog/setting-unicode'),
             'name': require('../dialog/setting-name'),
-            'adjust-pos': require('../dialog/setting-adjust-pos'),
-            'adjust-glyf': require('../dialog/setting-adjust-glyf'),
+            //'adjust-pos': require('../dialog/setting-adjust-pos'),
+            //'adjust-glyf': require('../dialog/setting-adjust-glyf'),
             'online': require('../dialog/font-online')
         }
 
@@ -152,10 +152,10 @@ define(
                 if (ttf) {
                     var dlg = new setting.name({
                         onChange: function(setting) {
-                            program.ttfmanager.setName(setting);
+                            program.ttfmanager.setInfo(setting);
                         }
                     });
-                    dlg.show(ttf.name);
+                    dlg.show($.extend({}, ttf.head, ttf.name));
                 }
             },
 
