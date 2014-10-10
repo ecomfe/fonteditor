@@ -57,7 +57,6 @@ define(
             return list;
         }
 
-
         /**
          * ttf读取函数
          * 
@@ -433,11 +432,11 @@ define(
         /**
          * 设置head信息
          * 
+         * @param {Object} head 头部信息
          * @return {Object} 头对象
          */
         TTF.prototype.setHead = function(head) {
             if (head) {
-                
                 // unitsperem
                 if (head.unitsPerEm && head.unitsPerEm >= 64 && head.unitsPerEm <= 16384) {
                     this.ttf.head.unitsPerEm = head.unitsPerEm;
@@ -446,8 +445,59 @@ define(
                 // lowestrecppem
                 if (head.lowestRecPPEM && head.lowestRecPPEM >= 8 && head.lowestRecPPEM <= 16384) {
                     this.ttf.head.lowestRecPPEM = head.lowestRecPPEM;
-                }            }
+                }
+                // created
+                if (head.created) {
+                    this.ttf.head.created = head.created;
+                }
+            }
             return this.ttf.head;
+        };
+
+        /**
+         * 设置hhea信息
+         * 
+         * @param {Object} fields 字段值
+         * @return {Object} 头对象
+         */
+        TTF.prototype.setHhea = function(fields) {
+            lang.overwrite(this.ttf.hhea, fields, ['ascent', 'descent', 'lineGap']);
+            return this.ttf.hhea;
+        };
+
+        /**
+         * 设置OS2信息
+         * 
+         * @param {Object} fields 字段值
+         * @return {Object} 头对象
+         */
+        TTF.prototype.setOS2 = function(fields) {
+            lang.overwrite(
+                this.ttf['OS/2'], fields, 
+                [
+                    'usWinAscent', 'usWinDescent', 
+                    'sTypoAscender', 'sTypoDescender', 'sTypoLineGap',
+                    'sxHeight', 'bXHeight',
+                    'yStrikeoutPosition', 'yStrikeoutSize'
+                ]
+            );
+            return this.ttf['OS/2'];
+        };
+
+        /**
+         * 设置post信息
+         * 
+         * @param {Object} fields 字段值
+         * @return {Object} 头对象
+         */
+        TTF.prototype.setPost = function(fields) {
+            lang.overwrite(
+                this.ttf.post, fields, 
+                [
+                    'underlinePosition', 'underlineThickness'
+                ]
+            );
+            return this.ttf.post;
         };
 
         return TTF;

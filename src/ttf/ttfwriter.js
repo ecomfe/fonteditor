@@ -47,10 +47,11 @@ define(
             // 重置校验码
             ttf.head.checkSumAdjustment = 0;
             ttf.head.magickNumber = 0x5F0F3CF5;
+            
             if (typeof(ttf.head.created) == 'string') {
                 ttf.head.created = /^\d+$/.test(ttf.head.created) ? +ttf.head.created : Date.parse(ttf.head.created);
             }
-            ttf.head.created = Date.now();
+
             ttf.head.modified = Date.now();
 
             // 将glyf的代码点按小到大排序

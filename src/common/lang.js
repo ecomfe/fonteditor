@@ -110,6 +110,28 @@ define(
             return target;
         }
 
+        /**
+         * 设置覆盖相关的属性值
+         * 
+         * @param {Object} thisObj 覆盖对象
+         * @param {Object} thatObj 值对象
+         * @param {Array.<string>} fields 字段
+         * @return {Object} thisObj
+         */
+        function overwrite(thisObj, thatObj, fields) {
+            if(!thatObj) {
+                return thisObj;
+            }
+
+            fields = fields || Object.keys(thatObj);
+            fields.forEach(function(field) {
+                if (thisObj.hasOwnProperty(field)) {
+                    thisObj[field] = thatObj[field]
+                }
+            });
+        }
+
+
         var hasOwnProperty = Object.prototype.hasOwnProperty;
         
         /**
@@ -201,6 +223,7 @@ define(
 
         var exports = {
             extend: extend,
+            overwrite: overwrite,
             bind: bind,
             inherits: inherits,
             curry: curry,

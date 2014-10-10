@@ -248,6 +248,26 @@ define(
             if (changed) {
                 this.fireChange(false);
             }
+
+            return this;
+        };
+
+        /**
+         * 设置度量信息
+         * @return {this}
+         */
+        Manager.prototype.setMetrics = function(info) {
+            var changed = false;
+            if (this.ttf.get().hhea.descent != info.descent) {
+                changed = true;
+            }
+            this.ttf.setHhea(info);
+            this.ttf.setOS2(info);
+            this.ttf.setPost(info);
+
+            if (changed) {
+                this.fireChange(false);
+            }
             
             return this;
         };

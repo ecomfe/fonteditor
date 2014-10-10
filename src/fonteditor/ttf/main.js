@@ -27,6 +27,7 @@ define(
             'name': require('../dialog/setting-name'),
             //'adjust-pos': require('../dialog/setting-adjust-pos'),
             //'adjust-glyf': require('../dialog/setting-adjust-glyf'),
+            'metrics': require('../dialog/setting-metrics'),
             'online': require('../dialog/font-online')
         }
 
@@ -146,19 +147,6 @@ define(
                 dlg.show();
             },
 
-            // 设置字体名称
-            'setting-name': function() {
-                var ttf = program.ttfmanager.get();
-                if (ttf) {
-                    var dlg = new setting.name({
-                        onChange: function(setting) {
-                            program.ttfmanager.setInfo(setting);
-                        }
-                    });
-                    dlg.show($.extend({}, ttf.head, ttf.name));
-                }
-            },
-
             // 调整字形位置
             'setting-adjust-pos': function() {
                 var ttf = program.ttfmanager.get();
@@ -199,6 +187,33 @@ define(
                     });
                     
                     dlg.show();
+                }
+            },
+
+            // 设置字体名称
+            'setting-name': function() {
+                var ttf = program.ttfmanager.get();
+                if (ttf) {
+                    var dlg = new setting.name({
+                        onChange: function(setting) {
+                            program.ttfmanager.setInfo(setting);
+                        }
+                    });
+                    dlg.show($.extend({}, ttf.head, ttf.name));
+                }
+            },
+
+            // 调整规格
+            'setting-metrics': function() {
+                var ttf = program.ttfmanager.get();
+                if (ttf) {
+                    var dlg = new setting['metrics']({
+                        onChange: function(setting) {
+                            program.ttfmanager.setMetrics(setting);
+                        }
+                    });
+                    
+                    dlg.show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
                 }
             }
         };
