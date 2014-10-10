@@ -478,7 +478,11 @@ define(
                     'usWinAscent', 'usWinDescent', 
                     'sTypoAscender', 'sTypoDescender', 'sTypoLineGap',
                     'sxHeight', 'bXHeight',
-                    'yStrikeoutPosition', 'yStrikeoutSize'
+                    'yStrikeoutPosition', 'yStrikeoutSize',
+                    'achVendID',
+                    // panose
+                    'bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
+                    'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'
                 ]
             );
             return this.ttf['OS/2'];

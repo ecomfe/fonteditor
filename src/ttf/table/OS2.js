@@ -189,6 +189,7 @@ define(
                     });
 
                     // os2
+                    ttf['OS/2'].achVendID = (ttf['OS/2'].achVendID + '    ').slice(0, 4);
                     ttf['OS/2'].xAvgCharWidth = xAvgCharWidth / (glyfNotEmpty || 1);
                     ttf['OS/2'].ulUnicodeRange2 = 268435456;
                     ttf['OS/2'].usFirstCharIndex = usFirstCharIndex;
