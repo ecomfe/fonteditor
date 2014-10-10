@@ -12,6 +12,7 @@ define(
         var string = require('common/string');
         var svg2contours = require('./util/svg2contours');
         var computeBoundingBox = require('graphics/computeBoundingBox');
+        var error = require('./error');
 
         /**
          * 加载xml字符串
@@ -21,11 +22,16 @@ define(
          */
         function loadXML(xml) {
             if (document.implementation && document.implementation.createDocument) {
-                var domParser = new DOMParser();
-                xmlDoc = domParser.parseFromString(xml, 'text/xml');
-                return xmlDoc;
+                try {
+                    var domParser = new DOMParser();
+                    xmlDoc = domParser.parseFromString(xml, 'text/xml');
+                    return xmlDoc;
+                }
+                catch(e) {
+                    error.throw(10103);
+                }
             }
-            throw 'not support xml parser';
+            error.throw(10004);
         }
 
         /**
@@ -94,7 +100,7 @@ define(
             var svgNode = xmlDoc.getElementsByTagName('svg')[0];
 
             if (!svgNode) {
-                throw 'not a svg file format!';
+                error.throw(10104);
             }
 
             var metaNode = xmlDoc.getElementsByTagName('metadata')[0];
@@ -195,6 +201,10 @@ define(
                     }
                     ttf.glyf.push(glyf);
                 }
+            }
+
+            if (!ttf.glyf.length) {
+                error.throw(10201);
             }
 
             return ttf;
