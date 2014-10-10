@@ -321,11 +321,11 @@ define(
 
                 glyfList.forEach(function(g) {
                     if (g.contours && g.contours.length) {
-                        var xMax = g.xMax;
-                        var yMax = g.yMax;
+                        var offsetX = g.xMax + g.xMin;
+                        var offsetY = g.yMax + g.yMin;
                         g.contours.forEach(function(contour) {
                             pathAdjust(contour, setting.reverse ? -1 : 1, setting.mirror ? -1 : 1);
-                            pathAdjust(contour, 1, 1, setting.reverse ? xMax : 0, setting.mirror ? yMax : 0);
+                            pathAdjust(contour, 1, 1, setting.reverse ? offsetX : 0, setting.mirror ? offsetY : 0);
                         });
                     }
                 });
