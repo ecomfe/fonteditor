@@ -17,6 +17,9 @@ define(
         var supportTables = require('./table/support');
         var Reader = require('./reader');
         var postName = require('./enum/postName');
+        var error = require('./error');
+
+
 
         /**
          * 初始化
@@ -33,6 +36,10 @@ define(
             // num tables
             ttf.numTables = reader.readUint16();
 
+            if (ttf.numTables <= 0 || ttf.numTables > 100) {
+                error.throw(10101);
+            }
+
             // searchRenge
             ttf.searchRenge = reader.readUint16();
 
@@ -44,15 +51,22 @@ define(
 
             ttf.tables = new Directory(reader.offset).read(reader, ttf);
 
+            if (!ttf.tables.glyf || !ttf.tables.head || !ttf.tables.cmap || !ttf.tables.hmtx) {
+                error.throw(10204);
+            }
+
             // 读取支持的表数据
             Object.keys(supportTables).forEach(function(tableName) {
-                // console.log(tableName);
                 if (ttf.tables[tableName]) {
                     var offset = ttf.tables[tableName].offset;
                     ttf[tableName] = new supportTables[tableName](offset).read(reader, ttf);
                 }
             });
-            
+
+            if (!ttf.glyf) {
+                error.throw(10201);
+            }
+
             reader.dispose();
 
             return ttf;

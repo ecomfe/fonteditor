@@ -15,6 +15,7 @@ define(
         var string = require('common/string');
         var TTFReader = require('./ttfreader');
         var contours2svg = require('./util/contours2svg');
+        var error = require('./error');
 
         // svg font id
         var SVG_FONT_ID = 'fonteditor';
@@ -141,7 +142,7 @@ define(
                 return ttfobject2svg(ttfBuffer, options);
             }
             else {
-                throw 'not support ttf data';
+                error.throw(10109);
             }
         }
         return ttf2svg;

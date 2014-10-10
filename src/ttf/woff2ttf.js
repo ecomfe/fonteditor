@@ -12,6 +12,7 @@ define(
 
         var Reader = require('./reader');
         var Writer = require('./writer');
+        var error = require('./error');
 
         /**
          * 写空数据
@@ -45,7 +46,7 @@ define(
 
             if (signature !== 0x774F4646 || flavor !== 0x10000) {
                 reader.dispose();
-                throw 'not a ttf sfnt format!';
+                error.throw(10102);
             }
 
             var numTables = reader.readUint16(12);
@@ -67,10 +68,12 @@ define(
                 var deflateData = reader.readBytes(tableEntry.offset, tableEntry.compLength);
                 // 需要解压
                 if (deflateData.length < tableEntry.length) {
+
                     if (!options.inflate) {
                         reader.dispose();
-                        throw 'no inflate function!';
+                        error.throw(10105);
                     }
+
                     tableEntry.data = options.inflate(deflateData);
                 }
                 else {

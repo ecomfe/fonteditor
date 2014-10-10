@@ -15,6 +15,7 @@ define(
 
         var extend = require('common/lang').extend;
         var curry = require('common/lang').curry;
+        var error = require('./error');
 
         // 检查数组支持情况
         if(typeof ArrayBuffer === 'undefined' || typeof DataView === 'undefined') {
@@ -114,7 +115,7 @@ define(
                 }
 
                 if(length < 0 || offset + length > this.length) {
-                    throw 'length out of range:' + offset + ',' + length;
+                    error.throw(10001, this.length, offset + length);
                 }
 
                 var value = '';
@@ -141,7 +142,7 @@ define(
                 }
 
                 if(length < 0 || offset + length > this.length) {
-                    throw 'length out of range:' + offset + ',' + length;
+                    error.throw(10001, this.length, offset + length);
                 }
 
                 var buffer = [];
@@ -165,7 +166,7 @@ define(
                 }
 
                 if (offset < 0 || offset > this.length) {
-                    throw 'offset out of range:' + offset;
+                    error.throw(10001, this.length, offset);
                 }
 
                 this.offset = offset;

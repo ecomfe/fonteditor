@@ -54,6 +54,10 @@ define(
 
             ttf.head.modified = Date.now();
 
+            if (!ttf.glyf) {
+                error.throw(10201);
+            }
+
             // 将glyf的代码点按小到大排序
             ttf.glyf.forEach(function(glyf) {
                 if (glyf.unicode) {
@@ -123,8 +127,6 @@ define(
                 var tableStart = writer.offset;
                 !new supportTables[table.name]().write(writer, ttf);
                 
-                //console.log(table.name, writer.offset - tableStart - table.length);
-
                 if (table.length % 4) {
                     // 对齐字节
                     for (var i = 0, l = 4 - table.length % 4; i < l; i++) {

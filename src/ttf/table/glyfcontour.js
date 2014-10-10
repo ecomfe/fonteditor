@@ -15,6 +15,7 @@ define(
         var glyFlag = require('../enum/glyFlag');
         var table = require('./table');
         var componentFlag = require('../enum/componentFlag');
+        var error = require('../error');
 
         function readSimpleGlyf(reader, ttf, offset, val) {
 
@@ -244,7 +245,7 @@ define(
                                 };
                             }
                             else {
-                                console.error('not support !ARGS_ARE_XY_VALUES!');
+                                error.throw(10202);
                             }
 
                             val.glyfs.push(glyf);

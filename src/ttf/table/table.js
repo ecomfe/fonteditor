@@ -11,7 +11,7 @@ define(
     function(require) {
         var struct = require('./struct');
         var extend = require('common/lang').extend;
-
+        var error = require('../error');
 
         /**
          * 读取表结构
@@ -65,7 +65,7 @@ define(
                         break;
 
                     default:
-                        throw 'unknown type:' + name + ':' + type;
+                        error.throw(10003, name, type);
                 }
             });
 
@@ -84,7 +84,7 @@ define(
             var table = ttf[this.name];
             
             if (!table) {
-                throw 'can not find table:' + this.name;
+                error.throw(10203, this.name);
             }
 
             this.struct.forEach(function(item){
@@ -123,7 +123,7 @@ define(
                         break;
 
                     default:
-                        throw 'unknown type:' + name + ':' + type;
+                        error.throw(10003, name, type);
                 }
             });
 
@@ -180,7 +180,7 @@ define(
                         break;
 
                     default:
-                        throw 'unknown type:' + name + ':' + type;
+                        error.throw(10003, name, type);
                 }
             });
 

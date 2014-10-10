@@ -20,6 +20,7 @@ define(
         var Reader = require('./reader');
         var Writer = require('./writer');
         var string = require('common/string');
+        var error = require('./error');
 
         /**
          * metadata 转换成XML
@@ -162,6 +163,10 @@ define(
             var tableEntries = [];
             var numTables = ttfReader.readUint16(4); // 读取ttf表个数
 
+            if (numTables <= 0 || numTables > 100) {
+                error.throw(10101);
+            }
+
             // 读取ttf表索引信息
             ttfReader.seek(12);
             for (var i = 0; i < numTables; ++i) {
@@ -204,6 +209,10 @@ define(
                 tableEntry.compLength = tableEntry.data.length;
                 tableEntries.push(tableEntry);
                 ttfReader.seek(entryOffset);
+            }
+
+            if (!tableEntries.length) {
+                error.throw(10204);
             }
 
             // 对table进行排序

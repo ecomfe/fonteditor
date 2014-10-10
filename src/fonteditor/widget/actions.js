@@ -48,7 +48,10 @@ define(
                     var target = $(e.target);
                     program.exporter.export(program.ttfmanager.get(), {
                         type: target.attr('data-type'),
-                        target: target
+                        target: target,
+                        error: function() {
+                            e.preventDefault();
+                        }
                     });
                 }
             },

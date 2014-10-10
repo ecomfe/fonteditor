@@ -34,18 +34,23 @@ define(
             loading.show();
             var fileReader = new FileReader();
             fileReader.onload = function(e) {
-                var buffer = e.target.result;
 
-                if (options.type == 'woff') {
-                    buffer = woff2ttf(buffer, woffOptions);
+                try {
+                    var buffer = e.target.result;
+                    if (options.type == 'woff') {
+                        buffer = woff2ttf(buffer, woffOptions);
+                    }
+                    var ttfReader = new TTFReader();
+                    var ttf = ttfReader.read(buffer);
+                    ttfReader.dispose();
+                    fileReader = null;
+                    options.success && options.success(ttf);
+                }
+                catch(e) {
+                    alert(e.message);
                 }
 
-                var ttfReader = new TTFReader();
-                var ttf = ttfReader.read(buffer);
-                ttfReader.dispose();
-                fileReader = null;
                 loading.hide();
-                options.success && options.success(ttf);
             }
 
             fileReader.onerror = function(e) {
@@ -69,14 +74,21 @@ define(
          */
         function loadSFNTBinary(buffer, options) {
             loading.show();
-            if (options.type == 'woff') {
-                buffer = woff2ttf(buffer, woffOptions);
+
+            try {
+                if (options.type == 'woff') {
+                    buffer = woff2ttf(buffer, woffOptions);
+                }
+                var ttfReader = new TTFReader();
+                var ttf = ttfReader.read(buffer);
+                ttfReader.dispose();
+                options.success && options.success(ttf);
             }
-            var ttfReader = new TTFReader();
-            var ttf = ttfReader.read(buffer);
-            ttfReader.dispose();
+            catch(e) {
+                alert(e.message);
+            }
+
             loading.hide();
-            options.success && options.success(ttf);
         }
 
         /**
@@ -93,11 +105,17 @@ define(
             var fileReader = new FileReader();
 
             fileReader.onload = function(e) {
-                var buffer = e.target.result;
-                var imported = svg2ttfobject(buffer);
-                fileReader = null;
+                try {
+                    var buffer = e.target.result;
+                    var imported = svg2ttfobject(buffer);
+                    fileReader = null;
+                    options.success && options.success(imported);
+                }
+                catch(e) {
+                    alert(e.message);
+                }
+
                 loading.hide();
-                options.success && options.success(imported);
             };
 
             fileReader.onerror = function(e) {

@@ -32,24 +32,30 @@ define(
         function exportFile(ttf, options) {
 
             if (ttf) {
-                var base64Str = ''; 
-                if (options.type == 'woff') {
-                    var buffer = ttf2woff(new TTFWriter().write(ttf));
-                    base64Str = woff2base64(buffer);
+                try {
+                    var base64Str = ''; 
+                    if (options.type == 'woff') {
+                        var buffer = ttf2woff(new TTFWriter().write(ttf));
+                        base64Str = woff2base64(buffer);
+                    }
+                    else if(options.type == 'svg') {
+                        base64Str = svg2base64(ttf2svg(ttf));
+                    }
+                    else {
+                        buffer = new TTFWriter().write(ttf);
+                        base64Str = ttf2base64(buffer);
+                        options.type == 'ttf';
+                    }
+                    
+                    var target = $(options.target);
+                    target.attr('download', (options.fileName || ttf.name.fontFamily || 'export') + '.' + options.type);
+                    target.attr('href', base64Str);
+                    options.success && options.success(base64Str);  
                 }
-                else if(options.type == 'svg') {
-                    base64Str = svg2base64(ttf2svg(ttf));
+                catch(e) {
+                    alert(e.message);
+                    options.error && options.error(e);  
                 }
-                else {
-                    buffer = new TTFWriter().write(ttf);
-                    base64Str = ttf2base64(buffer);
-                    options.type == 'ttf';
-                }
-                
-                var target = $(options.target);
-                target.attr('download', (options.fileName || ttf.name.fontFamily || 'export') + '.' + options.type);
-                target.attr('href', base64Str);
-                options.success && options.success(base64Str);
             }
 
             return options.target;

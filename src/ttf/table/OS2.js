@@ -12,7 +12,8 @@ define(
         var table = require('./table');
         var struct = require('./struct');
         var lang = require('common/lang');
-
+        var error = require('../error');
+        
         var OS2 = table.create(
             'OS/2', 
             [
@@ -116,7 +117,9 @@ define(
 
                     var glyfNotEmpty = 0; // 非空glyf
 
-                    ttf.glyf.forEach(function(glyf) {
+                    var checkUnicodeRepeat = {}; // 检查是否有重复代码点
+
+                    ttf.glyf.forEach(function(glyf, index) {
 
                         // 统计control point信息
                         if (glyf.compound) {
@@ -184,6 +187,14 @@ define(
                                     usFirstCharIndex = Math.min(usFirstCharIndex, unicode);
                                     usLastCharIndex = Math.max(usLastCharIndex, unicode);
                                 }
+
+                                if (checkUnicodeRepeat[unicode]) {
+                                    error.throw(10200, index);
+                                }
+                                else {
+                                    checkUnicodeRepeat[unicode] = true;
+                                }
+
                             });
                         }
                     });
