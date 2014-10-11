@@ -86,8 +86,6 @@ define(
             return size;
         }
 
-
-
         /**
          * 获取flags
          * 
@@ -100,18 +98,21 @@ define(
                 return glyfSupport;
             }
 
-
-            var prev = {};
             var flags = [];
             var xCoord = [];
             var yCoord = [];
-            var first = true;
 
-            glyf.contours.forEach(function(contour) {
-                contour.forEach(function(p) {
+            var contours = glyf.contours, contour, prev, first = true;
+            for(var j = 0, cl = contours.length; j < cl; j++) {
+                contour = contours[j];
+                for(var i = 0, l = contour.length; i < l; i++) {
+
+                    p = contour[i];
+
                     if (first) {
                         xCoord.push(p.x);
                         yCoord.push(p.y);
+                        first = false;
                     }
                     else {
                         xCoord.push(p.x - prev.x);
@@ -119,9 +120,8 @@ define(
                     }
                     flags.push(p.onCurve ? glyFlag.ONCURVE : 0);
                     prev = p;
-                    first = false;
-                });
-            });
+                }
+            }
 
             // compress
             var flagsC = [];

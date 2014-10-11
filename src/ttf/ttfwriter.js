@@ -16,6 +16,8 @@ define(
         var supportTables = require('./table/support');
         var checkSum = require('./util/checkSum');
 
+        var reduceGlyf = require('./util/reduceGlyf');
+
         // 支持写的表, 注意表顺序
         var tableList = [
             'OS/2',
@@ -62,6 +64,10 @@ define(
             ttf.glyf.forEach(function(glyf) {
                 if (glyf.unicode) {
                     glyf.unicode = glyf.unicode.sort();
+                }
+
+                if (!glyf.compound && glyf.contours) {
+                    reduceGlyf(glyf);
                 }
             });
 
