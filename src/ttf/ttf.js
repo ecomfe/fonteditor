@@ -582,6 +582,14 @@ define(
             });
 
             return {
+
+                // 此处非必须自动设置
+                ascent: usWinAscent,
+                descent: usWinDescent,
+                sTypoAscender: usWinAscent,
+                sTypoDescender: usWinDescent,
+                
+                // 自动设置项目
                 usWinAscent: usWinAscent,
                 usWinDescent: -usWinDescent,
                 sxHeight: sxHeight || 0,

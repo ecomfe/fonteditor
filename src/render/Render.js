@@ -47,19 +47,24 @@ define(
             if(this.options.enableScale) {
                 var me = this;
                 this.capture.on('wheel', function(e) {
-
-                    var defaultRatio = me.options.defaultRatio || 1.2;
-                    var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
-                    var toScale = me.camera.scale * ratio;
-                    if (
-                        toScale < me.options.minScale 
-                        || toScale > me.options.maxScale
-                    ) {
-                        return;
+                    if (e.altKey) {
+                        var defaultRatio = me.options.defaultRatio || 1.2;
+                        var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
+                        var toScale = me.camera.scale * ratio;
+                        if (
+                            toScale < me.options.minScale 
+                            || toScale > me.options.maxScale
+                        ) {
+                            return;
+                        }
+                        
+                        me.scale(ratio, e);
                     }
-                    console.time('refresh');
-                    me.scale(ratio, e);
-                    console.timeEnd('refresh');
+                    else {
+                        var moval = e.delta > 0 ? 20 : -20;
+                        me.move(e.shiftKey ? moval : 0, e.shiftKey ? 0 : moval);
+                        me.refresh();
+                    }
                 });
             }
 
