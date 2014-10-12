@@ -42,7 +42,7 @@ define(
                                     x: e.x
                                 }
                             });
-                            this.render.setCursor('e-resize');
+                            this.render.setCursor('col-resize');
                         }
                         else if (e.startY <= 20 && e.y > 20) {
                             this.currentLine = this.axisLayer.addShape('line', {
@@ -50,7 +50,7 @@ define(
                                     y: e.y
                                 }
                             });
-                            this.render.setCursor('n-resize');
+                            this.render.setCursor('row-resize');
                         }
 
                         this._dragMode == mode.dragLine;
@@ -93,10 +93,10 @@ define(
                 if (m === mode.dragLine) {
                     var line = arguments[1];
                     if(undefined !== line.p0.x) {
-                        this.render.setCursor('e-resize');
+                        this.render.setCursor('col-resize');
                     }
                     else {
-                        this.render.setCursor('n-resize');
+                        this.render.setCursor('row-resize');
                     }
 
                     this.currentLine = line;

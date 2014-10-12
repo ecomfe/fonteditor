@@ -118,29 +118,29 @@ define(
                 var result = render.getLayer('cover').getShapeIn(e);
 
                 if(result) {
-                    if (this.currentGroup) {
-                        this.currentPoint = lang.clone(result[0]);
-                    }
+                    this.currentPoint = lang.clone(result[0]);
                 }
                 else {
 
-                    if (this.currentGroup) {
-                        result = render.getLayer('font').getShapeIn(e);
-                        if(result) {
-                            var shape = result[0];
-                            if (result.length > 1) {
-                                shape = selectShape(result);
-                            }
-                            
-                            if(this.currentGroup.shapes.indexOf(shape) >=0) {
-                                return;
-                            }
-                            else {
-                                this.currentGroup.setShapes([shape]);
-                                this.currentGroup.setMode('scale');
-                                this.currentGroup.refresh();
-                                return;
-                            }
+                    this.currentPoint = null;
+
+                    result = render.getLayer('font').getShapeIn(e);
+
+                    if(result) {
+                        var shape = result[0];
+                        if (result.length > 1) {
+                            shape = selectShape(result);
+                        }
+                        
+                        if(this.currentGroup.shapes.indexOf(shape) >=0) {
+                            return;
+                        }
+                        else {
+                            this.currentGroup.setShapes([shape]);
+                            this.currentGroup.setMode('scale');
+                            this.currentGroup.refresh();
+                            this.clicked = false;
+                            return;
                         }
                     }
 
@@ -154,41 +154,34 @@ define(
              */
             dragstart: function(e) {
 
-
-                if (this.currentGroup) {
-
-                    // 点拖动模式
-                    if (this.currentPoint) {
-                        this.currentGroup.beginTransform(this.currentPoint);
-                    }
-                    // 复制模式
-                    else if (e.ctrlKey && e.altKey) {
-                        var shapes = lang.clone(this.currentGroup.shapes);
-                        var fontLayer = this.fontLayer;
-                        shapes.forEach(function(shape) {
-                            shape.id = guid('shape');
-                            fontLayer.addShape(shape);
-                        });
-                        
-                        this.currentGroup.setShapes(shapes);
-                    }
-
+                // 点拖动模式
+                if (this.currentPoint) {
+                    this.currentGroup.beginTransform(this.currentPoint, this.render.camera);
                 }
+                // 复制模式
+                else if (e.ctrlKey && e.altKey) {
+                    var shapes = lang.clone(this.currentGroup.shapes);
+                    var fontLayer = this.fontLayer;
+                    shapes.forEach(function(shape) {
+                        shape.id = guid('shape');
+                        fontLayer.addShape(shape);
+                    });
+                    
+                    this.currentGroup.setShapes(shapes);
+                }
+                else {
+                    this.currentGroup.setMode('move');
+                    this.currentGroup.beginTransform(this.currentPoint, this.render.camera);
+                }
+
             },
 
             /**
              * 拖动事件
              */
             drag: function(e) {
-                var render = this.render;
-                var camera = render.camera;
                 if(this.currentGroup) {
-                    if (this.currentPoint) {
-                        this.currentGroup.transform(this.currentPoint, camera);
-                    }
-                    else {
-                        this.currentGroup.move(camera.mx, camera.my);
-                    }
+                    this.currentGroup.transform(this.currentPoint, this.render.camera);
                 }
             },
 
@@ -196,35 +189,29 @@ define(
              * 拖动结束事件
              */
             dragend: function(e) {
-                if (this.currentGroup) {
-                    if (this.currentPoint) {
-                        this.currentGroup.finishTransform(this.currentPoint);
-                        this.currentPoint = null;
-                    }
-                    this.fire('change');
-                }
-            },
 
-            /**
-             * 点击
-             */
-            click: function(e) {
-                // 变换编辑模式
-                if (e.time > 400 && this.currentGroup && !this.currentPoint) {
-                    this.currentGroup.setMode(this.currentGroup.mode == 'scale' ? 'rotate' : 'scale');
-                    this.currentGroup.refresh();
-                }
-                else {
+                if (this.currentPoint) {
+                    this.currentGroup.finishTransform(this.currentPoint, this.render.camera);
                     this.currentPoint = null;
                 }
+                else if (this.currentGroup.mode == 'move') {
+                    this.currentGroup.finishTransform(this.currentPoint, this.render.camera);
+                    this.currentGroup.setMode('scale');
+                }
+
+                this.render.setCursor('default');
+                this.fire('change');
             },
 
             /**
              * 移动
              */
             move: function(e) {
+
                 var shapes = this.coverLayer.getShapeIn(e);
-                if(shapes) {
+                var mode = this.currentGroup.mode;
+                
+                if(shapes && mode != 'move' ) {
                     this.render.setCursor(POS_CUSOR[this.currentGroup.mode][shapes[0].pos] || 'default');
                 }
                 else {
@@ -237,14 +224,22 @@ define(
              */
             rightdown: function(e) {
                 // 对单个shape进行操作
-                if (this.currentGroup) {
-                    this.contextMenu.onClick = lang.bind(onContextMenu, this);
-                    this.contextMenu.show(e, 
-                        this.currentGroup.shapes.length > 1
-                        ? commandList.shapes
-                        : commandList.shape
-                    );
+                this.contextMenu.onClick = lang.bind(onContextMenu, this);
+                this.contextMenu.show(e, 
+                    this.currentGroup.shapes.length > 1
+                    ? commandList.shapes
+                    : commandList.shape
+                );
+            },
+
+            click: function(e) {
+                if (this.clicked) {
+                    // 变换编辑模式
+                    var mode = this.currentGroup.mode;
+                    this.currentGroup.setMode(mode == 'scale' ? 'rotate' : 'scale');
+                    this.currentGroup.refresh();
                 }
+                this.clicked = true;
             },
 
             /**
@@ -252,27 +247,28 @@ define(
              */
             keyup: function(e) {
                 // esc键，重置model
-                if (e.key == 'delete' && this.currentGroup) {
+                if (e.key == 'delete') {
                     this.execCommand('removeshapes', this.currentGroup.shapes);
                     this.setMode();
                     this.fire('change');
                 }
-                else if(e.keyCode == 65 && e.ctrlKey && this.currentGroup) {
+                // 全选
+                else if(e.keyCode == 65 && e.ctrlKey) {
                     this.currentGroup.setShapes(this.fontLayer.shapes.slice());
                     this.currentGroup.refresh();
                 }
                 // 剪切
-                else if (e.keyCode == 88 && e.ctrlKey && this.currentGroup) {
+                else if (e.keyCode == 88 && e.ctrlKey) {
                     this.execCommand('cutshapes', this.currentGroup.shapes);
                     this.setMode();
                     this.fire('change');
                 }
                 // 复制
-                else if (e.keyCode == 67 && e.ctrlKey && this.currentGroup) {
+                else if (e.keyCode == 67 && e.ctrlKey) {
                     this.execCommand('copyshapes', this.currentGroup.shapes);
                 }
                 // 移动
-                else if(stepMap[e.key] && this.currentGroup) {
+                else if(stepMap[e.key]) {
                     this.fire('change');
                 }
                 else if (e.key == 'esc') {
@@ -285,7 +281,7 @@ define(
              */
             keydown: function(e) {
                 // 移动
-                if(stepMap[e.key] && this.currentGroup) {
+                if(stepMap[e.key]) {
                     this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);
                 }
             },
@@ -296,6 +292,8 @@ define(
             begin: function(shapes) {
                 this.currentGroup = new ShapesGroup(shapes, this);
                 this.currentGroup.refresh();
+                this.currentGroup.setMode('scale');
+                this.clicked = false;
             },
 
 
@@ -304,14 +302,9 @@ define(
              */
             end: function() {
 
-                if (this.currentGroup) {
-                    if (this.currentPoint) {
-                        this.currentGroup.finishTransform(this.currentPoint);
-                        this.currentPoint = null;
-                    }
-                    this.currentGroup.dispose();
-                    this.currentGroup = null;
-                }
+                this.currentPoint = null;
+                this.currentGroup.dispose();
+                this.currentGroup = null;
 
                 this.render.setCursor('default');
             }

@@ -35,9 +35,9 @@ define(
             // 更新shape
             var shapes = this.shapes;
 
-            this.originShapes.forEach(function(originShape, index) {
+            this.coverShapes.forEach(function(coverShape, index) {
 
-                var shape = lang.clone(originShape);
+                var shape = lang.clone(shapes[index]);
                 pathAdjust(shape.points, matrix[2], matrix[3], -matrix[0], -matrix[1]);
                 pathAdjust(shape.points, 1, 1, matrix[0], matrix[1]);
 
@@ -48,26 +48,12 @@ define(
                 if (matrix[3] < 0 && matrix[2] >= 0) {
                     shape.points = shape.points.reverse();
                 }
-
-                lang.extend(shapes[index], shape);
-
+                lang.extend(coverShape, shape);
             });
             
-            this.editor.fontLayer.refresh();
-
             // 更新边界
             var coverLayer = this.editor.coverLayer;
             var boundShape = coverLayer.getShape('bound');
-
-            if(!boundShape) {
-                boundShape = {
-                    type: 'polygon',
-                    dashed: true,
-                    id: 'bound'
-                };
-                coverLayer.addShape(boundShape);
-            }
-
             var bound = this.bound;
             var points = pathAdjust(
                 [

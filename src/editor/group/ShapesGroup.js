@@ -12,8 +12,11 @@ define(
         var pathAdjust = require('graphics/pathAdjust');
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
+
+        var moveTransform = require('./moveTransform');
         var scaleTransform = require('./scaleTransform');
         var rotateTransform = require('./rotateTransform');
+
         var updateControls = require('./updateControls');
         
 
@@ -36,29 +39,46 @@ define(
         /**
          * 选择组控制器
          */
-        function ShapesGroup(shapes, editor, mode) {
+        function ShapesGroup(shapes, editor) {
             this.editor = editor;
             this.setShapes(shapes);
-            this.setMode(mode);
         }
 
         /**
          * 根据控制点做图形变换
          */
-        ShapesGroup.prototype.beginTransform = function(point) {
+        ShapesGroup.prototype.beginTransform = function(point, camera) {
             this.bound = getBound(this.shapes);
-            this.originShapes = lang.clone(this.shapes);
-            this.editor.coverLayer.clearShapes();
+            this.coverShapes = lang.clone(this.shapes);
+
+            var coverLayer = this.editor.coverLayer;
+
+            coverLayer.clearShapes();
+            this.coverShapes.forEach(function(shape) {
+                shape.id = 'cover-' + shape.id;
+                shape.selectable = false;
+
+                coverLayer.addShape(shape);
+            });
+
+            coverLayer.addShape({
+                type: 'polygon',
+                dashed: true,
+                id: 'bound'
+            });
         };
 
         /**
          * 根据控制点做图形变换
          */
         ShapesGroup.prototype.transform = function(point, camera) {
-            if (this.mode === 'scale') {
+            if (this.mode === 'move') {
+                moveTransform.call(this, camera);
+            }
+            else if (this.mode === 'scale') {
                 scaleTransform.call(this, point, camera);
             }
-            else {
+            else if (this.mode === 'rotate') {
                 rotateTransform.call(this, point, camera);
             }
         };
@@ -66,24 +86,21 @@ define(
         /**
          * 刷新Shapesgroup信息
          */
-        ShapesGroup.prototype.finishTransform = function() {
-            delete this.originShapes;
-            delete this.bound;
-            this.refresh();
-        };
+        ShapesGroup.prototype.finishTransform = function(point, camera) {
 
-        /**
-         * 移动到指定位置
-         */
-        ShapesGroup.prototype.move = function(mx, my) {
-
-            this.shapes.forEach(function(shape) {
-                pathAdjust(shape.points, 1, 1, mx, my);
+            var coverLayer = this.editor.coverLayer;
+            this.coverShapes.forEach(function(shape) {
+                coverLayer.removeShape(shape);
             });
-            
+
+            this.coverShapes = this.shapes;
+            this.transform(point, camera);
+
+            delete this.coverShapes;
+            delete this.bound;
+
             this.editor.fontLayer.refresh();
-            this.editor.coverLayer.move(mx, my);
-            this.editor.coverLayer.refresh();
+            this.refresh();
         };
 
         /**
@@ -111,9 +128,23 @@ define(
          * 设置操作的shapes
          */
         ShapesGroup.prototype.setMode = function(mode) {
-            this.mode = mode || 'scale'; // 两种变化模式，scale和rotate
+            this.mode = mode; // 两种变化模式，scale和rotate
         };
 
+
+        /**
+         * 移动到指定位置
+         */
+        ShapesGroup.prototype.move = function(mx, my) {
+
+            this.shapes.forEach(function(shape) {
+                pathAdjust(shape.points, 1, 1, mx, my);
+            });
+            
+            this.editor.fontLayer.refresh();
+            this.editor.coverLayer.move(mx, my);
+            this.editor.coverLayer.refresh();
+        };
 
         /**
          * refresh
