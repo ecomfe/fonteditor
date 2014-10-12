@@ -12,7 +12,7 @@ define(
         var lang = require('common/lang');
         var observable = require('common/observable');
         var pad = require('common/string').pad;
-
+        
         /**
          * 设置框函数
          * 
@@ -89,11 +89,17 @@ define(
         Setting.prototype.setFields = function(setting) {
             this.getDialog().find('[data-field]').each(function(i, item) {
 
+                var field = item.getAttribute('data-field');
+                
+                if (undefined == setting[field]) {
+                    return;
+                }
+
                 if (item.type == 'checkbox') {
-                    item.checked = setting[item.getAttribute('data-field')] ? 'checked' : '';
+                    item.checked = setting[field] ? 'checked' : '';
                 }
                 else if (item.type == 'datetime-local') {
-                    var val = setting[item.getAttribute('data-field')];
+                    var val = setting[field];
                     var date;
                     if (typeof(val) === 'string') {
                         date = new Date(Date.parse(val));
@@ -109,8 +115,9 @@ define(
                 }
                 else {
                     item = $(item);
-                    item.val(setting[item.attr('data-field')]);
+                    item.val(setting[field]);
                 }
+
             });
             return this;
         };
@@ -124,14 +131,16 @@ define(
             var setting = {};
             this.getDialog().find('[data-field]').each(function(i, item) {
 
+                var field = item.getAttribute('data-field');
+
                 if (item.type == 'checkbox') {
                     if (item.checked) {
-                        setting[item.getAttribute('data-field')] = true;
+                        setting[field] = true;
                     }
                 }
                 else if (item.type == 'datetime-local') {
                     if (item.value) {
-                        setting[item.getAttribute('data-field')] = Date.parse(item.value.replace('T', ' '));
+                        setting[field] = Date.parse(item.value.replace('T', ' '));
                     }
                 }
                 else if (item.type == 'number') {
@@ -140,7 +149,7 @@ define(
                         if (item.getAttribute('data-ceil')) {
                             val = Math.floor(val);
                         }
-                        setting[item.getAttribute('data-field')] = val;
+                        setting[field] = val;
                     }
                 }
 
@@ -148,7 +157,7 @@ define(
                     item = $(item);
                     var val = item.val().trim();
                     if (val) {
-                        setting[item.attr('data-field')] =  val;
+                        setting[field] =  val;
                     }
                 }
             });

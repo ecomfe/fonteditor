@@ -316,6 +316,18 @@ define(
         Manager.prototype.clearGlyfTag = clearGlyfTag;
 
         /**
+         * 设置状态
+         * @return {this}
+         */
+        Manager.prototype.calcMetrics = function() {
+            if (this.ttf) {
+                return this.ttf.calcMetrics();
+            }
+        };
+
+
+
+        /**
          * 注销
          */
         Manager.prototype.dispose = function() {

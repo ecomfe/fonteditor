@@ -18,11 +18,11 @@ define(
 
             // 新建
             'new': function() {
-                if (program.ttfmanager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
+                if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                     return;
                 }
                 $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
-                    program.ttfmanager.set(imported);
+                    program.ttfManager.set(imported);
                     program.data.projectName = null;
                 });
             },
@@ -44,9 +44,9 @@ define(
 
             // 导出文件
             'export-file': function(e) {
-                if (program.ttfmanager.get()) {
+                if (program.ttfManager.get()) {
                     var target = $(e.target);
-                    program.exporter.export(program.ttfmanager.get(), {
+                    program.exporter.export(program.ttfManager.get(), {
                         type: target.attr('data-type'),
                         target: target,
                         error: function() {
@@ -58,21 +58,21 @@ define(
 
             // 保存项目
             'save': function() {
-                if (program.ttfmanager.get()) {
+                if (program.ttfManager.get()) {
                     var name = '';
                     if(name = window.prompt('请输入项目名称：')) {
                         name = string.encodeHTML(name);
-                        var list = program.project.add(name, program.ttfmanager.get());
+                        var list = program.project.add(name, program.ttfManager.get());
                         program.projectViewer.show(list);
                         program.data.projectName = name;
-                        program.ttfmanager.setState('new');
+                        program.ttfManager.setState('new');
                     }
                 }
             },
 
             // 添加新字形
             'add-new': function() {
-                program.ttfmanager.addGlyf({
+                program.ttfManager.addGlyf({
                     name: '',
                     unicode:[]
                 });
@@ -92,13 +92,13 @@ define(
                                         type: 'ttf',
                                         success: function(imported) {
                                             program.loading.hide();
-                                            if (program.ttfmanager.get()) {
-                                                program.ttfmanager.merge(imported, {
+                                            if (program.ttfManager.get()) {
+                                                program.ttfManager.merge(imported, {
                                                     scale: true
                                                 });
                                             }
                                             else {
-                                                program.ttfmanager.set(imported);
+                                                program.ttfManager.set(imported);
                                                 program.data.projectName = null;
                                             }
 
@@ -122,9 +122,9 @@ define(
                     onChange: function(unicode) {
                         // 此处延迟处理
                         setTimeout(function(){
-                            if (program.ttfmanager.get()) {
+                            if (program.ttfManager.get()) {
                                 var glyfList = program.viewer.getSelected();
-                                program.ttfmanager.setUnicode(unicode, glyfList);
+                                program.ttfManager.setUnicode(unicode, glyfList);
                             }
                         }, 20);
                     }
@@ -135,12 +135,12 @@ define(
 
             // 调整字形位置
             'setting-adjust-pos': function() {
-                var ttf = program.ttfmanager.get();
+                var ttf = program.ttfManager.get();
                 if (ttf) {
                     var dlg = new setting['adjust-pos']({
                         onChange: function(setting) {
                             setTimeout(function() {
-                                program.ttfmanager.adjustGlyfPos(setting, selected);
+                                program.ttfManager.adjustGlyfPos(setting, selected);
                             }, 20);
                         }
                     });
@@ -148,7 +148,7 @@ define(
                     // 如果仅选择一个字形，则填充现有值
                     var selected = program.viewer.getSelected();
                     if (selected.length === 1) {
-                        var glyf = program.ttfmanager.getGlyf(selected)[0];
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
                         dlg.show({
                             leftSideBearing: glyf.leftSideBearing || '',
                             rightSideBearing: glyf.advanceWidth - glyf.xMax || ''
@@ -162,12 +162,12 @@ define(
 
             // 调整字形
             'setting-adjust-glyf': function() {
-                var ttf = program.ttfmanager.get();
+                var ttf = program.ttfManager.get();
                 if (ttf) {
                     var dlg = new setting['adjust-glyf']({
                         onChange: function(setting) {
                             setTimeout(function() {
-                                program.ttfmanager.adjustGlyf(setting, program.viewer.getSelected());
+                                program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
                             }, 20);
                         }
                     });
@@ -178,11 +178,11 @@ define(
 
             // 设置字体名称
             'setting-name': function() {
-                var ttf = program.ttfmanager.get();
+                var ttf = program.ttfManager.get();
                 if (ttf) {
                     var dlg = new setting.name({
                         onChange: function(setting) {
-                            program.ttfmanager.setInfo(setting);
+                            program.ttfManager.setInfo(setting);
                         }
                     });
                     dlg.show($.extend({}, ttf.head, ttf.name));
@@ -191,11 +191,11 @@ define(
 
             // 调整规格
             'setting-metrics': function() {
-                var ttf = program.ttfmanager.get();
+                var ttf = program.ttfManager.get();
                 if (ttf) {
                     var dlg = new setting['metrics']({
                         onChange: function(setting) {
-                            program.ttfmanager.setMetrics(setting);
+                            program.ttfManager.setMetrics(setting);
                         }
                     });
                     

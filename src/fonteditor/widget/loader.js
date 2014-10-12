@@ -48,6 +48,7 @@ define(
                 }
                 catch(e) {
                     alert(e.message);
+                    throw e;
                 }
 
                 loading.hide();
@@ -86,6 +87,7 @@ define(
             }
             catch(e) {
                 alert(e.message);
+                throw e;
             }
 
             loading.hide();
@@ -113,6 +115,7 @@ define(
                 }
                 catch(e) {
                     alert(e.message);
+                    throw e;
                 }
 
                 loading.hide();

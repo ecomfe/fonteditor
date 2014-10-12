@@ -9,6 +9,8 @@
 define(
     function(require) {
 
+            var program = require('../widget/program');
+
             var panose = [
                 'bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
                 'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'
@@ -48,23 +50,24 @@ define(
                 +         '<input data-field="usWinDescent" type="number" class="form-control">'
                 +       '</div>'
                 +   '</div>'
+                +   '<a href="#" id="setting-calc-metrics" class="form-group">计算</a>'
                 + '</div>'
                 + '<div class="form-inline">'
                 +   '<div class="form-group">'
                 +       '<div class="input-group input-group-sm">'
-                +         '<span class="input-group-addon">错字上升</span>'
+                +         '<span class="input-group-addon">typo上升</span>'
                 +         '<input data-field="sTypoAscender" type="number" class="form-control">'
                 +       '</div>'
                 +   '</div>'
                 +   '<div class="form-group">'
                 +       '<div class="input-group input-group-sm">'
-                +         '<span class="input-group-addon">错字下降</span>'
+                +         '<span class="input-group-addon">typo下降</span>'
                 +         '<input data-field="sTypoDescender" type="number" class="form-control">'
                 +       '</div>'
                 +   '</div>'
                 +   '<div class="form-group">'
                 +       '<div class="input-group input-group-sm">'
-                +         '<span class="input-group-addon">错字间距</span>'
+                +         '<span class="input-group-addon">typo间距</span>'
                 +         '<input data-field="sTypoLineGap" type="number" class="form-control">'
                 +       '</div>'
                 +   '</div>'
@@ -182,20 +185,32 @@ define(
                 +     '<span class="input-group-addon">panose</span>'
                 +     '<input data-field="panose" type="text" class="form-control">'
                 + '</div>';
+
             return require('./setting').derive({
                 
                   title: '字体度量',
+
                   getTpl: function() {
                         return tpl;
                   },
+
                   set: function(setting) {
                         setting.panose = panose.map(function(name) {
                               return setting[name];
                         }).join('-');
                         this.setFields(setting);
+
+                        var me = this;
+                        $('#setting-calc-metrics').on('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            var metrics = program.ttfManager.calcMetrics();
+                            me.setFields(metrics);
+                        });
                   },
                   
                   validate: function() {
+                        $('#setting-calc-metrics').off('click');
                         var setting = this.getFields();
                         var length = panose.length;
                         (setting.panose || '').split('-').forEach(function(val, i) {
@@ -203,7 +218,7 @@ define(
                                     setting[panose[i]] = (+val || 0) & 0xF;
                               }
                         });
-                      return setting;          
+                        return setting;          
                   }
             });
     }

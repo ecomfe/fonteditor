@@ -24,18 +24,18 @@ define(
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                     success: function(imported) {
-                        program.ttfmanager.set(imported);
+                        program.ttfManager.set(imported);
                         program.data.projectName = null;
                     }
                 });
             }
             else if (program.data.action == 'import' && file.name.match(/(\.ttf|\.woff|\.svg)$/i)) {
-                if (program.ttfmanager.get()) {
+                if (program.ttfManager.get()) {
                     program.loader.load(file, {
                         type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                         success: function(imported) {
                             if (imported.glyf.length) {
-                                program.ttfmanager.merge(imported, {scale: true});
+                                program.ttfManager.merge(imported, {scale: true});
                             }
                         }
                     });
@@ -81,7 +81,7 @@ define(
                 program.projectViewer = new ProjectViewer($('#project-list'));
 
                 // ttf管理
-                program.ttfmanager = new TTFManager();
+                program.ttfManager = new TTFManager();
 
                 // 导入导出器
                 program.loader = require('../widget/loader');

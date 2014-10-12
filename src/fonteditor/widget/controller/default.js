@@ -24,40 +24,40 @@ define(
             init: function(program) {
                 program.viewer.on('del', function(e) {
                     if (e.list) {
-                        program.ttfmanager.removeGlyf(e.list);
+                        program.ttfManager.removeGlyf(e.list);
                     }
                 }).on('copy', function(e) {
-                    var list = program.ttfmanager.getGlyf(e.list);
+                    var list = program.ttfManager.getGlyf(e.list);
                     clipboard.set(list, 'glyf');
                 }).on('cut', function(e) {
-                    var list = program.ttfmanager.getGlyf(e.list);
+                    var list = program.ttfManager.getGlyf(e.list);
                     clipboard.set(list, 'glyf');
-                    program.ttfmanager.removeGlyf(e.list);
+                    program.ttfManager.removeGlyf(e.list);
                 }).on('paste', function(e) {
                     var glyfList = clipboard.get('glyf');
                     if (glyfList && glyfList.length) {
-                        program.ttfmanager.appendGlyf(glyfList, program.viewer.getSelected());
+                        program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
                     }
                 }).on('undo', function(e) {
-                    program.ttfmanager.undo();
+                    program.ttfManager.undo();
                 }).on('redo', function(e) {
-                    program.ttfmanager.redo();
+                    program.ttfManager.redo();
                 }).on('save', function(e) {
                     // 保存项目
-                    if (program.ttfmanager.get()) {
+                    if (program.ttfManager.get()) {
                         if (program.data.projectName) {
-                            program.project.add(program.data.projectName, program.ttfmanager.get());
-                            program.ttfmanager.setState('new');
+                            program.project.add(program.data.projectName, program.ttfManager.get());
+                            program.ttfManager.setState('new');
                             program.loading.show('保存成功..', 400);
                         }
                         else {
                             var name = '';
                             if(name = window.prompt('请输入项目名称：')) {
                                 name = string.encodeHTML(name);
-                                var list = program.project.add(name, program.ttfmanager.get());
+                                var list = program.project.add(name, program.ttfManager.get());
                                 program.projectViewer.show(list);
                                 program.data.projectName = name;
-                                program.ttfmanager.setState('new');
+                                program.ttfManager.setState('new');
                                 program.loading.show('保存成功..', 400);
                             }
                         }
@@ -69,10 +69,10 @@ define(
                 program.projectViewer.on('open', function(e) {
                     var imported = program.project.get(e.projectName);
                     if (imported) {
-                        if (program.ttfmanager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
+                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                             return;
                         }
-                        program.ttfmanager.set(imported);
+                        program.ttfManager.set(imported);
                         program.data.projectName = e.projectName;
                         program.viewer.focus();
                     }
@@ -83,13 +83,13 @@ define(
                     program.viewer.focus();
                 })
 
-                program.ttfmanager.on('change', function(e) {
+                program.ttfManager.on('change', function(e) {
                     program.viewer.show(e.ttf);
                     program.viewer.focus();
                 });
 
                 window.onbeforeunload = function() {
-                    if (program.ttfmanager.isChanged()) {
+                    if (program.ttfManager.isChanged()) {
                             return '是否放弃保存当前项目?';
                     }
                 };
