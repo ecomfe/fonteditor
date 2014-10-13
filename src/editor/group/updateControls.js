@@ -21,6 +21,7 @@ define(
                 // 虚线框
                 this.controls = [
                     {
+                        id: 'control',
                         type: 'polygon',
                         dashed: true,
                         selectable: false
@@ -73,10 +74,11 @@ define(
             });
 
             var coverLayer = this.editor.coverLayer;
-            coverLayer.clearShapes();
-            controls.forEach(function(shape) {
-                coverLayer.addShape(shape);
-            });
+            if (!coverLayer.getShape('control')) {
+                controls.forEach(function(shape) {
+                    coverLayer.addShape(shape);
+                });
+            }
         }
 
 

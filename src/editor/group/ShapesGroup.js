@@ -48,20 +48,9 @@ define(
          * 根据控制点做图形变换
          */
         ShapesGroup.prototype.beginTransform = function(point, camera) {
+
             this.bound = getBound(this.shapes);
-            this.coverShapes = lang.clone(this.shapes);
-
-            var coverLayer = this.editor.coverLayer;
-
-            coverLayer.clearShapes();
-            this.coverShapes.forEach(function(shape) {
-                shape.id = 'cover-' + shape.id;
-                shape.selectable = false;
-
-                coverLayer.addShape(shape);
-            });
-
-            coverLayer.addShape({
+            this.editor.coverLayer.addShape({
                 type: 'polygon',
                 dashed: true,
                 id: 'bound'
@@ -89,17 +78,18 @@ define(
         ShapesGroup.prototype.finishTransform = function(point, camera) {
 
             var coverLayer = this.editor.coverLayer;
-            this.coverShapes.forEach(function(shape) {
-                coverLayer.removeShape(shape);
-            });
 
+            // 保存最后一次修改
+            var coverShapes = this.coverShapes;
             this.coverShapes = this.shapes;
             this.transform(point, camera);
+            this.coverShapes = coverShapes;
+            this.editor.fontLayer.refresh();
 
-            delete this.coverShapes;
+
+            this.editor.coverLayer.removeShape('bound');
             delete this.bound;
 
-            this.editor.fontLayer.refresh();
             this.refresh();
         };
 
@@ -112,6 +102,19 @@ define(
                 this.shapes = null;
             }
             this.shapes = shapes;
+
+            var coverLayer = this.editor.coverLayer;
+            coverLayer.clearShapes();
+
+            this.coverShapes = lang.clone(this.shapes);
+            this.coverShapes.forEach(function(shape) {
+                shape.id = 'cover-' + shape.id;
+                shape.selectable = false;
+                shape.style = {
+                    strokeColor: 'red'
+                };
+                coverLayer.addShape(shape);
+            });
         };
 
         /**

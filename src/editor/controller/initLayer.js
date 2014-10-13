@@ -25,7 +25,8 @@ define(
             this.fontLayer = this.render.addLayer('font', {
                 level: 20,
                 lineWidth: 1,
-                strokeColor: 'red',
+                strokeColor: '#999',
+                fillColor: '#333',
                 strokeSeparate: false
             });
 
