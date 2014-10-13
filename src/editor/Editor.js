@@ -154,6 +154,22 @@ define(
         };
 
         /**
+         * 获取焦点
+         * 
+         */
+        Editor.prototype.focus = function() {
+            this.render.focus();
+        };
+
+        /**
+         * 离开焦点
+         * 
+         */
+        Editor.prototype.blur = function() {
+            this.render.blur();
+        };
+
+        /**
          * 注销
          */
         Editor.prototype.dispose = function() {

@@ -84,6 +84,13 @@ define(
             this.main = main;
             options = options || {};
             this.events = options.events || {};
+
+            this.handlers = {
+                keydown: lang.bind(keydetect, this, 'down'),
+                keyup: lang.bind(keydetect, this, 'up'),
+                keypress: lang.bind(keydetect, this, 'press')
+            };
+            
             this.start();
         }
 
@@ -97,16 +104,15 @@ define(
              */
             start: function() {
 
-                var target = document.body;
-                this.handlers = {
-                    keydown: lang.bind(keydetect, this, 'down'),
-                    keyup: lang.bind(keydetect, this, 'up'),
-                    keypress: lang.bind(keydetect, this, 'press')
-                };
+                if (!this.listening) {
+                    this.listening = true;
 
-                target.addEventListener('keydown', this.handlers.keydown, false);
-                target.addEventListener('keyup', this.handlers.keyup, false);
-                target.addEventListener('keypress', this.handlers.keypress, false);
+                    var target = document.body;
+                    target.addEventListener('keydown', this.handlers.keydown, false);
+                    target.addEventListener('keyup', this.handlers.keyup, false);
+                    target.addEventListener('keypress', this.handlers.keypress, false);
+                }
+
 
                 return this;
             },
@@ -117,13 +123,25 @@ define(
              * @return {this}
              */
             stop: function() {
+                if (this.listening) {
+                    this.listening = false;
 
-                var target = document.body;
-                target.removeEventListener('keydown', this.handlers.keydown);
-                target.removeEventListener('keyup', this.handlers.keyup);
-                target.removeEventListener('keypress', this.handlers.keypress);
+                    var target = document.body;
+                    target.removeEventListener('keydown', this.handlers.keydown);
+                    target.removeEventListener('keyup', this.handlers.keyup);
+                    target.removeEventListener('keypress', this.handlers.keypress);
+                }
 
                 return this;
+            },
+
+            /**
+             * 是否监听中
+             * 
+             * @return {boolean} 是否
+             */
+            isListening: function() {
+                return !!this.listening;
             },
 
             /**

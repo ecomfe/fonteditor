@@ -204,6 +204,24 @@ define(
         };
 
         /**
+         * 获取焦点
+         * 
+         */
+        Render.prototype.focus = function() {
+            this.capture.start();
+            this.keyCapture.start();
+        };
+
+        /**
+         * 离开焦点
+         * 
+         */
+        Render.prototype.blur = function() {
+            this.capture.stop();
+            this.keyCapture.stop();
+        };
+
+        /**
          * 注销对象
          * 
          */

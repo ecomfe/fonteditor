@@ -264,6 +264,17 @@ define(
             options = options || {};
             this.events = options.events || {};
             this.dragDelta = 2;
+
+            this.handlers = {
+                mousewheel: lang.bind(mousewheel, this),
+                mousemove: lang.bind(mousemove, this),
+                mousedown: lang.bind(mousedown, this),
+                dblclick: lang.bind(dblclick, this),
+                mouseover: lang.bind(mouseover, this),
+                mouseout: lang.bind(mouseout, this),
+                mouseup: lang.bind(mouseup, this)
+            };
+
             this.start();
         }
 
@@ -277,25 +288,19 @@ define(
              */
             start: function() {
 
-                var target = this.main;
-                this.handlers = {
-                    mousewheel: lang.bind(mousewheel, this),
-                    mousemove: lang.bind(mousemove, this),
-                    mousedown: lang.bind(mousedown, this),
-                    dblclick: lang.bind(dblclick, this),
-                    mouseover: lang.bind(mouseover, this),
-                    mouseout: lang.bind(mouseout, this),
-                    mouseup: lang.bind(mouseup, this)
-                };
+                if (!this.listening) {
+                    this.listening = true;
 
-                target.addEventListener('DOMMouseScroll', this.handlers.mousewheel, false);
-                target.addEventListener('mousewheel', this.handlers.mousewheel, false);
-                target.addEventListener('mousemove', this.handlers.mousemove, false);
-                target.addEventListener('mousedown', this.handlers.mousedown, false);
-                target.addEventListener('dblclick', this.handlers.dblclick, false);
-                target.addEventListener('mouseover', this.handlers.mouseover, false);
-                target.addEventListener('mouseout', this.handlers.mouseout, false);
-                document.addEventListener('mouseup', this.handlers.mouseup, false);
+                    var target = this.main;
+                    target.addEventListener('DOMMouseScroll', this.handlers.mousewheel, false);
+                    target.addEventListener('mousewheel', this.handlers.mousewheel, false);
+                    target.addEventListener('mousemove', this.handlers.mousemove, false);
+                    target.addEventListener('mousedown', this.handlers.mousedown, false);
+                    target.addEventListener('dblclick', this.handlers.dblclick, false);
+                    target.addEventListener('mouseover', this.handlers.mouseover, false);
+                    target.addEventListener('mouseout', this.handlers.mouseout, false);
+                    document.addEventListener('mouseup', this.handlers.mouseup, false);
+                }
 
                 return this;
             },
@@ -307,18 +312,31 @@ define(
              */
             stop: function() {
 
-                var target = this.main;
-                target.removeEventListener('DOMMouseScroll', this.handlers.mousewheel);
-                target.removeEventListener('mousewheel', this.handlers.mousewheel);
-                target.removeEventListener('mousemove', this.handlers.mousemove);
-                target.removeEventListener('mousedown', this.handlers.mousedown);
-                target.removeEventListener('click', this.handlers.click);
-                target.removeEventListener('dblclick', this.handlers.dblclick);
-                target.removeEventListener('mouseover', this.handlers.mouseover);
-                target.removeEventListener('mouseout', this.handlers.mouseout);
-                document.removeEventListener('mouseup', this.handlers.mouseup);
+                if (this.listening) {
+                    this.listening = false;
+
+                    var target = this.main;
+                    target.removeEventListener('DOMMouseScroll', this.handlers.mousewheel);
+                    target.removeEventListener('mousewheel', this.handlers.mousewheel);
+                    target.removeEventListener('mousemove', this.handlers.mousemove);
+                    target.removeEventListener('mousedown', this.handlers.mousedown);
+                    target.removeEventListener('click', this.handlers.click);
+                    target.removeEventListener('dblclick', this.handlers.dblclick);
+                    target.removeEventListener('mouseover', this.handlers.mouseover);
+                    target.removeEventListener('mouseout', this.handlers.mouseout);
+                    document.removeEventListener('mouseup', this.handlers.mouseup);
+                }
 
                 return this;
+            },
+
+            /**
+             * 是否监听中
+             * 
+             * @return {boolean} 是否
+             */
+            isListening: function() {
+                return !!this.listening;
             },
 
             /**
