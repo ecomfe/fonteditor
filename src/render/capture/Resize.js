@@ -1,9 +1,9 @@
 /**
- * @file Mouse.js
+ * @file Resize.js
  * @author mengke01
  * @date 
  * @description
- * 键盘动作捕获器
+ * resize捕获器
  */
 
 
@@ -13,27 +13,6 @@ define(
         var lang = require('common/lang');
         var observable = require('common/observable');
 
-        // 键盘名称映射表
-        var keyCodeMap = {
-            37: 'left',
-            38: 'up' ,
-            39: 'right',
-            40: 'down',
-            13: 'enter',
-            27: 'esc',
-            8: 'backspace',
-            45: 'insert',
-            46: 'delete',
-            16: 'shift',
-            17: 'ctrl',
-            18: 'alt',
-            36: 'home',
-            47: 'help',
-            20: 'caps',
-            9: 'tab'
-        };
-
-
         /**
          * 键盘按键
          * @param {MouseEvent} e 事件
@@ -42,12 +21,6 @@ define(
          */
         function getEvent(e) {
             return {
-                keyCode: e.keyCode,
-                key: keyCodeMap[e.keyCode],
-                ctrlKey: e.ctrlKey,
-                metaKey: e.metaKey,
-                altKey: e.altKey,
-                shiftKey: e.shiftKey,
                 originEvent: e
             };
         }
@@ -57,19 +30,14 @@ define(
          * 
          * @param {Object} e 事件参数
          */
-        function keydetect(keyEvent, e) {
+        function resizedetect(e) {
             
-            if(false === this.events['key' + Event]) {
+            if(false === this.events.resize) {
                 return;
             }
 
             var event = getEvent(e);
-            this.fire('key' + keyEvent, event);
-
-            var keyName = keyCodeMap[event.keyCode];
-            if (keyName) {
-                this.fire(keyName + ':' + keyEvent, event);
-            }
+            this.fire('resize', event);
         }
 
         /**
@@ -80,22 +48,20 @@ define(
          * @param {Object} options 参数选项
          * @param {HTMLElement} options.main 监控对象
          */
-        function KeyboardCapture(main, options) {
+        function ResizeCapture(main, options) {
             this.main = main;
             options = options || {};
             this.events = options.events || {};
-
+            this.debounce = options.debounce || 200;
             this.handlers = {
-                keydown: lang.bind(keydetect, this, 'down'),
-                keyup: lang.bind(keydetect, this, 'up'),
-                keypress: lang.bind(keydetect, this, 'press')
+                resize: lang.debounce(lang.bind(resizedetect, this), this.debounce)
             };
             
             this.start();
         }
 
 
-        lang.extend(KeyboardCapture.prototype, {
+        lang.extend(ResizeCapture.prototype, {
 
             /**
              * 开始监听
@@ -106,11 +72,7 @@ define(
 
                 if (!this.listening) {
                     this.listening = true;
-
-                    var target = document.body;
-                    target.addEventListener('keydown', this.handlers.keydown, false);
-                    target.addEventListener('keyup', this.handlers.keyup, false);
-                    target.addEventListener('keypress', this.handlers.keypress, false);
+                    window.addEventListener('resize', this.handlers.resize, false);
                 }
 
                 return this;
@@ -122,14 +84,10 @@ define(
              * @return {this}
              */
             stop: function() {
-                
+
                 if (this.listening) {
                     this.listening = false;
-
-                    var target = document.body;
-                    target.removeEventListener('keydown', this.handlers.keydown);
-                    target.removeEventListener('keyup', this.handlers.keyup);
-                    target.removeEventListener('keypress', this.handlers.keypress);
+                    window.removeEventListener('resize', this.handlers.resize);
                 }
 
                 return this;
@@ -154,8 +112,8 @@ define(
             }
         });
 
-        observable.mixin(KeyboardCapture.prototype);
+        observable.mixin(ResizeCapture.prototype);
 
-        return KeyboardCapture;
+        return ResizeCapture;
     }
 );

@@ -15,6 +15,7 @@ define(
         var Painter = require('./Painter');
         var MouseCapture = require('./capture/Mouse');
         var KeyboardCapture = require('./capture/Keyboard');
+        var ResizeCapture = require('./capture/Resize');
         var observable = require('common/observable');
 
         /**
@@ -43,9 +44,10 @@ define(
 
             this.camera = this.painter.camera;
 
+            var me = this;
+
             // 是否允许缩放
             if(this.options.enableScale) {
-                var me = this;
                 this.capture.on('wheel', function(e) {
                     if (e.ctrlKey) {
                         e.originEvent.stopPropagation();
@@ -70,22 +72,21 @@ define(
                 });
             }
 
-            var me = this;
-            me._resizeObserver = lang.debounce(function(e) {
-
-                var prevSize = me.painter.getSize();
-                me.painter.resetSize();
-                var size = me.painter.getSize();
-                if(size.width != prevSize.width || size.height != prevSize.height) {
-                    me.fire('resize', {
-                        size: size,
-                        prevSize: prevSize
-                    });
-                }
-            }, 200);
-
-            // 改变大小
-            window.addEventListener('resize', me._resizeObserver, false);
+            // 窗口改变
+            if(this.options.enableResize) {
+                this.resizeCapture = new ResizeCapture(this.main);
+                this.resizeCapture.on('resize', function(e) {
+                    var prevSize = me.painter.getSize();
+                    me.painter.resetSize();
+                    var size = me.painter.getSize();
+                    if(size.width != prevSize.width || size.height != prevSize.height) {
+                        me.fire('resize', {
+                            size: size,
+                            prevSize: prevSize
+                        });
+                    }
+                });
+            }
         }
 
         /**
@@ -103,7 +104,8 @@ define(
                     defaultRatio: 1.2, // 默认的缩放比例
                     minScale: 0.1, // 最小缩放
                     maxScale: 100, //最大缩放
-                    enableScale: true // 是否允许缩放
+                    enableScale: true, // 是否允许缩放
+                    enableResize: true // 是否允许大小改变
                 }, 
                 options
             );
@@ -236,6 +238,7 @@ define(
             this.painter.dispose();
             this.capture.dispose();
             this.keyCapture.dispose();
+            this.resizeCapture && this.resizeCapture.dispose();
 
             this.main = this.options = this.camera = null;
             this.painter = this.capture = this.keyCapture = null;

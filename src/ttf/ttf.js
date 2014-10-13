@@ -581,6 +581,9 @@ define(
                 }
             });
 
+            usWinAscent = Math.round(usWinAscent);
+            usWinDescent = Math.round(usWinDescent);
+
             return {
 
                 // 此处非必须自动设置
