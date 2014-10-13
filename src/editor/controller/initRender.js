@@ -195,14 +195,35 @@ define(
                     return;
                 }
 
+                // 放大
+                if (e.keyCode == 187 && e.ctrlKey) {
+                    e.originEvent.stopPropagation();
+                    e.originEvent.preventDefault();
+                    var size = render.getSize();
+                    render.scale(1.25, {
+                        x: size.width / 2, 
+                        y: size.height / 2
+                    });
+                }
+                // 缩小
+                else if (e.keyCode == 189 && e.ctrlKey) {
+                    e.originEvent.stopPropagation();
+                    e.originEvent.preventDefault();
+                    var size = render.getSize();
+                    render.scale(0.8, {
+                        x: size.width / 2, 
+                        y: size.height / 2
+                    });
+                }
                 // 撤销
-                if (e.keyCode == 90 && e.ctrlKey) {
+                else if (e.keyCode == 90 && e.ctrlKey) {
                     me.execCommand('undo');
                 }
                 // 恢复
                 else if (e.keyCode == 89 && e.ctrlKey) {
                     me.execCommand('redo');
                 }
+
                 else {
                     me.mode.keydown && me.mode.keydown.call(me, e);
                 }

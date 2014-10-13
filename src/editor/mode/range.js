@@ -74,7 +74,7 @@ define(
                         if (bound.width >= 20 && bound.height >= 20) {
                             var shapes;
                             if ((shapes = selectShapes.call(this, bound))) {
-                                this.setMode('shapes', shapes);
+                                this.setMode('shapes', shapes, 'range');
                                 return;
                             }
                         }

@@ -289,11 +289,16 @@ define(
             /**
              * 开始模式
              */
-            begin: function(shapes) {
+            begin: function(shapes, prevMode) {
                 this.currentGroup = new ShapesGroup(shapes, this);
                 this.currentGroup.refresh();
                 this.currentGroup.setMode('scale');
-                this.clicked = false;
+                if (prevMode == 'bound') {
+                    this.clicked = false;
+                }
+                else {
+                    this.clicked = true;
+                }
             },
 
 

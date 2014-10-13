@@ -33,7 +33,8 @@ define(
                         if (result.length > 1) {
                             shape = selectShape(result);
                         }
-                        this.setMode('shapes', [shape]);
+
+                        this.setMode('shapes', [shape], 'bound');
                         return;
                     }
 

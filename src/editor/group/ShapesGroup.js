@@ -88,6 +88,7 @@ define(
 
 
             this.editor.coverLayer.removeShape('bound');
+            this.editor.coverLayer.removeShape('boundcenter');
             delete this.bound;
 
             this.refresh();

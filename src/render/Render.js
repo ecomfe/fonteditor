@@ -47,7 +47,9 @@ define(
             if(this.options.enableScale) {
                 var me = this;
                 this.capture.on('wheel', function(e) {
-                    if (e.altKey) {
+                    if (e.ctrlKey) {
+                        e.originEvent.stopPropagation();
+                        e.originEvent.preventDefault();
                         var defaultRatio = me.options.defaultRatio || 1.2;
                         var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
                         var toScale = me.camera.scale * ratio;
@@ -154,10 +156,19 @@ define(
          * @return {this}
          */
         Render.prototype.scale = function(ratio, p, noRefresh) {
+
+            var toScale = this.camera.scale * ratio;
+            if (
+                toScale < this.options.minScale 
+                || toScale > this.options.maxScale
+            ) {
+                return;
+            }
+
             this.camera.ratio = ratio;
             this.camera.center.x = p.x;
             this.camera.center.y = p.y;
-            this.camera.scale *= ratio;
+            this.camera.scale = toScale;
 
             if(true !== noRefresh) {
                 this.painter.refresh();

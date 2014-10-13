@@ -47,7 +47,8 @@ define(
                 ctrlKey: e.ctrlKey,
                 metaKey: e.metaKey,
                 altKey: e.altKey,
-                shiftKey: e.shiftKey
+                shiftKey: e.shiftKey,
+                originEvent: e
             };
         }
 
