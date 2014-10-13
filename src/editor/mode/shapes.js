@@ -158,18 +158,18 @@ define(
                 if (this.currentPoint) {
                     this.currentGroup.beginTransform(this.currentPoint, this.render.camera);
                 }
-                // 复制模式
-                else if (e.ctrlKey && e.altKey) {
-                    var shapes = lang.clone(this.currentGroup.shapes);
-                    var fontLayer = this.fontLayer;
-                    shapes.forEach(function(shape) {
-                        shape.id = guid('shape');
-                        fontLayer.addShape(shape);
-                    });
-                    
-                    this.currentGroup.setShapes(shapes);
-                }
                 else {
+                    // 复制模式
+                    if (e.ctrlKey && e.altKey) {
+                        var shapes = lang.clone(this.currentGroup.shapes);
+                        var fontLayer = this.fontLayer;
+                        shapes.forEach(function(shape) {
+                            shape.id = guid('shape');
+                            fontLayer.addShape(shape);
+                        });
+                        this.currentGroup.setShapes(shapes);
+                    }
+                    // 移动
                     this.currentGroup.setMode('move');
                     this.currentGroup.beginTransform(this.currentPoint, this.render.camera);
                 }
