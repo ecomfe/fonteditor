@@ -21,7 +21,7 @@ define(
                     .replace(/&quot;/g, '"')
                     .replace(/&lt;/g, '<')
                     .replace(/&gt;/g, '>')
-                    .replace(/&amp;/g, "&");
+                    .replace(/&amp;/g, '&');
 
                 //处理转义的中文和实体字符
                 return str.replace(/&#([\d]+);/g, function(_0, _1){
@@ -73,7 +73,7 @@ define(
                         return str.slice(0, i) + tail;
                     }
                 }
-                return str + tail;;
+                return str + tail;
             },
 
             /**

@@ -22,7 +22,7 @@ define(
             init: function () {
                 currentEditor = editor.create($('#render-view').get(0));
                 currentEditor.setFont(shape_baidu);
-                currentEditor.blur();
+                //currentEditor.blur();
                 
             }
         };

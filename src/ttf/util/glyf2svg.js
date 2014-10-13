@@ -13,9 +13,9 @@
 
 define(
     function(require) {
+        
         var contour2svg = require('./contour2svg');
         var contours2svg = require('./contours2svg');
-        var pathAdjust = require('graphics/pathAdjust');
         var matrixTransform = require('graphics/transform');
         var lang = require('common/lang');
 

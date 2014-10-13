@@ -1,9 +1,9 @@
-﻿/**
+/**
  * @file string.js
  * @author mengke01
  * @date 
  * @description
- * string工具箱
+ * string 工具箱
  * 
  * see svg2ttf @ github
  */

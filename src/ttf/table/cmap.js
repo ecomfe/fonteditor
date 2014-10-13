@@ -27,7 +27,7 @@ define(
 
             var i;
             // 0～256 紧凑排列
-            if (subTable.format == 0) {
+            if (subTable.format === 0) {
                 var format0 = subTable;
                 // 跳过format字段
                 format0.length = reader.readUint16();
@@ -39,7 +39,7 @@ define(
                 format0.glyphIdArray = glyphIdArray;
             }
             // 双字节编码，非紧凑排列
-            else if(subTable.format == 4) {
+            else if(subTable.format === 4) {
                 var format4 = subTable;
                 // 跳过format字段
                 format4.length = reader.readUint16();
@@ -102,7 +102,7 @@ define(
             // The firstCode and entryCount values in the subtable specify 
             // the useful subrange within the range of possible character codes. 
             // The range begins with firstCode and has a length equal to entryCount. 
-            else if(subTable.format == 6) {
+            else if(subTable.format === 6) {
                 var format6 = subTable;
 
                 format6.length = reader.readUint16();
@@ -123,7 +123,7 @@ define(
 
             }
             // defines segments for sparse representation in 4-byte character space
-            else if(subTable.format == 12) {
+            else if(subTable.format === 12) {
                 var format12 = subTable;
 
                 format12.reserved = reader.readUint16();

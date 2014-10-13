@@ -27,11 +27,11 @@ define(
                     xmlDoc = domParser.parseFromString(xml, 'text/xml');
                     return xmlDoc;
                 }
-                catch(e) {
-                    error.throw(10103);
+                catch(exp) {
+                    error.raise(10103);
                 }
             }
-            error.throw(10004);
+            error.raise(10004);
         }
 
         /**
@@ -100,7 +100,7 @@ define(
             var svgNode = xmlDoc.getElementsByTagName('svg')[0];
 
             if (!svgNode) {
-                error.throw(10104);
+                error.raise(10104);
             }
 
             var metaNode = xmlDoc.getElementsByTagName('metadata')[0];
@@ -169,7 +169,7 @@ define(
                     advanceWidth: +(missingNode.getAttribute('horiz-adv-x') || 0)
                 };
                 
-                if (d = missingNode.getAttribute('d')) {
+                if ((d = missingNode.getAttribute('d'))) {
                     missing.contours = svg2contours(d);
                 }
             }
@@ -182,6 +182,12 @@ define(
             }
 
             if (glyfNodes.length) {
+
+                // map unicode
+                var unicodeMap = function(u) {
+                    return u.charCodeAt(0);
+                };
+
                 for (var i = 0, l = glyfNodes.length; i < l ; i++) {
 
                     var node = glyfNodes[i];
@@ -190,13 +196,11 @@ define(
                         name: node.getAttribute('glyph-name') || node.getAttribute('name') || ''
                     };
 
-                    if (unicode = node.getAttribute('unicode')) {
-                        glyf.unicode = unicode.split('').map(function(u) {
-                            return u.charCodeAt(0);
-                        });
+                    if ((unicode = node.getAttribute('unicode'))) {
+                        glyf.unicode = unicode.split('').map(unicodeMap);
                     }
 
-                    if (d = node.getAttribute('d')) {
+                    if ((d = node.getAttribute('d'))) {
                         glyf.contours = svg2contours(d);
                     }
                     ttf.glyf.push(glyf);
@@ -204,7 +208,7 @@ define(
             }
 
             if (!ttf.glyf.length) {
-                error.throw(10201);
+                error.raise(10201);
             }
 
             return ttf;

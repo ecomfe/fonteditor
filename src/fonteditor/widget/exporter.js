@@ -33,9 +33,10 @@ define(
 
             if (ttf) {
                 try {
-                    var base64Str = ''; 
+                    var base64Str = '';
+                    var buffer = null;
                     if (options.type == 'woff') {
-                        var buffer = ttf2woff(new TTFWriter().write(ttf));
+                        buffer = ttf2woff(new TTFWriter().write(ttf));
                         base64Str = woff2base64(buffer);
                     }
                     else if(options.type == 'svg') {
@@ -76,7 +77,7 @@ define(
              * 
              * @return {HTMLElement} 导出按钮
              */
-            export: exportFile
+            'export': exportFile
         };
         return exporter;
     }

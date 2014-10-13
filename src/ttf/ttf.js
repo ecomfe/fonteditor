@@ -53,7 +53,12 @@ define(
                     });
 
                     // 重新计算xmin，xmax，ymin，ymax
-                    if (undefined == g.xMin || undefined == g.yMax || undefined == g.leftSideBearing || undefined == g.advanceWidth) {
+                    if (
+                        undefined === g.xMin 
+                        || undefined === g.yMax 
+                        || undefined === g.leftSideBearing 
+                        || undefined === g.advanceWidth
+                    ) {
                         var bound = computeBoundingBox.computePathBox.apply(this, g.contours);
                         
                         g.xMin = bound.x;

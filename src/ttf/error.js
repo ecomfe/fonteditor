@@ -35,7 +35,7 @@ define(
             10205: '未找到解压函数'
         };
 
-        error.throw = function(number) {
+        error.raise = function(number) {
 
             var message = error[number];
             

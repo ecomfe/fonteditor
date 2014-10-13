@@ -46,7 +46,7 @@ define(
             'export-file': function(e) {
                 if (program.ttfManager.get()) {
                     var target = $(e.target);
-                    program.exporter.export(program.ttfManager.get(), {
+                    program.exporter['export'](program.ttfManager.get(), {
                         type: target.attr('data-type'),
                         target: target,
                         error: function() {
@@ -60,7 +60,7 @@ define(
             'save': function() {
                 if (program.ttfManager.get()) {
                     var name = '';
-                    if(name = window.prompt('请输入项目名称：')) {
+                    if ((name = window.prompt('请输入项目名称：'))) {
                         name = string.encodeHTML(name);
                         var list = program.project.add(name, program.ttfManager.get());
                         program.projectViewer.show(list);

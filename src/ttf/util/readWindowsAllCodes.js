@@ -24,7 +24,7 @@ define(
 
             // 读取windows unicode 编码段
             var format0 = tables.filter(function(item) {
-                return item.format == 0;
+                return item.format === 0;
             });
 
             if (format0.length) {

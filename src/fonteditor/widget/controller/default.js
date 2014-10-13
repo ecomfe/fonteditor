@@ -11,7 +11,6 @@ define(
     function(require) {
 
         var clipboard = require('../clipboard');
-        var lang = require('common/lang');
         var string = require('common/string');
         
         return {
@@ -52,7 +51,7 @@ define(
                         }
                         else {
                             var name = '';
-                            if(name = window.prompt('请输入项目名称：')) {
+                            if ((name = window.prompt('请输入项目名称：'))) {
                                 name = string.encodeHTML(name);
                                 var list = program.project.add(name, program.ttfManager.get());
                                 program.projectViewer.show(list);
@@ -81,7 +80,7 @@ define(
                         program.projectViewer.show(program.project.remove(e.projectName));
                     }
                     program.viewer.focus();
-                })
+                });
 
                 program.ttfManager.on('change', function(e) {
                     program.viewer.show(e.ttf);

@@ -50,7 +50,7 @@ define(
                 unicode = [unicode];
             }
             return unicode.map(function(u) {
-                return '&#x' + u.toString(16) + ';'
+                return '&#x' + u.toString(16) + ';';
             }).join('');
         }
 
@@ -105,7 +105,7 @@ define(
                         name: glyf.name,
                         unicode: unicode2xml(glyf.unicode),
                         d: contours2svg(glyf.contours)
-                    }
+                    };
                     glyphList += string.format(GLYPH_TPL, glyfObject);
                 }
             }
@@ -142,7 +142,7 @@ define(
                 return ttfobject2svg(ttfBuffer, options);
             }
             else {
-                error.throw(10109);
+                error.raise(10109);
             }
         }
         return ttf2svg;

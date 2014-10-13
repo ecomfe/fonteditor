@@ -17,7 +17,9 @@ define(
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify}">'
             +   '<i data-action="del" class="i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
-            +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) "><path class="path" ${d}/></g></svg>'
+            +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
+            +           '<path class="path" ${d}/></g>'
+            +   '</svg>'
             +   '<div data-field="unicode" class="unicode" title="${unicode}">${unicode}</div>'
             +   '<div data-field="name" class="name" title="${name}">${name}</div>'
             + '</div>';
@@ -47,7 +49,7 @@ define(
                     name: glyf.name
                 };
 
-                if (d = glyf2svg(glyf, ttf)) {
+                if ((d = glyf2svg(glyf, ttf))) {
                     g.d = 'd="'+ d +'"';
                 }
 
@@ -93,7 +95,7 @@ define(
                 var p = {
                     x: pos.left + item.width() / 2,
                     y: pos.top + item.height() / 2
-                }
+                };
 
                 if (p.x >= bound.x && p.x <= bound.x + bound.width 
                     && p.y >= bound.y && p.y <= bound.y + bound.height
@@ -102,7 +104,7 @@ define(
                         item.toggleClass('selected');
                     }
                     else {
-                        item.addClass('selected')
+                        item.addClass('selected');
                     }
                 }
             });
@@ -215,7 +217,6 @@ define(
 
                 var x = e.originEvent.pageX;
                 var y = e.originEvent.pageY;
-                var pos = me.main.offset();
 
                 selectRangeItem.call(me, {
                     x: Math.min(me.startX, x),

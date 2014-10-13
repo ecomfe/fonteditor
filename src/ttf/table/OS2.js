@@ -102,8 +102,6 @@ define(
 
                     // os2 count
                     var xAvgCharWidth = 0,
-                        ulUnicodeRange1 = 0,
-                        ulUnicodeRange2 = 0x10000000,
                         usFirstCharIndex = 0xFFFF,
                         usLastCharIndex = -1;
 
@@ -144,7 +142,7 @@ define(
                         else if (glyf.contours && glyf.contours.length) {
                             maxContours = Math.max(maxContours, glyf.contours.length);
                             
-                            var points = 0, twilightPoints = 0;
+                            var points = 0;
                             glyf.contours.forEach(function(contour) {
                                 points += contour.length;
                             });
@@ -189,7 +187,7 @@ define(
                                 }
 
                                 if (checkUnicodeRepeat[unicode]) {
-                                    error.throw(10200, index);
+                                    error.raise(10200, index);
                                 }
                                 else {
                                     checkUnicodeRepeat[unicode] = true;

@@ -26,7 +26,7 @@ define(
          */
         function read(buffer) {
 
-            var reader = new Reader(buffer, 0, buffer.byteLength, false);;
+            var reader = new Reader(buffer, 0, buffer.byteLength, false);
 
             var ttf = {};
 
@@ -37,7 +37,7 @@ define(
             ttf.numTables = reader.readUint16();
 
             if (ttf.numTables <= 0 || ttf.numTables > 100) {
-                error.throw(10101);
+                error.raise(10101);
             }
 
             // searchRenge
@@ -52,7 +52,7 @@ define(
             ttf.tables = new Directory(reader.offset).read(reader, ttf);
 
             if (!ttf.tables.glyf || !ttf.tables.head || !ttf.tables.cmap || !ttf.tables.hmtx) {
-                error.throw(10204);
+                error.raise(10204);
             }
 
             // 读取支持的表数据
@@ -64,7 +64,7 @@ define(
             });
 
             if (!ttf.glyf) {
-                error.throw(10201);
+                error.raise(10201);
             }
 
             reader.dispose();

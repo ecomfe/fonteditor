@@ -10,7 +10,6 @@
 define(
     function(require) {
 
-        var Reader = require('./reader');
         var Writer = require('./writer');
         var Directory = require('./table/directory');
         var supportTables = require('./table/support');
@@ -57,7 +56,7 @@ define(
             ttf.head.modified = Date.now();
 
             if (!ttf.glyf) {
-                error.throw(10201);
+                error.raise(10201);
             }
 
             // 将glyf的代码点按小到大排序
@@ -144,8 +143,6 @@ define(
                 table.checkSum = checkSum(writer.getBuffer(), tableStart, table.size);
 
             });
-
-            var writerOffset = writer.offset; // 记录当前游标
 
             // 重新写入每个表校验和
             ttf.support.tables.forEach(function(table, index) {

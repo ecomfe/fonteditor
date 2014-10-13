@@ -135,7 +135,7 @@ define(
                 y = yCoord[index];
 
                 // 第一个
-                if (index == 0) {
+                if (index === 0) {
 
                     if (-0xFF <= x && x <= 0xFF) {
                         flag += glyFlag.XSHORT;
@@ -166,7 +166,7 @@ define(
                     prevX = xCoord[index - 1];
                     prevY = yCoord[index - 1];
 
-                    if (x == 0) {
+                    if (x === 0) {
                         flag += glyFlag.XSAME;
                     }
                     else {
@@ -182,7 +182,7 @@ define(
                         xCoordC.push(x);
                     }
 
-                    if (y == 0) {
+                    if (y === 0) {
                         flag += glyFlag.YSAME;
                     }
                     else {
@@ -229,10 +229,8 @@ define(
                     
                 ttf.glyf.forEach(function(glyf, index) {
 
-                    var writerOffset = writer.offset;
-
                     // 非复合图元没有轮廓则不写
-                    if (!glyf.compound && (!glyf.contours || 0 == glyf.contours.length)) {
+                    if (!glyf.compound && (!glyf.contours || 0 === glyf.contours.length)) {
                         return;
                     }
 
@@ -377,7 +375,7 @@ define(
 
                     // 4字节对齐
                     var glyfSize = ttf.support.glyf[index].glyfSize;
-                    //console.log(glyfSize, writer.offset - writerOffset);
+
                     // 
                     if (glyfSize % 4) {
                         for (var i = 0, l = 4 - glyfSize % 4; i < l; i++) {

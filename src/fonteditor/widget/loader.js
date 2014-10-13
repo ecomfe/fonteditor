@@ -46,13 +46,13 @@ define(
                     fileReader = null;
                     options.success && options.success(ttf);
                 }
-                catch(e) {
-                    alert(e.message);
-                    throw e;
+                catch(exp) {
+                    alert(exp.message);
+                    throw exp;
                 }
 
                 loading.hide();
-            }
+            };
 
             fileReader.onerror = function(e) {
                 loading.hide();
@@ -85,9 +85,9 @@ define(
                 ttfReader.dispose();
                 options.success && options.success(ttf);
             }
-            catch(e) {
-                alert(e.message);
-                throw e;
+            catch(exp) {
+                alert(exp.message);
+                throw exp;
             }
 
             loading.hide();
@@ -113,9 +113,9 @@ define(
                     fileReader = null;
                     options.success && options.success(imported);
                 }
-                catch(e) {
-                    alert(e.message);
-                    throw e;
+                catch(exp) {
+                    alert(exp.message);
+                    throw exp;
                 }
 
                 loading.hide();

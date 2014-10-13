@@ -28,7 +28,7 @@ define(
 
                 clearTimeout(this.showtimer);
 
-                $('#loading span').html(text || '正在加载...')
+                $('#loading span').html(text || '正在加载...');
                 $('#loading').show();
 
                 if (duration) {

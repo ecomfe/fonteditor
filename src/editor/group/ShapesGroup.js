@@ -77,8 +77,6 @@ define(
          */
         ShapesGroup.prototype.finishTransform = function(point, camera) {
 
-            var coverLayer = this.editor.coverLayer;
-
             // 保存最后一次修改
             var coverShapes = this.coverShapes;
             this.coverShapes = this.shapes;

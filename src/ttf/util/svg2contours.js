@@ -22,7 +22,7 @@ define(
             var q2, prevq2;
             for (var i = 0, l = q2List.length; i < l; i++) {
                 q2 = q2List[i];
-                if (i == 0) {
+                if (i === 0) {
                     contour.push({
                         x: q2[1].x,
                         y: q2[1].y
@@ -69,6 +69,10 @@ define(
                 return null;
             }
 
+            var argsMap = function(d) {
+                return +d.trim();
+            };
+
             // 获取segments
             var segments = [];
             var cmd, relative = false, c, r, lastIndex, args, segReg = /\-?\d+(?:\.\d+)?\b/g;
@@ -77,7 +81,8 @@ define(
                 r = c != path[i];
                 switch (c) {
                     case 'M':
-                        if (i == 0) {
+                        /*jshint -W086 */
+                        if (i === 0) {
                             cmd = c;
                             lastIndex = 1;
                             break;
@@ -99,9 +104,7 @@ define(
                             segments.push({
                                 cmd: cmd,
                                 relative: relative,
-                                args: args.match(segReg).map(function(d) {
-                                    return +d.trim();
-                                })
+                                args: args.match(segReg).map(argsMap)
                             });
                         }
 
@@ -304,7 +307,7 @@ define(
                         };
 
                         // 计算中间点
-                        if (q == 0) {
+                        if (q === 0) {
                             cubic.push({x: prevX, y: prevY});
                             cubic.push(c1);
                             cubic.push(c2);
@@ -314,7 +317,7 @@ define(
                             var p1 = {
                                 x: (prevC2.x + c1.x) / 2,
                                 y: (prevC2.y + c1.y) / 2
-                            }
+                            };
                             cubicList[cubicList.length - 1][3] = p1;
 
                             cubic.push(p1);
@@ -343,7 +346,7 @@ define(
                     
                     // TODO 这里没有支持连续的情况，有时间再搞
                     if (segment.args.length > 4) {
-                        throw 'not support svg "S" command continuous!'
+                        throw 'not support svg "S" command continuous!';
                     }
 
                     // 这里需要移除上一个曲线的终点

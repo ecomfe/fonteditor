@@ -10,7 +10,6 @@
 define(
     function(require) {
         var lang = require('common/lang');
-        var observable = require('common/observable');
         var pad = require('common/string').pad;
         
         /**
@@ -91,7 +90,7 @@ define(
 
                 var field = item.getAttribute('data-field');
                 
-                if (undefined == setting[field]) {
+                if (undefined === setting[field]) {
                     return;
                 }
 

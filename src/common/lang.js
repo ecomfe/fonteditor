@@ -126,7 +126,7 @@ define(
             fields = fields || Object.keys(thatObj);
             fields.forEach(function(field) {
                 if (thisObj.hasOwnProperty(field)) {
-                    thisObj[field] = thatObj[field]
+                    thisObj[field] = thatObj[field];
                 }
             });
         }

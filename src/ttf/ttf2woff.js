@@ -89,13 +89,13 @@ define(
             if (metadata.license) {
                 xml += '<license url="'+ string.encodeHTML(metadata.license.url) +'"'
                     +      ' id="'+ string.encodeHTML(metadata.license.id) +'"><text xml:lang="en">';
-                xml +=     string.encodeHTML(metadata.license.text)
+                xml +=     string.encodeHTML(metadata.license.text);
                 xml += '</text></license>';
             }
 
             if (metadata.copyright) {
-                xml += '<copyright><text xml:lang="en">'
-                xml +=     string.encodeHTML(metadata.copyright)
+                xml += '<copyright><text xml:lang="en">';
+                xml +=     string.encodeHTML(metadata.copyright);
                 xml += '</text></copyright>';
             }
 
@@ -164,7 +164,7 @@ define(
             var numTables = ttfReader.readUint16(4); // 读取ttf表个数
 
             if (numTables <= 0 || numTables > 100) {
-                error.throw(10101);
+                error.raise(10101);
             }
 
             // 读取ttf表索引信息
@@ -182,8 +182,8 @@ define(
 
                 if (tableEntry.tag == 'head') {
                     // 读取font revision
-                    woffHeader.majorVersion = ttfReader.readUint16(tableEntry.offset + 4),
-                    woffHeader.minorVersion = ttfReader.readUint16(tableEntry.offset + 6)
+                    woffHeader.majorVersion = ttfReader.readUint16(tableEntry.offset + 4);
+                    woffHeader.minorVersion = ttfReader.readUint16(tableEntry.offset + 6);
                 }
 
                 // ttf 表数据
@@ -212,7 +212,7 @@ define(
             }
 
             if (!tableEntries.length) {
-                error.throw(10204);
+                error.raise(10204);
             }
 
             // 对table进行排序

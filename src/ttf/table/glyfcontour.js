@@ -245,7 +245,7 @@ define(
                                 };
                             }
                             else {
-                                error.throw(10202);
+                                error.raise(10202);
                             }
 
                             val.glyfs.push(glyf);

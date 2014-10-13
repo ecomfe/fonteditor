@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file nameId.js
  * @author mengke01
  * @date 

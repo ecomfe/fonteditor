@@ -65,7 +65,7 @@ define(
                         break;
 
                     default:
-                        error.throw(10003, name, type);
+                        error.raise(10003, name, type);
                 }
             });
 
@@ -84,7 +84,7 @@ define(
             var table = ttf[this.name];
             
             if (!table) {
-                error.throw(10203, this.name);
+                error.raise(10203, this.name);
             }
 
             this.struct.forEach(function(item){
@@ -123,7 +123,7 @@ define(
                         break;
 
                     default:
-                        error.throw(10003, name, type);
+                        error.raise(10003, name, type);
                 }
             });
 
@@ -180,7 +180,7 @@ define(
                         break;
 
                     default:
-                        error.throw(10003, name, type);
+                        error.raise(10003, name, type);
                 }
             });
 

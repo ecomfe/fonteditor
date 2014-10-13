@@ -104,7 +104,7 @@ define(
             });
 
             var i = -1, unicode;
-            while (unicode = unicodes.shift()) {
+            while ((unicode = unicodes.shift())) {
                 while(++i < unicode[0]) {
                     writer.writeUint8(0);
                 }
@@ -297,14 +297,14 @@ define(
                     ttf.support.cmap.hasGLyphsOver2Bytes = hasGLyphsOver2Bytes;
                     ttf.support.cmap.format12Segments = getSegments(unicodes2Bytes);
                     ttf.support.cmap.format12Size = 16 
-                        + ttf.support.cmap.format12Segments.length * 12
+                        + ttf.support.cmap.format12Segments.length * 12;
                 }
 
                 
                 var size = 4 + (hasGLyphsOver2Bytes ? 32 : 24) // cmap header
                     + 262 // format 0
                     + ttf.support.cmap.format4Size // format 4
-                    + (hasGLyphsOver2Bytes ? ttf.support.cmap.format12Size : 0) // format 12
+                    + (hasGLyphsOver2Bytes ? ttf.support.cmap.format12Size : 0); // format 12
 
                 return size;
             }

@@ -46,7 +46,7 @@ define(
 
             if (signature !== 0x774F4646 || flavor !== 0x10000) {
                 reader.dispose();
-                error.throw(10102);
+                error.raise(10102);
             }
 
             var numTables = reader.readUint16(12);
@@ -71,7 +71,7 @@ define(
 
                     if (!options.inflate) {
                         reader.dispose();
-                        error.throw(10105);
+                        error.raise(10105);
                     }
 
                     tableEntry.data = options.inflate(deflateData);
@@ -104,7 +104,8 @@ define(
                 writer.writeUint32(tableEntry.checkSum);
                 writer.writeUint32(tblOffset);
                 writer.writeUint32(tableEntry.length);
-                tblOffset += tableEntry.length + (tableEntry.length % 4 ? 4 - tableEntry.length % 4 : 0)
+                tblOffset += tableEntry.length 
+                    + (tableEntry.length % 4 ? 4 - tableEntry.length % 4 : 0);
             }
 
             // 写ttf表数据

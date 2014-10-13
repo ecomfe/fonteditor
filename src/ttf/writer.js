@@ -115,7 +115,7 @@ define(
                 var length  = length || str.replace(/[^\x00-\xff]/g, '11').length;
 
                 if(length < 0 || offset + length > this.length) {
-                    error.throw(10002, this.length, offset + length);
+                    error.raise(10002, this.length, offset + length);
                 }
 
                 this.seek(offset);
@@ -152,7 +152,7 @@ define(
                 length = length || value.byteLength || value.length;
 
                 if(length < 0 || offset + length > this.length) {
-                    error.throw(10002, this.length, offset + length);
+                    error.raise(10002, this.length, offset + length);
                 }
 
                 // ArrayBuffer
@@ -189,7 +189,7 @@ define(
                 }
 
                 if (offset < 0 || offset > this.length) {
-                    error.throw(10002, this.length, offset);
+                    error.raise(10002, this.length, offset);
                 }
 
                 this._offset = this.offset;

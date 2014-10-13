@@ -60,7 +60,6 @@ define(
                     }
 
                     // 最后一个宽度
-                    var advanceWidth = ttf.glyf[numOfLongHorMetrics - 1].advanceWidth;
                     var numOfLast = ttf.glyf.length - numOfLongHorMetrics;
 
                     for (var i = 0; i < numOfLast; ++i) {
