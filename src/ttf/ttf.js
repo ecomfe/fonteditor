@@ -46,46 +46,42 @@ define(
 
             list.forEach(function(g) {
                 if (scale !== 1) {
-
                     g.contours.forEach(function(contour) {
                         pathAdjust(contour, scale, scale);
                         pathCeil(contour);
                     });
-
-                    // 重新计算xmin，xmax，ymin，ymax
-                    if (
-                        undefined === g.xMin 
-                        || undefined === g.yMax 
-                        || undefined === g.leftSideBearing 
-                        || undefined === g.advanceWidth
-                    ) {
-                        var bound = computeBoundingBox.computePathBox.apply(this, g.contours);
-                        
-                        g.xMin = bound.x;
-                        g.xMax = bound.x + bound.width;
-                        g.yMin = bound.y;
-                        g.yMax = bound.y + bound.height;
-
-                        g.leftSideBearing = g.xMin;
-
-                        // 如果设置了advanceWidth就是用默认的，否则为10
-                        if (undefined !== g.advanceWidth) {
-                            g.advanceWidth = Math.round(g.advanceWidth * scale);
-                        }
-                        else {
-                            g.advanceWidth = g.xMax + 10;
-                        }
-
-                    }
-                    else {
-                        g.xMin = Math.round(g.xMin * scale);
-                        g.xMax = Math.round(g.xMax * scale);
-                        g.yMin = Math.round(g.yMin * scale);
-                        g.yMax = Math.round(g.yMax * scale);
-                        g.leftSideBearing = Math.round(g.leftSideBearing * scale);
-                        g.advanceWidth = Math.round(g.advanceWidth * scale);
-                    }
                 }
+
+                // 重新计算xmin，xmax，ymin，ymax
+                if (
+                    undefined === g.xMin 
+                    || undefined === g.yMax 
+                    || undefined === g.leftSideBearing 
+                    || undefined === g.advanceWidth
+                ) {
+                    var bound = computeBoundingBox.computePathBox.apply(this, g.contours);
+                    
+                    g.xMin = bound.x;
+                    g.xMax = bound.x + bound.width;
+                    g.yMin = bound.y;
+                    g.yMax = bound.y + bound.height;
+
+                    g.leftSideBearing = g.xMin;
+
+                    // 如果设置了advanceWidth就是用默认的，否则为10
+                    g.advanceWidth = g.xMax + 10;
+                }
+                else {
+                    g.xMin = Math.round(g.xMin * scale);
+                    g.xMax = Math.round(g.xMax * scale);
+                    g.yMin = Math.round(g.yMin * scale);
+                    g.yMax = Math.round(g.yMax * scale);
+                    g.leftSideBearing = Math.round(g.leftSideBearing * scale);
+                    g.advanceWidth = Math.round(g.advanceWidth * scale);
+                }
+
+                //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
+
                 ttf.glyf.push(g);
             });
 
@@ -303,6 +299,7 @@ define(
                         else {
                             g.advanceWidth += offset;
                         }
+
                         if (g.contours && g.contours.length) {
                             g.contours.forEach(function(contour) {
                                 pathAdjust(contour, 1, 1, offset);
@@ -312,6 +309,8 @@ define(
                     else if (undefined !== setting.rightSideBearing) {
                         g.advanceWidth = g.xMax + setting.rightSideBearing;
                     }
+
+                    //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
                 });
             }
 
@@ -395,6 +394,7 @@ define(
                         g.leftSideBearing = g.xMin;
                         g.advanceWidth = g.xMax + rightSideBearing;
                     }
+                    //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
                 });
             }
             // 缩放到embox
@@ -420,7 +420,9 @@ define(
                                 pathAdjust(contour, 1, 1, 0, yOffset);
                                 pathCeil(contour);
                             });
+
                             var box = computeBoundingBox.computePathBox.apply(null, g.contours);
+
                             g.xMin = box.x;
                             g.xMax = box.x + box.width;
                             g.yMin = box.y;
@@ -430,6 +432,8 @@ define(
                             g.advanceWidth = g.xMax + rightSideBearing;
                         }
                     }
+
+                    //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
                 });
             }
 

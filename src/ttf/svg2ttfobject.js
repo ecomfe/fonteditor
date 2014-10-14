@@ -74,15 +74,31 @@ define(
                     glyf.xMax = bound.x + bound.width;
                     glyf.yMin = bound.y;
                     glyf.yMax = bound.y + bound.height;
-                    glyf.advanceWidth = Math.round(glyf.advanceWidth);
+
+                    if (glyf.leftSideBearing) {
+                        glyf.leftSideBearing = Math.round(glyf.leftSideBearing);
+                    }
+                    else {
+                        glyf.leftSideBearing = glyf.xMin;
+                    }
+
+                    if (glyf.advanceWidth) {
+                        glyf.advanceWidth = Math.round(glyf.advanceWidth);
+                    }
+                    else {
+                        glyf.advanceWidth = glyf.xMax + 10;
+                    }
                 }
             });
+    
+            if (undefined !== ttf.head.xMin && undefined !== ttf.head.yMax) {
+                ttf.head.xMin = Math.round(ttf.head.xMin);
+                ttf.head.xMax = Math.round(ttf.head.xMax);
+                ttf.head.yMin = Math.round(ttf.head.yMin);
+                ttf.head.yMax = Math.round(ttf.head.yMax);
+            }
 
-            ttf.head.xMin = Math.round(ttf.head.xMin);
-            ttf.head.xMax = Math.round(ttf.head.xMax);
-            ttf.head.yMin = Math.round(ttf.head.yMin);
-            ttf.head.yMax = Math.round(ttf.head.yMax);
-            ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 0;
+            ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 512;
 
             return ttf;
         }
@@ -165,10 +181,13 @@ define(
             // 解析glyf
             var d, unicode;
             if (missingNode) {
-                var missing = {
-                    advanceWidth: +(missingNode.getAttribute('horiz-adv-x') || 0)
-                };
-                
+
+                var missing = {};
+
+                if (missingNode.getAttribute('horiz-adv-x')) {
+                    missing.advanceWidth = +missingNode.getAttribute('horiz-adv-x');
+                }
+
                 if ((d = missingNode.getAttribute('d'))) {
                     missing.contours = svg2contours(d);
                 }
@@ -192,9 +211,12 @@ define(
 
                     var node = glyfNodes[i];
                     var glyf = {
-                        advanceWidth: +(node.getAttribute('horiz-adv-x') || 0),
                         name: node.getAttribute('glyph-name') || node.getAttribute('name') || ''
                     };
+                    
+                    if (node.getAttribute('horiz-adv-x')) {
+                        glyf.advanceWidth = +node.getAttribute('horiz-adv-x');
+                    }
 
                     if ((unicode = node.getAttribute('unicode'))) {
                         glyf.unicode = unicode.split('').map(unicodeMap);

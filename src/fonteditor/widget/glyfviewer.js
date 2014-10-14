@@ -120,6 +120,13 @@ define(
         function downlistener(e) {
             var me = this;
 
+            if (e.keyCode >= 112 && e.keyCode <= 119 && e.keyCode !== 116) {
+                e.preventDefault();
+                e.stopPropagation();
+                me.fire('function', {
+                    keyCode: e.keyCode
+                });
+            }
             // 保存
             if (83 === e.keyCode && e.ctrlKey) {
                 e.preventDefault();
@@ -189,11 +196,9 @@ define(
             var me = this;
             me.downlistener = lang.bind(downlistener, this);
 
-            document.body.addEventListener('keydown', this.downlistener);
-
             $(document.body).on('click', function(e) {
                 var focused = me.main.get(0) === e.target || me.main.get(0).contains(e.target);
-                me.listening = focused;
+                focused ? me.focus() : me.blur();
             });
 
             me.capture = new MouseCapture(me.main.get(0), {
@@ -245,14 +250,20 @@ define(
          * 获取焦点
          */
         GlyfViewer.prototype.focus = function() {
-            this.listening = true;
+            if (!this.listening) {
+                this.listening = true;
+                document.body.addEventListener('keydown', this.downlistener);
+            }
         };
 
         /**
          * 失去焦点
          */
         GlyfViewer.prototype.blur = function() {
-            this.listening = false;
+            if (this.listening) {
+                this.listening = false;
+                document.body.addEventListener('keydown', this.downlistener);
+            }
         };
 
         /**
