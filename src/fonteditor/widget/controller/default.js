@@ -83,7 +83,7 @@ define(
                 });
 
                 program.ttfManager.on('change', function(e) {
-                    program.viewer.show(e.ttf);
+                    program.viewer.show(e.ttf, program.viewer.getSelected());
                     program.viewer.focus();
                 });
 

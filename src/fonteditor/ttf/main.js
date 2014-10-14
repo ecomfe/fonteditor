@@ -24,6 +24,7 @@ define(
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                     success: function(imported) {
+                        program.viewer.clearSelected();
                         program.ttfManager.set(imported);
                         program.data.projectName = null;
                     }

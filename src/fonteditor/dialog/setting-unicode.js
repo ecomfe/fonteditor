@@ -33,7 +33,7 @@ define(
 
             validate: function() {
                 var unicode = $('#setting-text-unicode').val();
-                if (unicode.match(/^\$[A-E0-9]+$/i)) {
+                if (unicode.match(/^\$[A-F0-9]+$/i)) {
                     return (this.setting = unicode);
                 }
                 else {

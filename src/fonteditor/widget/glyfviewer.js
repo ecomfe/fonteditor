@@ -14,7 +14,7 @@ define(
         var MouseCapture = require('render/capture/Mouse');
 
         var GLYF_ITEM_TPL = ''
-            + '<div data-index="${index}" class="glyf-item ${compound} ${modify}">'
+            + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected}">'
             +   '<i data-action="del" class="i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
@@ -32,14 +32,20 @@ define(
         };
 
         // 显示glyf
-        function showGLYF(ttf) {
+        function showGLYF(ttf, selectedList) {
             var unitsPerEm = ttf.head.unitsPerEm;
             var descent = unitsPerEm + ttf.hhea.descent;
+            var selectedHash = {};
+            (selectedList || []).forEach(function(i) {
+                selectedHash[i] = true;
+            });
+
             var glyfStr = '', d = '';
             ttf.glyf.forEach(function(glyf, index) {
                 var g = {
                     index: index,
                     compound: glyf.compound ? 'compound' : '',
+                    selected: selectedHash[index] ? 'selected' : '',
                     modify: glyf.modify,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
@@ -142,12 +148,19 @@ define(
                     // 取消选中
                     else if (27 === e.keyCode) {
                         e.stopPropagation();
-                        me.main.children().removeClass('selected');
+                        me.clearSelected();
                     }
                     // 其他操作
                     else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
                         e.stopPropagation();
                         var selected = me.getSelected();
+
+                        // 取消选中的glyf
+                        if (e.keyCode == 46 || e.keyCode == 88) {
+                            me.clearSelected();
+                        }
+
+                        // 粘贴和有选择的操作需要发事件
                         if (e.keyCode == 86 || selected.length) {
                             me.fire(keyMap[e.keyCode], {
                                 list: selected
@@ -228,24 +241,67 @@ define(
 
         }
 
+        /**
+         * 获取焦点
+         */
         GlyfViewer.prototype.focus = function() {
             this.listening = true;
         };
 
+        /**
+         * 失去焦点
+         */
         GlyfViewer.prototype.blur = function() {
             this.listening = false;
         };
 
-        GlyfViewer.prototype.show = function(ttf) {
-            showGLYF.call(this, ttf);
+        /**
+         * 显示ttf文档
+         * 
+         * @param {Object} ttf ttfObject
+         * @param {Array?} selectedList 选中的列表
+         */
+        GlyfViewer.prototype.show = function(ttf, selectedList) {
+            showGLYF.call(this, ttf, selectedList);
         };
 
+        /**
+         * 获取选中的列表
+         * 
+         * @return {Array} 选中的indexList
+         */
         GlyfViewer.prototype.getSelected = function() {
             var selected = [];
             this.main.find('.selected').each(function(index, item) {
                 selected.push(+item.getAttribute('data-index'));
             });
             return selected;
+        };
+
+        /**
+         * 清除选中列表
+         */
+        GlyfViewer.prototype.clearSelected = function() {
+            this.main.children().removeClass('selected');
+        };
+
+        /**
+         * 设置选中的列表
+         */
+        GlyfViewer.prototype.setSelected = function(selectedList) {
+            if (selectedList && 0 !== selectedList.length) {
+                var selectedHash = {};
+
+                selectedList.forEach(function(i) {
+                    selectedHash[i] = true;
+                });
+
+                this.main.children().each(function(index, item) {
+                    if (selectedHash[item.getAttribute('data-index')]) {
+                        $(item).addClass('selected');
+                    }
+                });
+            }
         };
 
         require('common/observable').mixin(GlyfViewer.prototype);
