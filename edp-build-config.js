@@ -9,11 +9,11 @@ exports.getProcessors = function () {
 
     return [ 
         new LessCompiler( {
-            files: ['css/ttf.less']
+            files: ['css/ttf.less', 'css/preview.less']
         }),
 
         new CssCompressor({
-            files: ['css/ttf.less'],
+            files: ['css/ttf.less', 'css/preview.less'],
             compressOptions: {
                 keepBreaks: false
             }

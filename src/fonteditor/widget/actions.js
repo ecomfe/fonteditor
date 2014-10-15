@@ -201,7 +201,17 @@ define(
                     
                     dlg.show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
                 }
-            }
+            },
+
+            // 预览
+            'preview': function(e) {
+                var ttf = program.ttfManager.get();
+                if (ttf) {
+                    var format = e.target.getAttribute('data-format');
+                    program.previewer.load(ttf, format);
+                }
+            },
+
         };
 
         return actions;

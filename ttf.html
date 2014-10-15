@@ -47,6 +47,20 @@
             </ul>
         </div>
 
+        <div class="btn-group">
+
+            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                预览
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" role="menu">
+                <li><a data-format="ttf" data-action="preview">ttf字体</a></li>
+                <li><a data-format="woff" data-action="preview">woff字体</a></li>
+                <li><a data-format="svg" data-action="preview">svg字体</a></li>
+            </ul>
+        </div>
+
     </section>
 
     <section class="sidebar">
@@ -90,7 +104,8 @@
             baseUrl: './src',
             paths: {
                 deflate: '../dep/pako_deflate.min',
-                inflate: '../dep/pako_inflate.min'
+                inflate: '../dep/pako_inflate.min',
+                utpl: '../dep/utpl.min'
             }
         });
         define('jquery', $);

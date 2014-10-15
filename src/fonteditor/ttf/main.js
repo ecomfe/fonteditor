@@ -88,6 +88,8 @@ define(
                 program.loader = require('../widget/loader');
                 program.exporter = require('../widget/exporter');
 
+                // 预览器
+                program.previewer = require('../widget/previewer');
 
                 controller.init(program);
 
