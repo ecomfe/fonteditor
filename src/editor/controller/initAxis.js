@@ -10,6 +10,8 @@
 define(
     function(require) {
         
+        var lang = require('common/lang');
+
         /**
          * 初始化坐标系
          * 
@@ -18,19 +20,14 @@ define(
         function initAxis(origin) {
 
             // 绘制轴线
-            this.axis = this.axisLayer.addShape('axis', {
+            this.axis = this.axisLayer.addShape('axis', lang.extend(this.options.axis, {
                 id: 'axis',
                 x: origin.x,
                 y: origin.y,
-                gap: origin.axisGap,
                 unitsPerEm: this.options.unitsPerEm,
                 metrics: this.options.metrics,
-                // 刻度配置
-                graduation: {
-                    gap: origin.axisGap
-                },
                 selectable: false
-            });
+            }));
 
             this.rightSideBearing = this.axisLayer.addShape('line', {
                 id: 'rightSideBearing',

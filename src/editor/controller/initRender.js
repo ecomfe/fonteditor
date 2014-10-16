@@ -15,7 +15,8 @@ define(
         var modeSupport = require('../mode/support');
         var pathAdjust = require('graphics/pathAdjust');
         var computeBoundingBox = require('graphics/computeBoundingBox');
-
+        var selectShape = require('render/util/selectShape');
+        
         /**
          * 右键点击处理
          */
@@ -145,14 +146,13 @@ define(
                     return;
                 }
 
-                if(me.mode === modeSupport.bound) {
-                    me.setMode('point');
+                var result = render.getLayer('font').getShapeIn(e);
+                if(result) {
+                    var shape = selectShape(result);
+                    me.setMode('point', shape);
                 }
                 else if(me.mode === modeSupport.point){
                     me.setMode();
-                }
-                else {
-                    me.setMode('point');
                 }
             });
 

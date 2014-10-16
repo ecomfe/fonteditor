@@ -9,26 +9,27 @@
 
 define(
     function(require) {
-        
+        var lang = require('common/lang');
+
         /**
          * 初始化层
          */
         function initLayer() {
 
-            this.coverLayer = this.render.addLayer('cover', {
+            this.coverLayer = this.render.addLayer('cover', lang.extend(this.options.coverLayer, {
                 level: 30,
                 fill: false,
                 strokeColor: 'green',
                 fillColor: 'white'
-            });
+            }));
 
-            this.fontLayer = this.render.addLayer('font', {
+            this.fontLayer = this.render.addLayer('font', lang.extend(this.options.fontLayer, {
                 level: 20,
                 lineWidth: 1,
                 strokeColor: '#999',
-                fillColor: '#333',
+                fillColor: '#555',
                 strokeSeparate: false
-            });
+            }));
 
             this.axisLayer = this.render.addLayer('axis', {
                 level: 10,

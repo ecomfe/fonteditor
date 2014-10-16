@@ -132,7 +132,8 @@ define(
                     this.axisLayer.addShape('line', {
                         p0: {
                             x: x
-                        }
+                        },
+                        style: this.options.referenceline.style
                     });
                 }
 
@@ -140,7 +141,8 @@ define(
                     this.axisLayer.addShape('line', {
                         p0: {
                             y: y
-                        }
+                        },
+                        style: this.options.referenceline.style
                     });
                 }
                 this.axisLayer.refresh();

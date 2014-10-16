@@ -12,6 +12,9 @@ define(
         
         var render = require('render/main');
         var Editor = require('./Editor');
+        var defaultOptions = require('./options');
+        var lang = require('common/lang');
+
         var exports = {};
 
         /**
@@ -27,9 +30,11 @@ define(
                 throw 'need main element';
             }
 
-            options = options || {};
-            var editor = new Editor(main, options);
-            var opt = options.renderOptions || {};
+            options = lang.extend({}, defaultOptions, options);
+
+            var editor = new Editor(main, options.editor);
+            var opt = options.render || {};
+
             opt.controller = editor;
             render.create(main, opt);
             return editor;

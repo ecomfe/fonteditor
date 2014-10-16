@@ -30,7 +30,7 @@ define(
 
             // 坐标原点位置，基线原点
             var offsetX = (width - options.unitsPerEm) / 2;
-            var offsetY = (height + (options.unitsPerEm + options.metrics.WinDecent)) / 2;
+            var offsetY = (height + (options.unitsPerEm + options.metrics.decent)) / 2;
 
             // 构造形状集合
             var shapes = contours.map(function(path) {
@@ -40,17 +40,18 @@ define(
                 return shape;
             });
 
+            font.rightSideBearing = offsetX + font.advanceWidth;
+
             this.font = font;
 
             // 重置形状
             this.render.reset();
 
-            var rightSideBearing = offsetX + font.advanceWidth;
             initAxis.call(this, {
                 x: offsetX, 
                 y: offsetY,
-                rightSideBearing: rightSideBearing,
-                axisGap: 100
+                rightSideBearing: font.rightSideBearing,
+                axisGap: this.options.axisGap || 100
             });
 
             var fontLayer = this.render.painter.getLayer('font');

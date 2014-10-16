@@ -23,15 +23,16 @@ define(
             options = options || {};
             var render = new Render(main, options);
             var controller = options.controller;
+            delete options.controller;
             
             // 设置render的默认控制器
             if (!controller) {
                 controller = new Controller();
             }
 
+
             controller.setRender(render);
             
-            delete options.controller;
             return render;
         };
 

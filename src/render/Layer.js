@@ -115,10 +115,10 @@ define(
                             setContextStyle(context, shape.style);
                             drawer.draw(context, shape);
 
-                            if(false !== options.fill) {
+                            if(false !== options.fill || shape.style.fill) {
                                 context.fill();
                             }
-                            if(false !== options.stroke) {
+                            if(false !== options.stroke || shape.style.stroke) {
                                 context.stroke();
                             }
 

@@ -40,7 +40,8 @@ define(
                             this.currentLine = this.axisLayer.addShape('line', {
                                 p0: {
                                     x: e.x
-                                }
+                                },
+                                style: this.options.referenceline.style
                             });
                             this.render.setCursor('col-resize');
                         }
@@ -48,7 +49,8 @@ define(
                             this.currentLine = this.axisLayer.addShape('line', {
                                 p0: {
                                     y: e.y
-                                }
+                                },
+                                style: this.options.referenceline.style
                             });
                             this.render.setCursor('row-resize');
                         }
