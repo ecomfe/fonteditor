@@ -18,6 +18,10 @@ define(
          */
         function contour2svg(contour) {
 
+            if (!contour.length) {
+                return '';
+            }
+
             var pathArr = [];
 
             var curPoint, prevPoint, nextPoint;
