@@ -31,7 +31,7 @@ define(
             +           ' units-per-em="${unitsPerEm}" panose-1="${panose}" ascent="${ascent}" descent="${descent}"'
             +           ' x-height="${xHeight}" bbox="${bbox}" underline-thickness="${underlineThickness}"'
             +           ' underline-position="${underlinePosition}" unicode-range="${unicodeRange}" />'
-            +       '<missing-glyph horiz-adv-x="${missing.advanceWidth}" d="${missing.d}" />'
+            +       '<missing-glyph horiz-adv-x="${missing.advanceWidth}" ${missing.d} />'
             +       '${glyphList}'
             +   '</font></defs>'
             + '</svg>';
@@ -92,7 +92,7 @@ define(
             xmlObject.missing = {};
             xmlObject.missing.advanceWidth = ttf.glyf[0].advanceWidth || 0;
             xmlObject.missing.d = ttf.glyf[0].contours && ttf.glyf[0].contours.length 
-                ? contours2svg(ttf.glyf[0].contours) : '';
+                ? 'd="' + contours2svg(ttf.glyf[0].contours) + '"' : '';
 
             // glyf 信息
             var glyphList = '';
@@ -100,7 +100,7 @@ define(
                 var glyf = ttf.glyf[i];
 
                 // 筛选简单字形，并且有轮廓，有编码
-                if (!glyf.compound && glyf.contours && glyf.contours.length && glyf.unicode && glyf.unicode.length) {
+                if (!glyf.compound && glyf.contours && glyf.unicode && glyf.unicode.length) {
                     var glyfObject = {
                         name: glyf.name,
                         unicode: unicode2xml(glyf.unicode),

@@ -228,7 +228,7 @@ define(
         /**
          * 设置unicode代码
          * 
-         * @param {string} unicode unicode代码
+         * @param {string} unicode unicode代码 $E021, $22
          * @param {Array} indexList 索引列表
          * @return {Array} 改变的glyf
          */
@@ -243,15 +243,24 @@ define(
                 list = glyf;
             }
 
-            list = list.filter(function(g) {
-                return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn';
-            });
+            if (list.length > 1) {
+                list = list.filter(function(g) {
+                    return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn';
+                });
+            }
 
             if (list.length) {
                 unicode = Number('0x' + unicode.slice(1));
                 list.forEach(function(g) {
                     g.unicode = [unicode];
-                    g.name = unicode - 29 < 258 ? postName[unicode - 29] : 'uni' + unicode.toString(16).toUpperCase();
+
+                    if (unicode === 0 || unicode === 1 || unicode === 2) {
+                        g.name = postName[unicode];
+                    }
+                    else {
+                        g.name = unicode - 29 < 258 ? postName[unicode - 29] : 'uni' + unicode.toString(16).toUpperCase();
+                    }
+                    
                     unicode++;
                 });
             }
