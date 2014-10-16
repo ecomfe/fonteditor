@@ -14,9 +14,9 @@ define(
         var Directory = require('./table/directory');
         var supportTables = require('./table/support');
         var checkSum = require('./util/checkSum');
+        var error = require('./error');
 
         var reduceGlyf = require('./util/reduceGlyf');
-
         var pathCeil = require('graphics/pathCeil');
 
         // 支持写的表, 注意表顺序

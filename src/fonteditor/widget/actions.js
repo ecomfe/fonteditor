@@ -38,8 +38,10 @@ define(
             },
 
             // 导出
-            'export': function() {
-
+            'export': function(e) {
+                if (!e.target.getAttribute('download')) {
+                    e.preventDefault();
+                }
             },
 
             // 导出文件
@@ -49,6 +51,7 @@ define(
                     program.exporter['export'](program.ttfManager.get(), {
                         type: target.attr('data-type'),
                         target: target,
+                        originEvent: e,
                         error: function() {
                             e.preventDefault();
                         }

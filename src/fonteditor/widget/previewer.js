@@ -56,7 +56,6 @@ define(
                 fontData = ttf2base64(buffer);
             }
 
-
             // 过滤不显示的字形
             var filtered = ttf.glyf.filter(function(g) {
                 return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn' 
@@ -99,14 +98,19 @@ define(
              * @param {string} fontFormat 字体类型
              */
             load: function(ttf, fontFormat) {
-                var html = generatePreviewHTML(ttf, fontFormat);
-                var win = window.open('./empty.html');
-                win.onload = function() {
-                    win.document.body.innerHTML = html;
-                    win.focus();
-                    win = null;
-                    html = null;
-                };
+                try {
+                    var html = generatePreviewHTML(ttf, fontFormat);
+                    var win = window.open('./empty.html');
+                    win.onload = function() {
+                        win.document.body.innerHTML = html;
+                        win.focus();
+                        win = null;
+                        html = null;
+                    };                    
+                }
+                catch (exp) {
+                    alert(exp.message);
+                }
             }
         };
 

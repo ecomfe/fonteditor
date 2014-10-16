@@ -54,6 +54,7 @@ define(
                     options.success && options.success(base64Str);  
                 }
                 catch(e) {
+                    $(options.target).removeAttr('download');
                     alert(e.message);
                     options.error && options.error(e);  
                 }
