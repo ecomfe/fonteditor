@@ -27,7 +27,7 @@ define(
          */
         function onContextMenu(e) {
 
-            if(!this.currentPoint) {
+            if(!this.curPoint) {
                 return;
             }
 
@@ -47,9 +47,9 @@ define(
 
             var fontLayer = this.fontLayer;
             var command = e.command;
-            var shape = fontLayer.getShape(this.currentPoint.shapeId);
+            var shape = this.curShape;
             var points = shape.points;
-            var pointId = +this.currentPoint.pointId;
+            var pointId = +this.curPoint.pointId;
 
             if (command == 'add') {
                 var cur = points[pointId];
@@ -75,52 +75,65 @@ define(
                 shape.points = points.slice(pointId).concat(points.slice(0, pointId));
             }
 
-            refreshControlPoints.call(this);
+            refreshControlPoints.call(this, shape);
 
-            this.currentPoint = this.currentPointReserved = null;
+            delete this.curPoint;
             this.fontLayer.refresh();
-
             this.fire('change');
         }
 
         // 刷新控制点
-        function refreshControlPoints() {
+        function refreshControlPoints(shape) {
             var controls = [];
-            var shapes = this.fontLayer.shapes;
-            shapes.forEach(function(shape) {
-                var last = shape.points.length - 1;
-                shape.points.forEach(function(p, index) {
-                    var cpoint = {
-                        type: p.onCurve ? 'point' : 'cpoint',
-                        x: p.x,
-                        y: p.y,
-                        point: p,
-                        pointId: index,
-                        shapeId: shape.id
-                    };
+            var last = shape.points.length - 1;
+            var clonedShape = lang.clone(shape);
 
-                    if (index === 0) {
-                        cpoint.style = {
-                            fillColor: 'green',
-                            strokeWidth: 2
-                        };
+            clonedShape.id = 'cover-' + shape.id;
+            clonedShape.selectable = false;
+            clonedShape.style = {
+                strokeColor: 'red'
+            };
+            clonedShape.points.forEach(function(p, index) {
+                var cpoint = {
+                    type: p.onCurve ? 'point' : 'cpoint',
+                    x: p.x,
+                    y: p.y,
+                    point: p,
+                    pointId: index,
+                    style: {
+                        fill: true,
+                        stroke: true,
+                        strokeColor: 'green',
+                        fillColor: 'white'
                     }
-                    else if (index === last) {
-                        cpoint.style = {
-                            fillColor: 'red',
-                            strokeWidth: 2
-                        };
-                    }
+                };
 
-                    controls.push(cpoint);
-                });
+                if (index === 0) {
+                    cpoint.style.strokeColor = 'blue';
+                    cpoint.style.fillColor = 'blue';
+                    cpoint.style.strokeWidth = 2;
+                }
+                else if (index === last) {
+                    cpoint.style.strokeColor = 'red';
+                    cpoint.style.fillColor = 'red';
+                    cpoint.style.strokeWidth = 2;
+                }
+                controls.push(cpoint);
             });
 
             var coverLayer = this.coverLayer;
+
             coverLayer.clearShapes();
+
+            // 添加轮廓
+            coverLayer.addShape(clonedShape);
+            // 添加控制点
             controls.forEach(function(shape){
                 coverLayer.addShape(shape);
             });
+
+            this.curShape = shape;
+
             coverLayer.refresh();
         }
 
@@ -132,23 +145,21 @@ define(
              */
             down: function(e) {
 
-                if (this.currentPoint) {
-                    this.currentPoint.style = this.currentPointReserved.style;
-                    this.currentPoint = this.currentPointReserved = null;
+                // 恢复原来样式
+                if (this.curPoint) {
+                    if (this.curPoint._style){
+                        this.curPoint.style = lang.clone(this.curPoint._style);
+                    } 
                 }
+
+                delete this.curPoint;
 
                 var result = this.coverLayer.getShapeIn(e);
 
                 if(result) {
-
-                    this.currentPoint = result[0];
-                    this.currentPointReserved = lang.clone(this.currentPoint);
-                    this.currentPoint.style = lang.extend(
-                        this.currentPoint.style || {}, 
-                        {
-                            fillColor: 'blue'
-                        }
-                    );
+                    this.curPoint = result[0];
+                    this.curPoint._style = lang.clone(this.curPoint.style);
+                    this.curPoint.style.fillColor = 'green';
 
                     this.coverLayer.refresh();
                 }
@@ -160,34 +171,38 @@ define(
             drag: function(e) {
 
                 var camera = this.render.camera;
-                if(this.currentPoint) {
-                    var current = this.currentPoint;
-                    var reserved = this.currentPointReserved;
+                if(this.curPoint) {
+                    var current = this.curPoint;
+                    var reserved = this.curShape.points[current.pointId];
 
                     if(camera.event.altKey) {
                         current.x = reserved.x;
-                        current.point.x = reserved.point.x;
                     }
                     else {
                         current.x = reserved.x + camera.event.deltaX;
-                        current.point.x = reserved.point.x + camera.event.deltaX;
                     }
 
                     if(camera.event.shiftKey) {
                         current.y = reserved.y;
-                        current.point.y = reserved.point.y;
                     }
                     else {
                         current.y = reserved.y + camera.event.deltaY;
-                        current.point.y = reserved.point.y + camera.event.deltaY;
                     }
 
+                    current.point.x = current.x;
+                    current.point.y = current.y;
+
                     this.coverLayer.refresh();
-                    this.fontLayer.refresh();
                 }
             },
 
             dragend: function() {
+                if(this.curPoint) {
+                    var reserved = this.curShape.points[this.curPoint.pointId];
+                    reserved.x = this.curPoint.x;
+                    reserved.y = this.curPoint.y;
+                    this.fontLayer.refresh();
+                }
                 this.fire('change');
             },
 
@@ -208,7 +223,7 @@ define(
              * 右键
              */
             rightdown: function(e) {
-                if (this.currentPoint) {
+                if (this.curPoint) {
                     this.contextMenu.onClick = lang.bind(onContextMenu, this);
                     this.contextMenu.show(e, require('../menu/commandList').point);
                 }
@@ -220,13 +235,13 @@ define(
              */
             keyup: function(e) {
                 // esc键，重置model
-                if (e.key == 'delete' && this.currentPoint) {
+                if (e.key == 'delete' && this.curPoint) {
                     onContextMenu.call(this, {
                         command: 'remove'
                     });
                 }
                 // 移动
-                else if(stepMap[e.key] && this.currentPoint) {
+                else if(stepMap[e.key] && this.curPoint) {
                     this.fire('change');
                 }
                 else if (e.key == 'esc') {
@@ -239,22 +254,22 @@ define(
              */
             keydown: function(e) {
                 // 移动
-                if(stepMap[e.key] && this.currentPoint) {
+                if(stepMap[e.key] && this.curPoint) {
                     var step = stepMap[e.key];
-                    var current = this.currentPoint;
-                    var reserved = this.currentPointReserved;
+                    var current = this.curPoint;
+                    
                     if (step[0]) {
                         current.x += step[0];
-                        current.point.x += step[0];
-                        reserved.x += step[0];
-                        reserved.point.x += step[0];
                     }
+
                     if (step[1]) {
                         current.y += step[1];
-                        current.point.y += step[1];
-                        reserved.y += step[1];
-                        reserved.point.y += step[1];
                     }
+
+                    var reserved = this.curShape.points[current.pointId];
+                    reserved.x = current.point.x = current.x;
+                    reserved.y = current.point.y = current.y;
+
                     this.coverLayer.refresh();
                     this.fontLayer.refresh();
                 }
@@ -263,11 +278,10 @@ define(
             /**
              * 开始
              */
-            begin: function() {
+            begin: function(shape) {
                 var me = this;
                 var coverLayer = this.coverLayer;
-                coverLayer.options.fill = true;
-                refreshControlPoints.call(me);
+                refreshControlPoints.call(me, shape);
 
             },
 
@@ -275,8 +289,10 @@ define(
              * 结束
              */
             end: function() {
-                this.currentPoint = this.currentPointReserved = null;
-                this.coverLayer.options.fill = false;
+
+                delete this.curPoint;
+                delete this.curShape;
+
                 this.coverLayer.clearShapes();
                 this.coverLayer.refresh();
                 this.render.setCursor('default');

@@ -26,17 +26,7 @@ define(
          * @constructor
          */
         function Editor(main, options) {
-            this.options = lang.extend({
-                unitsPerEm: 512,
-                // 字体测量规格
-                metrics: {
-                    WinAscent: 480,
-                    WinDecent: -33,
-                    'x-Height': 256,
-                    'CapHeight': 358
-                },
-                contextMenu: {}
-            }, options);
+            this.options = options || {};
 
             this.contextMenu = new ContextMenu(main, this.options.contextMenu);
             this.history = new History();
