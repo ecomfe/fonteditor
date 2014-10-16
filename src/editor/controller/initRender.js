@@ -196,7 +196,7 @@ define(
                 }
 
                 // 放大
-                if (e.keyCode == 187 && e.ctrlKey) {
+                if (e.keyCode == 187 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
                     var size = render.getSize();
@@ -206,7 +206,7 @@ define(
                     });
                 }
                 // 缩小
-                else if (e.keyCode == 189 && e.ctrlKey) {
+                else if (e.keyCode == 189 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
                     var size = render.getSize();

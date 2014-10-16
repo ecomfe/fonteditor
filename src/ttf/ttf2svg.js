@@ -50,7 +50,10 @@ define(
                 unicode = [unicode];
             }
             return unicode.map(function(u) {
-                return '&#x' + u.toString(16) + ';';
+                if (u < 0x20) {
+                    return '';
+                }
+                return u >= 0x20 && u <= 255 ? String.fromCharCode(u).toLowerCase() : '&#x' + u.toString(16) + ';';
             }).join('');
         }
 
