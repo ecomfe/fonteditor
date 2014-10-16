@@ -17,6 +17,8 @@ define(
 
         var reduceGlyf = require('./util/reduceGlyf');
 
+        var pathCeil = require('graphics/pathCeil');
+
         // 支持写的表, 注意表顺序
         var tableList = [
             'OS/2',
@@ -59,15 +61,43 @@ define(
                 error.raise(10201);
             }
 
+            var checkUnicodeRepeat = {}; // 检查是否有重复代码点
+
             // 将glyf的代码点按小到大排序
-            ttf.glyf.forEach(function(glyf) {
+            ttf.glyf.forEach(function(glyf, index) {
                 if (glyf.unicode) {
                     glyf.unicode = glyf.unicode.sort();
+
+                    glyf.unicode.forEach(function(u) {
+                        if (checkUnicodeRepeat[u]) {
+                            error.raise(10200, index);
+                        }
+                        else {
+                            checkUnicodeRepeat[u] = true;
+                        }
+                    });
+
                 }
 
                 if (!glyf.compound && glyf.contours) {
+
+                    // 整数化
+                    glyf.contours.forEach(function(contour) {
+                        pathCeil(contour);
+                    });
+
+                    // 缩减glyf
                     reduceGlyf(glyf);
                 }
+
+                // 整数化
+                glyf.xMin = Math.round(glyf.xMin || 0);
+                glyf.xMax = Math.round(glyf.xMax || 0);
+                glyf.yMin = Math.round(glyf.yMin || 0);
+                glyf.yMax = Math.round(glyf.yMax || 0);
+                glyf.leftSideBearing = Math.round(glyf.leftSideBearing || 0);
+                glyf.advanceWidth = Math.round(glyf.advanceWidth || 0);
+
             });
 
         }

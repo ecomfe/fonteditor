@@ -93,10 +93,10 @@ define(
          * 
          * @return {this}
          */
-        Manager.prototype.addGlyf = function(glyf) {
+        Manager.prototype.insertGlyf = function(glyf, beforeIndex) {
 
             glyf.modify = 'new';
-            this.ttf.addGlyf(glyf);
+            this.ttf.insertGlyf(glyf, beforeIndex);
             this.fireChange(true);
 
             return this;

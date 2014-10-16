@@ -115,8 +115,6 @@ define(
 
                     var glyfNotEmpty = 0; // 非空glyf
 
-                    var checkUnicodeRepeat = {}; // 检查是否有重复代码点
-
                     ttf.glyf.forEach(function(glyf, index) {
 
                         // 统计control point信息
@@ -185,14 +183,6 @@ define(
                                     usFirstCharIndex = Math.min(usFirstCharIndex, unicode);
                                     usLastCharIndex = Math.max(usLastCharIndex, unicode);
                                 }
-
-                                if (checkUnicodeRepeat[unicode]) {
-                                    error.raise(10200, index);
-                                }
-                                else {
-                                    checkUnicodeRepeat[unicode] = true;
-                                }
-
                             });
                         }
                     });

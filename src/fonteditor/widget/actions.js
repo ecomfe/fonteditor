@@ -72,10 +72,11 @@ define(
 
             // 添加新字形
             'add-new': function() {
-                program.ttfManager.addGlyf({
+                var selected = program.viewer.getSelected();
+                program.ttfManager.insertGlyf({
                     name: '',
                     unicode:[]
-                });
+                }, selected[0]);
             },
 
             // 添加在线字形

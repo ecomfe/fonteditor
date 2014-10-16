@@ -170,7 +170,24 @@ define(
          * @return {Number} 添加的glyf
          */
         TTF.prototype.addGlyf = function(glyf) {
-            this.ttf.glyf.push(glyf);
+            return this.insertGlyf(glyf);
+        };
+
+        /**
+         * 插入glyf
+         * 
+         * @param {Object} glyf glyf对象
+         * @param {Object} insertIndex 插入的索引
+         * @return {Number} 添加的glyf
+         */
+        TTF.prototype.insertGlyf = function(glyf, insertIndex) {
+            if (insertIndex >= 0 && insertIndex < this.ttf.glyf.length) {
+                this.ttf.glyf.splice(insertIndex, 0, glyf);
+            }
+            else {
+                this.ttf.glyf.push(glyf);
+            }
+
             return [glyf];
         };
 
@@ -198,7 +215,7 @@ define(
         TTF.prototype.removeGlyf = function(indexList) {
             var glyf = this.ttf.glyf;
             var removed = [];
-            for(var i = glyf.length - 1; i > 0; i--) {
+            for(var i = glyf.length - 1; i >= 0; i--) {
                 if (indexList.indexOf(i) >= 0) {
                     removed.push(glyf[i]);
                     glyf.splice(i, 1);

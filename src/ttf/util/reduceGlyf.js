@@ -42,8 +42,13 @@ define(
         function reduceGlyf(glyf) {
 
             var contours = glyf.contours, contour, prev;
-            for(var j = 0, cl = contours.length; j < cl; j++) {
+            for(var j = contours.length - 1; j >= 0; j--) {
                 contour = contours[j];
+                // 空轮廓
+                if (0 === contour.length) {
+                    contours.splice(j, 1);
+                    continue;
+                }
 
                 for(var i = contour.length - 1, last = i; i >= 0; i--) {
 
@@ -58,6 +63,10 @@ define(
                         continue;
                     }
                 }
+            }
+
+            if (0 === glyf.contours.length) {
+                delete glyf.contours;
             }
         }
 
