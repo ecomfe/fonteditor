@@ -168,12 +168,12 @@ define(
                     id = this.layers.indexOf(layer);
                 }
                 else if(typeof layer === 'string') {
-                    this.layers.forEach(function(item, i) {
-                        if(item.id === layer) {
+                    for (var i = 0, l = this.layers.length; i < l; i++) {
+                        if (layer == this.layers[i].id) {
                             id = i;
-                            return false;
+                            break;
                         }
-                    });
+                    }
                 }
                 else if(typeof id === 'number') {
                     id = id;

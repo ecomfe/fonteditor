@@ -96,14 +96,21 @@ define(
          * 设置操作的shapes
          */
         ShapesGroup.prototype.setShapes = function(shapes) {
-            if(this.shapes) {
-                this.shapes.length = 0;
-                this.shapes = null;
-            }
-            this.shapes = shapes;
 
             var coverLayer = this.editor.coverLayer;
-            coverLayer.clearShapes();
+
+            if(this.shapes) {
+                this.shapes = null;
+            }
+            
+            if (this.coverShapes) {
+                this.coverShapes.forEach(function(shape) {
+                    coverLayer.removeShape(shape);
+                });
+                this.coverShapes = null;
+            }
+
+            this.shapes = shapes;
 
             this.coverShapes = lang.clone(this.shapes);
             this.coverShapes.forEach(function(shape) {
@@ -163,9 +170,7 @@ define(
 
             this.editor.coverLayer.clearShapes();
             this.editor.coverLayer.refresh();
-            this.shapes.length = 0;
-            this.controls.length = 0;
-            this.shapes = this.controls = this.editor = null;
+            this.shapes = this.coverShapes = this.controls = this.editor = null;
         };
 
         return ShapesGroup;

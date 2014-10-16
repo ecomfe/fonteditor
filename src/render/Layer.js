@@ -206,12 +206,12 @@ define(
                     id = this.shapes.indexOf(shape);
                 }
                 else if(typeof shape === 'string') {
-                    this.shapes.forEach(function(item, i) {
-                        if(item.id === shape) {
+                    for (var i = 0, l = this.shapes.length; i < l; i++) {
+                        if (shape == this.shapes[i].id) {
                             id = i;
-                            return false;
+                            break;
                         }
-                    });
+                    }
                 }
                 else if(typeof shape === 'number') {
                     id = shape;

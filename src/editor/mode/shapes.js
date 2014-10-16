@@ -74,17 +74,23 @@ define(
             }
             else if (command == 'rotate_left') {
                 this.execCommand('rotateleft', shapes);
+                this.currentGroup.setShapes(shapes);
                 this.currentGroup.refresh();
             }
             else if (command == 'rotate_right') {
                 this.execCommand('rotateright', shapes);
+                this.currentGroup.setShapes(shapes);
                 this.currentGroup.refresh();
             }
             else if (command == 'reverse_shapes') {
                 this.execCommand('reverseshapes', shapes);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
             }
             else if (command == 'mirror_shapes') {
                 this.execCommand('mirrorshapes', shapes);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
             }
             else if (command == 'add_referenceline') {
                 var bound = this.currentGroup.getBound();
