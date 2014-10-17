@@ -11,7 +11,6 @@
 
 define(
     function(require) {
-
         var string = require('common/string');
         var TTFReader = require('./ttfreader');
         var contours2svg = require('./util/contours2svg');
@@ -53,7 +52,7 @@ define(
                 if (u < 0x20) {
                     return '';
                 }
-                return u >= 0x20 && u <= 255 ? String.fromCharCode(u).toLowerCase() : '&#x' + u.toString(16) + ';';
+                return u >= 0x20 && u <= 255 ? string.encodeHTML(String.fromCharCode(u).toLowerCase()) : '&#x' + u.toString(16) + ';';
             }).join('');
         }
 
