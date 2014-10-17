@@ -17,7 +17,7 @@ define(
         var scaleTransform = require('./scaleTransform');
         var rotateTransform = require('./rotateTransform');
 
-        var updateControls = require('./updateControls');
+        var BoundControl = require('./BoundControl');
         
 
         /**
@@ -41,6 +41,7 @@ define(
          */
         function ShapesGroup(shapes, editor) {
             this.editor = editor;
+            this.boundControl = new BoundControl(editor.coverLayer);
             this.setShapes(shapes);
         }
 
@@ -48,13 +49,15 @@ define(
          * 根据控制点做图形变换
          */
         ShapesGroup.prototype.beginTransform = function(point, camera) {
-
             this.bound = getBound(this.shapes);
             this.editor.coverLayer.addShape({
+                id: 'bound',
                 type: 'polygon',
                 dashed: true,
-                id: 'bound'
+                selectable: false,
+                points: []
             });
+            this.boundControl.hide();
         };
 
         /**
@@ -82,12 +85,11 @@ define(
             this.coverShapes = this.shapes;
             this.transform(point, camera);
             this.coverShapes = coverShapes;
-            this.editor.fontLayer.refresh();
-
+            delete this.bound;
 
             this.editor.coverLayer.removeShape('bound');
             this.editor.coverLayer.removeShape('boundcenter');
-            delete this.bound;
+            this.editor.fontLayer.refresh();
 
             this.refresh();
         };
@@ -159,18 +161,16 @@ define(
          * refresh
          */
         ShapesGroup.prototype.refresh = function() {
-            updateControls.call(this, getBound(this.shapes));
-            this.editor.coverLayer.refresh();
+            this.boundControl.refresh(getBound(this.shapes), this.mode);
         };
 
         /**
          * 注销
          */
         ShapesGroup.prototype.dispose = function() {
-
             this.editor.coverLayer.clearShapes();
-            this.editor.coverLayer.refresh();
-            this.shapes = this.coverShapes = this.controls = this.editor = null;
+            this.boundControl.dispose();
+            this.shapes = this.coverShapes = this.boundControl = this.editor = null;
         };
 
         return ShapesGroup;

@@ -89,6 +89,10 @@ define(
             draw: function(ctx, shape) {
 
                 var points = shape.points;
+                if (!points || points.length < 2) {
+                    return;
+                }
+                
                 var i = 0, l = points.length;
                 if(shape.dashed) {
                     for (; i < l - 1; i++) {
