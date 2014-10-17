@@ -14,8 +14,8 @@ define(
         var string = require('common/string');
         var TTFReader = require('./ttfreader');
         var contours2svg = require('./util/contours2svg');
+        var unicode2xml = require('./util/unicode2xml');
         var error = require('./error');
-
         // svg font id
         var SVG_FONT_ID = 'fonteditor';
 
@@ -37,24 +37,6 @@ define(
 
         // glyph 模板
         var GLYPH_TPL = '<glyph glyph-name="${name}" unicode="${unicode}" d="${d}" />';
-
-        /**
-         * unicode 转xml编码格式
-         * 
-         * @param {Array} unicode unicode字符集
-         * @return {string} xml编码格式
-         */
-        function unicode2xml(unicode) {
-            if (typeof(unicode) == 'number') {
-                unicode = [unicode];
-            }
-            return unicode.map(function(u) {
-                if (u < 0x20) {
-                    return '';
-                }
-                return u >= 0x20 && u <= 255 ? string.encodeHTML(String.fromCharCode(u).toLowerCase()) : '&#x' + u.toString(16) + ';';
-            }).join('');
-        }
 
         /**
          * ttf数据结构转svg

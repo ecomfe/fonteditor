@@ -16,18 +16,16 @@ define(
         var ttf2base64 = require('ttf/ttf2base64');
         var woff2base64 = require('ttf/woff2base64');
         var svg2base64 = require('ttf/svg2base64');
+        var unicode2xml = require('ttf/util/unicode2xml');
         var utpl = require('utpl');
 
         var previewTplRender = null; // 模板渲染函数
 
-        /**
-         * unicode2html编码
-         * 
-         * @param {number} u unicode码
-         * @return {string} html编码
-         */
-        function unicode2html(u) {
-            return '&amp;#x' + u.toString(16) + ';';
+        // 列出unicode
+        function listUnicode(unicode) {
+            return unicode.map(function(u) {
+                return '\\' + u.toString(16);
+            }).join(',');
         }
 
         /**
@@ -64,8 +62,9 @@ define(
 
             filtered.forEach(function(g) {
                 glyfList.push({
-                    code: '&#x' + g.unicode[0].toString(16) + ';',
-                    codeName: g.unicode.map(unicode2html).join(',')
+                    code: unicode2xml(g.unicode[0]),
+                    codeName: listUnicode(g.unicode),
+                    name: g.name
                 });
             });
 
