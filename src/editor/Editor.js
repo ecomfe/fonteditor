@@ -19,6 +19,8 @@ define(
         var initLayer = require('./controller/initLayer');
         var initRender = require('./controller/initRender');
         var initBinder = require('./controller/initBinder');
+        var initAxis = require('./controller/initAxis');
+        var initFont = require('./controller/initFont');
 
         /**
          * Render控制器
@@ -37,9 +39,17 @@ define(
          */
         Editor.prototype.setRender = function(render) {
             this.render = render;
+            
+            initFont.call(this);
             initRender.call(this);
             initLayer.call(this);
+            initAxis.call(this);
             initBinder.call(this);
+
+            this.axisLayer.refresh();
+            this.graduationLayer.refresh();
+
+            this.setMode();
             return this;
         };
 
@@ -167,14 +177,13 @@ define(
             this.contextMenu.dispose();
             this.render && this.render.dispose();
             this.options = this.contextMenu = this.render = null;
-            this.fontLayer = this.coverLayer = this.axisLayer = null;
-            this.axis = this.rightSideBearing = this.font = null;
+            this.fontLayer = this.coverLayer = this.axisLayer = this.graduationLayer = null;
+            this.axis = this.rightSideBearing = this.graduation = this.font = null;
             this.mode = null;
             this.history.reset();
             this.history = null;
         };
 
-        lang.extend(Editor.prototype, require('./controller/font'));
         require('common/observable').mixin(Editor.prototype);
 
         return Editor;

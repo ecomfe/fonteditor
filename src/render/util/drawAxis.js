@@ -20,7 +20,7 @@ define(
          */
         function drawAxis(ctx, config) {
 
-                var gap = Math.round(config.gap || 100);
+                var gap = Math.round(config.gap);
                 var xMax = Math.round(ctx.canvas.width + gap);
                 var yMax = Math.round(ctx.canvas.height + gap);
                 var x = Math.round(config.x);

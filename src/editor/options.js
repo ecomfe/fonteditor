@@ -15,14 +15,6 @@ define(
 
                 unitsPerEm: 512, // 框大小
 
-                // 字体测量规格
-                metrics: {
-                    ascent: 480, // 上升
-                    decent: -33, // 下降
-                    'x-Height': 256, // x高度
-                    'CapHeight': 358 // 大写字母高度
-                },
-
                 // 辅助线
                 referenceline: {
                     style: {
@@ -45,10 +37,19 @@ define(
 
                 // 轴线
                 axis: {
-                    gap: 100,
+                    
                     gapColor: '#A6A6FF',
                     gridColor: 'red',
                     emColor: 'red',
+
+                    // 字体测量规格
+                    metrics: {
+                        ascent: 480, // 上升
+                        decent: -33, // 下降
+                        'x-Height': 256, // x高度
+                        'CapHeight': 358 // 大写字母高度
+                    },
+
                     // 刻度
                     graduation: {
                         gap: 100,

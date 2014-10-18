@@ -126,7 +126,18 @@ define(
             fields = fields || Object.keys(thatObj);
             fields.forEach(function(field) {
                 if (thisObj.hasOwnProperty(field)) {
-                    thisObj[field] = thatObj[field];
+
+                    // 拷贝对象
+                    if (
+                        thisObj[field] && typeof(thisObj[field]) === 'object' 
+                        && thatObj[field] && typeof(thatObj[field]) === 'object'
+                    ) {
+                        overwrite(thisObj[field], thatObj[field]);
+                    }
+                    else {
+                        thisObj[field] = thatObj[field];
+                    }
+
                 }
             });
         }

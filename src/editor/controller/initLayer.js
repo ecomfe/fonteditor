@@ -36,7 +36,7 @@ define(
                 fill: false
             });
 
-            this.render.addLayer('graduation', {
+            this.graduationLayer = this.render.addLayer('graduation', {
                 level: 40,
                 fill: false,
                 disabled: true

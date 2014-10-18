@@ -1,5 +1,5 @@
 /**
- * @file font.js
+ * @file initFont.js
  * @author mengke01
  * @date 
  * @description
@@ -10,7 +10,6 @@
 define(
     function(require) {
         
-        var initAxis = require('./initAxis');
         var lang = require('common/lang');
         var pathAdjust = require('graphics/pathAdjust');
         var guid = require('render/util/guid');
@@ -23,54 +22,42 @@ define(
         function setFont(font) {
 
             var contours = font.contours;
+            var originX = this.axis.x;
+            var originY = this.axis.y;
+            var scale = this.render.camera.scale;
 
-            var width = this.render.painter.width;
-            var height = this.render.painter.height;
-            var options = this.options;
+            // 不需要在此保存contours
+            delete font.contours;
+            font.rightSideBearing = font.advanceWidth - font.xMax;
+            this.font = font;
 
-            // 坐标原点位置，基线原点
-            var offsetX = (width - options.unitsPerEm) / 2;
-            var offsetY = (height + (options.unitsPerEm + options.metrics.decent)) / 2;
+            // 重置历史
+            this.history.reset();
+            this.history.add(lang.clone(contours));
 
-            // 构造形状集合
-            var shapes = contours.map(function(path) {
+            // 设置字形
+            var shapes = contours.map(function(contour) {
                 var shape = {};
-                path = pathAdjust(path, 1, -1);
-                shape.points = pathAdjust(path, 1, 1, offsetX, offsetY);
+                pathAdjust(contour, scale, -scale);
+                shape.points = pathAdjust(contour, 1, 1, originX, originY);
                 return shape;
             });
 
-            font.rightSideBearing = offsetX + font.advanceWidth;
-
-            this.font = font;
-
-            // 重置形状
-            this.render.reset();
-
-            initAxis.call(this, {
-                x: offsetX, 
-                y: offsetY,
-                rightSideBearing: font.rightSideBearing,
-                axisGap: this.options.axisGap || 100
-            });
-
-            var fontLayer = this.render.painter.getLayer('font');
+            var fontLayer = this.fontLayer;
+            fontLayer.clearShapes();
 
             shapes.forEach(function(shape) {
                 fontLayer.addShape('path', shape);
             });
-            
-            this.render.refresh();
+            fontLayer.refresh();
 
-            // 重置历史
-            this.history.reset();
-            this.history.add(this.getShapes());
+            // 设置参考线
+            this.rightSideBearing.p0.x = originX + font.advanceWidth * scale;
+            this.axisLayer.refresh();
 
             this.setMode();
-
             return this;
         }
-
 
         /**
          * 设置编辑中的shapes
@@ -124,10 +111,10 @@ define(
             return shapes;
         }
 
-        return {
-            setFont: setFont,
-            setShapes: setShapes,
-            getShapes: getShapes
+        return function() {
+            this.setFont = setFont;
+            this.setShapes = setShapes;
+            this.getShapes = getShapes;
         };
     }
 );
