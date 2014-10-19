@@ -9,22 +9,24 @@ exports.getProcessors = function () {
 
     return [ 
         new LessCompiler( {
-            files: ['css/ttf.less', 'css/preview.less']
-        }),
-
-        new CssCompressor({
-            files: ['css/ttf.less', 'css/preview.less'],
-            compressOptions: {
-                keepBreaks: false
+            files: [
+                'css/main.less',
+                'css/ttf.less',
+                'css/preview.less'
+            ],
+            compileOptions: {
+                relativeUrls: false
             }
         }),
-
         new ModuleCompiler( {
             configFile: './module.conf'
         }),
 
         new JsCompressor({
-            files: ['src/fonteditor/ttf/main.js']
+            files: [
+                'src/fonteditor/main.js',
+                'src/fonteditor/ttf.js'
+            ]
         }),
 
         // 清除冗余文件，比如`less`
@@ -62,7 +64,9 @@ exports.exclude = [
     "test/*",
     "edp-*",
     "output",
-    ".DS_Store"
+    ".DS_Store",
+    ".gitignore",
+    "package.json"
 ];
 
 exports.injectProcessor = function ( processors ) {
