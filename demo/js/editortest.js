@@ -35,10 +35,18 @@ define(
 
                 currentEditor = editor.create($('#render-view').get(0));
 
+                currentEditor.on('save', function(e) {
+                    var font = e.font;
+                    console.log(font);
+                    ttfObject.glyf[font.index] = font;
+                });
+
                 $('#glyf-list').delegate('[data-index]', 'click', function(e) {
                     e.preventDefault();
                     var index = +$(this).attr('data-index');
-                    currentEditor.setFont(lang.clone(ttfObject.glyf[index]));
+                    var font = lang.clone(ttfObject.glyf[index]);
+                    font.index = index;
+                    currentEditor.setFont(font);
                 });
 
                 $('#editor-unitsperem').on('change', function(){
@@ -46,7 +54,25 @@ define(
                     currentEditor.setAxis({
                         unitsPerEm: unitsPerEm
                     });
-                })
+                });
+
+                $('#editor-bearing').on('change', function(){
+                    var opt = $(this).val();
+
+                    var setting = {
+                        1 : {
+                            leftSideBearing: 10,
+                            rightSideBearing: 10
+                        },
+                        2: {
+                            leftSideBearing: 100,
+                            rightSideBearing: 100 
+                        }
+                    };
+
+
+                    currentEditor.adjustFont(setting[opt]);
+                });
 
             }
         };

@@ -169,7 +169,7 @@ define(
             }
             else {
                 for (var i = 0, l = arguments.length; i < l; i++) {
-                    points = points.concat(arguments[i]);
+                    Array.prototype.splice.apply(points, [points.length, 0].concat(arguments[i]));
                 }
             }
             return computeBoundingBox(points);

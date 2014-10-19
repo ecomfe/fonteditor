@@ -20,7 +20,8 @@ define(
             rescale: function() {
                 this.coverLayer.clearShapes();
                 var size = this.render.getSize();
-                this.render.scaleTo(1, {
+                var scale = 512 / this.options.unitsPerEm;
+                this.render.scaleTo(scale, {
                     x: size.width / 2, 
                     y: size.height / 2
                 });

@@ -195,8 +195,14 @@ define(
                     return;
                 }
 
+                // 保存
+                if (e.keyCode == 83 && e.ctrlKey) {
+                    me.fire('save', {
+                        font: me.getFont()
+                    });
+                }
                 // 放大
-                if (e.keyCode == 187 && (e.ctrlKey || e.altKey)) {
+                else if (e.keyCode == 187 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
                     var size = render.getSize();
