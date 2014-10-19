@@ -208,7 +208,7 @@ define(
          * 
          */
         Render.prototype.focus = function() {
-            this.capture.start();
+            //this.capture.start();
             this.keyCapture.start();
         };
 
@@ -217,7 +217,7 @@ define(
          * 
          */
         Render.prototype.blur = function() {
-            this.capture.stop();
+            //this.capture.stop();
             this.keyCapture.stop();
         };
 

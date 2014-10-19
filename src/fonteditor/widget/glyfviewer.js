@@ -1,5 +1,5 @@
 /**
- * @file glyflist.js
+ * @file GLYFViewer.js
  * @author mengke01
  * @date 
  * @description
@@ -15,6 +15,7 @@ define(
 
         var GLYF_ITEM_TPL = ''
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected}">'
+            +   '<i data-action="edit" class="i-edit" title="编辑"></i>'
             +   '<i data-action="del" class="i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
@@ -27,8 +28,7 @@ define(
         var keyMap = {
             46: 'del',
             67: 'copy',
-            88: 'cut',
-            86: 'paste'
+            88: 'cut'
         };
 
         // 显示glyf
@@ -120,62 +120,47 @@ define(
         function downlistener(e) {
             var me = this;
 
-            if (e.keyCode >= 112 && e.keyCode <= 119 && e.keyCode !== 116) {
-                e.preventDefault();
-                e.stopPropagation();
-                me.fire('function', {
-                    keyCode: e.keyCode
-                });
-            }
-            // 保存
-            if (83 === e.keyCode && e.ctrlKey) {
-                e.preventDefault();
-                e.stopPropagation();
-                me.fire('save');
-            }
-            // 处理其他事件，需要focus
-            else {
-                if (me.listening) {
-                    // 阻止ctrl+A默认事件
-                     if (65 === e.keyCode && e.ctrlKey) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        me.main.children().addClass('selected');
-                    }
-                    // 撤销
-                    else if(e.keyCode == 90 && e.ctrlKey) {
-                        e.stopPropagation();
-                         me.fire('undo');
-                    }
-                    // 重做
-                    else if(e.keyCode == 89 && e.ctrlKey) {
-                        e.stopPropagation();
-                        me.fire('redo');
-                    }
-                    // 取消选中
-                    else if (27 === e.keyCode) {
-                        e.stopPropagation();
+            if (me.listening) {
+                // 阻止ctrl+A默认事件
+                 if (65 === e.keyCode && e.ctrlKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    me.main.children().addClass('selected');
+                }
+                // 撤销
+                else if(e.keyCode == 90 && e.ctrlKey) {
+                    e.stopPropagation();
+                     me.fire('undo');
+                }
+                // 重做
+                else if(e.keyCode == 89 && e.ctrlKey) {
+                    e.stopPropagation();
+                    me.fire('redo');
+                }
+                // 取消选中
+                else if (27 === e.keyCode) {
+                    e.stopPropagation();
+                    me.clearSelected();
+                }
+                // 其他操作
+                else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
+                    e.stopPropagation();
+                    var selected = me.getSelected();
+
+                    // 取消选中的glyf
+                    if (e.keyCode == 46 || e.keyCode == 88) {
                         me.clearSelected();
                     }
-                    // 其他操作
-                    else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
-                        e.stopPropagation();
-                        var selected = me.getSelected();
 
-                        // 取消选中的glyf
-                        if (e.keyCode == 46 || e.keyCode == 88) {
-                            me.clearSelected();
-                        }
-
-                        // 粘贴和有选择的操作需要发事件
-                        if (e.keyCode == 86 || selected.length) {
-                            me.fire(keyMap[e.keyCode], {
-                                list: selected
-                            });
-                        }
+                    // 粘贴和有选择的操作需要发事件
+                    if (selected.length) {
+                        me.fire(keyMap[e.keyCode], {
+                            list: selected
+                        });
                     }
                 }
             }
+            
         }
 
         /**
@@ -185,7 +170,7 @@ define(
          * @param {HTMLElement} main 主元素
          * @param {Object} options 参数
          */
-        function GlyfViewer(main, options) {
+        function GLYFViewer(main, options) {
             this.options = options || {};
             this.main = $(main);
 
@@ -195,11 +180,6 @@ define(
 
             var me = this;
             me.downlistener = lang.bind(downlistener, this);
-
-            $(document.body).on('click', function(e) {
-                var focused = me.main.get(0) === e.target || me.main.get(0).contains(e.target);
-                focused ? me.focus() : me.blur();
-            });
 
             me.capture = new MouseCapture(me.main.get(0), {
                 events: {
@@ -249,7 +229,7 @@ define(
         /**
          * 获取焦点
          */
-        GlyfViewer.prototype.focus = function() {
+        GLYFViewer.prototype.focus = function() {
             if (!this.listening) {
                 this.listening = true;
                 document.body.addEventListener('keydown', this.downlistener);
@@ -259,10 +239,10 @@ define(
         /**
          * 失去焦点
          */
-        GlyfViewer.prototype.blur = function() {
+        GLYFViewer.prototype.blur = function() {
             if (this.listening) {
                 this.listening = false;
-                document.body.addEventListener('keydown', this.downlistener);
+                document.body.removeEventListener('keydown', this.downlistener);
             }
         };
 
@@ -272,7 +252,7 @@ define(
          * @param {Object} ttf ttfObject
          * @param {Array?} selectedList 选中的列表
          */
-        GlyfViewer.prototype.show = function(ttf, selectedList) {
+        GLYFViewer.prototype.show = function(ttf, selectedList) {
             showGLYF.call(this, ttf, selectedList);
         };
 
@@ -281,7 +261,7 @@ define(
          * 
          * @return {Array} 选中的indexList
          */
-        GlyfViewer.prototype.getSelected = function() {
+        GLYFViewer.prototype.getSelected = function() {
             var selected = [];
             this.main.find('.selected').each(function(index, item) {
                 selected.push(+item.getAttribute('data-index'));
@@ -292,14 +272,14 @@ define(
         /**
          * 清除选中列表
          */
-        GlyfViewer.prototype.clearSelected = function() {
+        GLYFViewer.prototype.clearSelected = function() {
             this.main.children().removeClass('selected');
         };
 
         /**
          * 设置选中的列表
          */
-        GlyfViewer.prototype.setSelected = function(selectedList) {
+        GLYFViewer.prototype.setSelected = function(selectedList) {
             if (selectedList && 0 !== selectedList.length) {
                 var selectedHash = {};
 
@@ -315,8 +295,8 @@ define(
             }
         };
 
-        require('common/observable').mixin(GlyfViewer.prototype);
+        require('common/observable').mixin(GLYFViewer.prototype);
 
-        return GlyfViewer;
+        return GLYFViewer;
     }
 );

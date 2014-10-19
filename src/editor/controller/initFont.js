@@ -25,23 +25,18 @@ define(
             var contours = font.contours;
             var originX = this.axis.x;
             var originY = this.axis.y;
-            var scale = this.render.camera.scale;
+            
 
             // 不需要在此保存contours
             delete font.contours;
             font.rightSideBearing = font.advanceWidth - font.xMax;
             this.font = font;
 
-            // 重置历史
-            this.history.reset();
-            this.history.add(lang.clone(contours));
-
             // 设置字形
             var shapes = contours.map(function(contour) {
-                var shape = {};
-                pathAdjust(contour, scale, -scale);
-                shape.points = pathAdjust(contour, 1, 1, originX, originY);
-                return shape;
+                return {
+                    points: contour
+                };
             });
 
             var fontLayer = this.fontLayer;
@@ -50,6 +45,18 @@ define(
             shapes.forEach(function(shape) {
                 fontLayer.addShape('path', shape);
             });
+
+            // 重置历史
+            this.history.reset();
+            this.history.add(lang.clone(shapes));
+
+            // 设置缩放
+            var scale = this.render.camera.scale;
+            shapes.forEach(function(shape) {
+                pathAdjust(shape.points, scale, -scale);
+                pathAdjust(shape.points, 1, 1, originX, originY);
+            });
+
             fontLayer.refresh();
 
             // 设置参考线
@@ -67,7 +74,7 @@ define(
          * @return {this}
          */
         function setShapes(shapes) {
-            var origin = this.render.getLayer('axis').shapes[0];
+            var origin = this.axis;
             var scale = this.render.camera.scale;
             var fontLayer = this.fontLayer;
 
@@ -124,14 +131,14 @@ define(
             font.name = font.name || '';
 
             var shapes = this.getShapes();
-            shapes.forEach(function(g) {
+            var contours = lang.clone(shapes.map(function(shape) {
+                return shape.points;
+            })).forEach(function(g) {
                 pathCeil(g);
             });
 
             // 设置边界
-            var box = computeBoundingBox.computePathBox.apply(null, shapes.map(function(shape) {
-                return shape.points;
-            }));
+            var box = computeBoundingBox.computePathBox.apply(null, contours);
             
             font.xMin = box.x;
             font.yMin = box.y;
@@ -141,7 +148,7 @@ define(
             font.advanceWidth = font.xMax + font.rightSideBearing;
             delete font.advanceWidth;
 
-            font.contours = shapes;
+            font.contours = contours;
 
             return font;
         }

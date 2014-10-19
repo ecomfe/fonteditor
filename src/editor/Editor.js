@@ -144,6 +144,15 @@ define(
         };
 
         /**
+         * 是否改变过
+         * 
+         * @return {boolean}
+         */
+        Editor.prototype.isChanged = function() {
+            return !this.history.atFirst();
+        };
+
+        /**
          * 从剪切板中获取
          * 
          * @param {Array} 形状集合

@@ -1,6 +1,8 @@
 
 @import './bootstrap.less';
 
+@import './def.less';
+
 body, html {
     margin: 0;
     padding: 0;
@@ -10,14 +12,14 @@ body, html {
 
 // scroll bar
 ::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 }
 
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    border: 5px solid transparent;
+    border: 1px solid transparent;
 }
 
 ::-webkit-scrollbar-track {
@@ -70,7 +72,7 @@ body, html {
 .sidebar {
     position: fixed;
     width: 200px;
-    top: 50px;
+    top: @top-height;
     bottom: 0;
     background: #FCFCFC;
     padding: 4px;
@@ -79,9 +81,13 @@ body, html {
 
 .main {
     margin-left: 200px;
-    padding: 4px;
-    padding-top: 50px;
+    padding: 4px 0 4px 10px;
+    padding-top: @top-height;
     height: 100%;
+}
+
+.main.editing {
+    margin-left: 70%;
 }
 
 // loading 动画
@@ -105,6 +111,15 @@ body, html {
 
 }
 
+.editor {
+    position: fixed;
+    width: 70%;
+    top: @top-height;
+    bottom: 0;
+    z-index: 1;
+    background: #FEFEFE;
+    border-right: 1px solid #DDD;
+}
 
 .selection-range {
     position: absolute;

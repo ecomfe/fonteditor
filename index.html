@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FontEditor字体编辑器</title>
+    <link rel="stylesheet" type="text/css" href="./dep/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+<body>
+
+    <section class="navbar navbar-inverse" role="navigation">
+        <button data-action="new" type="button" class="btn btn-primary btn-sm" title="新建ttf字体文件">新建</button>
+        <button data-action="open" type="button" class="btn btn-primary btn-sm" title="打开ttf,woff格式字体文件">打开</button>
+        <button data-action="import" type="button" class="btn btn-primary btn-sm" title="导入ttf,woff,svg格式字体文件">导入</button>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                插入
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" role="menu">
+                <li data-action="add-new"><a>新字形</a></li>
+                <li data-action="add-online"><a>在线字体</a></li>
+            </ul>
+        </div>
+
+        <a id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-success btn-sm">导出ttf</a>
+        <a id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-success btn-sm">导出woff</a>
+        <a id="export-btn-svg" href="#" data-action="export" data-type="svg" class="btn btn-success btn-sm">导出svg</a>
+
+        <button data-action="save" type="button" class="btn btn-warning btn-sm">保存项目</button>
+
+        <div class="btn-group">
+
+            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                设置
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" role="menu">
+                <li><a data-action="setting-unicode">代码点</a></li>
+                <li><a data-action="setting-name">字体信息</a></li>
+                <li><a data-action="setting-adjust-pos">调整位置</a></li>
+                <li><a data-action="setting-adjust-glyf">调整字形</a></li>
+                <li><a data-action="setting-metrics">调整字体度量</a></li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+
+            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                预览
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" role="menu">
+                <li><a data-format="ttf" data-action="preview">ttf字体</a></li>
+                <li><a data-format="woff" data-action="preview">woff字体</a></li>
+                <li><a data-format="svg" data-action="preview">svg字体</a></li>
+            </ul>
+        </div>
+
+    </section>
+
+    <section class="sidebar">
+        <div class="project">
+            <div class="project-title">项目列表</div>
+            <div id="project-list" class="project-list"></div>
+        </div>
+    </section>
+
+    <section class="main editing">
+        <div id="glyf-list" class="glyf-list">
+        </div>
+    </section>
+
+    <section class="editor" oncontextMenu="return false">
+        <div id="glyf-editor" class="glyf-editor"></div>
+    </section>
+
+    <div id="selection-range" class="selection-range"></div>
+    <div id="loading" class="loading"><span>正在加载...</span></div>
+
+    <!-- Modal -->
+    <div class="modal" id="model-dialog" tabindex="-1" role="dialog" aria-labelledby="model-label" aria-hidden="true" data-backdrop="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+            <h4 class="modal-title" id="model-label">设置</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary btn-sm btn-confirm">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="./dep/esl.js"></script>
+    <script src="./dep/jquery.min.js"></script>
+    <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        require.config({
+            baseUrl: './src',
+            paths: {
+                deflate: '../dep/pako_deflate.min',
+                inflate: '../dep/pako_inflate.min',
+                utpl: '../dep/utpl.min'
+            }
+        });
+        define('jquery', $);
+        require(['fonteditor/main'])
+    </script>
+    <form id="font-form" style="width:0px;height:0px;overflow:hidden;"><input id="font-import" type="file"></form>
+</body>
+</html>
