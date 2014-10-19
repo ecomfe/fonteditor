@@ -9,12 +9,12 @@
 define(
     function(require) {
 
-        var GLYFViewer = require('../widget/glyfviewer');
-        var ProjectViewer = require('../widget/projectviewer');
-        var TTFManager = require('../widget/ttfmanager');
-        var program = require('../widget/program');
-        var controller = require('../widget/controller/default');
-        var actions = require('../widget/actions');
+        var GLYFViewer = require('./widget/glyfviewer');
+        var ProjectViewer = require('./widget/projectviewer');
+        var TTFManager = require('./widget/ttfmanager');
+        var program = require('./widget/program');
+        var controller = require('./controller/ttf');
+        var actions = require('./widget/actions');
 
         // 打开文件
         function onUpFile(e) {
@@ -78,18 +78,18 @@ define(
                 program.viewer = new GLYFViewer($('#glyf-list'));
 
                 // 项目管理
-                program.project = require('../widget/project');
+                program.project = require('./widget/project');
                 program.projectViewer = new ProjectViewer($('#project-list'));
 
                 // ttf管理
                 program.ttfManager = new TTFManager();
 
                 // 导入导出器
-                program.loader = require('../widget/loader');
-                program.exporter = require('../widget/exporter');
+                program.loader = require('./widget/loader');
+                program.exporter = require('./widget/exporter');
 
                 // 预览器
-                program.previewer = require('../widget/previewer');
+                program.previewer = require('./widget/previewer');
 
                 controller.init(program);
 

@@ -31,6 +31,28 @@ define(
             88: 'cut'
         };
 
+        // 获取glyfhtml文本
+        function getGlyfHTML(glyf, ttf, opt) {
+            var g = {
+                index: opt.index,
+                compound: glyf.compound ? 'compound' : '',
+                selected: opt.selected ? 'selected' : '',
+                modify: glyf.modify,
+                unitsPerEm: opt.unitsPerEm,
+                descent: opt.descent,
+                unicode: (glyf.unicode || []).map(function(u) {
+                    return '$' + u.toString(16).toUpperCase();
+                }).join(','),
+                name: glyf.name
+            };
+            var d = '';
+            if ((d = glyf2svg(glyf, ttf))) {
+                g.d = 'd="'+ d +'"';
+            }
+
+            return string.format(GLYF_ITEM_TPL, g);
+        }
+
         // 显示glyf
         function showGLYF(ttf, selectedList) {
             var unitsPerEm = ttf.head.unitsPerEm;
@@ -40,31 +62,43 @@ define(
                 selectedHash[i] = true;
             });
 
-            var glyfStr = '', d = '';
+            var glyfStr = '';
             ttf.glyf.forEach(function(glyf, index) {
-                var g = {
+                glyfStr += getGlyfHTML(glyf, ttf, {
                     index: index,
-                    compound: glyf.compound ? 'compound' : '',
-                    selected: selectedHash[index] ? 'selected' : '',
-                    modify: glyf.modify,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
-                    unicode: (glyf.unicode || []).map(function(u) {
-                        return '$' + u.toString(16).toUpperCase();
-                    }).join(','),
-                    name: glyf.name
-                };
-
-                if ((d = glyf2svg(glyf, ttf))) {
-                    g.d = 'd="'+ d +'"';
-                }
-
-                glyfStr += string.format(GLYF_ITEM_TPL, g);
+                    selected: selectedHash[index]
+                });
             });
 
             this.main.html(glyfStr);
         }
 
+        // 刷新glyf
+        function refreshGLYF(ttf, indexList) {
+            var unitsPerEm = ttf.head.unitsPerEm;
+            var descent = unitsPerEm + ttf.hhea.descent;
+            var selectedHash = {};
+            var selectedList = this.getSelected();
+
+            selectedList.forEach(function(i) {
+                selectedHash[i] = true;
+            });
+
+            var main = this.main;
+            indexList.forEach(function (index) {
+                var glyfStr = getGlyfHTML(ttf.glyf[index], ttf, {
+                    index: index,
+                    unitsPerEm: unitsPerEm,
+                    descent: descent,
+                    selected: selectedHash[index]
+                });
+                var before = main.find('[data-index="'+ index +'"]');
+                $(glyfStr).insertBefore(before);
+                before.remove();
+            });
+        }
 
         // 点击item
         function clickItem(e) {
@@ -123,8 +157,6 @@ define(
             if (me.listening) {
                 // 阻止ctrl+A默认事件
                  if (65 === e.keyCode && e.ctrlKey) {
-                    e.preventDefault();
-                    e.stopPropagation();
                     me.main.children().addClass('selected');
                 }
                 // 撤销
@@ -254,6 +286,21 @@ define(
          */
         GLYFViewer.prototype.show = function(ttf, selectedList) {
             showGLYF.call(this, ttf, selectedList);
+        };
+
+        /**
+         * 刷新ttf文档
+         * 
+         * @param {Object} ttf ttfObject
+         * @param {Array?} selectedList 选中的列表
+         */
+        GLYFViewer.prototype.refresh = function(ttf, indexList) {
+            if (!indexList || indexList.length === 0) {
+                showGLYF.call(this, ttf, indexList);
+            }
+            else {
+                refreshGLYF.call(this, ttf, indexList);
+            }
         };
 
         /**

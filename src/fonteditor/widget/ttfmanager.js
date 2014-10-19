@@ -167,7 +167,7 @@ define(
          * 
          * @param {Array} glyfList 添加的列表
          * @param {Array} indexList 需要替换的索引列表
-         * @return {Array} glyflist
+         * @return {this}
          */
         Manager.prototype.appendGlyf = function(glyfList, indexList) {
 
@@ -179,6 +179,22 @@ define(
                 this.fireChange(true);
             }
 
+            return this;
+        };
+
+        /**
+         * 更新指定的glyf
+         * 
+         * @param {Object} glyf glyfobject
+         * @param {string} index 需要替换的索引列表
+         * @return {this}
+         */
+        Manager.prototype.updateGlyf = function(glyf, index) {
+            var list = this.ttf.updateGlyf(glyf, index);
+            if (list.length) {
+                list[0].modify = 'edit';
+                this.fireChange(true);
+            }
             return this;
         };
 

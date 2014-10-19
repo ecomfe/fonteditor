@@ -3,14 +3,14 @@
  * @author mengke01
  * @date 
  * @description
- * 默认的页面控制器
+ * ttf页面的页面控制器
  */
 
 
 define(
     function(require) {
         var lang = require('common/lang');
-        var clipboard = require('../clipboard');
+        var clipboard = require('../widget/clipboard');
         var string = require('common/string');
         
         return {
@@ -26,17 +26,6 @@ define(
                     if (e.list) {
                         program.ttfManager.removeGlyf(e.list);
                     }
-                }).on('edit', function(e) {
-                    $('.main').addClass('editing');
-                    $('.editor').addClass('editing');
-                    var list = program.ttfManager.getGlyf(e.list);
-                    if (list[0].compound) {
-                        alert('暂不支持复合字形!');
-                    }
-                    else {
-                        program.editor.show(lang.clone(list[0]));
-                    }
-
                 }).on('copy', function(e) {
                     var list = program.ttfManager.getGlyf(e.list);
                     clipboard.set(list, 'glyf');
@@ -102,12 +91,12 @@ define(
 
                 program.init({
                     viewer: program.viewer.main.get(0),
-                    editor: program.editor.main.get(0)
+                    editor: null
                 });
 
                 window.onbeforeunload = function() {
                     if (program.ttfManager.isChanged()) {
-                            return '是否放弃保存当前项目?';
+                        return '是否放弃保存当前项目?';
                     }
                 };
             }

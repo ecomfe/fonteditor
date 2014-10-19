@@ -14,7 +14,7 @@ define(
         var ProjectViewer = require('./widget/projectviewer');
         var TTFManager = require('./widget/ttfmanager');
         var program = require('./widget/program');
-        var controller = require('./widget/controller/default');
+        var controller = require('./controller/default');
         var actions = require('./widget/actions');
 
         // 打开文件
@@ -99,13 +99,6 @@ define(
 
                 // 加载项目
                 program.projectViewer.show(program.project.items());
-
-
-                // for test
-                $.getJSON('./demo/js/baiduHealth.json', function(ttf) {
-                    program.ttfManager.set(ttf);
-                    program.viewer.focus();
-                });
 
             }
         };

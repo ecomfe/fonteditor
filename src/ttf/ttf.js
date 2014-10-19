@@ -294,6 +294,22 @@ define(
         };
 
         /**
+         * 更新指定的glyf
+         * 
+         * @param {Object} glyf glyfobject
+         * @param {string} index 需要替换的索引列表
+         * @return {Array} 改变的glyf
+         */
+        TTF.prototype.updateGlyf = function(glyf, index) {
+            if (index >=0 && index < this.ttf.glyf.length) {
+                this.ttf.glyf[index] = glyf;
+                return [glyf];
+            }
+            return [];
+        };
+
+
+        /**
          * 调整glyf位置
          * 
          * @param {Object} setting 选项

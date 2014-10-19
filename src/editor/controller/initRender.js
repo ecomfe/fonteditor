@@ -176,6 +176,10 @@ define(
                 if (e.key == 'esc' && !me.mode.keyup) {
                     me.setMode();
                 }
+                // 保存
+                else if (e.keyCode == 83 && e.ctrlKey) {
+                    me.fire('save');
+                }
                 // 粘贴
                 else if (e.keyCode == 86 && e.ctrlKey) {
                     var shapes = me.getClipBoard();

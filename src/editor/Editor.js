@@ -60,7 +60,7 @@ define(
          * @return {Editor} 本对象
          */
         Editor.prototype.setMode = function(modeName) {
-            console.log(modeName);
+
             if (this.mode) {
                 this.mode.end.call(this);
             }
@@ -68,6 +68,17 @@ define(
             this.mode = modeSupport[modeName] || modeSupport['default'];
             var args = Array.prototype.slice.call(arguments, 1);
             this.mode.begin.apply(this, args);
+        };
+
+        /**
+         * 重置编辑器组件
+         */
+        Editor.prototype.reset = function() {
+            this.fontLayer.clearShapes();
+            this.coverLayer.clearShapes();
+            this.font = null;
+            this.refresh();
+            return this;
         };
 
         /**
@@ -149,7 +160,7 @@ define(
          * @return {boolean}
          */
         Editor.prototype.isChanged = function() {
-            return !this.history.atFirst();
+            return this.changed;
         };
 
         /**

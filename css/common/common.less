@@ -99,6 +99,7 @@ body, html {
     margin-left: -100px;
     line-height: 24px;
     text-align: center;
+    z-index: 1000;
     display: none;
     
     span {
@@ -119,6 +120,11 @@ body, html {
     z-index: 1;
     background: #FEFEFE;
     border-right: 1px solid #DDD;
+    display: none;
+}
+
+.editor.editing {
+    display: block;
 }
 
 .selection-range {

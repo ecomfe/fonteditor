@@ -24,7 +24,7 @@ define(
 
             // 坐标原点位置，基线原点
             var originX = (width - options.unitsPerEm) / 2;
-            var origionY = (height + (options.unitsPerEm + options.axis.metrics.decent)) / 2;
+            var origionY = (height + (options.unitsPerEm + options.axis.metrics.descent)) / 2;
 
             // 绘制轴线
             this.axis = this.axisLayer.addShape('axis', lang.extend(lang.clone(options.axis), {
@@ -65,7 +65,7 @@ define(
             var oldUnitsPerEm = this.options.unitsPerEm;
             this.options.unitsPerEm = options.unitsPerEm;
 
-            lang.overwrite(this.options, options);
+            lang.overwrite(this.options.axis, options);
 
             // 设置gap
             this.options.axis.graduation.gap = options.graduation && options.graduation.gap 

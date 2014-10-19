@@ -47,6 +47,11 @@ define(
 
             document.body.addEventListener('keydown', function(e) {
 
+                // 全选
+                if (65 === e.keyCode && e.ctrlKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
                 // 功能键
                 if (e.keyCode >= 112 && e.keyCode <= 119 && e.keyCode !== 116) {
                     e.preventDefault();

@@ -1,6 +1,22 @@
 
 // 编辑器样式集合
 
+.close-editor {
+    .ico();
+    .i-ico('\e611');
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    padding: 0 3px;
+    z-index: 100;
+    font-size: 14px;
+    background: #FFF;
+    border-left: 1px solid #000;
+    display: none;
+}
+
 .glyf-editor {
 
     width: 100%;
@@ -31,5 +47,11 @@
         div:last-child {
             border-bottom: none;
         }
+    }
+}
+
+.editor:hover {
+    .close-editor {
+        display: block;
     }
 }

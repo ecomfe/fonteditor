@@ -26,19 +26,27 @@ define(
         }
 
         GLYFEditor.prototype.show = function(font) {
+            // 这里注意显示顺序，否则editor创建的时候计算宽度会错误
+            this.main.show();
+
             if (!this.editor) {
                 this.editor = editor.create(this.main.get(0));
             }
-            this.main.show();
+
             if (font) {
                 this.editor.setFont(font);
+
             }
+            else {
+                this.editor.reset();
+            }
+
             this.editor.focus();
             this.editing = true;
         };
 
         GLYFEditor.prototype.hide = function() {
-            this.editor.blur();
+            this.editor && this.editor.blur();
             this.main.hide();
             this.editing = false;
         };
@@ -47,8 +55,28 @@ define(
             return this.editing;
         };
 
+        GLYFEditor.prototype.isVisible = function() {
+            return this.main.get(0).style.display !== 'none';
+        };
+
+        GLYFEditor.prototype.focus = function() {
+            this.editing = true;
+            this.editor && this.editor.focus();
+        };
+
+        GLYFEditor.prototype.blur = function() {
+            this.editing = false;
+            this.editor && this.editor.blur();
+        };
+
+        GLYFEditor.prototype.dispose = function() {
+            this.off();
+            this.editor.dispose();
+            this.main = this.options = this.editor = null;
+        };
+
         // 导出editor的函数
-        ['focus', 'blur', 'setFont', 'getFont', 'setShapes', 'getShapes'].forEach(function(fn) {
+        ['reset','setFont', 'getFont', 'addContours', 'isChanged', 'setAxis', 'adjustFont'].forEach(function(fn) {
             GLYFEditor.prototype[fn] = function() {
                 return this.editor ? this.editor[fn].apply(this.editor, arguments) : undefined;
             };

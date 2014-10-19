@@ -45,9 +45,9 @@ define(
                     // 字体测量规格
                     metrics: {
                         ascent: 480, // 上升
-                        decent: -33, // 下降
-                        'x-Height': 256, // x高度
-                        'CapHeight': 358 // 大写字母高度
+                        descent: -33, // 下降
+                        xHeight: 256, // x高度
+                        capHeight: 358 // 大写字母高度
                     },
 
                     // 刻度

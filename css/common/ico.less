@@ -6,8 +6,7 @@
     src: url('../font/iconfont.ttf') format('truetype');
 }
 
-.i-edit,
-.i-del {
+.ico() {
     display: inline-block;
     font-family: 'fonteditor';
     font-size: 12px;
@@ -21,10 +20,21 @@
     }
 }
 
-.i-edit:before {
-    content: '\e605';
+.i-ico(@unicode) {
+    &:before {
+        content: @unicode;
+    }
 }
 
-.i-del:before {
-    content: '\e611';
+.i-edit,
+.i-del {
+    .ico();
+}
+
+.i-edit {
+    .i-ico('\e605');
+}
+
+.i-del {
+    .i-ico('\e611');
 }

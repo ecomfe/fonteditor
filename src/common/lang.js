@@ -137,9 +137,9 @@ define(
                     else {
                         thisObj[field] = thatObj[field];
                     }
-
                 }
             });
+            return thisObj;
         }
 
 

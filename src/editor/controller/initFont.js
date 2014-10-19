@@ -22,7 +22,7 @@ define(
          */
         function setFont(font) {
 
-            var contours = font.contours;
+            var contours = font.contours || [];
             var originX = this.axis.x;
             var originY = this.axis.y;
             
@@ -47,6 +47,7 @@ define(
             });
 
             // 重置历史
+            this.changed = false;
             this.history.reset();
             this.history.add(lang.clone(shapes));
 
@@ -101,6 +102,30 @@ define(
         }
 
         /**
+         * 设置编辑中的轮廓
+         * 
+         * @param {Array} contours 轮廓数组
+         * @return {[type]} [return description]
+         */
+        function addContours(contours) {
+            if (!contours || contours.length === 0) {
+                return this;
+            }
+
+            this.setShapes(contours.map(function(contour){
+                return {
+                    id: guid('shape'),
+                    type: 'path',
+                    points: contour
+                };
+            }));
+
+            this.fire('change');
+
+            return this;
+        }
+
+        /**
          * 获取编辑中的shapes
          * 
          * @param {Array} shapes 要获取的shapes
@@ -126,14 +151,17 @@ define(
          */
         function getFont() {
             var font = lang.clone(this.font || {});
-            font.rightSideBearing = font.rightSideBearing || 0;
             font.unicode = font.unicode || [];
             font.name = font.name || '';
 
+            var origin = this.axis;
+            var rightSideBearing = Math.round((this.rightSideBearing.p0.x - origin.x) / this.render.camera.scale);
             var shapes = this.getShapes();
-            var contours = lang.clone(shapes.map(function(shape) {
+            var contours = shapes.map(function(shape) {
                 return shape.points;
-            })).forEach(function(g) {
+            });
+
+            contours.forEach(function(g) {
                 pathCeil(g);
             });
 
@@ -145,8 +173,8 @@ define(
             font.xMax = box.x + box.width;
             font.yMax = box.y + box.height;
             font.leftSideBearing = font.xMin;
-            font.advanceWidth = font.xMax + font.rightSideBearing;
-            delete font.advanceWidth;
+            font.advanceWidth = rightSideBearing || (font.xMax + font.rightSideBearing) || font.xMax;
+            delete font.rightSideBearing;
 
             font.contours = contours;
 
@@ -212,6 +240,7 @@ define(
 
             this.setShapes = setShapes;
             this.getShapes = getShapes;
+            this.addContours = addContours;
         };
     }
 );
