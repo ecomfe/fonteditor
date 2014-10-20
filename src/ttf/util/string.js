@@ -5,11 +5,14 @@
  * @description
  * string 工具箱
  * 
- * see svg2ttf @ github
+ * references:
+ * 1. svg2ttf @ github
  */
 
 define(
     function(require) {
+
+        var postName = require('../enum/postName');
 
         /**
          * 将unicode编码转换成js内部编码
@@ -24,6 +27,22 @@ define(
         var string = {
 
             stringify: stringify,
+
+            /**
+             * 获取unicode的名字值
+             * 
+             * @param {number} unicode unicode
+             * @return {string} 名字
+             */
+            getUnicodeName: function(unicode) {
+                if (unicode === 0 || unicode === 1 || unicode === 2) {
+                    return postName[unicode];
+                }
+                else {
+                    return unicode - 29 < 258 ? postName[unicode - 29] : 'uni' + unicode.toString(16).toUpperCase();
+                }
+            },
+
             /**
              * 转换成utf8的字节数组
              * 

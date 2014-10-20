@@ -257,6 +257,12 @@ define(
                 changed = true;
             }
 
+            if (setting.name != glyf.name) {
+                glyf.name = setting.name;
+                glyf.modify = 'edit';
+                changed = true;
+            }
+
             if (
                 (undefined !== setting.leftSideBearing && setting.leftSideBearing != glyf.leftSideBearing) 
                 || (undefined !== setting.rightSideBearing && setting.rightSideBearing + (glyf.xMax || 0) != glyf.advanceWidth)

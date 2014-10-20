@@ -25,14 +25,19 @@ define(
             var contours = font.contours || [];
             var originX = this.axis.x;
             var originY = this.axis.y;
-            
+
+            // 这里由于advanceWidth=rightSideBearing+xMax，原来的设置可能会不准确，重新计算
+            var box = computeBoundingBox.computePathBox.apply(null, contours);
+            if (box) {
+                font.rightSideBearing = font.advanceWidth - box.x - box.width;
+            }
+            else {
+                font.rightSideBearing = font.advanceWidth;
+            }
 
             // 不需要在此保存contours
             delete font.contours;
 
-            var advanceWidth = font.advanceWidth || this.options.unitsPerEm;
-
-            font.rightSideBearing = advanceWidth - (font.xMax || advanceWidth);
             this.font = font;
 
             // 设置字形
@@ -64,7 +69,8 @@ define(
             fontLayer.refresh();
 
             // 设置参考线
-            this.rightSideBearing.p0.x = originX + advanceWidth * scale;
+            var advanceWidth = font.advanceWidth;
+            this.rightSideBearing.p0.x = originX + (advanceWidth || this.options.unitsPerEm) * scale;
             this.axisLayer.refresh();
 
             this.setMode();
@@ -135,7 +141,7 @@ define(
          * @return {Array} 获取编辑中的shape
          */
         function getShapes(shapes) {
-            var origin = this.render.getLayer('axis').shapes[0];
+            var origin = this.axis;
             shapes = shapes ? lang.clone(shapes) : lang.clone(this.fontLayer.shapes);
             var scale = 1 / this.render.camera.scale;
             
@@ -158,7 +164,7 @@ define(
             font.name = font.name || '';
 
             var origin = this.axis;
-            var rightSideBearing = Math.round((this.rightSideBearing.p0.x - origin.x) / this.render.camera.scale);
+            var advanceWidth = Math.round((this.rightSideBearing.p0.x - origin.x) / this.render.camera.scale);
             var shapes = this.getShapes();
             var contours = shapes.map(function(shape) {
                 return shape.points;
@@ -169,14 +175,27 @@ define(
             });
 
             // 设置边界
-            var box = computeBoundingBox.computePathBox.apply(null, contours);
+            var box = computeBoundingBox.computePathBox.apply(null, contours) || {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
+            };
             
             font.xMin = box.x;
             font.yMin = box.y;
             font.xMax = box.x + box.width;
             font.yMax = box.y + box.height;
             font.leftSideBearing = font.xMin;
-            font.advanceWidth = rightSideBearing || (font.xMax + font.rightSideBearing) || font.xMax;
+
+            // 这里仅还原之前的设置
+            if (box.width == 0) {
+                font.advanceWidth = font.rightSideBearing;
+            }
+            else {
+                font.advanceWidth = advanceWidth || (font.xMax + font.rightSideBearing) || font.xMax;
+            }
+
             delete font.rightSideBearing;
 
             font.contours = contours;
@@ -202,27 +221,36 @@ define(
             var scale = this.render.camera.scale;
             var shapes = this.fontLayer.shapes;
 
-            var origin = this.render.getLayer('axis').shapes[0];
+            var origin = this.axis;
             // 计算边界
             var box = computeBoundingBox.computePathBox.apply(null, shapes.map(function(shape) {
                 return shape.points;
             }));
 
-            var offset = 0;
-            var xMin = box.x - origin.x;
+            if (box) {
+                var offset = 0;
+                var xMin = box.x - origin.x;
 
-            if (undefined !== options.leftSideBearing && Math.abs(options.leftSideBearing - xMin / scale) > 0.01) {
-                offset = options.leftSideBearing * scale - xMin;
-                shapes.forEach(function(g) {
-                    pathAdjust(g.points, 1, 1, offset, 0);
-                });
-                this.fontLayer.refresh();
-                this.fire('change');
+                // 左边轴
+                if (undefined !== options.leftSideBearing && Math.abs(options.leftSideBearing - xMin / scale) > 0.01) {
+                    offset = options.leftSideBearing * scale - xMin;
+                    shapes.forEach(function(g) {
+                        pathAdjust(g.points, 1, 1, offset, 0);
+                    });
+                    this.fontLayer.refresh();
+                    this.font.leftSideBearing = options.leftSideBearing;
+                    this.fire('change');
+                }
+                
+                // 右边轴
+                if (undefined !== options.rightSideBearing) {
+                    this.font.rightSideBearing = options.rightSideBearing;
+                    this.rightSideBearing.p0.x = box.x + box.width + offset + options.rightSideBearing * scale;
+                    this.axisLayer.refresh();
+                }
             }
-            
-            if (undefined !== options.rightSideBearing) {
-                this.rightSideBearing.p0.x = box.x + box.width + offset + options.rightSideBearing * scale;
-                this.axisLayer.refresh();
+            else {
+                this.font.rightSideBearing = options.rightSideBearing;
             }
 
             if (undefined !== options.unicode) {

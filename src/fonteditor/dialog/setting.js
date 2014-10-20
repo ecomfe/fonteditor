@@ -99,7 +99,7 @@ define(
                 }
                 else if (type == 'unicode') {
                     item.value = (setting[field] || []).map(function(u) {
-                        return '$' + u.toString(16);
+                        return '$' + u.toString(16).toUpperCase();
                     }).join(',');
                 }
                 else if (type == 'datetime-local') {

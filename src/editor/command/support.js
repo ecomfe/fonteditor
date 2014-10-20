@@ -11,6 +11,7 @@ define(
     function(require) {
 
         var lang = require('common/lang');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
 
         var support = {
 
@@ -227,6 +228,35 @@ define(
              */
             addshapes: function(shapes) {
                 this.setShapes(shapes);
+            },
+
+            /**
+             * 设置字体信息
+             */
+            font: function() {
+
+                // 计算边界
+                var box = computeBoundingBox.computePathBox.apply(null, this.fontLayer.shapes.map(function(shape) {
+                    return shape.points;
+                }));
+
+                var leftSideBearing = 0;
+                var rightSideBearing = 0;
+                
+                if (box) {
+                    var scale = this.render.camera.scale;
+                    var leftSideBearing = (box.x - this.axis.x) / scale;
+                    var rightSideBearing = (this.rightSideBearing.p0.x - box.x - box.width) / scale; 
+                }
+
+                this.fire('setting:font', {
+                    setting: {
+                        leftSideBearing: leftSideBearing,
+                        rightSideBearing: rightSideBearing || 0,
+                        unicode: this.font.unicode,
+                        name: this.font.name                        
+                    }
+                });
             }
         };
 

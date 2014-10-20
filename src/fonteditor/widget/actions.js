@@ -137,7 +137,7 @@ define(
                 dlg.show();
             },
 
-            // 调整字形
+            // 调整字形信息
             'setting-glyf': function() {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
@@ -154,7 +154,8 @@ define(
                         }).show({
                             unicode: glyf.unicode,
                             leftSideBearing: glyf.leftSideBearing,
-                            rightSideBearing: glyf.advanceWidth - glyf.xMax
+                            rightSideBearing: glyf.advanceWidth - (glyf.xMax || 0),
+                            name: glyf.name
                         });
                     }
                 }

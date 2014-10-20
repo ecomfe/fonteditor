@@ -12,7 +12,7 @@ define(
     function(require) {
 
         var lang = require('common/lang');
-        var postName = require('./enum/postName');
+        var string = require('./util/string');
         var pathAdjust = require('graphics/pathAdjust');
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
@@ -253,14 +253,7 @@ define(
                 unicode = Number('0x' + unicode.slice(1));
                 list.forEach(function(g) {
                     g.unicode = [unicode];
-
-                    if (unicode === 0 || unicode === 1 || unicode === 2) {
-                        g.name = postName[unicode];
-                    }
-                    else {
-                        g.name = unicode - 29 < 258 ? postName[unicode - 29] : 'uni' + unicode.toString(16).toUpperCase();
-                    }
-                    
+                    g.name = string.getUnicodeName(unicode);
                     unicode++;
                 });
             }

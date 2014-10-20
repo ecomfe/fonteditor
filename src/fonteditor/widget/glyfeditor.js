@@ -10,8 +10,24 @@
 define(
     function(require) {
 
-        var editor = require('editor/main');
+        var editorFactory = require('editor/main');
+        var setting= require('./setting');
 
+        /**
+         * 绑定editor编辑器
+         */
+        function bindEditor() {
+
+            // 设置字形信息
+            var editor  = this.editor;
+            editor.on('setting:font', function(e) {
+                !new setting['glyf']({
+                    onChange: function(setting) {
+                        editor.adjustFont(setting);
+                    }
+                }).show(e.setting);
+            });
+        }
 
         /**
          * font查看器
@@ -30,12 +46,12 @@ define(
             this.main.show();
 
             if (!this.editor) {
-                this.editor = editor.create(this.main.get(0));
+                this.editor = editorFactory.create(this.main.get(0));
+                bindEditor.call(this);
             }
 
             if (font) {
                 this.editor.setFont(font);
-
             }
             else {
                 this.editor.reset();
@@ -70,7 +86,6 @@ define(
         };
 
         GLYFEditor.prototype.dispose = function() {
-            this.off();
             this.editor.dispose();
             this.main = this.options = this.editor = null;
         };

@@ -166,6 +166,10 @@ define(
 
             'rescale': {
                 title: '重置缩放'
+            },
+
+            'font': {
+                title: '字形信息'
             }
         };
 

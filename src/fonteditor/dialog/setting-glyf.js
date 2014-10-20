@@ -9,13 +9,22 @@
 define(
     function(require) {
 
+        var string = require('ttf/util/string');
+        var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/i;
+
         var tpl = ''
             + '<div class="form-inline">'
             +   '<div class="input-group input-group-sm">'
             +     '<span class="input-group-addon">unicode</span>'
-            +     '<input data-field="unicode" data-type="unicode" id="glyf-unicode" class="form-control">'
+            +     '<input data-field="unicode" data-type="unicode" id="setting-glyf-unicode" class="form-control">'
             +   '</div>'
             +   '&nbsp;&nbsp;<span>可以设置多个unicode，例如："$21,$22,$23"</span>'
+            + '</div>'
+            + '<div class="form-inline">'
+            +   '<div class="input-group input-group-sm">'
+            +     '<span class="input-group-addon">命名</span>'
+            +     '<input data-field="name" id="setting-glyf-name" class="form-control">'
+            +   '</div>'
             + '</div>'
             + '<div class="form-inline">'
             +   '<div class="input-group input-group-sm">'
@@ -42,13 +51,20 @@ define(
             },
 
             set: function(setting) {
+                $('#setting-glyf-name').on('focus', function(e) {
+                    var val = $('#setting-glyf-unicode').val();
+                    if (val.match(unicodeREG)) {
+                        val = Number('0x' + val.split(',')[0].slice(1));
+                        this.value = string.getUnicodeName(val);
+                    }
+                });
                 this.setFields(setting || {});
             },
             
             validate: function() {
 
-                var unicode = $('#glyf-unicode').val();
-                if (unicode && !unicode.match(/^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/i)) {
+                var unicode = $('#setting-glyf-unicode').val();
+                if (unicode && !unicode.match(unicodeREG)) {
                     alert('unicode设置不正确!');
                     return false;
                 }
@@ -58,6 +74,7 @@ define(
                 if(setting.leftSideBearing === undefined
                     && setting.rightSideBearing === undefined 
                     && setting.unicode === undefined
+                    && setting.name === undefined
                 ) {
                     alert('没有设置项目!');
                     return false;
