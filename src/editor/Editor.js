@@ -13,6 +13,7 @@ define(
         var modeSupport = require('./mode/support');
         var ContextMenu = require('./menu/ContextMenu');
         var commandSupport = require('./command/support');
+        var clipboard = require('./util/clipboard');
         var History = require('./util/History');
 
         // editor 的控制器
@@ -149,8 +150,7 @@ define(
          * @return {this}
          */
         Editor.prototype.setClipBoard = function(shapes) {
-            Editor.ClipBoardData = null;
-            Editor.ClipBoardData = shapes;
+            clipboard.set(shapes, 'editor-shape');
             return this;
         };
 
@@ -170,7 +170,7 @@ define(
          * @return {this}
          */
         Editor.prototype.getClipBoard = function() {
-            return Editor.ClipBoardData ? lang.clone(Editor.ClipBoardData) : null;
+            return clipboard.get('editor-shape');
         };
 
         /**

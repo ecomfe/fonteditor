@@ -10,7 +10,7 @@
 define(
     function(require) {
         var lang = require('common/lang');
-        var clipboard = require('../widget/clipboard');
+        var clipboard = require('editor/util/clipboard');
         var string = require('common/string');
         
         return {

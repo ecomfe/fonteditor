@@ -183,14 +183,14 @@ define(
         };
 
         /**
-         * 更新指定的glyf
+         * 替换指定的glyf
          * 
          * @param {Object} glyf glyfobject
          * @param {string} index 需要替换的索引列表
          * @return {this}
          */
-        Manager.prototype.updateGlyf = function(glyf, index) {
-            var list = this.ttf.updateGlyf(glyf, index);
+        Manager.prototype.replaceGlyf = function(glyf, index) {
+            var list = this.ttf.replaceGlyf(glyf, index);
             if (list.length) {
                 list[0].modify = 'edit';
                 this.fireChange(true);
@@ -238,6 +238,43 @@ define(
 
             return this;
         };
+
+        /**
+         * 设置glyf
+         * 
+         * @param {Object} setting 选项
+         * @param {Array} index 索引
+         * @return {boolean}
+         */
+        Manager.prototype.updateGlyf = function(setting, index) {
+            
+            var glyf = this.getGlyf([index])[0];
+            var changed = false;
+
+            if (setting.unicode.toString() != glyf.unicode.toString()) {
+                glyf.unicode = setting.unicode;
+                glyf.modify = 'edit';
+                changed = true;
+            }
+
+            if (
+                (undefined !== setting.leftSideBearing && setting.leftSideBearing != glyf.leftSideBearing) 
+                || (undefined !== setting.rightSideBearing && setting.rightSideBearing + (glyf.xMax || 0) != glyf.advanceWidth)
+            ) {
+                var list = this.ttf.adjustGlyfPos(setting, [index]);
+                if (list.length) {
+                    list.forEach(function(g) {
+                        g.modify = 'edit';
+                    });
+                    changed = true;
+                }
+            }
+
+            changed && this.fireChange(true);
+
+            return this;
+        };
+
 
         /**
          * 获取glyfList

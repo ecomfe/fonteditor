@@ -10,7 +10,7 @@
 define(
     function(require) {
         var lang = require('common/lang');
-        var clipboard = require('../widget/clipboard');
+        var clipboard = require('editor/util/clipboard');
         var string = require('common/string');
         
         // 获取ttf的编辑选项
@@ -139,7 +139,7 @@ define(
                         if (program.editor.isEditing()) {
                             // 如果是正在编辑的
                             if (program.data.editingIndex !== -1) {
-                                 program.ttfManager.updateGlyf(program.editor.getFont(), program.data.editingIndex);
+                                 program.ttfManager.replaceGlyf(program.editor.getFont(), program.data.editingIndex);
                             }
                             // 否则新建font
                             else {

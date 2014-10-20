@@ -199,14 +199,15 @@ define(
                 if (this.currentPoint) {
                     this.currentGroup.finishTransform(this.currentPoint, this.render.camera);
                     this.currentPoint = null;
+                    this.fire('change');
                 }
                 else if (this.currentGroup.mode == 'move') {
                     this.currentGroup.finishTransform(this.currentPoint, this.render.camera);
                     this.currentGroup.setMode('scale');
+                    this.fire('change');
                 }
 
                 this.render.setCursor('default');
-                this.fire('change');
             },
 
             /**

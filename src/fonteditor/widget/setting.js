@@ -14,7 +14,8 @@ define(
             'adjust-pos': require('../dialog/setting-adjust-pos'),
             'adjust-glyf': require('../dialog/setting-adjust-glyf'),
             'metrics': require('../dialog/setting-metrics'),
-            'online': require('../dialog/font-online')
+            'online': require('../dialog/font-online'),
+            'glyf': require('../dialog/setting-glyf')
         };
     }
 );

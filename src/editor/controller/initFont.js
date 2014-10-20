@@ -29,7 +29,10 @@ define(
 
             // 不需要在此保存contours
             delete font.contours;
-            font.rightSideBearing = font.advanceWidth - font.xMax;
+
+            var advanceWidth = font.advanceWidth || this.options.unitsPerEm;
+
+            font.rightSideBearing = advanceWidth - (font.xMax || advanceWidth);
             this.font = font;
 
             // 设置字形
@@ -61,7 +64,7 @@ define(
             fontLayer.refresh();
 
             // 设置参考线
-            this.rightSideBearing.p0.x = originX + font.advanceWidth * scale;
+            this.rightSideBearing.p0.x = originX + advanceWidth * scale;
             this.axisLayer.refresh();
 
             this.setMode();
@@ -230,6 +233,7 @@ define(
                 this.font.name = options.name;
             }
 
+            this.fire('change');
             return this;
         }
 

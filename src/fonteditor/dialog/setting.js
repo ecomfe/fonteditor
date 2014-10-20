@@ -89,15 +89,20 @@ define(
             this.getDialog().find('[data-field]').each(function(i, item) {
 
                 var field = item.getAttribute('data-field');
-                
+                var type = item.getAttribute('data-type') || item.type;
                 if (undefined === setting[field]) {
                     return;
                 }
 
-                if (item.type == 'checkbox') {
+                if (type == 'checkbox') {
                     item.checked = setting[field] ? 'checked' : '';
                 }
-                else if (item.type == 'datetime-local') {
+                else if (type == 'unicode') {
+                    item.value = (setting[field] || []).map(function(u) {
+                        return '$' + u.toString(16);
+                    }).join(',');
+                }
+                else if (type == 'datetime-local') {
                     var val = setting[field];
                     var date;
                     if (typeof(val) === 'string') {
@@ -131,18 +136,24 @@ define(
             this.getDialog().find('[data-field]').each(function(i, item) {
 
                 var field = item.getAttribute('data-field');
+                var type = item.getAttribute('data-type') || item.type;
 
-                if (item.type == 'checkbox') {
+                if (type == 'checkbox') {
                     if (item.checked) {
                         setting[field] = true;
                     }
                 }
-                else if (item.type == 'datetime-local') {
+                else if (type == 'unicode') {
+                    setting[field] = item.value.trim() == '' ? [] : item.value.split(',').map(function(u) {
+                        return Number('0x' + u.slice(1));
+                    });
+                }
+                else if (type == 'datetime-local') {
                     if (item.value) {
                         setting[field] = Date.parse(item.value.replace('T', ' '));
                     }
                 }
-                else if (item.type == 'number') {
+                else if (type == 'number') {
                     if (item.value) {
                         var val = +item.value;
                         if (item.getAttribute('data-ceil')) {

@@ -137,30 +137,53 @@ define(
                 dlg.show();
             },
 
+            // 调整字形
+            'setting-glyf': function() {
+                var ttf = program.ttfManager.get();
+                if (ttf) {
+
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    if (selected.length) {
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
+
+                        !new setting['glyf']({
+                            onChange: function(setting) {
+                                program.ttfManager.updateGlyf(setting, selected[0]);
+                            }
+                        }).show({
+                            unicode: glyf.unicode,
+                            leftSideBearing: glyf.leftSideBearing,
+                            rightSideBearing: glyf.advanceWidth - glyf.xMax
+                        });
+                    }
+                }
+            },
+
             // 调整字形位置
             'setting-adjust-pos': function() {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
-                    var dlg = new setting['adjust-pos']({
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    var opt = {};
+
+                    if (selected.length === 1) {
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
+                        opt = {
+                            unicode: glyf.unicode,
+                            leftSideBearing: glyf.leftSideBearing,
+                            rightSideBearing: glyf.advanceWidth - glyf.xMax
+                        };
+                    }
+
+                    !new setting['adjust-pos']({
                         onChange: function(setting) {
                             setTimeout(function() {
                                 program.ttfManager.adjustGlyfPos(setting, selected);
                             }, 20);
                         }
-                    });
-
-                    // 如果仅选择一个字形，则填充现有值
-                    var selected = program.viewer.getSelected();
-                    if (selected.length === 1) {
-                        var glyf = program.ttfManager.getGlyf(selected)[0];
-                        dlg.show({
-                            leftSideBearing: glyf.leftSideBearing || '',
-                            rightSideBearing: glyf.advanceWidth - glyf.xMax || ''
-                        });
-                    }
-                    else {
-                        dlg.show();
-                    }
+                    }).show(opt);
                 }
             },
 

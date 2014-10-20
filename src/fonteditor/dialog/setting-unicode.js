@@ -15,7 +15,7 @@ define(
             +       '<button type="button" class="btn btn-default dropdown-toggle"'
             +           ' data-toggle="dropdown">起始代码点 <span class="caret"></span></button>'
             +       '<ul class="dropdown-menu" role="menu">'
-            +         '<li><a href="javascript:$(\'#setting-text-unicode\').val(\'$20\')">ascii</a></li>'
+            +         '<li><a href="javascript:$(\'#setting-text-unicode\').val(\'$21\')">ascii</a></li>'
             +         '<li><a href="javascript:$(\'#setting-text-unicode\').val(\'$E001\')">'
             +           'unicode private data</a></li>'
             +       '</ul>'
