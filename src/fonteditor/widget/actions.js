@@ -21,7 +21,7 @@ define(
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                     return;
                 }
-                $.getJSON('./src/fonteditor/data/empty.json', function(imported) {
+                $.getJSON('./font/empty.json', function(imported) {
                     program.ttfManager.set(imported);
                     program.data.projectName = null;
                 });
@@ -93,7 +93,7 @@ define(
                                 url: url,
                                 onSuccess: function(buffer) {
                                     program.loader.load(buffer, {
-                                        type: 'ttf',
+                                        type: url.slice(url.lastIndexOf('.') + 1) || 'ttf',
                                         success: function(imported) {
                                             program.loading.hide();
                                             if (program.ttfManager.get()) {
