@@ -137,12 +137,25 @@ define(
                         if (result.length > 1) {
                             shape = selectShape(result);
                         }
-                        
-                        if(this.currentGroup.shapes.indexOf(shape) >=0) {
+
+                        var shapeIndex = this.currentGroup.shapes.indexOf(shape);
+                        if(shapeIndex >= 0) {
+
+                            if (e.ctrlKey) {
+                                this.currentGroup.shapes.splice(shapeIndex, 1);
+                                this.currentGroup.setShapes(this.currentGroup.shapes);
+                                this.currentGroup.refresh();
+                                this.clicked = false;
+                            }
+
                             return;
                         }
                         else {
-                            this.currentGroup.setShapes([shape]);
+                            var shapes = [shape];
+                            if (e.ctrlKey) {
+                                shapes = shapes.concat(this.currentGroup.shapes);;
+                            }
+                            this.currentGroup.setShapes(shapes);
                             this.currentGroup.setMode('scale');
                             this.currentGroup.refresh();
                             this.clicked = false;
@@ -264,16 +277,6 @@ define(
                     this.currentGroup.setShapes(this.fontLayer.shapes.slice());
                     this.currentGroup.refresh();
                 }
-                // 剪切
-                else if (e.keyCode == 88 && e.ctrlKey) {
-                    this.execCommand('cutshapes', this.currentGroup.shapes);
-                    this.setMode();
-                    this.fire('change');
-                }
-                // 复制
-                else if (e.keyCode == 67 && e.ctrlKey) {
-                    this.execCommand('copyshapes', this.currentGroup.shapes);
-                }
                 // 移动
                 else if(stepMap[e.key]) {
                     this.fire('change');
@@ -287,6 +290,22 @@ define(
              * 按住
              */
             keydown: function(e) {
+                // 剪切
+                if (e.keyCode == 88 && e.ctrlKey) {
+                    if (this.currentGroup.shapes.length) {
+                        this.execCommand('cutshapes', this.currentGroup.shapes);
+                        this.currentGroup.shapes.length = 0;
+                        this.coverLayer.clearShapes();
+                        this.coverLayer.refresh();
+                        this.fire('change');
+                    }
+                }
+                // 复制
+                else if (e.keyCode == 67 && e.ctrlKey) {
+                    if (this.currentGroup.shapes.length) {
+                        this.execCommand('copyshapes', this.currentGroup.shapes);
+                    }
+                }
                 // 移动
                 if(stepMap[e.key]) {
                     this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);

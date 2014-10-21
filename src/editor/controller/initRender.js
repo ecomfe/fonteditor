@@ -176,19 +176,6 @@ define(
                 if (e.key == 'esc' && !me.mode.keyup) {
                     me.setMode();
                 }
-                // 保存
-                else if (e.keyCode == 83 && e.ctrlKey) {
-                    me.fire('save');
-                }
-                // 粘贴
-                else if (e.keyCode == 86 && e.ctrlKey) {
-                    var shapes = me.getClipBoard();
-                    if(shapes) {
-                        me.setShapes(shapes);
-                        me.setMode('shapes', shapes);
-                        me.fire('change');
-                    }
-                }
                 else {
                     me.mode.keyup && me.mode.keyup.call(me, e);
                 }
@@ -204,6 +191,15 @@ define(
                     me.fire('save', {
                         font: me.getFont()
                     });
+                }
+                // 粘贴
+                else if (e.keyCode == 86 && e.ctrlKey) {
+                    var shapes = me.getClipBoard();
+                    if(shapes) {
+                        me.setShapes(shapes);
+                        me.setMode('shapes', shapes);
+                        me.fire('change');
+                    }
                 }
                 // 放大
                 else if (e.keyCode == 187 && (e.ctrlKey || e.altKey)) {

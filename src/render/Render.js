@@ -63,7 +63,7 @@ define(
                         me.scale(ratio, e);
                     }
                     else {
-                        var moval = e.delta > 0 ? 20 : -20;
+                        var moval = e.delta > 0 ? 30 : -30;
                         me.move(e.shiftKey ? moval : 0, e.shiftKey ? 0 : moval);
                         me.refresh();
                     }

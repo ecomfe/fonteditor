@@ -62,7 +62,7 @@ define(
 
             filtered.forEach(function(g) {
                 glyfList.push({
-                    code: unicode2xml(g.unicode[0]),
+                    code: '&#x' + g.unicode[0].toString(16) + ';',
                     codeName: listUnicode(g.unicode),
                     name: g.name
                 });
