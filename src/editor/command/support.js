@@ -251,8 +251,8 @@ define(
 
                 this.fire('setting:font', {
                     setting: {
-                        leftSideBearing: leftSideBearing,
-                        rightSideBearing: rightSideBearing || 0,
+                        leftSideBearing: Math.round(leftSideBearing),
+                        rightSideBearing: Math.round(rightSideBearing || 0),
                         unicode: this.font.unicode,
                         name: this.font.name                        
                     }

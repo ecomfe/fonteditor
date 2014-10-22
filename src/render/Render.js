@@ -49,7 +49,11 @@ define(
             // 是否允许缩放
             if(this.options.enableScale) {
                 this.capture.on('wheel', function(e) {
-                    if (e.altKey) {
+                    if (e.altKey || e.ctrlKey) {
+
+                        e.originEvent.preventDefault();
+                        e.originEvent.stopPropagation();
+
                         var defaultRatio = me.options.defaultRatio || 1.2;
                         var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
                         var toScale = me.camera.scale * ratio;
@@ -101,7 +105,7 @@ define(
                 {
                     defaultRatio: 1.2, // 默认的缩放比例
                     minScale: 0.2, // 最小缩放
-                    maxScale: 100, //最大缩放
+                    maxScale: 200, //最大缩放
                     enableScale: true, // 是否允许缩放
                     enableResize: true // 是否允许大小改变
                 }, 

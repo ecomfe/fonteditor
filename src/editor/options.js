@@ -69,7 +69,7 @@ define(
             render: {
                 defaultRatio: 1.2, // 默认的缩放比例
                 minScale: 0.2, // 最小缩放
-                maxScale: 100, //最大缩放
+                maxScale: 200, //最大缩放
                 enableScale: true, // 是否允许缩放
                 enableResize: true // 是否允许大小改变
             }
