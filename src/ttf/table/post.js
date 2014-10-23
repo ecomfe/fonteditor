@@ -20,9 +20,9 @@ define(
             'posthead', 
             [
                 ['italicAngle', struct.Fixed],
-                ['postoints', struct.Uint16], // 不知道干嘛用，文档里面没有
                 ['underlinePosition', struct.Int16],
                 ['underlineThickness', struct.Int16],
+                ['postoints', struct.Int16], // 不知道干嘛用，文档里面没有
                 ['isFixedPitch', struct.Uint32],
                 ['minMemType42', struct.Uint32],
                 ['maxMemType42', struct.Uint32],
@@ -77,9 +77,9 @@ define(
                     // write header
                     writer.writeFixed(2); // format
                     writer.writeFixed(post.italicAngle || 0); // italicAngle
-                    writer.writeUint16(post.postoints || 0); // postoints
                     writer.writeInt16(post.underlinePosition || 0); // underlinePosition
                     writer.writeInt16(post.underlineThickness || 0); // underlineThickness
+                    writer.writeUint16(post.postoints || 0); // postoints
                     writer.writeUint32(post.isFixedPitch || 0); // isFixedPitch
                     writer.writeUint32(post.minMemType42 || 0); // minMemType42
                     writer.writeUint32(post.maxMemType42 || 0); // maxMemType42
