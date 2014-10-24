@@ -17,10 +17,9 @@ define(
          * 读取表结构
          * 
          * @param {Object} reader reader对象
-         * @param {Object} ttf 已解析的ttf对象
          * @return {Object} 当前对象
          */
-        function read(reader, ttf) {
+        function read(reader) {
             var offset = this.offset;
 
             if(undefined !== offset) {
@@ -52,8 +51,8 @@ define(
                         me[name] = reader.readLongDateTime();
                         break;
 
-                    case struct.Byte:
-                        me[name] = reader.readByte(reader.offset, item[2] || 0);
+                    case struct.Bytes:
+                        me[name] = reader.readBytes(reader.offset, item[2] || 0);
                         break;
 
                     case struct.Char:
@@ -110,8 +109,8 @@ define(
                         writer.writeLongDateTime(table[name]);
                         break;
 
-                    case struct.Byte:
-                        writer.writeByte(table[name], item[2] || 0);
+                    case struct.Bytes:
+                        writer.writeBytes(table[name], item[2] || 0);
                         break;
 
                     case struct.Char:
@@ -134,14 +133,9 @@ define(
          * 获取ttf表的size大小
          * 
          * @param {string} name 表名
-         * @param {Object} ttf ttf数据结构
          * @return {number} 表大小
          */
-        function size(ttf) {
-
-            if (!ttf[this.name]) {
-                return 0;
-            }
+        function size() {
 
             var sz = 0;
             this.struct.forEach(function(item) {
@@ -167,7 +161,7 @@ define(
                         sz += 8;
                         break;
 
-                    case struct.Byte:
+                    case struct.Bytes:
                         sz += item[2] || 0;
                         break;
 

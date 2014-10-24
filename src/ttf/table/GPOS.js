@@ -28,7 +28,7 @@ define(
                 /**
                  * 解析GPOS表
                  */
-                read: function(reader, ttf) {
+                read: function(reader) {
                     reader.seek(this.offset);
                     var gpos  = {};
                     gpos.Version = reader.readFixed();

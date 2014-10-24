@@ -164,9 +164,7 @@ define(
                 
                 if (table.length % 4) {
                     // 对齐字节
-                    for (var i = 0, l = 4 - table.length % 4; i < l; i++) {
-                        writer.writeUint8(0);
-                    }
+                    writer.writeEmpty(4 - table.length % 4);
                 }
 
                 // 计算校验和

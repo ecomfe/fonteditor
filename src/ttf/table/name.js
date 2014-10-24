@@ -17,7 +17,7 @@ define(
             'name', 
             [], {
 
-                read: function(reader, ttf) {
+                read: function(reader) {
                     var offset = this.offset;
                     reader.seek(offset);
 

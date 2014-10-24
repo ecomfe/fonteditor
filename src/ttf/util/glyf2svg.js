@@ -43,6 +43,11 @@ define(
                 var glyfs = glyf.glyfs;
                 glyfs.forEach(function(g) {
                     var compound = ttf.glyf[g.glyphIndex];
+                    
+                    if (!compound) {
+                        return;
+                    }
+
                     var contours = lang.clone(compound.contours); // 这里需要进行matrix变换，需要复制一份
                     var transform = g.transform;
                     for ( var i = 0, l = contours.length; i < l; i++) {

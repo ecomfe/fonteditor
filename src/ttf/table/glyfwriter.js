@@ -378,9 +378,7 @@ define(
 
                     // 
                     if (glyfSize % 4) {
-                        for (var i = 0, l = 4 - glyfSize % 4; i < l; i++) {
-                            writer.writeUint8(0);
-                        }
+                        writer.writeEmpty(4 - glyfSize % 4);
                     }
                 });
 

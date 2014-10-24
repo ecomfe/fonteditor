@@ -15,27 +15,13 @@ define(
         var error = require('./error');
 
         /**
-         * 写空数据
-         * 
-         * @param {Writer} writer writer对象
-         * @param {number} length 大小
-         * @return {Writer}
-         */
-        function writeEmpty(writer, length) {
-            while (length-- > 0) {
-                writer.writeUint8(0);
-            }
-            return writer;
-        }
-
-        /**
          * woff格式转换成ttf字体格式
          * 
-         * @param {ArrayBuffer} woffBuffer ttf缓冲数组
+         * @param {ArrayBuffer} woffBuffer woff缓冲数组
          * @param {Object} options 选项
          * @param {Object} options.inflate 解压相关函数
          * 
-         * @return {ArrayBuffer} woff格式byte流
+         * @return {ArrayBuffer} ttf格式byte流
          */
         function woff2ttf(woffBuffer, options) {
             options = options || {};
@@ -113,7 +99,7 @@ define(
                 var tableEntry = tableEntries[i];
                 writer.writeBytes(tableEntry.data);
                 if (tableEntry.length % 4) {
-                    writeEmpty(writer, 4 - tableEntry.length % 4);
+                    writer.writeEmpty(4 - tableEntry.length % 4);
                 }
             }
 

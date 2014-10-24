@@ -33,7 +33,7 @@ define(
             // extend data type
             Char: 13,
             String: 14,
-            Byte: 15
+            Bytes: 15
         };
 
         var names = {};

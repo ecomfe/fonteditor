@@ -115,20 +115,6 @@ define(
         }
 
         /**
-         * 写空数据
-         * 
-         * @param {Writer} writer writer对象
-         * @param {number} length 大小
-         * @return {Writer}
-         */
-        function writeEmpty(writer, length) {
-            while (length-- > 0) {
-                writer.writeUint8(0);
-            }
-            return writer;
-        }
-
-        /**
          * ttf格式转换成woff字体格式
          * 
          * @param {ArrayBuffer} ttfBuffer ttf缓冲数组
@@ -296,7 +282,7 @@ define(
                 woffWriter.writeBytes(tableEntry.data);
 
                 if (tableEntry.compLength % 4) {
-                    writeEmpty(woffWriter, 4 - tableEntry.compLength % 4);
+                    woffWriter.writeEmpty(4 - tableEntry.compLength % 4);
                 }
             }
 
@@ -304,7 +290,7 @@ define(
             if (metadata) {
                 woffWriter.writeBytes(metadata);
                 if (woffHeader.metaLength % 4) {
-                    writeEmpty(woffWriter, 4 - woffHeader.metaLength % 4);
+                    woffWriter.writeEmpty(4 - woffHeader.metaLength % 4);
                 }
             }
 

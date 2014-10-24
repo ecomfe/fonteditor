@@ -56,8 +56,8 @@ define(
             }
 
             // 扩展方法
-            if(expandProto[write + type]) {
-                return this[write + type](value, offset, littleEndian);
+            if(undefined === dataType[type]) {
+                return this['write' + type](value, offset, littleEndian);
             }
             else {
                 var size = dataType[type];
@@ -100,6 +100,74 @@ define(
             write: write,
 
             /**
+             * 写入指定的字节数组
+             * 
+             * @param {ArrayBuffer} value 写入值
+             * @return {this}
+             */
+            writeBytes: function(value, length, offset) {
+
+
+                length = length || value.byteLength || value.length;
+
+                if (!length) {
+                    return this;
+                }
+
+                if(undefined === offset) {
+                    offset = this.offset;
+                }
+
+                if(length < 0 || offset + length > this.length) {
+                    error.raise(10002, this.length, offset + length);
+                }
+
+                if (value instanceof ArrayBuffer) {
+                    var view = new DataView(value, 0, length);
+                    var littleEndian = this.littleEndian;
+
+                    for (var i = 0; i < length; ++i) {
+                        this.view.setUint8(offset + i, view.getUint8(i, littleEndian), littleEndian);
+                    }                    
+                }
+                else {
+                    for (var i = 0; i < length; ++i) {
+                        this.view.setUint8(offset + i, value[i], littleEndian);
+                    }
+                }
+
+                this.offset = offset + length;
+
+                return this;
+            },
+
+            /**
+             * 写空数据
+             * 
+             * @param {number} length 长度
+             * @return {this}
+             */
+            writeEmpty: function(length, offset) {
+
+                if (length < 0) {
+                    error.raise(10002, this.length, length);
+                }
+
+                if(undefined === offset) {
+                    offset = this.offset;
+                }
+
+                var littleEndian = this.littleEndian;
+                for (var i = 0; i < length; ++i) {
+                    this.view.setUint8(offset + i, 0, littleEndian);
+                }
+
+                this.offset = offset + length;
+
+                return this;
+            },
+            
+            /**
              * 写入一个string
              * 
              * @param {number} value 写入值
@@ -108,10 +176,13 @@ define(
              * @return {this}
              */
             writeString: function(str, length, offset) {
+
                 str = str || '';
+
                 if(undefined === offset) {
                     offset = this.offset;
                 }
+
                 var length  = length || str.replace(/[^\x00-\xff]/g, '11').length;
 
                 if(length < 0 || offset + length > this.length) {
@@ -136,87 +207,6 @@ define(
 
                 return this;
             },
-
-            /**
-             * 写入指定的字节数组
-             * 
-             * @param {ArrayBuffer} value 写入值
-             * @return {this}
-             */
-            writeBytes: function(value, length, offset) {
-
-                if(undefined === offset) {
-                    offset = this.offset;
-                }
-
-                length = length || value.byteLength || value.length;
-
-                if(length < 0 || offset + length > this.length) {
-                    error.raise(10002, this.length, offset + length);
-                }
-
-                // ArrayBuffer
-                this.seek(offset);
-
-                if (value instanceof ArrayBuffer) {
-                    var view = new DataView(value, 0, length);
-                    var littleEndian = this.littleEndian;
-
-                    for (var i = 0; i < length; ++i) {
-                        this.writeUint8(view.readUint8(i, littleEndian));
-                    }                    
-                }
-                else {
-                    for (var i = 0; i < length; ++i) {
-                        this.writeUint8(value[i]);
-                    }
-                }
-
-                this.offset = offset + length;
-
-                return this;
-            },
-
-            /**
-             * 跳转到指定偏移
-             * 
-             * @param {number} offset 偏移
-             * @return {this}
-             */
-            seek: function (offset) {
-                if (undefined === offset) {
-                    this.offset = 0;
-                }
-
-                if (offset < 0 || offset > this.length) {
-                    error.raise(10002, this.length, offset);
-                }
-
-                this._offset = this.offset;
-                this.offset = offset;
-
-                return this;
-            },
-
-            /**
-             * 跳转到写入头部位置
-             * 
-             * @return {this}
-             */
-            head: function() {
-                this.offset = this._offset || 0;
-            },
-            
-            /**
-             * 注销
-             */
-            dispose: function() {
-                delete this.view;
-            }
-        };
-
-        // 扩展方法
-        var expandProto = {
 
             /**
              * 写入一个字符
@@ -279,6 +269,37 @@ define(
 
                 return this;
             },
+
+            /**
+             * 跳转到指定偏移
+             * 
+             * @param {number} offset 偏移
+             * @return {this}
+             */
+            seek: function (offset) {
+                if (undefined === offset) {
+                    this.offset = 0;
+                }
+
+                if (offset < 0 || offset > this.length) {
+                    error.raise(10002, this.length, offset);
+                }
+
+                this._offset = this.offset;
+                this.offset = offset;
+
+                return this;
+            },
+
+            /**
+             * 跳转到写入头部位置
+             * 
+             * @return {this}
+             */
+            head: function() {
+                this.offset = this._offset || 0;
+            },
+
             /**
              * 获取缓存的byte数组
              * 
@@ -286,11 +307,17 @@ define(
              */
             getBuffer: function(begin, end) {
                 return this.view.buffer;
+            },
+
+            /**
+             * 注销
+             */
+            dispose: function() {
+                delete this.view;
             }
         };
 
-
-        extend(Writer.prototype, proto, expandProto);
+        extend(Writer.prototype, proto);
 
         return Writer;
     }

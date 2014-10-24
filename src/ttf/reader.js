@@ -58,8 +58,8 @@ define(
             }
 
             // 扩展方法
-            if(expandProto[read + type]) {
-                return this[read + type](offset, littleEndian);
+            if(undefined === dataType[type]) {
+                return this['read' + type](offset, littleEndian);
             }
             else {
                 var size = dataType[type];
@@ -101,6 +101,31 @@ define(
             read: read,
 
             /**
+             * 获取指定的字节数组
+             * 
+             * @return {Array} 字节数组
+             */
+            readBytes: function(offset, length) {
+
+                if(arguments.length == 1) {
+                    length = arguments[0];
+                    offset = this.offset;
+                }
+
+                if(length < 0 || offset + length > this.length) {
+                    error.raise(10001, this.length, offset + length);
+                }
+
+                var buffer = [];
+                for (var i = 0; i < length; ++i) {
+                    buffer.push(this.view.getUint8(offset + i));
+                }
+
+                this.offset = offset + length;
+                return buffer;
+            },
+
+            /**
              * 读取一个string
              * 
              * @param {number} offset 偏移
@@ -128,62 +153,6 @@ define(
 
                 return value;
             },
-
-            /**
-             * 获取指定的字节数组
-             * 
-             * @return {Array} 字节数组
-             */
-            readBytes: function(offset, length) {
-
-                if(arguments.length == 1) {
-                    length = arguments[0];
-                    offset = this.offset;
-                }
-
-                if(length < 0 || offset + length > this.length) {
-                    error.raise(10001, this.length, offset + length);
-                }
-
-                var buffer = [];
-                for (var i = 0; i < length; ++i) {
-                    buffer.push(this.view.getUint8(offset + i));
-                }
-
-                this.offset = offset + length;
-                return buffer;
-            },
-
-            /**
-             * 跳转到指定偏移
-             * 
-             * @param {number} offset 偏移
-             * @return {Object} this
-             */
-            seek: function (offset) {
-                if (undefined === offset) {
-                    this.offset = 0;
-                }
-
-                if (offset < 0 || offset > this.length) {
-                    error.raise(10001, this.length, offset);
-                }
-
-                this.offset = offset;
-
-                return this;
-            },
-
-            /**
-             * 注销
-             */
-            dispose: function() {
-                delete this.view;
-            }
-        };
-
-        // 扩展方法
-        var expandProto = {
 
             /**
              * 读取一个字符
@@ -224,11 +193,37 @@ define(
                 var date = new Date();
                 date.setTime(time * 1000 + delta);
                 return date;
+            },
+
+            /**
+             * 跳转到指定偏移
+             * 
+             * @param {number} offset 偏移
+             * @return {Object} this
+             */
+            seek: function (offset) {
+                if (undefined === offset) {
+                    this.offset = 0;
+                }
+
+                if (offset < 0 || offset > this.length) {
+                    error.raise(10001, this.length, offset);
+                }
+
+                this.offset = offset;
+
+                return this;
+            },
+
+            /**
+             * 注销
+             */
+            dispose: function() {
+                delete this.view;
             }
         };
 
-
-        extend(Reader.prototype, proto, expandProto);
+        extend(Reader.prototype, proto);
 
         return Reader;
     }

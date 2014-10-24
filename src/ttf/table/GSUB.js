@@ -28,7 +28,7 @@ define(
                 /**
                  * 解析GSUB表
                  */
-                read: function(reader, ttf) {
+                read: function(reader) {
                     reader.seek(this.offset);
                     var gsub  = {};
                     gsub.Version = reader.readFixed();

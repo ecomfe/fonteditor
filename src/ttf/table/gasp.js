@@ -18,7 +18,7 @@ define(
                 /**
                  * 解析gasp表
                  */
-                read: function(reader, ttf) {
+                read: function(reader) {
                     var offset = this.offset;
                     var gasp = {};
 

@@ -3,7 +3,7 @@
  * @author mengke01
  * @date 
  * @description
- * ttf 二进制转base64编码
+ * svg 二进制转base64编码
  */
 
 
@@ -11,7 +11,7 @@ define(
     function(require) {
 
         /**
-         * ttf 二进制转base64编码
+         * svg 二进制转base64编码
          * 
          * @param {string} svg svg对象
          * @return {string} base64编码
