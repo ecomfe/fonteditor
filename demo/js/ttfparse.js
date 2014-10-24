@@ -11,7 +11,7 @@ define(
     function(require) {
         var ttfreader = require('ttf/ttfreader');
         var TTF = require('ttf/ttf');
-        var ajaxBinaryFile = require('common/ajaxBinaryFile');
+        var ajaxFile = require('common/ajaxFile');
 
         function onUpFileChange(e) {
             var file = e.target.files[0];
@@ -40,7 +40,8 @@ define(
                 var upFile = document.getElementById('upload-file');
                 upFile.addEventListener('change', onUpFileChange);
 
-                ajaxBinaryFile({
+                ajaxFile({
+                    type: 'binary',
                     url: '../test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
                         var ttfReader = new ttfreader();

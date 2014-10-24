@@ -2,7 +2,11 @@
     <style>
         @font-face {
             font-family: '{%=fontFamily%}';
+            {%if(fontFormat=='eot'){%}
+            src: url({%=fontData%});
+            {%} else {%}
             src: url({%=fontData%}) format('{%=fontFormat%}');
+            {%}%}
         }
         .icon {
             font-family: '{%=fontFamily%}';

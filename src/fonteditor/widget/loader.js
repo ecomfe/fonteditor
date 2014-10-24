@@ -12,6 +12,7 @@ define(
 
         var TTFReader = require('ttf/ttfreader');
         var woff2ttf = require('ttf/woff2ttf');
+        var eot2ttf = require('ttf/eot2ttf');
         var svg2ttfobject = require('ttf/svg2ttfobject');
         
         var loading = require('./loading');
@@ -39,6 +40,9 @@ define(
                     var buffer = e.target.result;
                     if (options.type == 'woff') {
                         buffer = woff2ttf(buffer, woffOptions);
+                    }
+                    else if (options.type == 'eot') {
+                        buffer = eot2ttf(buffer, woffOptions);
                     }
                     var ttfReader = new TTFReader();
                     var ttf = ttfReader.read(buffer);
@@ -80,6 +84,9 @@ define(
                 if (options.type == 'woff') {
                     buffer = woff2ttf(buffer, woffOptions);
                 }
+                else if (options.type == 'eot') {
+                    buffer = eot2ttf(buffer, woffOptions);
+                }
                 var ttfReader = new TTFReader();
                 var ttf = ttfReader.read(buffer);
                 ttfReader.dispose();
@@ -101,7 +108,7 @@ define(
          * @param {Function} options.success 成功回调
          * @param {Function} options.error 失败回调
          */
-         function loadSVG(file, options) {
+         function loadSVGFile(file, options) {
 
             loading.show();
             var fileReader = new FileReader();
@@ -130,6 +137,27 @@ define(
             fileReader.readAsText(file);
         }
 
+        /**
+         * 加载svg结构字体
+         * 
+         * @param {File} svg svg文本
+         * @param {Object} options 参数
+         * @param {Function} options.success 成功回调
+         * @param {Function} options.error 失败回调
+         */
+         function loadSVG(file, options) {
+            loading.show();
+            try {
+                var imported = svg2ttfobject(file);
+                loading.hide();
+                options.success && options.success(imported);
+            }
+            catch(exp) {
+                loading.hide();
+                alert(exp.message);
+                throw exp;
+            }
+        }
 
         var loader = {
 
@@ -144,9 +172,14 @@ define(
              */
             load: function(file, options) {
                 if (options.type == 'svg') {
-                    loadSVG(file, options);
+                    if (typeof(file) === 'string' || file instanceof XMLDocument) {
+                        loadSVG(file, options);
+                    }
+                    else {
+                        loadSVGFile(file, options);
+                    }
                 }
-                else if (options.type == 'ttf' || options.type == 'woff'){
+                else if (options.type == 'ttf' || options.type == 'woff' || options.type == 'eot'){
                     if (file instanceof ArrayBuffer) {
                         loadSFNTBinary(file, options);
                     }
@@ -159,6 +192,26 @@ define(
                         message: '不支持的文件类型'
                     });
                 }
+            },
+
+            /**
+             * 支持的加载类型
+             * 
+             * @param {string} fileName 文件类型
+             * @return {boolean}
+             */
+            supportLoad: function(fileName) {
+                return !!fileName.match(/(\.ttf|\.woff|\.eot)$/i);
+            },
+
+            /**
+             * 支持的导入类型
+             * 
+             * @param {string} fileName 文件类型
+             * @return {boolean}
+             */
+            supportImport: function(fileName) {
+                return !!fileName.match(/(\.ttf|\.woff|\.svg|\.eot)$/i);
             }
         };
 

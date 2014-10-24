@@ -12,14 +12,19 @@ define(
 
         var TTFWriter = require('ttf/ttfwriter');
         var ttf2woff = require('ttf/ttf2woff');
+        var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
         var ttf2base64 = require('ttf/ttf2base64');
         var woff2base64 = require('ttf/woff2base64');
+        var eot2base64 = require('ttf/eot2base64');
         var svg2base64 = require('ttf/svg2base64');
         var unicode2xml = require('ttf/util/unicode2xml');
         var utpl = require('utpl');
 
         var previewTplRender = null; // 模板渲染函数
+
+
+        var isIE = !!navigator.userAgent.match(/\bMSIE\s+\d+\b/);
 
         // 列出unicode
         function listUnicode(unicode) {
@@ -45,6 +50,10 @@ define(
             if (fontFormat == 'woff') {
                 var buffer = new TTFWriter().write(ttf);
                 fontData = woff2base64(ttf2woff(buffer));
+            }
+            else if (fontFormat == 'eot') {
+                var buffer = new TTFWriter().write(ttf);
+                fontData = eot2base64(ttf2eot(buffer));
             }
             else  if (fontFormat == 'svg') {
                 fontData = svg2base64(ttf2svg(ttf));
@@ -100,12 +109,18 @@ define(
                 try {
                     var html = generatePreviewHTML(ttf, fontFormat);
                     var win = window.open('./empty.html');
-                    win.onload = function() {
+                    if (isIE && win.document && win.document.body) {
                         win.document.body.innerHTML = html;
                         win.focus();
-                        win = null;
-                        html = null;
-                    };                    
+                    }
+                    else {
+                        win.addEventListener('load', function() {
+                            win.document.body.innerHTML = html;
+                            win.focus();
+                            win = null;
+                            html = null;
+                        }, false);
+                    }
                 }
                 catch (exp) {
                     alert(exp.message);

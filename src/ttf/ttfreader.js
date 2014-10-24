@@ -33,6 +33,10 @@ define(
             // version
             ttf.version = reader.readFixed(0);
 
+            if (ttf.version !== 0x1) {
+                error.raise(10101);
+            }
+
             // num tables
             ttf.numTables = reader.readUint16();
 

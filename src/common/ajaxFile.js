@@ -1,9 +1,9 @@
 /**
- * @file ajaxBinaryFile.js
+ * @file ajaxFile.js
  * @author mengke01
  * @date 
  * @description
- * ajax获取二进制数据
+ * ajax获取文本数据
  */
 
 
@@ -11,22 +11,35 @@ define(
     function(require) {
             
         /**
-         * ajax获取二进制数据
+         * ajax获取数据
          * 
          * @param {Object} options 参数选项
+         * @param {string=} options.type 类型
          * @param {string=} options.method method
          * @param {Function=} options.onSuccess 成功回调
          * @param {Function=} options.onError 失败回调
          * @param {Object=} options.params 参数集合
          */
-        function ajaxBinaryFile(options) {
+        function ajaxFile(options) {
             var xhr = new XMLHttpRequest();
 
             xhr.onreadystatechange = function(){
                 if (xhr.readyState=== 4 && xhr.status === 200){
                     if(options.onSuccess) {
-                        var buffer = xhr.responseBlob || xhr.response;
-                        options.onSuccess(buffer);
+
+                        if (options.type === 'binary') {
+                            var buffer = xhr.responseBlob || xhr.response;
+                            options.onSuccess(buffer);
+                        }
+                        else if (options.type === 'xml') {
+                            options.onSuccess(xhr.responseXML);
+                        }
+                        else if (options.type === 'json') {
+                            options.onSuccess(JSON.parse(xhr.responseText));
+                        }
+                        else {
+                            options.onSuccess(xhr.responseText);
+                        }
                     }
                 }
                 else if(xhr.status > 200){
@@ -55,10 +68,12 @@ define(
             }
 
             xhr.open(method, options.url, true);
-            xhr.responseType = 'arraybuffer';
+            if (options.type === 'binary') {
+                xhr.responseType = 'arraybuffer';
+            }
             xhr.send(null);
         }
 
-        return ajaxBinaryFile;
+        return ajaxFile;
     }
 );

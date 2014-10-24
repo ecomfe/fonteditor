@@ -11,7 +11,7 @@ define(
     function(require) {
         var setting = require('../widget/setting');
         var program = require('../widget/program');
-        var ajaxBinaryFile = require('common/ajaxBinaryFile');
+        var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
 
         var actions = {
@@ -89,7 +89,8 @@ define(
                         // 此处延迟处理
                         setTimeout(function(){
                             program.loading.show('正在加载..', 1000);
-                            ajaxBinaryFile({
+                            ajaxFile({
+                                type: url.slice(url.lastIndexOf('.') + 1) === 'svg' ? 'xml' : 'binary',
                                 url: url,
                                 onSuccess: function(buffer) {
                                     program.loader.load(buffer, {

@@ -1,17 +1,20 @@
 /**
- * @file ttf2woff.js
+ * @file ttf2eot.js
  * @author mengke01
  * @date 
  * @description
- * ttf2woff 转换
+ * ttf2eot 转换
  */
 
 define(
     function(require) {
         var ajaxFile = require('common/ajaxFile');
-        var ttf2svg = require('ttf/ttf2svg');
-        var svg2base64 = require('ttf/svg2base64');
+        var ttf2eot = require('ttf/ttf2eot');
+        var eot2ttf = require('ttf/eot2ttf');
+        var ttf2base64 = require('ttf/ttf2base64');
+        var eot2base64 = require('ttf/eot2base64');
         var TTFReader = require('ttf/ttfreader');
+        var TTFWriter = require('ttf/ttfwriter');
         var TTF = require('ttf/ttf');
 
         // 设置字体
@@ -21,7 +24,7 @@ define(
                 + 'font-family:\'truetype\';'
                 + 'src:url('
                 +   base64str 
-                + ') format(\'svg\');'
+                + ') format(\'truetype\');'
                 + '}';
             document.getElementById('font-face').innerHTML = str;
         }
@@ -42,28 +45,47 @@ define(
             $('#font-list').html(str);
         }
 
-
-
         function write() {
             ajaxFile({
                 type: 'binary',
                 url: '../font/iconfont.ttf',
                 onSuccess: function(buffer) {
 
-                    var svgBuffer = ttf2svg(buffer, {
-                        metadata: 'fonteditor V0.1'
-                    });
-
-                    var base64str = svg2base64(svgBuffer);
-                    setFont(base64str);
-
-
-                    var saveBtn = $('.saveas');
-                    saveBtn.attr('href', base64str);
-                    saveBtn.attr('download', 'save.svg');
+                    var eotBuffer = ttf2eot(buffer);
 
                     var ttfReader = new TTFReader();
-                    var ttfData = ttfReader.read(buffer);
+                    var ttfBuffer = eot2ttf(eotBuffer);
+                    var ttfData = ttfReader.read(ttfBuffer);
+                    showTTFGlyf(ttfData);
+
+                    var base64str = ttf2base64(ttfBuffer);
+                    setFont(base64str);
+
+                    var base64str = eot2base64(eotBuffer);
+                    var saveBtn = $('.saveas');
+                    saveBtn.attr('href', base64str);
+                    saveBtn.attr('download', 'save.eot');
+
+                },
+                onError: function() {
+                    console.error('error read file');
+                }
+            });
+        }
+
+
+        function readeot() {
+            ajaxFile({
+                type: 'binary',
+                url: './iconfont.eot',
+                onSuccess: function(buffer) {
+
+
+                    var ttfBuffer = eot2ttf(buffer);
+                    var ttfReader = new TTFReader();
+                    var ttfData = ttfReader.read(ttfBuffer);
+                    var base64str = ttf2base64(ttfBuffer);
+                    setFont(base64str);
                     showTTFGlyf(ttfData);
 
                 },
@@ -79,7 +101,8 @@ define(
              * 初始化
              */
             init: function () {
-                write();
+                //write();
+                readeot();
             }
         };
 

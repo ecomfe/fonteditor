@@ -8,7 +8,7 @@
 
 define(
     function(require) {
-        var ajaxBinaryFile = require('common/ajaxBinaryFile');
+        var ajaxFile = require('common/ajaxFile');
         var woff2ttf = require('ttf/woff2ttf');
         var TTFReader = require('ttf/ttfreader');
         var inflate = require('inflate').inflate;
@@ -16,8 +16,9 @@ define(
 
         function write() {
 
-            ajaxBinaryFile({
-                url: '../test/iconfont.woff',
+            ajaxFile({
+                type: 'binary',
+                url: '../font/iconfont.woff',
                 onSuccess: function(buffer) {
 
                     var ttfBuffer = woff2ttf(buffer, {

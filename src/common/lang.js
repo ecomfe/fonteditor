@@ -244,6 +244,7 @@ define(
             debounce: debounce
         };
 
+        var toString = toString || Object.prototype.toString;
         // 生成 isXXX方法
         ['String', 'Array', 'Function', 'Date', 'Object'].forEach(function (type) {
             exports['is' + type] = function (obj) {

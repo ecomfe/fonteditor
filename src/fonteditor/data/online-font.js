@@ -16,9 +16,19 @@ define(
                 from: '阿里妈妈图标库'
             },
             {
-                name: 'empty.woff',
-                url: './font/empty.woff',
-                from: 'fonteditor'
+                name: 'iconfont.woff',
+                url: './font/iconfont.woff',
+                from: '阿里妈妈图标库'
+            },
+            {
+                name: 'iconfont.svg',
+                url: './font/iconfont.svg',
+                from: '阿里妈妈图标库'
+            },
+            {
+                name: 'iconfont.eot',
+                url: './font/iconfont.eot',
+                from: '阿里妈妈图标库'
             }
         ];
     }

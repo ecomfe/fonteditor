@@ -21,7 +21,7 @@ define(
         function onUpFile(e) {
             var file = e.target.files[0];
 
-            if (program.data.action == 'open' && file.name.match(/(\.ttf|\.woff)$/i)) {
+            if (program.data.action == 'open' && program.loader.supportLoad(file.name)) {
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                     success: function(imported) {
@@ -31,7 +31,7 @@ define(
                     }
                 });
             }
-            else if (program.data.action == 'import' && file.name.match(/(\.ttf|\.woff|\.svg)$/i)) {
+            else if (program.data.action == 'import' && program.loader.supportImport(file.name)) {
                 if (program.ttfManager.get()) {
                     program.loader.load(file, {
                         type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
@@ -63,6 +63,7 @@ define(
             $('#export-btn').on('mouseup', actions['export-file']);
             $('#export-btn-woff').on('mouseup', actions['export-file']);
             $('#export-btn-svg').on('mouseup', actions['export-file']);
+            $('#export-btn-eot').on('mouseup', actions['export-file']);
 
             document.getElementById('font-import').addEventListener('change', onUpFile);
         }

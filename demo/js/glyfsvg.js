@@ -12,7 +12,7 @@ define(
         var ttfreader = require('ttf/ttfreader');
         var TTF = require('ttf/ttf');
         var ttf2base64 = require('ttf/ttf2base64');
-        var ajaxBinaryFile = require('common/ajaxBinaryFile');
+        var ajaxFile = require('common/ajaxFile');
         var glyf2svg = require('ttf/util/glyf2svg');
         var setFontface = require('./setFontface');
         var lang = require('common/lang');
@@ -117,7 +117,8 @@ define(
                 var upFile = document.getElementById('upload-file');
                 upFile.addEventListener('change', onUpFileChange);
 
-                ajaxBinaryFile({
+                ajaxFile({
+                    type: 'binary',
                     url: '../test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
                         setFont(binaryData);

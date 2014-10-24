@@ -12,9 +12,11 @@ define(
 
         var TTFWriter = require('ttf/ttfwriter');
         var ttf2woff = require('ttf/ttf2woff');
+        var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
         var ttf2base64 = require('ttf/ttf2base64');
         var woff2base64 = require('ttf/woff2base64');
+        var eot2base64 = require('ttf/eot2base64');
         var svg2base64 = require('ttf/svg2base64');
 
         /**
@@ -38,6 +40,10 @@ define(
                     if (options.type == 'woff') {
                         buffer = ttf2woff(new TTFWriter().write(ttf));
                         base64Str = woff2base64(buffer);
+                    }
+                    else if (options.type == 'eot') {
+                        buffer = ttf2eot(new TTFWriter().write(ttf));
+                        base64Str = eot2base64(buffer);
                     }
                     else if(options.type == 'svg') {
                         base64Str = svg2base64(ttf2svg(ttf));
