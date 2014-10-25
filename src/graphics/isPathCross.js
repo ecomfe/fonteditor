@@ -26,11 +26,11 @@ define(
          * 
          * @return {Array} 交点数组
          */
-        function getJoint(path, command, p0, p1, p2) {
+        function getJoint(path, command, p0, p1, p2, i) {
 
             var joint = [];
             var result;
-            pathIterator(path, function (c, t0, t1, t2) {
+            pathIterator(path, function (c, t0, t1, t2, j) {
                 if (c === 'L') {
                     if (command === 'L') {
                         result = isSegmentCross(p0, p1, t0, t1);
@@ -50,7 +50,11 @@ define(
                 }
 
                 if (result) {
-                    joint = joint.concat(result);
+                    joint = joint.concat(result.map(function(p) {
+                        p.index0 = i; // 第一个path交点的索引
+                        p.index1 = j; // 第二个path交点的索引
+                        return p;
+                    }));
                 }
             });
 
@@ -68,12 +72,12 @@ define(
 
             var joint = [];
             var result;
-            pathIterator(path0, function (c, p0, p1, p2) {
+            pathIterator(path0, function (c, p0, p1, p2, i) {
                 if (c === 'L') {
-                    result = getJoint(path1, 'L', p0, p1);
+                    result = getJoint(path1, 'L', p0, p1, 0, i);
                 }
                 else if(c === 'Q') {
-                    result = getJoint(path1, 'Q', p0, p1, p2);
+                    result = getJoint(path1, 'Q', p0, p1, p2, i);
                 }
 
                 if (result) {

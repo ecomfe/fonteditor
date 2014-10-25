@@ -36,13 +36,7 @@ define(
                             zCount = 1;
                             return false;
                         }
-
-                        if(p1.y > p0.y) {
-                            zCount++;
-                        }
-                        else {
-                            zCount--;
-                        }
+                        zCount += joint.length;
                     }
                 }
                 else if(c === 'Q') {
@@ -59,33 +53,12 @@ define(
                             return false;
                         }
 
-                        if (joint.length == 2) {
-                            return;
-                        }
-                        
-                        joint = joint[0];
-
-                        if(joint.y > p0.y && joint.y < p1.y) {
-                            ps = p0;
-                            pe =  p1;
-                        }
-                        else {
-                            ps = p1;
-                            pe =  p2;
-                        }
-
-                        if(pe.y > ps.y) {
-                            zCount++;
-                        }
-                        else {
-                            zCount--;
-                        }
-
+                        zCount += joint.length;
                     }
                 }
             });
 
-            return !!zCount;
+            return !!(zCount % 2);
         }
 
         return isInsidePath;

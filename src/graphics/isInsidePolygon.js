@@ -32,16 +32,10 @@ define(
                     if (result.y == p.y) {
                         return true;
                     }
-
-                    if (p1.y > p0.y) {
-                        zCount++;
-                    }
-                    else {
-                        zCount--;
-                    }
+                    zCount += result.length;
                 }
             }
-            return !!zCount;
+            return !!(zCount % 2);
         }
 
         return isInsidePolygon;
