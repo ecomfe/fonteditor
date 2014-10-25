@@ -114,12 +114,12 @@ define(
                         win.focus();
                     }
                     else {
-                        win.addEventListener('load', function() {
+                        win.onload = function() {
                             win.document.body.innerHTML = html;
                             win.focus();
                             win = null;
                             html = null;
-                        }, false);
+                        };
                     }
                 }
                 catch (exp) {

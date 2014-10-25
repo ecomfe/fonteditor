@@ -233,10 +233,6 @@ define(
 
             this.un();
 
-            // 改变大小
-            window.removeEventListener('resize', this._resizeObserver, false);
-            this._resizeObserver = null;
-
             this.painter.dispose();
             this.capture.dispose();
             this.keyCapture.dispose();

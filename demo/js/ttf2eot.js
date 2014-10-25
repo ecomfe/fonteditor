@@ -77,7 +77,7 @@ define(
         function readeot() {
             ajaxFile({
                 type: 'binary',
-                url: './iconfont.eot',
+                url: '../font/iconfont.eot',
                 onSuccess: function(buffer) {
 
 
