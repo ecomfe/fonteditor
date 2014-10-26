@@ -10,7 +10,7 @@
 define(
     function(require) {
         
-        var bezierQ2Equation = require('math/bezierQ2Equation');
+        var getBezierQ2T = require('./getBezierQ2T');
 
         // 获取贝塞尔曲线上的点
         function getPoint(p0, p1, p2, t) {
@@ -38,27 +38,10 @@ define(
             }
             else if (typeof(point) === 'object') {
                 p = point;
-                var result = bezierQ2Equation(
-                    p0.x + p2.x - 2 * p1.x + p0.y + p2.y - 2 * p1.y,
-                    2 * (p1.x - p0.x) + 2 * (p1.y - p0.y),
-                    p0.x + p0.y - p.x - p.y
-                );
+                t = getBezierQ2T(p0, p1, p2, p);
 
-                if (!result) {
+                if (false === t) {
                     return false;
-                }
-                
-                if (result.length === 1) {
-                    t =  result[0];
-                }
-                else {
-                    var pt = getPoint(p0, p1, p2, result[0]);
-                    if (Math.abs(pt.x - p.x) < 0.01 && Math.abs(pt.y - p.y) < 0.01) {
-                        t = result[0];
-                    }
-                    else {
-                        t = result[1];
-                    }
                 }
             }
 

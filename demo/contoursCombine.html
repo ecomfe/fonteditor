@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试editor combine</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/editor.css">
+    <style id="font-face"></style>
+</head>
+<body>
+    <script>
+        require.config({
+            baseUrl: '../src',
+            paths: {
+                demo: '../demo/js',
+            }
+        });
+        define('jquery', $);
+    </script>
+
+    <div id="render-view" class="render-view" oncontextMenu="return false"></div>
+
+    <script>
+        require(['demo/contoursCombine']);
+    </script>
+
+</body>
+</html>

@@ -22,7 +22,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points =[{"x":167,"y":449},{"x":233,"y":331},{"x":431,"y":332},{"x":481,"y":417}];
+                var points =[{"x":400.74906,"y":658.69371,"onCurve":true},{"x":343.80109577246503,"y":678.5444583886682},{"x":296,"y":722,"onCurve":true},{"x":484.52353,"y":642.49215,"index0":2,"index1":12,"index":18}];
 
                 $(points).each(function(index, item) {
                     $('[data-index="'+index+'"]').css({
@@ -80,7 +80,9 @@ define(
 
                     
                     
-                    var result = splitBezier(points[0], points[1], points[2], getPoint(points[0], points[1], points[2], 0.5));
+                    //var result = splitBezier(points[0], points[1], points[2], getPoint(points[0], points[1], points[2], 0.5));
+                    // 
+                    var result = splitBezier(points[0], points[1], points[2], points[3]);
 
                     result.forEach(function(bezier, i) {
                         ctx.beginPath();
