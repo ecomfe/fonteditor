@@ -11,7 +11,7 @@ define(
 
         var lang = require('common/lang');
         var editor = require('editor/main');
-        var shape_baidu = require('./contours');
+        var shape_baidu = require('./contours-3');
         var isPathCross = require('graphics/isPathCross');
         var pathJoin = require('graphics/pathJoin');
         var util = require('graphics/util');
@@ -54,23 +54,25 @@ define(
                             }
                         });
                     });
-                    jointLayer.refresh();
-
-                    var paths = pathJoin(path0, path1, 1);
-
-                    paths.forEach(function(p, index) {
-                        jointLayer.addShape('path', {
-                            points: lang.clone(p),
-                            style: {
-                                lineWidth: 2,
-                                fill:true,
-                                fillColor: index % 2 ? 'red' : 'blue'
-                            }
-                        });
-                    });
 
                     jointLayer.refresh();
                 }
+
+
+                var paths = pathJoin(path0, path1, 4);
+
+                paths.forEach(function(p, index) {
+                    jointLayer.addShape('path', {
+                        points: lang.clone(p),
+                        style: {
+                            lineWidth: 2,
+                            fill:true,
+                            fillColor: index % 2 ? 'red' : 'blue'
+                        }
+                    });
+                });
+
+                jointLayer.refresh();
 
             }
         };

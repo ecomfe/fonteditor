@@ -178,73 +178,72 @@ define(
             var newPaths = [];
             var splice = Array.prototype.splice;
 
-            // 交集
-            if (relation == pathJoin.INTERSECT) {
+            // 过滤路径
+            var filterPath = function(path){
+                if (relation == pathJoin.INTERSECT) {
+                    return path.cross;
+                }
+                else if (relation == pathJoin.JOIN) {
+                    return !path.cross;
+                }
+                else {
+                    return true;
+                }
+            };
 
-            }
-            else {
+            splitPaths0 = splitPaths0.filter(filterPath);
+            splitPaths1 = splitPaths1.filter(filterPath);
 
-                // 相切，分割图形
-                if (relation == pathJoin.TANGENCY) {
 
-                    // 计算哈希，用来辅助组合点
-                    var splitHash0 = getSplitPathHash(splitPaths0);
-                    var splitHash1 = getSplitPathHash(splitPaths1);
+            // 计算哈希，用来辅助组合点
+            var splitHash0 = getSplitPathHash(splitPaths0);
+            var splitHash1 = getSplitPathHash(splitPaths1);
 
-                    for (var i = 0; i < splitPaths0.length; i++) {
-                        var length = splitPaths0[i].length;
-                        var newPath = splitPaths0[i].slice(0, length - 1);
+            for (var i = 0; i < splitPaths0.length; i++) {
+                var length = splitPaths0[i].length;
+                var newPath = splitPaths0[i].slice(0, length - 1);
 
-                        var start = splitPaths0[i][0];
-                        var end = splitPaths0[i][length - 1];
-                        
-                        var nextHash = splitHash1;
-                        var cross = splitPaths0[i].cross; // 起始cross
-                        var loops = 0; // 防止死循环，最多组合100个路径段
+                var start = splitPaths0[i][0];
+                var end = splitPaths0[i][length - 1];
+                
+                var nextHash = splitHash1;
+                var cross = splitPaths0[i].cross; // 起始cross
+                var loops = 0; // 防止死循环，最多组合100个路径段
 
-                        while (loops++ < 100 && (Math.abs(start.x - end.x) > 0.0001 || Math.abs(start.y - end.y) > 0.0001)) {
+                while (loops++ < 100 && (Math.abs(start.x - end.x) > 0.0001 || Math.abs(start.y - end.y) > 0.0001)) {
 
-                            var paths = nextHash[hashcode(end)];
+                    var paths = nextHash[hashcode(end)];
 
-                            // 选取异向
-                            var p = paths[0];
-                            if (cross == p.cross) {
-                                p = paths[1];
-                            }
-
-                            if (end.x == p[0].x && end.y == p[0].y) {
-                            }
-                            else {
-                                p = p.reverse();
-                            }
-
-                            splice.apply(newPath, [newPath.length, 0].concat(p.slice(0, p.length - 1)));
-
-                            cross = !cross;
-                            end = p[p.length - 1];
-
-                            if (nextHash === splitHash1) {
-                                nextHash = splitHash0;
-                            }
-                            else {
-                                nextHash = splitHash1;
-                                // 这里需要去掉已经使用的splitPaths0上的点
-                                splitPaths0.splice(splitPaths0.indexOf(p), 1);
-                            }
-                        }
-
-                        newPaths.push(newPath);
-
+                    // 选取异向
+                    var p = paths[0];
+                    if (relation == pathJoin.TANGENCY && cross == p.cross) {
+                        p = paths[1];
                     }
 
+                    if (end.x == p[0].x && end.y == p[0].y) {
+                    }
+                    else {
+                        p = p.reverse();
+                    }
 
+                    splice.apply(newPath, [newPath.length, 0].concat(p.slice(0, p.length - 1)));
+
+                    cross = !cross;
+                    end = p[p.length - 1];
+
+                    if (nextHash === splitHash1) {
+                        nextHash = splitHash0;
+                    }
+                    else {
+                        nextHash = splitHash1;
+                        // 这里需要去掉已经使用的splitPaths0上的点
+                        splitPaths0.splice(splitPaths0.indexOf(p), 1);
+                    }
                 }
-
-                // 合并两图形
-                else {
-
-                }
+                newPaths.push(newPath);
             }
+
+
 
             if (newPaths.length) {
                 return newPaths.map(function(path){
@@ -308,6 +307,10 @@ define(
                 //异向的 combine 等于相切
                 if (relation == pathJoin.JOIN && direction0 !== direction1) {
                     relation = pathJoin.TANGENCY;
+                }
+                // 异向的相交等于空
+                if (relation == pathJoin.INTERSECT && direction0 !== direction1) {
+                    return [];
                 }
 
                 return combinePath(splitPaths0, splitPaths1, relation);

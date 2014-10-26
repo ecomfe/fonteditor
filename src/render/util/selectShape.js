@@ -48,10 +48,10 @@ define(
             });
 
             if(2 === result) {
-                return start;
+                return end;
             }
             else if(3 === result) {
-                return end;
+                return start;
             }
             else {
                 return start;

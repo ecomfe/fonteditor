@@ -108,11 +108,11 @@ define(
                 var result = getPathJoint(path0, path1);
                 if (!result) {
                     // 0 包含 1
-                    if (isInsidePath(path1, path0[0])) {
+                    if (isInsidePath(path0, path1[0])) {
                         return 2;
                     }
                     // 1 包含 0
-                    else if(isInsidePath(path0, path1[0])) {
+                    else if(isInsidePath(path1, path0[0])) {
                         return 3;
                     }
                 }
