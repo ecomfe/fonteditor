@@ -11,14 +11,7 @@ define(
     function(require) {
         
         var getBezierQ2T = require('./getBezierQ2T');
-
-        // 获取贝塞尔曲线上的点
-        function getPoint(p0, p1, p2, t) {
-            return {
-                x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1-t) + p2.x * Math.pow(t, 2),
-                y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1-t) + p2.y * Math.pow(t, 2)
-            };
-        }
+        var getPoint = require('./getBezierQ2Point');
 
         /**
          * 分割贝塞尔曲线
@@ -43,6 +36,10 @@ define(
                 if (false === t) {
                     return false;
                 }
+            }
+
+            if (t == 0 || t == 1) {
+                return [t];
             }
 
             return [

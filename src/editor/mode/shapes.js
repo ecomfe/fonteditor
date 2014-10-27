@@ -72,6 +72,24 @@ define(
             else if (command == 'down') {
                 this.execCommand('downshape', shape);
             }
+
+            // 相交，结合和相切
+            else if (command == 'join_shapes') {
+                this.execCommand('joinshapes', shapes);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
+            }
+            else if (command == 'intersect_shapes') {
+                this.execCommand('intersectshapes', shapes);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
+            }
+            else if (command == 'tangency_shapes') {
+                this.execCommand('tangencyshapes', shapes);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
+            }
+
             else if (command == 'rotate_left') {
                 this.execCommand('rotateleft', shapes);
                 this.currentGroup.setShapes(shapes);
@@ -141,7 +159,7 @@ define(
                         var shapeIndex = this.currentGroup.shapes.indexOf(shape);
                         if(shapeIndex >= 0) {
 
-                            if (e.ctrlKey) {
+                            if (e.ctrlKey && !e.altKey) {
                                 this.currentGroup.shapes.splice(shapeIndex, 1);
                                 this.currentGroup.setShapes(this.currentGroup.shapes);
                                 this.currentGroup.refresh();

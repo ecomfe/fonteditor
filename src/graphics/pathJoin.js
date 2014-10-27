@@ -13,7 +13,9 @@ define(
         var isInsidePath = require('./isInsidePath');
         var bezierQ2Split = require('math/bezierQ2Split');
         var getBezierQ2T = require('math/getBezierQ2T');
+        var getBezierQ2Point = require('math/getBezierQ2Point');
         var util = require('./util');
+        var splice = Array.prototype.splice;
 
         /**
          * 按索引号排序相交点，这里需要处理曲线段上有多个交点的问题
@@ -43,7 +45,7 @@ define(
                         var prev = p0.index == 0 ? path[length - 1] : path[p0.index - 1];
                         var t1 = getBezierQ2T(prev, cur, next, p0);
                         var t2 = getBezierQ2T(prev, cur, next, p1);
-                        return t1 < t2 ? -1 : 1;
+                        return t1 == t2 ? 0 : t1 < t2 ? -1 : 1;
                     }
 
                 }
@@ -72,7 +74,6 @@ define(
         function splitPath(path, joint) {
             joint = sortJoint(path, joint);
 
-
             var jointOffset = 0; // 用来标记插入点产生的偏移
 
             // 插入分割点
@@ -99,54 +100,69 @@ define(
                 else if (!path[cur].onCurve) {
                     var prev = cur == 0 ? length - 1 : cur - 1;
                     var bezierArray = bezierQ2Split(path[prev], path[cur], path[next], p);
+                    
+                    if (!bezierArray) {
+                        throw 'can\'t split path';
+                    }
 
-                    path.splice(cur, 1, 
-                        bezierArray[0][1], 
-                        {
-                            x: p.x,
-                            y: p.y,
-                            onCurve: true
-                        }, 
-                        bezierArray[1][1]
-                    );
+                    // 端点情况
+                    if (bezierArray.length === 1) {
+                        p.index = bezierArray[0] === 0 ? prev : next;
+                    }
+                    else {
+                        path.splice(cur, 1, 
+                            bezierArray[0][1], 
+                            {
+                                x: p.x,
+                                y: p.y,
+                                onCurve: true
+                            }, 
+                            bezierArray[1][1]
+                        );
 
-                    p.index = cur + 1;
-                    jointOffset += 2;
+                        p.index = cur + 1;
+                        jointOffset += 2;
+                    }
                 }
                 else {
                     throw 'can\'t get here';
                 }
             }
 
+            // 这里需要重新筛选排序
+            joint.sort(function(p0, p1) {
+                return p0.index - p1.index;
+            });
+
             // 分割曲线
-            var splitPaths = [];
+            var splitedPaths = [];
             var start;
             var end;
             for (var i = 0, l = joint.length - 1; i < l; i++) {
                 start = joint[i];
                 end = joint[i + 1];
-                splitPaths.push(path.slice(start.index, end.index + 1));
+                splitedPaths.push(path.slice(start.index, end.index + 1));
             }
 
             // 闭合轮廓
             start = end;
             end = joint[0];
-            splitPaths.push(path.slice(start.index).concat(path.slice(0, end.index + 1)));
-            return splitPaths;
+            splitedPaths.push(path.slice(start.index).concat(path.slice(0, end.index + 1)));
+            return splitedPaths;
         }
 
         /**
          * 获取分割的路径hash
          * 
-         * @param {Array} splitPath 分割的路径
+         * @param {Array} splitedPath 分割的路径
          * @return {Object} 哈希值
          */
-        function getSplitPathHash(splitPath) {
+        function getSplitedPathHash(splitedPath) {
             var splitHash = {};
             var code;
 
             // 根据起始点创建hash
-            splitPath.forEach(function(path) {
+            splitedPath.forEach(function(path) {
                 // 开始点
                 code = hashcode(path[0]);
                 if (!splitHash[code]) {
@@ -168,15 +184,15 @@ define(
         /**
          * 组合路径
          * 
-         * @param {Array} splitPaths0 分割后的路径1
-         * @param {Array} splitPaths1 分割后的路径2
+         * @param {Array} splitedPaths0 分割后的路径1
+         * @param {Array} splitedPaths1 分割后的路径2
          * @param {number} relation 分割关系
          * @return {Array} 组合后的路径
          */
-        function combinePath(splitPaths0, splitPaths1, relation) {
-
+        function combinePath(splitedPaths0, splitedPaths1, relation) {
+            var direction0 = splitedPaths0.direction;
+            var direction1 = splitedPaths1.direction;
             var newPaths = [];
-            var splice = Array.prototype.splice;
 
             // 过滤路径
             var filterPath = function(path){
@@ -191,32 +207,38 @@ define(
                 }
             };
 
-            splitPaths0 = splitPaths0.filter(filterPath);
-            splitPaths1 = splitPaths1.filter(filterPath);
+            splitedPaths0 = splitedPaths0.filter(filterPath);
+            splitedPaths1 = splitedPaths1.filter(filterPath);
 
 
             // 计算哈希，用来辅助组合点
-            var splitHash0 = getSplitPathHash(splitPaths0);
-            var splitHash1 = getSplitPathHash(splitPaths1);
+            var splitHash0 = getSplitedPathHash(splitedPaths0);
+            var splitHash1 = getSplitedPathHash(splitedPaths1);
 
-            for (var i = 0; i < splitPaths0.length; i++) {
-                var length = splitPaths0[i].length;
-                var newPath = splitPaths0[i].slice(0, length - 1);
-
-                var start = splitPaths0[i][0];
-                var end = splitPaths0[i][length - 1];
+            for (var i = 0; i < splitedPaths0.length; i++) {
+                var curPath = splitedPaths0[i];
+                var cross = curPath.cross; // 起始cross
+                var length = curPath.length;
+                
+                // 对于求相切的情况，外轮廓不需要处理，内轮廓需要根据另一个轮廓的方向调整反向
+                if (relation == pathJoin.TANGENCY && cross && direction0 == direction1) {
+                    curPath = curPath.reverse();
+                }
+                
+                var newPath = curPath.slice(0, length - 1);
+                var start = curPath[0];
+                var end = curPath[length - 1];
                 
                 var nextHash = splitHash1;
-                var cross = splitPaths0[i].cross; // 起始cross
                 var loops = 0; // 防止死循环，最多组合100个路径段
 
-                while (loops++ < 100 && (Math.abs(start.x - end.x) > 0.0001 || Math.abs(start.y - end.y) > 0.0001)) {
+                while (++loops < 100 && (Math.abs(start.x - end.x) > 0.001 || Math.abs(start.y - end.y) > 0.001)) {
 
                     var paths = nextHash[hashcode(end)];
 
                     // 选取异向
                     var p = paths[0];
-                    if (relation == pathJoin.TANGENCY && cross == p.cross) {
+                    if (relation == pathJoin.TANGENCY && cross == p.cross && paths.length > 1) {
                         p = paths[1];
                     }
 
@@ -236,14 +258,16 @@ define(
                     }
                     else {
                         nextHash = splitHash1;
-                        // 这里需要去掉已经使用的splitPaths0上的点
-                        splitPaths0.splice(splitPaths0.indexOf(p), 1);
+                        // 这里需要去掉已经使用的splitedPaths0上的点
+                        splitedPaths0.splice(splitedPaths0.indexOf(p), 1);
                     }
                 }
                 newPaths.push(newPath);
             }
 
-
+            if (loops >= 100) {
+                throw '没有找到可组合的轮廓!';
+            }
 
             if (newPaths.length) {
                 return newPaths.map(function(path){
@@ -265,7 +289,7 @@ define(
          * @param {number} relation 关系
          * @return {Array} 新的路径集合
          */
-        function pathJoin(path0, path1, relation) {
+        function join2Path(path0, path1, relation) {
             // 方向， 0 顺时针， 1 逆时针
             var direction0 = util.isClockWise(path0);
             var direction1 = util.isClockWise(path1);
@@ -277,28 +301,49 @@ define(
             // 获取组合后的路径
             var getJoinPaths = function(joint) {
 
-                var splitPaths0 = splitPath(newPath0, joint.map(function(p) {
+                var splitedPaths0 = splitPath(newPath0, joint.map(function(p) {
                     p.index = p.index0;
                     return p;
                 }));
 
                 // 求路径是否在另一个路径内
-                var inPath = isInsidePath(path1, splitPaths0[0][1]);
-                splitPaths0 = splitPaths0.map(function(path) {
-                    path.direction = direction0;
-                    path.cross = inPath;
-                    inPath = !inPath;
-                    return path;
+                var inPath = false;
+                splitedPaths0 = splitedPaths0.map(function(splitedPath) {
+                    splitedPath.cross = isInsidePath(
+                        path1, 
+                        splitedPath[1].onCurve 
+                            ? splitedPath[1] 
+                            : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
+                    );
+                    if (splitedPath.cross) {
+                        inPath = true;
+                    }
+                    return splitedPath;
                 });
 
-                var splitPaths1 = splitPath(newPath1, joint.map(function(p) {
+                // 只有相交的点，没有相交的轮廓
+                if (!inPath) {
+                    if (relation == pathJoin.JOIN || relation == pathJoin.TANGENCY) {
+                        return [path0, path1];
+                    }
+                    else if (relation == pathJoin.INTERSECT) {
+                        return [];
+                    }
+                }
+
+                var splitedPaths1 = splitPath(newPath1, joint.map(function(p) {
                     p.index = p.index1;
                     return p;
                 }));
 
-                inPath = isInsidePath(path0, splitPaths1[0][1]);
-                splitPaths1 = splitPaths1.map(function(path) {
-                    path.direction = direction1;
+                var splitedPath = splitedPaths1[0];
+                inPath = isInsidePath(
+                    path0, 
+                    splitedPath[1].onCurve 
+                        ? splitedPath[1] 
+                        : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
+                );
+                splitedPaths1 = splitedPaths1.map(function(path) {
                     path.cross = inPath;
                     inPath = !inPath;
                     return path;
@@ -313,7 +358,10 @@ define(
                     return [];
                 }
 
-                return combinePath(splitPaths0, splitPaths1, relation);
+                splitedPaths0.direction = direction0;
+                splitedPaths1.direction = direction1;
+
+                return combinePath(splitedPaths0, splitedPaths1, relation);
                 
             };
 
@@ -372,6 +420,85 @@ define(
 
             return [path0, path1];
         }
+
+
+        /**
+         * 求路径交集、并集、差集
+         * 
+         * @param {Array} paths 路径集合
+         * @param {number} relation 关系
+         * @return {Array} 合并后的路径
+         */
+        function pathJoin(paths, relation) {
+            if (paths.length == 1) {
+                if (relation == pathJoin.INTERSECT) {
+                    return [];
+                }
+                else {
+                    return paths;
+                }
+            }
+            else if (paths.length == 2) {
+                return join2Path(paths[0], paths[1], relation);
+            }
+            else {
+
+                // 算法描述：
+                // 1. 第一个路径为已选集合，后面依次为待选集合
+                // 2. 从已选集合中和待选集合中各取一个轮廓求pathJoin
+                // 3. 如果有合并项目，则除去已选集合和待选集合中的路径，把新路径加入待选集合，继续2
+                //    否则将待选集合中的当前路径加入已选集合，继续2
+                // 4. 继续2、3步骤直到待选集合为空
+
+                // 已选集合
+                var startPaths = [paths[0]];
+                var leftPath = paths.slice(1);
+                var curPath;
+                var joinFlag = 0; // 两个轮廓如果是由同一个合并生成的，则不需要进行比较了
+
+                while (curPath = leftPath.shift()) {
+                    for (var i = 0, l = startPaths.length; i < l; i++) {
+
+                        if (curPath.joinFlag && startPaths[i].joinFlag && (curPath.joinFlag & startPaths[i].joinFlag)) {
+                            continue;
+                        }
+
+                        var result = join2Path(curPath, startPaths[i], relation);
+
+                        // 相交关系，有个无交集则返回空
+                        if (relation == pathJoin.INTERSECT && !result.length) {
+                            return [];
+                        }
+                        
+                        // 原样返回,继续比较
+                        if (result.length == 2 &&  result[0] === curPath && result[1] === startPaths[i]) {
+                            continue;
+                        }
+                        // 否则分割出来的点，加入待选集合
+                        else {
+                            startPaths.splice(i, 1);
+                            joinFlag ++;
+                            result.forEach(function(path) {
+                                path.joinFlag = (path.joinFlag || 0) + (1 << joinFlag);
+                                leftPath.push(path);
+                            });
+                            break;
+                        }
+                    }
+
+                    // 没有找到
+                    if (i == l) {
+                        startPaths.push(curPath);
+                    }
+                    else if (!startPaths.length) {
+                        startPaths.push(leftPath.shift());
+                    }
+                }
+
+                return startPaths;
+            }
+        }
+
 
         pathJoin.JOIN = 1; // 并集
         pathJoin.INTERSECT = 2; // 交集

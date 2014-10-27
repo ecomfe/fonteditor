@@ -18,7 +18,7 @@ define(
          * @return {Array|boolean} 交点数组或者false
          */
         function isBezierRayCross(p0, p1, p2, p) {
-            
+
             // 3点都在同一侧
             if(0 === ((p0.y > p.y) + (p1.y > p.y) + (p2.y > p.y)) % 3) {
                 return false;

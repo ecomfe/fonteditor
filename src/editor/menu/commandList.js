@@ -107,6 +107,17 @@ define(
                 title: '复制'
             },
 
+            'join_shapes': {
+                title: '结合'
+            },
+            
+            'intersect_shapes': {
+                title: '相交'
+            },
+
+            'tangency_shapes': {
+                title: '相切'
+            },
 
             'rotate_left': {
                 title: '向左旋转'

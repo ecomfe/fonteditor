@@ -10,6 +10,7 @@ define(
     function(require) {
 
         var bezierQ2Equation = require('math/bezierQ2Equation');
+        var getPoint = require('./getBezierQ2Point');
 
         /**
          * 分割贝塞尔曲线
@@ -21,6 +22,14 @@ define(
          * @return {number} t值
          */
         function getBezierQ2T(p0, p1, p2, p) {
+
+            // 极端情况
+            if (Math.abs(p.x - p0.x) < 0.001 && Math.abs(p.y - p0.y) < 0.001) {
+                return 0;
+            }
+            else if (Math.abs(p.x - p2.x) < 0.001 && Math.abs(p.y - p2.y) < 0.001) {
+                return 1;
+            }
 
             var result = bezierQ2Equation(
                 p0.x + p2.x - 2 * p1.x + p0.y + p2.y - 2 * p1.y,
@@ -39,7 +48,7 @@ define(
             }
             else {
                 var pt = getPoint(p0, p1, p2, result[0]);
-                if (Math.abs(pt.x - p.x) < 0.01 && Math.abs(pt.y - p.y) < 0.001) {
+                if (Math.abs(pt.x - p.x) < 0.001 && Math.abs(pt.y - p.y) < 0.001) {
                     t = result[0];
                 }
                 else {
