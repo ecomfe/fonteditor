@@ -39,7 +39,7 @@ define(
                     // 直线
                     if (cur.onCurve && next.onCurve) {
                         return  Math.pow(p0.x - cur.x, 2) + Math.pow(p0.y - cur.y, 2)
-                            -  Math.pow(p1.x - cur.x, 2) + Math.pow(p1.y - cur.y, 2);
+                            -  (Math.pow(p1.x - cur.x, 2) + Math.pow(p1.y - cur.y, 2));
                     }
                     else if (!cur.onCurve){
                         var prev = p0.index == 0 ? path[length - 1] : path[p0.index - 1];
@@ -266,7 +266,8 @@ define(
             }
 
             if (loops >= 100) {
-                throw '没有找到可组合的轮廓!';
+                console.warn('no combination path');
+                return [];
             }
 
             if (newPaths.length) {
@@ -297,32 +298,58 @@ define(
             var newPath0 = util.interpolate(path0);
             var newPath1 = util.interpolate(path1);
             var joint = isPathCross(newPath0, newPath1);
+            var splitedPaths0;
+            var splitedPaths1;
+
+            // 获取另一个路径和分割路径的交点情况
+            var getPathCross = function (path, splitedPath) {
+                var inPath = isInsidePath(
+                    path, 
+                    splitedPath[1].onCurve 
+                        ? splitedPath[1]
+                        : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
+                );
+                return inPath;
+            };
 
             // 获取组合后的路径
             var getJoinPaths = function(joint) {
 
-                var splitedPaths0 = splitPath(newPath0, joint.map(function(p) {
+                splitedPaths0 = splitPath(newPath0, joint.map(function(p) {
                     p.index = p.index0;
                     return p;
                 }));
 
                 // 求路径是否在另一个路径内
                 var inPath = false;
+                var partInPath = false;
+                var inPathBefore = -1;
+                // 求path0的分割曲线
                 splitedPaths0 = splitedPaths0.map(function(splitedPath) {
-                    splitedPath.cross = isInsidePath(
-                        path1, 
-                        splitedPath[1].onCurve 
-                            ? splitedPath[1] 
-                            : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
-                    );
+
+                    splitedPath.cross = getPathCross(path1, splitedPath);
+
+                    // 这里需要判断整个曲线有相交区域，但是部分曲线只有交点没有相交轮廓的情况
+                    if (inPathBefore == splitedPath.cross) {
+                        partInPath = true; 
+                    }
+
                     if (splitedPath.cross) {
                         inPath = true;
                     }
+
+                    inPathBefore = splitedPath.cross;
+
                     return splitedPath;
                 });
 
+                // 部分只有交点没有轮廓
+                if (partInPath) {
+                    console.warn('part cross');
+                }
+
                 // 只有相交的点，没有相交的轮廓
-                if (!inPath) {
+                if (!inPath || partInPath) {
                     if (relation == pathJoin.JOIN || relation == pathJoin.TANGENCY) {
                         return [path0, path1];
                     }
@@ -331,18 +358,14 @@ define(
                     }
                 }
 
-                var splitedPaths1 = splitPath(newPath1, joint.map(function(p) {
+                // 求path1的分割曲线
+                splitedPaths1 = splitPath(newPath1, joint.map(function(p) {
                     p.index = p.index1;
                     return p;
                 }));
 
-                var splitedPath = splitedPaths1[0];
-                inPath = isInsidePath(
-                    path0, 
-                    splitedPath[1].onCurve 
-                        ? splitedPath[1] 
-                        : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
-                );
+                // 这里只需要判断第一个就可以知道曲线相交情况了
+                inPath = getPathCross(path0, splitedPaths1[0]);
                 splitedPaths1 = splitedPaths1.map(function(path) {
                     path.cross = inPath;
                     inPath = !inPath;

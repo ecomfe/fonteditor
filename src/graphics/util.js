@@ -18,8 +18,24 @@ define(
          * @return {Object} 点
          */
         function ceilPoint(p) {
-            p.x = Math.round(p.x * 100000) / 100000;
-            p.y = Math.round(p.y * 100000) / 100000;
+            var t = p.x;
+
+            // 处理形如 4.99999 = 5, 5.00001 = 5的情况
+            if (Math.abs(Math.round(t) - t) < 0.00002) {
+                p.x = Math.round(t);
+            }
+            else {
+                p.x = Math.round(p.x * 100000) / 100000;
+            }
+
+            t = p.y;
+            if (Math.abs(Math.round(t) - t) < 0.00005) {
+                p.y = Math.round(t);
+            }
+            else {
+                p.y = Math.round(p.y * 100000) / 100000;
+            }
+
             return p;
         }
 
@@ -31,7 +47,12 @@ define(
          * @return {number} 点
          */
         function ceil(x) {
-            return Math.round(x * 100000) / 100000;
+            if (Math.abs(Math.round(x) - x) < 0.00002) {
+                return Math.round(x);
+            }
+            else {
+                return Math.round(x * 100000) / 100000;
+            }
         }
 
         /**
