@@ -153,7 +153,7 @@ define(
                     if(result) {
                         var shape = result[0];
                         if (result.length > 1) {
-                            shape = selectShape(result);
+                            shape = selectShape(result, e);
                         }
 
                         var shapeIndex = this.currentGroup.shapes.indexOf(shape);

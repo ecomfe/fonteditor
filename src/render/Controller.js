@@ -29,7 +29,7 @@ define(
                 else {
                     result = render.getLayer('font').getShapeIn(e);
                     if (result.length > 1) {
-                        render.selectedShape = selectShape(result);
+                        render.selectedShape = selectShape(result, e);
                     }
                     else {
                         render.selectedShape = result[0];

@@ -148,7 +148,7 @@ define(
 
                 var result = render.getLayer('font').getShapeIn(e);
                 if(result) {
-                    var shape = selectShape(result);
+                    var shape = selectShape(result, e);
                     me.setMode('point', shape);
                 }
                 else if(me.mode === modeSupport.point){

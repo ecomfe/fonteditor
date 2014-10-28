@@ -29,7 +29,7 @@ define(
                     // 字体模式
                     var result = this.fontLayer.getShapeIn(e);
                     if(result) {
-                        var shape = selectShape(result);
+                        var shape = selectShape(result, e);
                         this.setMode('shapes', [shape], 'bound');
                         return;
                     }
