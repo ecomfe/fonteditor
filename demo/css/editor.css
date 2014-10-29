@@ -45,3 +45,21 @@ html {
 #render-view .editor-contextmenu div:last-child {
   border-bottom: none;
 }
+#render-view .marker-x,
+#render-view .marker-y {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 60;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+#render-view .marker-x {
+  width: 20px;
+  border-top: 1px dashed #000;
+}
+#render-view .marker-y {
+  height: 20px;
+  border-left: 1px dashed #000;
+}

@@ -11,6 +11,7 @@ define(
     function(require) {
         
         var lang = require('common/lang');
+        var GraduationMarker = require('../widget/GraduationMarker');
 
         /**
          * 初始化坐标系
@@ -50,6 +51,9 @@ define(
             this.graduation = this.graduationLayer.addShape('graduation', {
                 config: this.axis
             });
+
+            // 刻度线标记
+            this.graduationMarker = new GraduationMarker(this.render.main, options.axis.graduation);
         }
 
 

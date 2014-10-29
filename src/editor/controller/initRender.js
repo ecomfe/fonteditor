@@ -118,6 +118,8 @@ define(
                     return;
                 }
                 
+                // 这里由于canvas绘制导致0.5像素偏差，需要修正一下
+                me.graduationMarker.moveTo(e.x - 1, e.y - 1);
                 me.mode.move && me.mode.move.call(me, e);
             });
 

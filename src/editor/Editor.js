@@ -11,7 +11,7 @@ define(
     function(require) {
         var lang = require('common/lang');
         var modeSupport = require('./mode/support');
-        var ContextMenu = require('./menu/ContextMenu');
+        var ContextMenu = require('./widget/ContextMenu');
         var commandSupport = require('./command/support');
         var clipboard = require('./util/clipboard');
         var History = require('./util/History');
@@ -30,7 +30,6 @@ define(
          */
         function Editor(main, options) {
             this.options = options || {};
-
             this.contextMenu = new ContextMenu(main, this.options.contextMenu);
             this.history = new History();
         }
@@ -39,8 +38,8 @@ define(
          * 设置渲染器
          */
         Editor.prototype.setRender = function(render) {
+
             this.render = render;
-            
             initFont.call(this);
             initRender.call(this);
             initLayer.call(this);
@@ -51,6 +50,7 @@ define(
             this.graduationLayer.refresh();
 
             this.setMode();
+
             return this;
         };
 
@@ -196,9 +196,10 @@ define(
             this.un();
             this.contextMenu.dispose();
             this.render && this.render.dispose();
+            this.graduationMarker.dispose();
             this.options = this.contextMenu = this.render = null;
             this.fontLayer = this.coverLayer = this.axisLayer = this.graduationLayer = null;
-            this.axis = this.rightSideBearing = this.graduation = this.font = null;
+            this.axis = this.rightSideBearing = this.graduation = this.graduationMarker = this.font = null;
             this.mode = null;
             this.history.reset();
             this.history = null;

@@ -19,11 +19,16 @@ define(
         function bindEditor() {
 
             // 设置字形信息
+            var me = this;
             var editor  = this.editor;
             editor.on('setting:font', function(e) {
                 !new setting['glyf']({
                     onChange: function(setting) {
                         editor.adjustFont(setting);
+                        // 此处需要等待点击完成后设置focus状态
+                        setTimeout(function() {
+                            me.focus();
+                        });
                     }
                 }).show(e.setting);
             });

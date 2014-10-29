@@ -37,8 +37,15 @@ define(
                 if(1 == e.which) {
                     if (this.selectionBox) {
                         var camera = this.render.camera;
-                        this.selectionBox.width = camera.x - this.selectionBox.x;
-                        this.selectionBox.height = camera.y - this.selectionBox.y;
+                        var width = camera.x - this.selectionBox.x;
+                        var height = camera.y - this.selectionBox.y;
+
+                        if (e.shiftKey) {
+                            height = width;
+                        }
+
+                        this.selectionBox.width = width;
+                        this.selectionBox.height = height;
                         this.coverLayer.refresh();
                     }
                 }
@@ -52,7 +59,7 @@ define(
                 if(1 == e.which) {
                     if(this.selectionBox) {
                         var box = this.selectionBox;
-                        // 对shape进行多选
+
                         if(box.width >= 10 || box.height >= 10) {
                             var shape = this.fontLayer.addShape('path', {
                                 points: [

@@ -24,7 +24,8 @@
     font-size: 12px;
     -webkit-user-select: none;
     -moz-user-select: none;
-
+    -ms-user-select: none;
+    
     .editor-contextmenu {
 
         width: 120px;
@@ -47,6 +48,25 @@
         div:last-child {
             border-bottom: none;
         }
+    }
+
+    .marker-x,
+    .marker-y {
+        position: absolute;
+        width: 0;
+        height: 0;
+        z-index: 60;
+        pointer-events: none;
+    }
+
+    .marker-x {
+        width: 20px;
+        border-top: 1px dashed #000;
+    }
+
+    .marker-y {
+        height: 20px;
+        border-left: 1px dashed #000;
     }
 }
 
