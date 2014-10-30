@@ -31,12 +31,19 @@ define(
                 if (c === 'L') {
 
                     if((joint = isSegmentRayCross(p0, p1, p))) {
+
                         // 在直线上
                         if(joint[0].x == p.x) {
                             zCount = 1;
                             return false;
                         }
-                        zCount += joint.length;
+
+                        if(p1.y > p0.y) {
+                            zCount--;
+                        }
+                        else {
+                            zCount++;
+                        }
                     }
                 }
                 else if(c === 'Q') {
@@ -53,12 +60,33 @@ define(
                             return false;
                         }
 
-                        zCount += joint.length;
+                        if (joint.length == 2) {
+                            return;
+                        }
+                        
+                        joint = joint[0];
+
+                        if(joint.y > p0.y && joint.y < p1.y) {
+                            ps = p0;
+                            pe =  p1;
+                        }
+                        else {
+                            ps = p1;
+                            pe =  p2;
+                        }
+
+                        if(pe.y > ps.y) {
+                            zCount--;
+                        }
+                        else {
+                            zCount++;
+                        }
+
                     }
                 }
             });
 
-            return !!(zCount % 2);
+            return !!zCount;
         }
 
         return isInsidePath;
