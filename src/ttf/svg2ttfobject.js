@@ -98,7 +98,7 @@ define(
                 ttf.head.yMax = Math.round(ttf.head.yMax);
             }
 
-            ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 512;
+            ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 1024;
 
             return ttf;
         }
