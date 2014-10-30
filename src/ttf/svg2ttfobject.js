@@ -116,7 +116,7 @@ define(
             var svgNode = xmlDoc.getElementsByTagName('svg')[0];
 
             if (!svgNode) {
-                error.raise(10104);
+                error.raise(10106);
             }
 
             var metaNode = xmlDoc.getElementsByTagName('metadata')[0];

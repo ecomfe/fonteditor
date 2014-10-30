@@ -11,7 +11,6 @@ exports.getProcessors = function () {
         new LessCompiler( {
             files: [
                 'css/main.less',
-                'css/ttf.less',
                 'css/preview.less'
             ],
             compileOptions: {
@@ -24,8 +23,7 @@ exports.getProcessors = function () {
 
         new JsCompressor({
             files: [
-                'src/fonteditor/main.js',
-                'src/fonteditor/ttf.js'
+                'src/fonteditor/main.js'
             ]
         }),
 

@@ -20,7 +20,7 @@ define(
         // 打开文件
         function onUpFile(e) {
             var file = e.target.files[0];
-
+            console.log(file);
             if (program.data.action == 'open' && program.loader.supportLoad(file.name)) {
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
@@ -33,13 +33,22 @@ define(
             }
             else if (program.data.action == 'import' && program.loader.supportImport(file.name)) {
                 if (program.ttfManager.get()) {
-                    program.loader.load(file, {
-                        type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
-                        success: function(imported) {
-                            if (imported.glyf.length) {
-                                program.ttfManager.merge(imported, {scale: true});
+
+                    var ext = file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase();
+                    var reg = new RegExp('\.'+ ext +'$', 'i');
+                    var files = Array.prototype.slice.call(e.target.files).filter(function(f) {
+                        return reg.test(file.name);
+                    });
+
+                    files.forEach(function(f) {
+                        program.loader.load(f, {
+                            type: ext,
+                            success: function(imported) {
+                                if (imported.glyf.length) {
+                                    program.ttfManager.merge(imported, {scale: true});
+                                }
                             }
-                        }
+                        });
                     });
                 }
             }
