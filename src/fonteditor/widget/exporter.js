@@ -11,6 +11,7 @@ define(
     function(require) {
 
         var TTFWriter = require('ttf/ttfwriter');
+        var deflate = require('deflate');
         var ttf2woff = require('ttf/ttf2woff');
         var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
@@ -38,7 +39,7 @@ define(
                     var base64Str = '';
                     var buffer = null;
                     if (options.type == 'woff') {
-                        buffer = ttf2woff(new TTFWriter().write(ttf));
+                        buffer = ttf2woff(new TTFWriter().write(ttf), deflate);
                         base64Str = woff2base64(buffer);
                     }
                     else if (options.type == 'eot') {
