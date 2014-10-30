@@ -18,11 +18,6 @@ build_tpl() {
         sed -e "s#'\.\/src'#'./$version'#g" |
         tr -s "\n" " " |
         sed 's#[[:space:]]\+# #g' > ./release/index.html
-
-    cat ./release/ttf.html |
-        sed -e "s#'\.\/src'#'./$version'#g" |
-        tr -s "\n" " " |
-        sed 's#[[:space:]]\+# #g' > ./release/ttf.html
 }
 
 

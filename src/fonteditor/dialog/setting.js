@@ -11,7 +11,8 @@ define(
     function(require) {
         var lang = require('common/lang');
         var pad = require('common/string').pad;
-        
+        var program = require('../widget/program');
+
         /**
          * 设置框函数
          * 
@@ -33,6 +34,7 @@ define(
             }
 
             dlg.on('hidden.bs.modal', lang.bind(function (e) {
+                program.listening = true;
                 if (dlg) {
                     this.onDispose && this.onDispose();
                     delete this.options;
@@ -179,6 +181,7 @@ define(
          * @param {Object} setting 设置选项
          */
         Setting.prototype.show = function(setting) {
+            program.listening = false;
             $('#model-dialog').modal('show');
             this.set(setting);
             return this;

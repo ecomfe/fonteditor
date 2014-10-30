@@ -15,6 +15,7 @@ define(
             'adjust-glyf': require('../dialog/setting-adjust-glyf'),
             'metrics': require('../dialog/setting-metrics'),
             'online': require('../dialog/font-online'),
+            'url': require('../dialog/font-url'),
             'glyf': require('../dialog/setting-glyf')
         };
     }

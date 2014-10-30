@@ -14,6 +14,36 @@ define(
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
 
+        // 读取在线字体
+        function readOnlineFont(type, url) {
+            ajaxFile({
+                type: type === 'svg' ? 'xml' : 'binary',
+                url: url,
+                onSuccess: function(buffer) {
+                    program.loader.load(buffer, {
+                        type: type || 'ttf',
+                        success: function(imported) {
+                            program.loading.hide();
+                            if (program.ttfManager.get()) {
+                                program.ttfManager.merge(imported, {
+                                    scale: true
+                                });
+                            }
+                            else {
+                                program.ttfManager.set(imported);
+                                program.data.projectName = null;
+                            }
+
+                        }
+                    });
+                },
+                onError: function() {
+                    alert('加载文件错误!');
+                }
+            });
+        }
+
+
         var actions = {
 
             // 新建
@@ -89,36 +119,28 @@ define(
                         // 此处延迟处理
                         setTimeout(function(){
                             program.loading.show('正在加载..', 1000);
-                            ajaxFile({
-                                type: url.slice(url.lastIndexOf('.') + 1) === 'svg' ? 'xml' : 'binary',
-                                url: url,
-                                onSuccess: function(buffer) {
-                                    program.loader.load(buffer, {
-                                        type: url.slice(url.lastIndexOf('.') + 1) || 'ttf',
-                                        success: function(imported) {
-                                            program.loading.hide();
-                                            if (program.ttfManager.get()) {
-                                                program.ttfManager.merge(imported, {
-                                                    scale: true
-                                                });
-                                            }
-                                            else {
-                                                program.ttfManager.set(imported);
-                                                program.data.projectName = null;
-                                            }
-
-                                        }
-                                    });
-                                },
-                                onError: function() {
-                                    alert('加载文件错误!');
-                                }
-                            });
+                            readOnlineFont(url.slice(url.lastIndexOf('.') + 1), url);
                         }, 20);
                     }
                 });
 
                 dlg.show();
+            },
+
+            // 线上地址
+            'add-url': function() {
+                    var dlg = new setting.url({
+                        onChange: function(url) {
+                            // 此处延迟处理
+                            setTimeout(function(){
+                                program.loading.show('正在加载..', 1000);
+                                var fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                                readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
+                            }, 20);
+                        }
+                    });
+
+                    dlg.show();
             },
 
             // 设置unicode

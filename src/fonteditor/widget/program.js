@@ -47,6 +47,10 @@ define(
 
             document.body.addEventListener('keydown', function(e) {
 
+                if (!program.listening) {
+                    return;
+                }
+
                 // 全选
                 if (65 === e.keyCode && e.ctrlKey) {
                     e.preventDefault();
@@ -76,6 +80,9 @@ define(
         }
 
         var program = {
+            
+            // 在线地址读取接口
+            fontUrl: './php/readFont.php?file=${0}',
 
             /**
              * 初始化
@@ -99,6 +106,8 @@ define(
             projectViewer: null, // 项目查看器
 
             ttfManager: null, // ttf管理器
+
+            listening: true, // 正在监听事件
 
             loading: require('./loading')
         };
