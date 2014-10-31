@@ -128,6 +128,16 @@ define(
             else if (command == 'copy') {
                 this.execCommand('copyshapes', shapes);
             }
+            else if (command == 'shapes_align') {
+                this.execCommand('align', shapes, e.args.type);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
+            }
+            else if (command == 'shapes_verticalalign') {
+                this.execCommand('verticalalign', shapes, e.args.type);
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
+            }
             this.fire('change');
         }
 

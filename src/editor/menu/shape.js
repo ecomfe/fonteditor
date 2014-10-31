@@ -27,8 +27,8 @@ define(
                 title: '复制'
             },
             {
-                name: 'position',
-                title: '排列',
+                name: 'order',
+                title: '顺序',
                 items: [
                     {
                         name: 'top',

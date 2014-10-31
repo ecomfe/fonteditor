@@ -261,6 +261,7 @@ define(
 
         lang.extend(support, require('./transform'));
         lang.extend(support, require('./shapes'));
+        lang.extend(support, require('./align'));
 
         return support;
     }

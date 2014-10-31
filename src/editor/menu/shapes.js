@@ -45,20 +45,89 @@ define(
                 ]
             },
             {
-                name: 'rotate_left',
-                title: '向左旋转'
+                name: 'transform',
+                title: '变换',
+                items: [
+                    {
+                        name: 'rotate_left',
+                        title: '向左旋转'
+                    },
+                    {
+                        name: 'rotate_right',
+                        title: '向右旋转'
+                    },
+                    {
+                        name: 'reverse_shapes',
+                        title: '翻转'
+                    },
+                    {
+                        name: 'mirror_shapes',
+                        title: '镜像'
+                    }
+                ]
+            },
+
+            {
+                name: 'shapes_align',
+                title: '对齐形状',
+                items: [
+                    {
+                        name: 'shapes_align',
+                        type: 'left',
+                        title: '左对齐'
+                    },
+                    {
+                        name: 'shapes_align',
+                        type: 'center',
+                        title: '居中对齐'
+                    },
+                    {
+                        name: 'shapes_align',
+                        type: 'right',
+                        title: '右对齐'
+                    },
+                    {
+                        name: 'shapes_align',
+                        type: 'top',
+                        title: '顶部对齐'
+                    },
+                    {
+                        name: 'shapes_align',
+                        type: 'middle',
+                        title: '中间对齐'
+                    },
+                    {
+                        name: 'shapes_align',
+                        type: 'bottom',
+                        title: '底部对齐'
+                    }
+                ]
             },
             {
-                name: 'rotate_right',
-                title: '向右旋转'
-            },
-            {
-                name: 'reverse_shapes',
-                title: '翻转'
-            },
-            {
-                name: 'mirror_shapes',
-                title: '镜像'
+                name: 'shapes_verticalalign',
+                title: '垂直方向',
+                items: [
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'ascent',
+                        title: '顶端对齐'
+                    },
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'middle',
+                        title: '居中对齐'
+                    },
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'descent',
+                        title: '低端对齐'
+                    },
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'baseline',
+                        title: '基线对齐'
+                    }
+                ]
             },
             {
                 name: 'add_referenceline',
