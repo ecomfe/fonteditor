@@ -17,11 +17,13 @@ define(
          * 移动对象
          * 
          * @param {Object} camera 镜头对象
+         * @param {boolean} fixX 固定X
+         * @param {boolean} fixY 固定Y
          */
-        function moveTransform (camera) {
+        function moveTransform (camera, fixX, fixY) {
 
-            var x = camera.x - camera.startX;
-            var y = camera.y - camera.startY;
+            var x = fixX ? 0 : (camera.x - camera.startX);
+            var y = fixY ? 0 : (camera.y - camera.startY);
 
             // 更新shape
             var shapes = this.shapes;

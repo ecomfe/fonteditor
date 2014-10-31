@@ -71,6 +71,32 @@ define(
                 ]
             },
             {
+                name: 'shapes_verticalalign',
+                title: '垂直方向',
+                items: [
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'ascent',
+                        title: '顶端对齐'
+                    },
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'middle',
+                        title: '居中对齐'
+                    },
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'descent',
+                        title: '低端对齐'
+                    },
+                    {
+                        name: 'shapes_verticalalign',
+                        type: 'baseline',
+                        title: '基线对齐'
+                    }
+                ]
+            },
+            {
                 name: 'add_referenceline',
                 title: '添加边界参考线'
             }

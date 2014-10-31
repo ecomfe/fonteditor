@@ -203,7 +203,7 @@ define(
 
                 // 点拖动模式
                 if (this.currentPoint) {
-                    this.currentGroup.beginTransform(this.currentPoint, this.render.camera);
+                    this.currentGroup.beginTransform(this.currentPoint, this.render.camera, e);
                 }
                 else {
                     // 复制模式
@@ -218,7 +218,7 @@ define(
                     }
                     // 移动
                     this.currentGroup.setMode('move');
-                    this.currentGroup.beginTransform(this.currentPoint, this.render.camera);
+                    this.currentGroup.beginTransform(this.currentPoint, this.render.camera, e);
                 }
 
             },
@@ -228,7 +228,7 @@ define(
              */
             drag: function(e) {
                 if(this.currentGroup) {
-                    this.currentGroup.transform(this.currentPoint, this.render.camera);
+                    this.currentGroup.transform(this.currentPoint, this.render.camera, e);
                 }
             },
 
@@ -238,12 +238,12 @@ define(
             dragend: function(e) {
 
                 if (this.currentPoint) {
-                    this.currentGroup.finishTransform(this.currentPoint, this.render.camera);
+                    this.currentGroup.finishTransform(this.currentPoint, this.render.camera, e);
                     this.currentPoint = null;
                     this.fire('change');
                 }
                 else if (this.currentGroup.mode == 'move') {
-                    this.currentGroup.finishTransform(this.currentPoint, this.render.camera);
+                    this.currentGroup.finishTransform(this.currentPoint, this.render.camera, e);
                     this.currentGroup.setMode('scale');
                     this.fire('change');
                 }
