@@ -105,11 +105,13 @@ define(
 
             // 添加新字形
             'add-new': function() {
-                var selected = program.viewer.getSelected();
-                program.ttfManager.insertGlyf({
-                    name: '',
-                    unicode:[]
-                }, selected[0]);
+                if (program.ttfManager.get()) {
+                    var selected = program.viewer.getSelected();
+                    program.ttfManager.insertGlyf({
+                        name: '',
+                        unicode:[]
+                    }, selected[0]);
+                }
             },
 
             // 添加在线字形

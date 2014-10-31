@@ -12,6 +12,7 @@ define(
 
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
+        var shapesSupport = require('../shapes/support');
 
         var support = {
 
@@ -31,24 +32,19 @@ define(
 
 
             /**
-             * 添加shape
+             * 添加path
              */
-            addshape: function() {
-                this.setMode('addshape');
+            addpath: function() {
+                this.setMode('addpath');
             },
 
             /**
-             * 添加rect
+             * 添加自选图形
              */
-            addrect: function() {
-                this.setMode('addrect');
-            },
-
-            /**
-             * 添加circle
-             */
-            addcircle: function() {
-                this.setMode('addcircle');
+            addsupportshapes: function(type) {
+                if (shapesSupport[type]) {
+                    this.setMode('addshapes', lang.clone(shapesSupport[type]));
+                }
             },
 
             /**
@@ -65,8 +61,11 @@ define(
             /**
              * 反转shape
              */
-            reversepoint: function(shape) {
-                shape.points = shape.points.reverse();
+            reversepoint: function(shapes) {
+                shapes.forEach(function(shape) {
+                    shape.points = shape.points.reverse();
+                });
+
                 this.fontLayer.refresh();
             },
 

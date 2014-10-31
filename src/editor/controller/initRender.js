@@ -49,6 +49,10 @@ define(
                     this.fire('change');
                 }
             }
+            else if (e.command == 'add_supportshapes') {
+                var type = e.args.type;
+                this.execCommand('addsupportshapes', type);
+            }
             else {
                 this.execCommand(e.command, e);
             }

@@ -18,13 +18,13 @@ define(
          * @return {HTMLElement} 浮动层对象
          */
         function createPopup(container, options) {
-            var div = document.createElement('div');
-            div.className = options.className || 'editor-contextmenu';
-            div.style.position = 'absolute';
-            div.style.zIndex = options.zIndex || 1000;
-            div.style.display = 'none';
-            container.appendChild(div);
-            return div;
+            var menu = document.createElement('ul');
+            menu.className = options.className || 'editor-contextmenu';
+            menu.style.position = 'absolute';
+            menu.style.zIndex = options.zIndex || 1000;
+            menu.style.display = 'none';
+            container.appendChild(menu);
+            return menu;
         }
 
 
@@ -42,11 +42,14 @@ define(
 
             var me = this;
             me.main.addEventListener('click', me['_command_click'] = function(e) {
-                var key = e.target.getAttribute('data-key');
-                if (key) {
+
+                var id = e.target.getAttribute('data-id');
+                var superId = e.target.getAttribute('data-super');
+                if (id) {
+                    var command = (!!superId ? me.commands[superId].items : me.commands)[id];
                     var event = {
-                        command: key,
-                        commandArgs: me.commands[key],
+                        command: command.name,
+                        args: command,
                         pos: me.pos
                     };
                     me.onClick && me.onClick(event);
@@ -69,8 +72,21 @@ define(
              */
             setCommands: function(commands) {
                 var str = '';
-                Object.keys(commands).forEach(function(key) {
-                    str += '<div data-key="'+ key +'">'+ commands[key].title +'</div>';
+                commands.forEach(function(command, index) {
+                    if (command.items) {
+                        str += '<li data-sub="'+ index +'">';
+                        str += '<ul>';
+                        command.items.forEach(function(subCommand, subIndex) {
+                            str += '<li data-super="'+ index +'" data-id="'+ subIndex +'">'+ subCommand.title +'</li>';
+                        });
+                        str += '</ul>';
+                        str += command.title + '</li>';
+
+                    }
+                    else {
+                        str += '<li data-id="'+ index +'">'+ command.title +'</li>';
+                    }
+
                 });
                 this.commands = commands;
                 this.main.innerHTML = str;

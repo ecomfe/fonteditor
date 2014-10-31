@@ -15,6 +15,78 @@ a:hover {
 .hide {
   display: none;
 }
+.glyf-editor {
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.glyf-editor .marker-x,
+.glyf-editor .marker-y {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+.glyf-editor .marker-x {
+  width: 20px;
+  border-top: 1px dashed #000;
+}
+.glyf-editor .marker-y {
+  height: 20px;
+  border-left: 1px dashed #000;
+}
+.editor-contextmenu {
+  color: #333;
+  width: 140px;
+  border: 1px solid #999;
+  background: #FEFEFE;
+  line-height: 24px;
+  padding: 0 4px;
+  box-shadow: 1px 1px 1px #CCC;
+  position: absolute;
+}
+.editor-contextmenu li {
+  padding-left: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #CCC;
+}
+.editor-contextmenu li > ul {
+  display: none;
+  color: #333;
+  width: 140px;
+  border: 1px solid #999;
+  background: #FEFEFE;
+  line-height: 24px;
+  padding: 0 4px;
+  box-shadow: 1px 1px 1px #CCC;
+  position: absolute;
+  margin-left: 120px;
+}
+.editor-contextmenu > li[data-sub] {
+  color: green;
+}
+.editor-contextmenu > li[data-sub]:after {
+  content: '>';
+  margin-right: 10px;
+  float: right;
+  font-family: 'Simsun';
+}
+.editor-contextmenu li:hover {
+  background: #EEE;
+}
+.editor-contextmenu li:hover > ul {
+  display: block;
+}
+.editor-contextmenu li:last-child {
+  border-bottom: none;
+}
+.editor:hover .close-editor {
+  display: block;
+}
 body,
 html {
   height: 100%;
@@ -25,41 +97,4 @@ html {
   height: 100%;
   position: relative;
   -webkit-text-size-adjust: none;
-}
-#render-view .editor-contextmenu {
-  width: 120px;
-  border: 1px solid #999;
-  background: #FEFEFE;
-  line-height: 24px;
-  padding: 0 4px;
-  box-shadow: 1px 1px 1px #CCC;
-}
-#render-view .editor-contextmenu div {
-  padding-left: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #CCC;
-}
-#render-view .editor-contextmenu div:hover {
-  background: #EEE;
-}
-#render-view .editor-contextmenu div:last-child {
-  border-bottom: none;
-}
-#render-view .marker-x,
-#render-view .marker-y {
-  position: absolute;
-  width: 0;
-  height: 0;
-  z-index: 60;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-#render-view .marker-x {
-  width: 20px;
-  border-top: 1px dashed #000;
-}
-#render-view .marker-y {
-  height: 20px;
-  border-left: 1px dashed #000;
 }
