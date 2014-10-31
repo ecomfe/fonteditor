@@ -58,7 +58,7 @@ define(
                 this.setMode();
             }
             else if (command == 'reverse_point') {
-                this.execCommand('reversepoint', shape);
+                this.execCommand('reversepoint', shapes);
             }
             else if (command == 'top') {
                 this.execCommand('topshape', shape);
