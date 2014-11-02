@@ -57,6 +57,10 @@ define(
                 name: 'paste',
                 title: '粘贴'
             },
+            // {
+            //     name: 'intelligentadsorb',
+            //     title: '智能吸附'
+            // },
             {
                 name: 'add_referenceline',
                 title: '添加参考线'

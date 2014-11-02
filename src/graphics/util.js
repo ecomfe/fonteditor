@@ -82,7 +82,7 @@ define(
          * see:
          * http://debian.fmi.uni-sofia.bg/~sergei/cgsr/docs/clockwise.htm
          * @param {Array} path 路径
-         * @return {number} 0 无方向 1 clockwise, 2 counter clockwise
+         * @return {number} 0 无方向 1 clockwise, -1 counter clockwise
          */
         function isClockWise(path) {
 

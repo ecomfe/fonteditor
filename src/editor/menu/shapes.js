@@ -120,7 +120,7 @@ define(
                     {
                         name: 'shapes_verticalalign',
                         type: 'descent',
-                        title: '低端对齐'
+                        title: '底端对齐'
                     },
                     {
                         name: 'shapes_verticalalign',

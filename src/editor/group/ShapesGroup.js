@@ -65,7 +65,7 @@ define(
          */
         ShapesGroup.prototype.transform = function(point, camera, key) {
             if (this.mode === 'move') {
-                moveTransform.call(this, camera, key.altKey, key.shiftKey);
+                moveTransform.call(this, camera, key.ctrlKey ? false :  key.altKey, key.ctrlKey ? false : key.shiftKey);
             }
             else if (this.mode === 'scale') {
                 scaleTransform.call(this, point, camera);
