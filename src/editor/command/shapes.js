@@ -80,21 +80,21 @@ define(
              * 结合
              */
             joinshapes: function(shapes) {
-                combineShape.call(this, shapes, pathJoin.JOIN);
+                combineShape.call(this, shapes, pathJoin.Relation.join);
             },
 
             /**
              * 相交
              */
             intersectshapes: function(shapes) {
-                combineShape.call(this, shapes, pathJoin.INTERSECT);
+                combineShape.call(this, shapes, pathJoin.Relation.intersect);
             },
 
             /**
              * 相切
              */
             tangencyshapes: function(shapes) {
-                combineShape.call(this, shapes, pathJoin.TANGENCY);
+                combineShape.call(this, shapes, pathJoin.Relation.tangency);
             }
         };
 
