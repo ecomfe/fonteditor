@@ -1,5 +1,5 @@
 /**
- * @file addshape.js
+ * @file addpath.js
  * @author mengke01
  * @date 
  * @description
@@ -10,7 +10,7 @@
 define(
     function(require) {
 
-        var addshape = {
+        var mode = {
 
             /**
              * 点击
@@ -40,10 +40,25 @@ define(
                 }
                 // 添加控制点
                 else {
+
+                    var x = e.x;
+                    var y = e.y;
+                    
+                    if (this.points.length) {
+                        var last = this.points[this.points.length - 1];
+                        if (e.shiftKey) {
+                            y = last.y;
+                        }
+
+                        if (e.altKey) {
+                            x = last.x;
+                        }
+                    }
+
                     var point = coverLayer.addShape({
                         type: 'point',
-                        x: e.x,
-                        y: e.y
+                        x: x,
+                        y: y
                     });
 
                     if(this.points.length === 0) {
@@ -87,9 +102,24 @@ define(
                     this.render.setCursor('crosshair');
                 }
 
+                var x = e.x;
+                var y = e.y;
+
+                if (this.points.length) {
+                    var last = this.points[this.points.length - 1];
+                    if (e.shiftKey) {
+                        y = last.y;
+                    }
+
+                    if (e.altKey) {
+                        x = last.x;
+                    }
+                }
+
+
                 // 更新dashLine
-                this.dashedLine.p1.x = e.x;
-                this.dashedLine.p1.y = e.y;
+                this.dashedLine.p1.x = x;
+                this.dashedLine.p1.y = y;
                 this.dashedLine.disabled = false;
 
                 this.coverLayer.refresh();
@@ -123,6 +153,6 @@ define(
             }
         };
 
-        return addshape;
+        return mode;
     }
 );

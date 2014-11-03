@@ -14,9 +14,8 @@ define(
             'range': require('./range'),
             'default': require('./bound'),
             'shapes': require('./shapes'),
-            'addshape': require('./addshape'),
-            'addrect': require('./addrect'),
-            'addcircle': require('./addcircle'),
+            'addshapes': require('./addshapes'),
+            'addpath': require('./addpath'),
             'referenceline': require('./referenceline')
         };
     }

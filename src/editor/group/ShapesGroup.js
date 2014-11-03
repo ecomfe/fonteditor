@@ -48,7 +48,7 @@ define(
         /**
          * 根据控制点做图形变换
          */
-        ShapesGroup.prototype.beginTransform = function(point, camera) {
+        ShapesGroup.prototype.beginTransform = function(point, camera, key) {
             this.bound = getBound(this.shapes);
             this.editor.coverLayer.addShape({
                 id: 'bound',
@@ -63,9 +63,9 @@ define(
         /**
          * 根据控制点做图形变换
          */
-        ShapesGroup.prototype.transform = function(point, camera) {
+        ShapesGroup.prototype.transform = function(point, camera, key) {
             if (this.mode === 'move') {
-                moveTransform.call(this, camera);
+                moveTransform.call(this, camera, key.ctrlKey ? false :  key.altKey, key.ctrlKey ? false : key.shiftKey);
             }
             else if (this.mode === 'scale') {
                 scaleTransform.call(this, point, camera);
@@ -78,12 +78,12 @@ define(
         /**
          * 刷新Shapesgroup信息
          */
-        ShapesGroup.prototype.finishTransform = function(point, camera) {
+        ShapesGroup.prototype.finishTransform = function(point, camera, key) {
 
             // 保存最后一次修改
             var coverShapes = this.coverShapes;
             this.coverShapes = this.shapes;
-            this.transform(point, camera);
+            this.transform(point, camera, key);
             this.coverShapes = coverShapes;
             delete this.bound;
 

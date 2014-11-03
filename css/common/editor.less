@@ -1,25 +1,6 @@
 
 // 编辑器样式集合
 
-.close-editor {
-    .ico();
-    .i-ico('\e611');
-
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 100;
-    padding: 0 3px;
-    z-index: 100;
-    font-size: 14px;
-    background: #FFF;
-    border-left: 1px solid #000;
-    display: none;
-    &:hover {
-        cursor: pointer
-    }
-}
-
 .glyf-editor {
 
     width: 100%;
@@ -28,30 +9,6 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    
-    .editor-contextmenu {
-
-        width: 120px;
-        border: 1px solid #999;
-        background: #FEFEFE;
-        line-height: 24px;
-        padding: 0 4px;
-        box-shadow: 1px 1px 1px #CCC;
-
-        div {
-            padding-left: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #CCC;
-        }
-
-        div:hover {
-            background: #EEE;
-        }
-
-        div:last-child {
-            border-bottom: none;
-        }
-    }
 
     .marker-x,
     .marker-y {
@@ -73,8 +30,60 @@
     }
 }
 
+.editor-contextmenu {
+
+    color: #333;
+    width: 140px;
+    border: 1px solid #999;
+    background: #FEFEFE;
+    line-height: 24px;
+    padding: 0 4px;
+    box-shadow: 1px 1px 1px #CCC;
+    position: absolute;
+
+    li {
+        padding-left: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #CCC;
+        >ul {
+            display: none;
+            color: #333;
+            width: 140px;
+            border: 1px solid #999;
+            background: #FEFEFE;
+            line-height: 24px;
+            padding: 0 4px;
+            box-shadow: 1px 1px 1px #CCC;
+            position: absolute;
+            margin-left: 120px;
+        }
+    }
+
+    >li[data-sub] {
+        color: green;
+        &:after {
+            content:'>';
+            margin-right: 10px;
+            float: right;
+            font-family: 'Simsun';
+        }
+    }
+
+    li:hover {
+        background: #EEE;
+        >ul {
+            display: block;
+        }
+    }
+
+    li:last-child {
+        border-bottom: none;
+    }
+}
+
 .editor:hover {
     .close-editor {
         display: block;
     }
 }
+

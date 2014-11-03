@@ -20,7 +20,6 @@ define(
         // 打开文件
         function onUpFile(e) {
             var file = e.target.files[0];
-            console.log(file);
             if (program.data.action == 'open' && program.loader.supportLoad(file.name)) {
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
