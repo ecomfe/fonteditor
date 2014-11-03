@@ -58,9 +58,6 @@ define(
             if (font) {
                 this.editor.setFont(font);
             }
-            else {
-                this.editor.reset();
-            }
 
             this.editor.focus();
             this.editing = true;

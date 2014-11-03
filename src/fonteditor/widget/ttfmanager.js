@@ -251,7 +251,7 @@ define(
             var glyf = this.getGlyf([index])[0];
             var changed = false;
 
-            if (setting.unicode.toString() != glyf.unicode.toString()) {
+            if (setting.unicode.length) {
                 glyf.unicode = setting.unicode;
                 glyf.modify = 'edit';
                 changed = true;
