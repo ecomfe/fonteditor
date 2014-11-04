@@ -10,7 +10,8 @@ define(
     function(require) {
 
             var program = require('../widget/program');
-
+            var weightClass = require('ttf/enum/weightClass');
+            var widthClass = require('ttf/enum/widthClass');
             var panose = [
                 'bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
                 'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'
@@ -180,6 +181,19 @@ define(
                 +         '<input data-field="achVendID" type="text" class="form-control">'
                 +       '</div>'
                 +   '</div>'
+
+                +   '<div class="form-group">'
+                +       '<div class="input-group input-group-sm">'
+                +         '<span class="input-group-addon">粗细</span>'
+                +         '<select id="setting-weight" data-field="usWeightClass" data-type="number" class="form-control"></select>'
+                +       '</div>'
+                +   '</div>'
+                +   '<div class="form-group">'
+                +       '<div class="input-group input-group-sm">'
+                +         '<span class="input-group-addon">宽度</span>'
+                +         '<select id="setting-width" data-field="usWidthClass" data-type="number" class="form-control"></select>'
+                +       '</div>'
+                +   '</div>'
                 + '</div>'
                 + '<div class="input-group input-group-sm">'
                 +     '<span class="input-group-addon">panose</span>'
@@ -195,9 +209,25 @@ define(
                   },
 
                   set: function(setting) {
+
+                        // width and weight
+                        var html = '';
+                        Object.keys(weightClass).forEach(function(key) {
+                            html += '<option value="'+ key +'">'+ weightClass[key] +'</option>';
+                        });
+                        $('#setting-weight').html(html);
+
+                        html = '';
+                        Object.keys(widthClass).forEach(function(key) {
+                            html += '<option value="'+ key +'">'+ widthClass[key] +'</option>';
+                        });
+                        $('#setting-width').html(html);
+
+
                         setting.panose = panose.map(function(name) {
                               return setting[name];
                         }).join('-');
+
                         this.setFields(setting);
 
                         var me = this;

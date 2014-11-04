@@ -569,7 +569,7 @@ define(
                 [
                     'usWinAscent', 'usWinDescent', 
                     'sTypoAscender', 'sTypoDescender', 'sTypoLineGap',
-                    'sxHeight', 'bXHeight',
+                    'sxHeight', 'bXHeight', 'usWeightClass', 'usWidthClass',
                     'yStrikeoutPosition', 'yStrikeoutSize',
                     'achVendID',
                     // panose
