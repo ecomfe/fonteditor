@@ -19,6 +19,22 @@ define(
         var pathSplit = require('./pathSplit');
         var pathCombine = require('./pathCombine');
 
+        /**
+         * 获取另一个路径和分割路径的交点情况
+         * 
+         * @param {Array} path 要比较的路径
+         * @param {Array} splitedPath 分割后的路径
+         * @return {boolean} 是否相交
+         */
+        function getPathCross(path, splitedPath) {
+            var inPath = isInsidePath(
+                path, 
+                splitedPath[1].onCurve 
+                    ? splitedPath[1]
+                    : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
+            );
+            return !!inPath;
+        }
 
         /**
          * 求路径并集
@@ -39,17 +55,6 @@ define(
             var splitedPaths0;
             var splitedPaths1;
 
-            // 获取另一个路径和分割路径的交点情况
-            var getPathCross = function (path, splitedPath) {
-                var inPath = isInsidePath(
-                    path, 
-                    splitedPath[1].onCurve 
-                        ? splitedPath[1]
-                        : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
-                );
-                return inPath;
-            };
-
             // 获取组合后的路径
             var getJoinedPath = function(joint) {
 
@@ -67,17 +72,23 @@ define(
 
                     splitedPath.cross = getPathCross(path1, splitedPath);
 
-                    // 这里需要判断整个曲线有相交区域，但是部分曲线只有交点没有相交轮廓的情况
-                    if (inPathBefore == splitedPath.cross) {
-                        partInPath = true; 
-                    }
-
                     if (splitedPath.cross) {
                         inPath = true;
                     }
 
-                    inPathBefore = splitedPath.cross;
+                    // 这里需要判断整个曲线有相交区域，但是部分曲线只有交点没有相交轮廓的情况
+                    if (inPathBefore === splitedPath.cross) {
+                        if (false === inPathBefore) {
+                            partInPath = true;
+                        }
+                        else {
+                            // 这里需要修正相交边缘重叠的情况，不然组合路径的时候会出问题
+                            // TODO
+                        }
+                    }
+                    
 
+                    inPathBefore = splitedPath.cross;
                     return splitedPath;
                 });
 
