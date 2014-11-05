@@ -182,7 +182,9 @@ define(
             var d, unicode;
             if (missingNode) {
 
-                var missing = {};
+                var missing = {
+                    name: '.notdef'
+                };
 
                 if (missingNode.getAttribute('horiz-adv-x')) {
                     missing.advanceWidth = +missingNode.getAttribute('horiz-adv-x');
@@ -191,6 +193,8 @@ define(
                 if ((d = missingNode.getAttribute('d'))) {
                     missing.contours = svg2contours(d);
                 }
+
+                ttf.glyf.push(missing);
             }
 
             var glyfNodes = xmlDoc.getElementsByTagName('glyph');
