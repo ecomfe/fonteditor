@@ -94,7 +94,6 @@ define(
                     case 'H':
                     case 'V':
                     case 'L':
-                    case 'A':
                     case 'Z':
                         if (cmd == 'Z') {
                             segments.push({cmd:'Z'});
@@ -112,10 +111,17 @@ define(
                         relative = r;
                         lastIndex = i + 1;
                         break;
+                    case 'A':
+                        throw 'not support arc comand';
                 }
             }
 
             segments.push({cmd:'Z'});
+
+            console.log(segments.map(function(s){
+                return (s.relative ? s.cmd.toLowerCase() : s.cmd)
+                    + (s.args ? s.args.join(' ') : '');
+            }).join('\n'));
 
             // 解析segments
             var contours = [], contour = [], prevX = 0, prevY = 0, prevc1;
@@ -177,36 +183,32 @@ define(
                 else if (cmd === 'L') {
 
                     // 这里可能会连续绘制，最后一个是终点
-                    var q = 0, ql = segment.args.length, px = 0, py = 0;
-
-                    if (relative) {
-                        px = prevX;
-                        py = prevY;
-                    }
+                    var q = 0, ql = segment.args.length, px = prevX, py = prevY;
 
                     for (; q < ql ; q += 2) {
+                        if (relative) {
+                            px += segment.args[q];
+                            py += segment.args[q + 1];
+                        }
+                        else {
+                            px = segment.args[q];
+                            py = segment.args[q + 1];
+                        }
                         contour.push({
-                            x: px + segment.args[q],
-                            y: py + segment.args[q + 1],
+                            x: px,
+                            y: py,
                             onCurve: true
                         });
                     }
-
-                    ql = segment.args.length - 2;
                     
-                    if (relative) {
-                        prevX += segment.args[ql];
-                        prevY += segment.args[ql + 1];
-                    }
-                    else {
-                        prevX = segment.args[ql];
-                        prevY = segment.args[ql + 1];
-                    }
+                    prevX = px;
+                    prevY = py;
+
                 }
                 // 二次贝塞尔
                 else if (cmd === 'Q') {
                     // 这里可能会连续绘制，最后一个是终点
-                    var q = 0, ql = segment.args.length, px = 0, py = 0;
+                    var q = 0, ql = segment.args.length, px = prevX, py = prevY;
 
                     if (relative) {
                         px = prevX;
@@ -243,33 +245,38 @@ define(
 
                     var pc = contour[contour.length - 1];
 
-                    contour.push({
+                    contour.push(pc = {
                         x: 2 * last.x - pc.x,
                         y: 2 * last.y - pc.y
                     });
 
-                    var q = 0, ql = segment.args.length - 2, px = 0, py = 0;
-
-                    if (relative) {
-                        px = prevX;
-                        py = prevY;
-                    }
+                    var q = 0, ql = segment.args.length - 2, px = prevX, py = prevY;
 
                     for (; q < ql ; q += 2) {
-                        pc = contour[contour.length - 1];
+
+                        if (relative) {
+                            px += segment.args[q];
+                            py += segment.args[q + 1];
+                        }
+                        else {
+                            px = segment.args[q];
+                            py = segment.args[q + 1];
+                        }
+
                         last = {
-                            x: px + segment.args[q],
-                            y: py + segment.args[q + 1]
+                            x: px,
+                            y: py
                         };
-                        contour.push({
+                        
+                        contour.push(pc = {
                             x: 2 * last.x - pc.x,
                             y: 2 * last.y - pc.y
                         });
                     }
 
                     if (relative) {
-                        prevX += segment.args[ql];
-                        prevY += segment.args[ql + 1];
+                        prevX = px + segment.args[ql];
+                        prevY = py + segment.args[ql + 1];
                     }
                     else {
                         prevX = segment.args[ql];
@@ -383,10 +390,6 @@ define(
 
                     cubic2Points([[p1, c1, c2, p2]], contour);
                     prevc1 = c2;
-                }
-                // 圆弧
-                else if (cmd === 'A') {
-                    throw 'not support arc';
                 }
             }
 

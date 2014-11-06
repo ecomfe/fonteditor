@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>svg2contours test</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/glyf.css">
+    <style id="font-face"></style>
+</head>
+<body>
+
+
+<svg id="svg" width="1024px" height="1024px" viewBox="0 0 1024 1024" enable-background="new 0 0 1024 1024">
+  <path id="path" fill="#272636" d="" transform="translate(0, 812) scale(1, -1)"/>
+</svg>
+
+
+
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js'
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>
+    require(['demo/svg2contours']);
+</script>
+
+</body>
+</html>
