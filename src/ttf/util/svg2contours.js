@@ -11,7 +11,7 @@ define(
     function(require) {
 
         var bezierCubic2Q2 = require('math/bezierCubic2Q2');
-
+        var getArc =  require('graphics/getArc');
 
         /**
          * 三次贝塞尔曲线列表，转二次贝塞尔曲线列表
@@ -113,6 +113,7 @@ define(
                     case 'H':
                     case 'V':
                     case 'L':
+                    case 'A':
                     case 'Z':
                         if (cmd == 'Z') {
                             segments.push({cmd:'Z'});
@@ -130,8 +131,7 @@ define(
                         relative = r;
                         lastIndex = i + 1;
                         break;
-                    case 'A':
-                        throw 'not support arc comand';
+
                 }
             }
 
@@ -455,6 +455,36 @@ define(
 
                     cubic2Points(cubicList, contour);
                     prevCubicC1 = cubicList[cubicList.length - 1][2];
+                }
+                // 求弧度, rx, ry, angle, largeArc, sweep, ex, ey
+                else if (cmd === 'A') {
+
+                    if (segment.args.length !== 7) {
+                        throw 'arc command params error:' + segment.args.join(',');
+                    }
+
+                    var ex = segment.args[5];
+                    var ey = segment.args[6];
+                    if (relative) {
+                        ex = prevX + ex;
+                        ey = prevY + ey;
+                    }
+
+                    var path = getArc(
+                        segment.args[0], segment.args[1],
+                        segment.args[2], segment.args[3], segment.args[4],
+                        {x: prevX, y: prevY},
+                        {x: ex, y: ey}
+                    );
+
+                    if (path && path.length > 1) {
+                        for (var q = 1, ql = path.length; q < ql; q++) {
+                            contour.push(path[q]);
+                        }
+                    }
+
+                    prevX = ex;
+                    prevY = ey;
                 }
             }
 

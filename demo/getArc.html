@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>getArc test</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/glyf.css">
+    <style id="font-face"></style>
+</head>
+<body>
+
+
+<svg id="svg" style="opacity:0.5; position: absolute" width="1024px" height="1024px" viewBox="0 0 1024 1024">
+  <path id="path" fill="#000" d=""/>
+</svg>
+
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024">
+  <path fill="yellow" d="M300,200 A150,100 0 1,1 300,300 z"/>
+</svg>
+
+
+
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js'
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>
+    require(['demo/getArc']);
+</script>
+
+</body>
+</html>
