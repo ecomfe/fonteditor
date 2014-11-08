@@ -183,6 +183,9 @@ define(
                             name: glyf.name
                         });
                     }
+                    else {
+                        alert('请选中一个字形!');
+                    }
                 }
             },
 
