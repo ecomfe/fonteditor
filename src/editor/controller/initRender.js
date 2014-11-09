@@ -26,6 +26,9 @@ define(
                 var pos = e.pos;
                 this.execCommand('addreferenceline', pos.x, pos.y);
             }
+            else if (e.command == 'split') {
+                this.setMode('split');
+            }
             else if (e.command == 'paste') {
                 var shapes = this.getClipBoard();
                 if(shapes) {

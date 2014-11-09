@@ -57,6 +57,10 @@ define(
                 name: 'paste',
                 title: '粘贴'
             },
+            {
+                name: 'split',
+                title: '切割轮廓'
+            },
             // {
             //     name: 'intelligentadsorb',
             //     title: '智能吸附'

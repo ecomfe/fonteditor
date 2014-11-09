@@ -16,6 +16,7 @@ define(
             'shapes': require('./shapes'),
             'addshapes': require('./addshapes'),
             'addpath': require('./addpath'),
+            'split': require('./split'),
             'referenceline': require('./referenceline')
         };
     }

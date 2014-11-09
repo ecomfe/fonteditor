@@ -22,11 +22,11 @@ define(
          * @param {Object} p0 
          * @param {Object} p1 
          * @param {Object} p2 
-         * @param {Object} i 曲线段的索引
+         * @param {Object} index0 曲线段的索引
          *  
          * @return {Array} 交点数组
          */
-        function getJoint(path, command, p0, p1, p2, i) {
+        function getJoint(path, command, p0, p1, p2, index0) {
 
             var joint = [];
             var result;
@@ -51,7 +51,7 @@ define(
 
                 if (result) {
                     joint = joint.concat(result.map(function(p) {
-                        p.index0 = i; // 第一个path交点的索引
+                        p.index0 = index0; // 第一个path交点的索引
                         p.index1 = j; // 第二个path交点的索引
                         return p;
                     }));

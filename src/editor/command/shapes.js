@@ -12,7 +12,8 @@ define(
 
         var pathJoin = require('graphics/pathJoin');
         var lang = require('common/lang');
-        
+        var pathSplitBySegment = require('graphics/pathSplitBySegment');
+
         // shape的组合操作
         function combineShape(shapes, relation) {
             
@@ -95,6 +96,33 @@ define(
              */
             tangencyshapes: function(shapes) {
                 combineShape.call(this, shapes, pathJoin.Relation.tangency);
+            },
+
+            /**
+             * 切割路径
+             */
+            splitshapes: function(p0, p1, outShapes) {
+                var shapes = this.fontLayer.shapes;
+                for(var i = shapes.length - 1; i >=0; i--) {
+                    var result = pathSplitBySegment(shapes[i].points, p0, p1);
+                    if (result) {
+                        var id = shapes[i].id;
+                        shapes.splice(i, 1);
+                        result.forEach(function(contour, index) {
+                            var shape = {
+                                type: 'path',
+                                id: id + '-' + index,
+                                points: contour
+                            };
+                            shapes.push(shape);
+                            outShapes.push(shape);
+                        });
+                    }
+                }
+
+                if (outShapes.length) {
+                    this.fontLayer.refresh();
+                }
             }
         };
 

@@ -3,7 +3,7 @@
  * @author mengke01
  * @date 
  * @description
- * 获取椭圆弧度
+ * 使用插值法获取椭圆弧度，以支持svg arc命令
  * 
  * references:
  * http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
@@ -132,7 +132,7 @@ define(
 
             // 这里弧度有负向的情况，需要转换成正向
             var ovalPath = interpolate(getOval(2 * rx, 2 * ry, f >= 0 ? f : (f + Math.PI), {x: cx, y: cy}));
-            var result = getJoint(ovalPath, 'L', p0_, p1_, 0, 0);
+            var result = getJoint(ovalPath, 'L', p0_, p1_);
 
             // 这里必定会有交点，如果没有，则说明计算错误
             if (result && result.length > 1) {
