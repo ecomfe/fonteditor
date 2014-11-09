@@ -13,10 +13,6 @@ define(
         var isInsidePath = require('./isInsidePath');
         var isBoundingBoxCross = require('./isBoundingBoxCross');
 
-        function hashcode(p) {
-            return p.x / 7 + p.y / 13 + (p.x + p.y) / 17;
-        }
-
         /**
          * 判断x轴射线是否穿过线段
          * 
@@ -46,23 +42,6 @@ define(
                     }
                 }
                 else {
-
-                    // 对结果集合进行筛选，去除重复点
-                    var hash = {};
-                    for (var i = result.length - 1; i >= 0; i--) {
-                        var p = result[i];
-                        if (hash[hashcode(p)]) {
-                            result.splice(i, 1);
-                        }
-                        else {
-                            hash[hashcode(p)] = true;
-                        }
-                    }
-
-                    if (result.length === 1) {
-                        return false;
-                    }
-
                     return result;
                 }
             }

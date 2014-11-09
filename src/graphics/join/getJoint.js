@@ -15,6 +15,10 @@ define(
         var isBezierSegmentCross = require('../isBezierSegmentCross');
         var pathIterator = require('../pathIterator');
 
+        function hashcode(p) {
+            return p.x / 7 + p.y / 13 + (p.x + p.y) / 17;
+        }
+
         /**
          * 求路径和曲线段的交点集合
          * @param {Array} path 路径
@@ -58,7 +62,23 @@ define(
                 }
             });
 
-            return joint.length ? joint : false;
+            // 对结果集合进行筛选，去除重复点
+            var hash = {};
+            for (var i = joint.length - 1; i >= 0; i--) {
+                var p = joint[i];
+                if (hash[hashcode(p)]) {
+                    joint.splice(i, 1);
+                }
+                else {
+                    hash[hashcode(p)] = true;
+                }
+            }
+
+            if (joint.length <= 1) {
+                return false;
+            }
+
+            return joint;
         }
 
         return getJoint;
