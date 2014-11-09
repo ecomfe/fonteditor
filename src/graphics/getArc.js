@@ -49,7 +49,10 @@ define(
 
             pathAdjust(path, 1, 1, -(bound.x + bound.width / 2), -(bound.y + bound.height / 2));
             pathAdjust(path, scaleX, scaleX * ry / rx);
-            pathRotate(path, angle);
+            if (angle !== 0) {
+                pathRotate(path, angle);
+            }
+
             pathAdjust(path, 1, 1, center.x, center.y);
 
             return path;
@@ -124,17 +127,15 @@ define(
             var p1_ = {x: x2, y: y2};
 
             // 将线段放大，防止无交点
-            cx = (p0_.x + p1_.x) / 2;
-            cy = (p0_.y + p1_.y) / 2;
-            pathAdjust([p0_, p1_], 1.1, 1.1, -cx, -cy);
-            pathAdjust([p0_, p1_], 1, 1, cx, cy);
+            pathAdjust([p0_, p1_], 1.1, 1.1, -(x1 + x2) / 2, -(y1 + y2) / 2);
+            pathAdjust([p0_, p1_], 1, 1, (x1 + x2) / 2, (y1 + y2) / 2);
 
             // 这里弧度有负向的情况，需要转换成正向
-            var ovalPath = interpolate(getOval(2 * rx, 2 * ry, f > 0 ? f : (f + Math.PI), {x: cx, y: cy}));
+            var ovalPath = interpolate(getOval(2 * rx, 2 * ry, f >= 0 ? f : (f + Math.PI), {x: cx, y: cy}));
             var result = getJoint(ovalPath, 'L', p0_, p1_, 0, 0);
 
             // 这里必定会有交点，如果没有，则说明计算错误
-            if (result) {
+            if (result && result.length > 1) {
                 var ovalPaths = pathSplit(ovalPath, result.map(function(p) {
                     p.index = p.index1;
                     return p;
@@ -156,14 +157,22 @@ define(
                         ovalPath = ovalPaths[1];
                     }
                     else {
-                        ovalPath = ovalPaths[0];
+
+                        if (clockwise == 1) {
+                            ovalPath = ovalPaths[0];
+                        }
+                        else {
+                            ovalPath = ovalPaths[1];
+                        }
                     }  
                 }
                 
+                
                 ovalPath = deInterpolate(ovalPath);
+
                 // 逆向起始点
                 var end = ovalPath[ovalPath.length - 1];
-                if (Math.abs(p0.x - end.x) < 0.01 && Math.abs(p0.y - end.y) < 0.01) {
+                if (Math.abs(p0.x - end.x) < 1 && Math.abs(p0.y - end.y) < 1) {
                     ovalPath = ovalPath.reverse();
                 }
 

@@ -20,7 +20,7 @@ define(
             init: function () {
 
                 // 300,200 A150,50 0 1,0 450,50
-                var path = getArc(150, 100, 0, 1, 0, {x: 300, y:200}, {x:300, y:400});
+                var path = getArc(150, 150, 0, 0, 0, {x: 275, y:125}, {x:125, y:150});
 
                 console.log(path[0]);
                 $('#path').attr('d', contour2svg(path));

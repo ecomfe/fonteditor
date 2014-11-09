@@ -74,11 +74,7 @@ define(
                 }
             }
 
-            if (joint.length <= 1) {
-                return false;
-            }
-
-            return joint;
+            return joint.length ? joint : false;
         }
 
         return getJoint;
