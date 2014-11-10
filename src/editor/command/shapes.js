@@ -112,7 +112,7 @@ define(
                             var shape = {
                                 type: 'path',
                                 id: id + '-' + index,
-                                points: contour
+                                points: lang.clone(contour)
                             };
                             shapes.push(shape);
                             outShapes.push(shape);
