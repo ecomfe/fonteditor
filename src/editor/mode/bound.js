@@ -25,7 +25,7 @@ define(
                         this.setMode('referenceline', referenceline.newLine, e.x, e.y);
                         return;
                     }
-
+                    
                     // 字体模式
                     var result = this.fontLayer.getShapeIn(e);
                     if(result) {
@@ -35,7 +35,6 @@ define(
                     }
 
                     // 参考线模式
-
                     var result = this.axisLayer.getShapeIn(e);
                     if(result) {
                         var line = result[0];
@@ -43,7 +42,6 @@ define(
                         return;
                     }
 
-                    // 框选模式
                     this.setMode('range');
                 }
             },

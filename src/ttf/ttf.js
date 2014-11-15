@@ -108,7 +108,7 @@ define(
         };
 
         /**
-         * 获取字符的glyf信息
+         * 根据编码获取字形索引
          * @param {string} c 字符或者字符编码
          * 
          * @return {?number} 返回glyf索引号
@@ -120,7 +120,7 @@ define(
         };
 
         /**
-         * 获取字符的glyf信息
+         * 根据编码获取字形
          * @param {string} c 字符或者字符编码
          * 
          * @return {?Object} 返回glyf对象
@@ -131,7 +131,7 @@ define(
         };
 
         /**
-         * 获取字符的glyf信息
+         * 根据索引获取字形
          * @param {number} glyfIndex glyf的索引
          * 
          * @return {?Object} 返回glyf对象

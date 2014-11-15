@@ -113,7 +113,7 @@ define(
                             // 绘制当前shape
                             context.beginPath();
                             setContextStyle(context, shape.style);
-                            drawer.draw(context, shape);
+                            drawer.draw(context, shape, camera);
 
                             if(false !== options.fill || shape.style.fill) {
                                 context.fill();
@@ -127,7 +127,7 @@ define(
                             context.beginPath();
                         }
                         else {
-                            drawer.draw(context, shape);
+                            drawer.draw(context, shape, camera);
                         }
                     }
                 }

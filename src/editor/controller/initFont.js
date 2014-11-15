@@ -14,6 +14,7 @@ define(
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var guid = require('render/util/guid');
+        var compoundGlyf = require('graphics/compoundGlyf');
 
         /**
          * 初始化字体
@@ -22,49 +23,49 @@ define(
          */
         function setFont(font) {
 
-            var contours = font.contours || [];
+            this.font = font;
             var originX = this.axis.x;
             var originY = this.axis.y;
-
-            // 这里由于advanceWidth=rightSideBearing+xMax，原来的设置可能会不准确，重新计算
-            var box = computeBoundingBox.computePathBox.apply(null, contours);
-            if (box) {
-                font.rightSideBearing = font.advanceWidth - box.x - box.width;
-            }
-            else {
-                font.rightSideBearing = font.advanceWidth;
-            }
-
-            // 不需要在此保存contours
-            delete font.contours;
-
-            this.font = font;
-
             // 设置字形
-            var shapes = contours.map(function(contour) {
-                return {
-                    points: contour
-                };
-            });
-
             var fontLayer = this.fontLayer;
             fontLayer.clearShapes();
 
-            shapes.forEach(function(shape) {
-                fontLayer.addShape('path', shape);
-            });
+            // 简单字形
+            if (!font.compound) {
+                var contours = font.contours || [];
 
-            // 重置历史
-            this.changed = false;
-            this.history.reset();
-            this.history.add(lang.clone(shapes));
+                // 不需要在此保存contours
+                delete font.contours;
 
-            // 设置缩放
-            var scale = this.render.camera.scale;
-            shapes.forEach(function(shape) {
-                pathAdjust(shape.points, scale, -scale);
-                pathAdjust(shape.points, 1, 1, originX, originY);
-            });
+                // 这里由于advanceWidth=rightSideBearing+xMax，原来的设置可能会不准确，重新计算
+                var box = computeBoundingBox.computePathBox.apply(null, contours);
+                if (box) {
+                    font.rightSideBearing = font.advanceWidth - box.x - box.width;
+                }
+                else {
+                    font.rightSideBearing = font.advanceWidth;
+                }
+
+                contours.forEach(function(contour) {
+                    fontLayer.addShape('path', {
+                        points: contour
+                    });
+                });
+
+                var shapes = fontLayer.shapes;
+
+                // 重置历史
+                this.changed = false;
+                this.history.reset();
+                this.history.add(lang.clone(shapes));
+
+                // 设置缩放
+                var scale = this.render.camera.scale;
+                shapes.forEach(function(shape) {
+                    pathAdjust(shape.points, scale, -scale);
+                    pathAdjust(shape.points, 1, 1, originX, originY);
+                });
+            }
 
             fontLayer.refresh();
 

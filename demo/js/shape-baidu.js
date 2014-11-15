@@ -17,7 +17,7 @@ function(require) {
         "yMin": -27,
         "yMax": 475,
         "advanceWidth": 530,
-        "unicode": 57395,
+        "unicode": [57395],
         "name": "uniE033",
         "contours": [
             [

@@ -99,7 +99,7 @@ define(
              * 
              * @param {CanvasContext} ctx canvas的context
              * @param {Object} shape shape数据
-             * @param {Object} camera 当前的视角对象
+             * @param {Object=} camera 当前的视角对象
              */
             draw: function(ctx, shape, camera) {
                 // TODO

@@ -48,7 +48,9 @@ define(
             
             var glyf = lang.clone(ttf.getCodeGlyf(charcode));
             if (glyf.compound) {
-                return;
+                glyf.glyfs.forEach(function(g){
+                    g.glyf = ttf.getIndexGlyf(g.glyphIndex);
+                });
             }
 
             var canvas = $('#glyf-canvas').get(0);

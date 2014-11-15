@@ -1,5 +1,5 @@
 /**
- * @file render.js
+ * @file editor-compound.js
  * @author mengke01
  * @date 
  * @description
@@ -10,7 +10,7 @@ define(
     function(require) {
 
         var editor = require('editor/main');
-        var shape_baidu = require('./shape-baidu');
+        var compound = require('./compound-glyf');
 
         var currentEditor;
 
@@ -21,7 +21,7 @@ define(
              */
             init: function () {
                 currentEditor = editor.create($('#render-view').get(0));
-                window.editor = currentEditor.setFont(shape_baidu);
+                window.editor = currentEditor.setFont(compound);
                 //currentEditor.blur();
                 
             }
