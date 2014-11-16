@@ -289,7 +289,9 @@ define(
              * 更多设置
              */
             moresetting: function(enabled) {
-                this.fire('setting:more', this.options);
+                this.fire('setting:editor', {
+                    setting: this.options
+                });
             }
         };
 

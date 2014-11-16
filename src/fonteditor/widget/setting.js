@@ -16,7 +16,8 @@ define(
             'metrics': require('../dialog/setting-metrics'),
             'online': require('../dialog/font-online'),
             'url': require('../dialog/font-url'),
-            'glyf': require('../dialog/setting-glyf')
+            'glyf': require('../dialog/setting-glyf'),
+            'editor': require('../dialog/setting-editor')
         };
     }
 );

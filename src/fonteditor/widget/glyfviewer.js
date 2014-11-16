@@ -19,7 +19,7 @@ define(
             +   '<i data-action="del" class="i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
-            +           '<path class="path" ${d}/></g>'
+            +           '<path class="path" ${fillColor} ${d}/></g>'
             +   '</svg>'
             +   '<div data-field="unicode" class="unicode" title="${unicode}">${unicode}</div>'
             +   '<div data-field="name" class="name" title="${name}">${name}</div>'
@@ -43,7 +43,8 @@ define(
                 unicode: (glyf.unicode || []).map(function(u) {
                     return '$' + u.toString(16).toUpperCase();
                 }).join(','),
-                name: glyf.name
+                name: glyf.name,
+                fillColor: opt.color ? 'style="fill:'+ opt.color +'"' : ''
             };
             var d = '';
             if ((d = glyf2svg(glyf, ttf))) {
@@ -63,12 +64,14 @@ define(
             });
 
             var glyfStr = '';
+            var color = this.options.color;
             ttf.glyf.forEach(function(glyf, index) {
                 glyfStr += getGlyfHTML(glyf, ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
-                    selected: selectedHash[index]
+                    selected: selectedHash[index],
+                    color: color
                 });
             });
 
@@ -87,12 +90,14 @@ define(
             });
 
             var main = this.main;
+            var color = this.options.color;
             indexList.forEach(function (index) {
                 var glyfStr = getGlyfHTML(ttf.glyf[index], ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
-                    selected: selectedHash[index]
+                    selected: selectedHash[index],
+                    color: color
                 });
                 var before = main.find('[data-index="'+ index +'"]');
                 $(glyfStr).insertBefore(before);
@@ -314,6 +319,24 @@ define(
                 selected.push(+item.getAttribute('data-index'));
             });
             return selected;
+        };
+
+        /**
+         * 获取设置项目
+         */
+        GLYFViewer.prototype.setSetting = function(options) {
+            var oldOptions = this.options;
+            this.options = options; 
+            if (options.color !== oldOptions.color) {
+                this.main.find('path').css('fill', options.color);
+            }
+        };
+
+        /**
+         * 获取设置项目
+         */
+        GLYFViewer.prototype.getSetting = function() {
+            return this.options;
         };
 
         /**

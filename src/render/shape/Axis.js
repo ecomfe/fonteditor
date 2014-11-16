@@ -25,11 +25,6 @@ define(
                 var center = camera.center;
                 var ratio = camera.ratio;
 
-                if (undefined === shape.gap) {
-                    shape.gap = shape.graduation.gap || 100;
-                }
-
-                shape.gap *= ratio;
                 shape.unitsPerEm *= ratio;
 
                 var metrics = shape.metrics;
@@ -76,11 +71,9 @@ define(
              * @param {CanvasContext} ctx canvas的context
              * @param {Object} shape shape数据
              */
-            draw: function(ctx, shape) {
+            draw: function(ctx, shape, camera) {
                 
-                if (undefined === shape.gap) {
-                    shape.gap = shape.graduation.gap || 100;
-                }
+                shape.gap = (shape.graduation.gap || 100) * camera.scale;
 
                 ctx.save();
 

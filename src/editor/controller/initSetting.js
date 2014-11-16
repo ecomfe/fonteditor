@@ -12,26 +12,52 @@ define(
 
         var menuUtil = require('../menu/util');
         var commandList = require('../menu/commandList');
+        var lang = require('common/lang');
 
         /**
          * 初始化设置选项
          */
-        function initSetting() {
+        function initSetting(options) {
             menuUtil.setSelected(
                 commandList.editor, 'setting.gridsorption',
-                !!this.options.sorption.enableGrid
+                !!options.sorption.enableGrid
             );
             menuUtil.setSelected(
                 commandList.editor, 'setting.shapesorption',
-                !!this.options.sorption.enableShape
+                !!options.sorption.enableShape
             );
             menuUtil.setSelected(
                 commandList.editor, 'setting.showgrid',
-                !!this.options.axis.showGrid
+                !!options.axis.showGrid
             );
         }
 
+        /**
+         * 设置选项
+         * 
+         * @param {Object} options 选项
+         * @return {this}
+         */
+        function setOptions(options) {
 
-        return initSetting;
+            this.execCommand('gridsorption', options.sorption.enableGrid);
+            this.execCommand('shapesorption', options.sorption.enableShape);
+            this.execCommand('showgrid', options.axis.showGrid);
+
+            this.fontLayer.options.fillColor = options.fontLayer.fillColor;
+            this.fontLayer.refresh();
+
+            this.axis.gapColor = options.axis.gapColor;
+            this.axis.graduation.gap = options.axis.graduation.gap || 100;
+            this.axisLayer.refresh();
+            this.graduationLayer.refresh();
+
+            lang.overwrite(this.options, options);
+        }
+
+        return function() {
+            initSetting.call(this, this.options);
+            this.setOptions = setOptions;
+        };
     }
 );

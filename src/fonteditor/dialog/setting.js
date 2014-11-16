@@ -14,6 +14,62 @@ define(
         var program = require('../widget/program');
 
         /**
+         * 获取对象的值
+         * 
+         * @param {object} object 对象
+         * @param {string} path path
+         * @return {*} 对象的值
+         */
+        function getValue(object, path) {
+            var ref = path.split('.');
+
+            if (ref.length === 1) {
+                return object[path];
+            }
+
+            var refObject = object;
+            var property;
+
+            while (refObject != undefined && (property = ref.shift())) {
+                refObject = refObject[property];
+            }
+
+            return refObject;
+        }
+
+        /**
+         * 设置对象的值
+         * 
+         * @param {object} object 对象
+         * @param {string} path path
+         * @param {*} value 值
+         * @return {Object} 对象
+         */
+        function setValue(object, path, value) {
+            var ref = path.split('.');
+
+            if (ref.length === 1) {
+                object[path] = value;
+            }
+            else {
+                var lastProperty = ref.pop();
+                var refObject = object;
+                var property;
+
+                while (refObject != undefined && (property = ref.shift())) {
+                    refObject = refObject[property];
+                }
+
+                if (refObject != undefined) {
+                    refObject[lastProperty] = value;
+                }
+            }
+
+            return object;
+        }
+
+
+        /**
          * 设置框函数
          * 
          * @constructor
@@ -92,20 +148,21 @@ define(
 
                 var field = item.getAttribute('data-field');
                 var type = item.getAttribute('data-type') || item.type;
-                if (undefined === setting[field]) {
+                var val = getValue(setting, field);
+                if (undefined === val) {
                     return;
                 }
 
                 if (type == 'checkbox') {
-                    item.checked = setting[field] ? 'checked' : '';
+                    item.checked = val ? 'checked' : '';
                 }
                 else if (type == 'unicode') {
-                    item.value = (setting[field] || []).map(function(u) {
+                    item.value = (val || []).map(function(u) {
                         return '$' + u.toString(16).toUpperCase();
                     }).join(',');
                 }
                 else if (type == 'datetime-local') {
-                    var val = setting[field];
+                    var val = val;
                     var date;
                     if (typeof(val) === 'string') {
                         date = new Date(Date.parse(val));
@@ -121,7 +178,7 @@ define(
                 }
                 else {
                     item = $(item);
-                    item.val(setting[field]);
+                    item.val(val);
                 }
 
             });
@@ -133,44 +190,46 @@ define(
          * 
          * @return {Object}
          */
-        Setting.prototype.getFields = function() {
-            var setting = {};
+        Setting.prototype.getFields = function(setting) {
+            setting = setting || {};
             this.getDialog().find('[data-field]').each(function(i, item) {
 
                 var field = item.getAttribute('data-field');
                 var type = item.getAttribute('data-type') || item.type;
-
+                var val;
                 if (type == 'checkbox') {
-                    if (item.checked) {
-                        setting[field] = true;
-                    }
+                    val = !!item.checked;
                 }
                 else if (type == 'unicode') {
-                    setting[field] = item.value.trim() == '' ? [] : item.value.split(',').map(function(u) {
+                    val = item.value.trim() == '' ? [] : item.value.split(',').map(function(u) {
                         return Number('0x' + u.slice(1));
                     });
                 }
                 else if (type == 'datetime-local') {
                     if (item.value) {
-                        setting[field] = Date.parse(item.value.replace('T', ' '));
+                        val = Date.parse(item.value.replace('T', ' '));
                     }
                 }
                 else if (type == 'number') {
                     if (item.value) {
-                        var val = +item.value;
+                        var value = +item.value;
                         if (item.getAttribute('data-ceil')) {
-                            val = Math.floor(val);
+                            value = Math.floor(value);
                         }
-                        setting[field] = val;
+                        val = value;
                     }
                 }
 
                 else {
                     item = $(item);
-                    var val = item.val().trim();
-                    if (val) {
-                        setting[field] =  val;
+                    var value = item.val().trim();
+                    if (value) {
+                        val =  value;
                     }
+                }
+
+                if (undefined != val) {
+                    setValue(setting, field, val);
                 }
             });
             return setting;

@@ -64,10 +64,9 @@ define(
          * 设置坐标信息
          * 
          * @param {Object} options 坐标选项
-         * @param {boolean} reset 是否重置坐标系
          * @return {this} 
          */
-        function setAxis(options, reset) {
+        function setAxis(options) {
 
             var oldUnitsPerEm = this.options.unitsPerEm;
             this.options.unitsPerEm = options.unitsPerEm;
@@ -87,7 +86,6 @@ define(
             });
 
             axisOpt.unitsPerEm = axisOpt.unitsPerEm * scale;
-            axisOpt.gap = axisOpt.graduation.gap * scale;
 
             lang.extend(this.axis, axisOpt);
 

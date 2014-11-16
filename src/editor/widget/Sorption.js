@@ -49,7 +49,7 @@ define(
          * @param {Object} options 参数选项
          */
         function Sorption(options) {
-            this.gridDelta = options.gridDelta || 4; // 吸附检查offset
+            this.gridDelta = options.gridDelta || 5; // 吸附检查offset
             this.delta = options.delta || 5; // 吸附检查offset
             this.enableGrid = options.enableGrid || false;
             this.enableShape = options.enableShape || true;

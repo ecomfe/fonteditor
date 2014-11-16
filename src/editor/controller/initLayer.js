@@ -16,20 +16,20 @@ define(
          */
         function initLayer() {
 
-            this.coverLayer = this.render.addLayer('cover', lang.extend(this.options.coverLayer, {
+            this.coverLayer = this.render.addLayer('cover', lang.extend({
                 level: 30,
                 fill: false,
                 strokeColor: 'green',
                 fillColor: 'white'
-            }));
+            }, this.options.coverLayer));
 
-            this.fontLayer = this.render.addLayer('font', lang.extend(this.options.fontLayer, {
+            this.fontLayer = this.render.addLayer('font', lang.extend({
                 level: 20,
                 lineWidth: 1,
                 strokeColor: '#999',
                 fillColor: '#555',
                 strokeSeparate: false
-            }));
+            }, this.options.fontLayer));
 
             this.axisLayer = this.render.addLayer('axis', {
                 level: 10,

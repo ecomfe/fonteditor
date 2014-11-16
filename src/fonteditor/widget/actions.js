@@ -145,6 +145,15 @@ define(
                     dlg.show();
             },
 
+            // 预览
+            'preview': function(e) {
+                var ttf = program.ttfManager.get();
+                if (ttf) {
+                    var format = e.target.getAttribute('data-format');
+                    program.previewer.load(ttf, format);
+                }
+            },
+
             // 设置unicode
             'setting-unicode': function() {
                 var dlg = new setting.unicode({
@@ -259,15 +268,21 @@ define(
                 }
             },
 
-            // 预览
-            'preview': function(e) {
-                var ttf = program.ttfManager.get();
-                if (ttf) {
-                    var format = e.target.getAttribute('data-format');
-                    program.previewer.load(ttf, format);
-                }
-            },
-
+            // 设置
+            'setting-editor': function(e) {
+                var dlg = new setting.editor({
+                    onChange: function(setting) {
+                        setTimeout(function() {
+                            program.viewer.setSetting(setting.viewer);
+                            program.editor.setSetting(setting.editor);
+                        }, 20);
+                    }
+                });
+                dlg.show({
+                    viewer: program.viewer.getSetting(),
+                    editor: program.editor.getSetting()
+                });
+            }
         };
 
         return actions;
