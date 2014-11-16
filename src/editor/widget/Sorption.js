@@ -49,9 +49,10 @@ define(
          * @param {Object} options 参数选项
          */
         function Sorption(options) {
+            this.gridDelta = options.gridDelta || 4; // 吸附检查offset
             this.delta = options.delta || 5; // 吸附检查offset
-            this.enableGrid = true;
-            this.enableShape = true;
+            this.enableGrid = options.enableGrid || false;
+            this.enableShape = options.enableShape || true;
         }
 
         /**
@@ -135,7 +136,7 @@ define(
 
             if (this.enableGrid) {
                 var delta = (x - this.axis.x) % this.axis.gap;
-                if (Math.abs(delta) < this.delta) {
+                if (Math.abs(delta) < this.gridDelta) {
                     return {
                         axis: x - delta,
                         y: 0
@@ -162,7 +163,7 @@ define(
 
             if (this.enableGrid) {
                 var delta = (y - this.axis.y) % this.axis.gap;
-                if (Math.abs(delta) < this.delta) {
+                if (Math.abs(delta) < this.gridDelta) {
                     return {
                         axis: y - delta,
                         x: 0
@@ -171,6 +172,15 @@ define(
             }
 
             return false;
+        };
+
+        /**
+         * 结束吸附检测
+         * 
+         * @return {this}
+         */
+        Sorption.prototype.isEnable = function() {
+            return this.enableShape || this.enableGrid;
         };
 
         /**

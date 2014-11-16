@@ -46,9 +46,8 @@ define(
                         sorptionShapeX = coverLayer.addShape({
                             type: 'line',
                             id: 'sorptionX',
-                            dashed: true,
                             style: {
-                                strokeColor: 'red'
+                                strokeColor: '#4AFF4A'
                             },
                             p0: {},
                             p1: {}
@@ -82,9 +81,8 @@ define(
                         sorptionShapeY = coverLayer.addShape({
                             type: 'line',
                             id: 'sorptionY',
-                            dashed: true,
                             style: {
-                                strokeColor: 'red'
+                                strokeColor: '#4AFF4A'
                             },
                             p0: {},
                             p1: {}

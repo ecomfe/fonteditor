@@ -232,18 +232,34 @@ define(
             },
 
             /**
-             * 是否打开智能吸附
+             * 是否打开网格吸附
              */
-            sorption: function(open) {
-                open = !!open;
-                menuUtil.setSelected(commandList.editor, 'sorption', open);
-                this.options.sorption.enable = open;
+            gridsorption: function(enabled) {
+                menuUtil.setSelected(commandList.editor, 'setting.gridsorption', !!enabled);
+                this.options.sorption.enableGrid = this.sorption.enableGrid = !!enabled;
+            },
+
+            /**
+             * 是否打开轮廓吸附
+             */
+            shapesorption: function(enabled) {
+                menuUtil.setSelected(commandList.editor, 'setting.shapesorption', !!enabled);
+                this.options.sorption.enableShape = this.sorption.enableShape = !!enabled;
+            },
+
+            /**
+             * 是否打开轮廓吸附
+             */
+            showgrid: function(enabled) {
+                menuUtil.setSelected(commandList.editor, 'setting.showgrid', !!enabled);
+                this.options.axis.showGrid = this.axis.showGrid = !!enabled;
+                this.axisLayer.refresh();
             },
 
             /**
              * 设置字体信息
              */
-            font: function() {
+            setfont: function() {
 
                 // 计算边界
                 var box = computeBoundingBox.computePathBox.apply(null, this.fontLayer.shapes.map(function(shape) {
@@ -267,6 +283,13 @@ define(
                         name: this.font.name                        
                     }
                 });
+            },
+
+            /**
+             * 更多设置
+             */
+            moresetting: function(enabled) {
+                this.fire('setting:more', this.options);
             }
         };
 

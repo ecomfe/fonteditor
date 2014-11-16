@@ -60,7 +60,7 @@ define(
             this.boundControl.hide();
 
             // 设置吸附选项
-            if (this.mode === 'move' && this.shapes.length && this.editor.options.sorption.enable) {
+            if (this.mode === 'move' && this.editor.sorption.isEnable()) {
                 var sorptionShapes = [];
                 var shapes = this.shapes;
 
@@ -84,7 +84,7 @@ define(
                     this, camera,
                     key.ctrlKey ? false :  key.altKey,
                     key.ctrlKey ? false : key.shiftKey,
-                    this.editor.options.sorption.enable
+                    this.editor.sorption.isEnable()
                 );
             }
             else if (this.mode === 'scale') {
@@ -110,7 +110,7 @@ define(
             this.editor.coverLayer.removeShape('bound');
             this.editor.coverLayer.removeShape('boundcenter');
             this.editor.fontLayer.refresh();
-            if (this.mode === 'move' && this.editor.options.sorption.enable) {
+            if (this.mode === 'move' && this.editor.sorption.isEnable()) {
                 this.editor.coverLayer.removeShape('sorptionX');
                 this.editor.coverLayer.removeShape('sorptionY');
                 this.editor.sorption.clear();

@@ -16,7 +16,7 @@ define(
             rect: require('./Rect'),
             polygon: require('./Polygon'),
             font: require('./Font'),
-            glyf: require('./Glyf'),
+            //glyf: require('./Glyf'),
             path: require('./Path'),
             axis: require('./Axis'),
             graduation: require('./Graduation'),

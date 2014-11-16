@@ -3,15 +3,18 @@
 // fontface
 @font-face {
     font-family: 'fonteditor';
-    src: url('../font/iconfont.ttf') format('truetype');
+    src: url('../../font/iconfont.ttf') format('truetype');
 }
 
 .ico() {
     display: inline-block;
-    font-family: 'fonteditor';
-    font-style:normal;
-    -webkit-font-smoothing: antialiased;
-    -webkit-text-stroke-width: 0.1px;
+    &:before,
+    &:after {
+        font-family: 'fonteditor';
+        font-style:normal;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.1px; 
+    }
 }
 
 .i-ico(@unicode) {

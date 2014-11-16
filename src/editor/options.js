@@ -17,10 +17,10 @@ define(
 
                 // 吸附选项
                 sorption: {
-                    enable: true, // 是否启用
-                    grid: true, // 吸附到网格
-                    shape: true, // 吸附到对象
-                    delta: 5 // 吸附delta
+                    enableGrid: false, // 吸附到网格
+                    enableShape: true, // 吸附到对象
+                    gridDelta: 4, // 网格delta
+                    delta: 5 // 对象delta
                 },
 
                 // 辅助线
@@ -45,7 +45,7 @@ define(
 
                 // 轴线
                 axis: {
-                    
+                    showGrid: true, // 显示网格
                     gapColor: '#A6A6FF',
                     gridColor: 'red',
                     emColor: 'red',

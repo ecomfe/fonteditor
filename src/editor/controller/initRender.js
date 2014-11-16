@@ -56,9 +56,14 @@ define(
                 var type = e.args.type;
                 this.execCommand('addsupportshapes', type);
             }
-            else if (e.command == 'sorption') {
-                var selected = e.args.selected;
-                this.execCommand('sorption', !selected);
+            else if (e.command == 'gridsorption') {
+                this.execCommand('gridsorption', !e.args.selected);
+            }
+            else if (e.command == 'shapesorption') {
+                this.execCommand('shapesorption', !e.args.selected);
+            }
+            else if (e.command == 'showgrid') {
+                this.execCommand('showgrid', !e.args.selected);
             }
             else {
                 this.execCommand(e.command, e);

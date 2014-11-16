@@ -23,6 +23,7 @@ define(
         var initBinder = require('./controller/initBinder');
         var initAxis = require('./controller/initAxis');
         var initFont = require('./controller/initFont');
+        var initSetting = require('./controller/initSetting');
 
         /**
          * Render控制器
@@ -42,6 +43,7 @@ define(
         Editor.prototype.setRender = function(render) {
 
             this.render = render;
+            initSetting.call(this);
             initFont.call(this);
             initRender.call(this);
             initLayer.call(this);

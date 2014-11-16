@@ -26,33 +26,36 @@ define(
                 var x = Math.round(config.x);
                 var y = Math.round(config.y);
 
-                ctx.beginPath();
-                ctx.strokeStyle = config.gapColor || '#A6A6FF';
+                // 显示网格线
+                if (false !== config.showGrid) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = config.gapColor || '#A6A6FF';
 
-                // 横轴线
-                for(var i = y; i < yMax; i += gap) {
-                    ctx.moveTo(0, i);
-                    ctx.lineTo(xMax, i);
+                    // 横轴线
+                    for(var i = y; i < yMax; i += gap) {
+                        ctx.moveTo(0, i);
+                        ctx.lineTo(xMax, i);
+                    }
+
+                    for(var i = y; i > 0; i -= gap) {
+                        ctx.moveTo(0, i);
+                        ctx.lineTo(xMax, i);
+                    }
+
+
+                    // 纵轴线
+                    for(var i = x; i < xMax; i += gap) {
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i, yMax);
+                    }
+
+                    for(var i = x; i > 0; i -= gap) {
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i, yMax);
+                    }
+
+                    ctx.stroke();
                 }
-
-                for(var i = y; i > 0; i -= gap) {
-                    ctx.moveTo(0, i);
-                    ctx.lineTo(xMax, i);
-                }
-
-
-                // 纵轴线
-                for(var i = x; i < xMax; i += gap) {
-                    ctx.moveTo(i, 0);
-                    ctx.lineTo(i, yMax);
-                }
-
-                for(var i = x; i > 0; i -= gap) {
-                    ctx.moveTo(i, 0);
-                    ctx.lineTo(i, yMax);
-                }
-
-                ctx.stroke();
 
                 ctx.beginPath();
                 ctx.strokeStyle = config.gridColor || 'red';

@@ -62,9 +62,26 @@ define(
                 title: '切割轮廓'
             },
             {
-                name: 'sorption',
-                title: '智能吸附',
-                selected: true
+                name: 'setting',
+                title: '设置',
+                items: [
+                    {
+                        name: 'gridsorption',
+                        title: '吸附到网格线'
+                    },
+                    {
+                        name: 'shapesorption',
+                        title: '吸附到轮廓'
+                    },
+                    {
+                        name: 'showgrid',
+                        title: '显示网格'
+                    },
+                    {
+                        name: 'moresetting',
+                        title: '更多..'
+                    }
+                ]
             },
             {
                 name: 'add_referenceline',
@@ -79,7 +96,7 @@ define(
                 title: '重置缩放'
             },
             {
-                name: 'font',
+                name: 'setfont',
                 title: '字形信息'
             }
         ];
