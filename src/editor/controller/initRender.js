@@ -56,6 +56,10 @@ define(
                 var type = e.args.type;
                 this.execCommand('addsupportshapes', type);
             }
+            else if (e.command == 'sorption') {
+                var selected = e.args.selected;
+                this.execCommand('sorption', !selected);
+            }
             else {
                 this.execCommand(e.command, e);
             }

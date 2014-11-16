@@ -15,6 +15,14 @@ define(
 
                 unitsPerEm: 512, // 框大小
 
+                // 吸附选项
+                sorption: {
+                    enable: true, // 是否启用
+                    grid: true, // 吸附到网格
+                    shape: true, // 吸附到对象
+                    delta: 5 // 吸附delta
+                },
+
                 // 辅助线
                 referenceline: {
                     style: {

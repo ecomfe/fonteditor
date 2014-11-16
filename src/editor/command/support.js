@@ -13,6 +13,8 @@ define(
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var shapesSupport = require('../shapes/support');
+        var menuUtil = require('../menu/util');
+        var commandList = require('../menu/commandList');
 
         var support = {
 
@@ -227,6 +229,15 @@ define(
              */
             addshapes: function(shapes) {
                 this.setShapes(shapes);
+            },
+
+            /**
+             * 是否打开智能吸附
+             */
+            sorption: function(open) {
+                open = !!open;
+                menuUtil.setSelected(commandList.editor, 'sorption', open);
+                this.options.sorption.enable = open;
             },
 
             /**

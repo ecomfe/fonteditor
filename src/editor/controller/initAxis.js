@@ -54,6 +54,9 @@ define(
 
             // 刻度线标记
             this.graduationMarker = new GraduationMarker(this.render.main, options.axis.graduation);
+
+            // 设置吸附选项
+            this.sorption.setGrid(this.axis);
         }
 
 

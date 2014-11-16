@@ -61,10 +61,11 @@ define(
                 name: 'split',
                 title: '切割轮廓'
             },
-            // {
-            //     name: 'intelligentadsorb',
-            //     title: '智能吸附'
-            // },
+            {
+                name: 'sorption',
+                title: '智能吸附',
+                selected: true
+            },
             {
                 name: 'add_referenceline',
                 title: '添加参考线'

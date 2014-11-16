@@ -13,8 +13,9 @@ define(
         var modeSupport = require('./mode/support');
         var ContextMenu = require('./widget/ContextMenu');
         var commandSupport = require('./command/support');
-        var clipboard = require('./util/clipboard');
-        var History = require('./util/History');
+        var clipboard = require('./widget/clipboard');
+        var History = require('./widget/History');
+        var Sorption = require('./widget/Sorption');
 
         // editor 的控制器
         var initLayer = require('./controller/initLayer');
@@ -31,6 +32,7 @@ define(
         function Editor(main, options) {
             this.options = options || {};
             this.contextMenu = new ContextMenu(main, this.options.contextMenu);
+            this.sorption = new Sorption(this.options.sorption);
             this.history = new History();
         }
 
@@ -197,12 +199,18 @@ define(
             this.contextMenu.dispose();
             this.render && this.render.dispose();
             this.graduationMarker.dispose();
+            
             this.options = this.contextMenu = this.render = null;
             this.fontLayer = this.coverLayer = this.axisLayer = this.graduationLayer = null;
             this.axis = this.rightSideBearing = this.graduation = this.graduationMarker = this.font = null;
-            this.mode = null;
+
+            this.sorption.dispose();
+            this.sorption = null;
+
             this.history.reset();
             this.history = null;
+
+            this.mode = null;
         };
 
         require('common/observable').mixin(Editor.prototype);

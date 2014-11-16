@@ -69,6 +69,16 @@
         }
     }
 
+    li[data-tag="selected"] {
+        .ico();
+        display: block;
+        &:after {
+            content:'\e610';
+            float: right;
+            margin-right: 10px;
+        }
+    }
+
     li:hover {
         background: #EEE;
         >ul {

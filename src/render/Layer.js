@@ -92,7 +92,7 @@ define(
                     shape = shapes[i];
 
                     if (true === shape.disabled) {
-                        return;
+                        continue;
                     }
 
                     if ((drawer = support[shape.type])) {

@@ -10,7 +10,7 @@
 define(
     function(require) {
         var lang = require('common/lang');
-        var History = require('editor/util/History'); 
+        var History = require('editor/widget/History'); 
         var TTF = require('ttf/ttf');
 
         /**

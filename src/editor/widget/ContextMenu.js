@@ -77,14 +77,18 @@ define(
                         str += '<li data-sub="'+ index +'">';
                         str += '<ul>';
                         command.items.forEach(function(subCommand, subIndex) {
-                            str += '<li data-super="'+ index +'" data-id="'+ subIndex +'">'+ subCommand.title +'</li>';
+                            str += '<li data-super="'+ index +'" data-id="'+ subIndex +'"'
+                                +   (subCommand.selected ? ' data-tag="selected"' : '') +'>'
+                                + subCommand.title +'</li>';
                         });
                         str += '</ul>';
                         str += command.title + '</li>';
 
                     }
                     else {
-                        str += '<li data-id="'+ index +'">'+ command.title +'</li>';
+                        str += '<li data-id="'+ index +'"'
+                            +   (command.selected ? ' data-tag="selected"' : '') +'>'
+                            + command.title +'</li>';
                     }
 
                 });

@@ -58,6 +58,21 @@ define(
                 points: []
             });
             this.boundControl.hide();
+
+            // 设置吸附选项
+            if (this.mode === 'move' && this.shapes.length && this.editor.options.sorption.enable) {
+                var sorptionShapes = [];
+                var shapes = this.shapes;
+
+                // 过滤需要吸附的对象
+                this.editor.fontLayer.shapes.forEach(function(shape) {
+                    if (shapes.indexOf(shape) < 0) {
+                        sorptionShapes.push(shape);
+                    }
+                });
+                this.editor.sorption.setShapes(sorptionShapes);
+            }
+
         };
 
         /**
@@ -65,7 +80,12 @@ define(
          */
         ShapesGroup.prototype.transform = function(point, camera, key) {
             if (this.mode === 'move') {
-                moveTransform.call(this, camera, key.ctrlKey ? false :  key.altKey, key.ctrlKey ? false : key.shiftKey);
+                moveTransform.call(
+                    this, camera,
+                    key.ctrlKey ? false :  key.altKey,
+                    key.ctrlKey ? false : key.shiftKey,
+                    this.editor.options.sorption.enable
+                );
             }
             else if (this.mode === 'scale') {
                 scaleTransform.call(this, point, camera);
@@ -90,6 +110,11 @@ define(
             this.editor.coverLayer.removeShape('bound');
             this.editor.coverLayer.removeShape('boundcenter');
             this.editor.fontLayer.refresh();
+            if (this.mode === 'move' && this.editor.options.sorption.enable) {
+                this.editor.coverLayer.removeShape('sorptionX');
+                this.editor.coverLayer.removeShape('sorptionY');
+                this.editor.sorption.clear();
+            }
 
             this.refresh();
         };
