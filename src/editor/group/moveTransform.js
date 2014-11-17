@@ -1,7 +1,7 @@
 /**
  * @file moveTransform.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 移动对象
  */
@@ -15,7 +15,7 @@ define(
 
         /**
          * 移动对象
-         * 
+         *
          * @param {Object} camera 镜头对象
          * @param {boolean} fixX 固定X
          * @param {boolean} fixY 固定Y
@@ -37,7 +37,7 @@ define(
             if (elableSorption) {
                 var centerX = bound.x + bound.width / 2;
                 var centerY = bound.y + bound.height / 2;
-                
+
                 if (!fixX) {
 
                     // 设置吸附辅助线
@@ -56,7 +56,7 @@ define(
 
                     var i = 0;
                     var posXList = [this.bound.x, centerX, this.bound.x + this.bound.width];
-                    for (var i = 0; i < 3; i++) {
+                    for (i = 0; i < 3; i++) {
                         var result = this.editor.sorption.detectX(posXList[i] + x);
                         if (result) {
                             x = result.axis - posXList[i];
@@ -91,7 +91,7 @@ define(
 
                     var i = 0;
                     var posYList = [this.bound.y, centerY, this.bound.y + this.bound.height];
-                    for (var i = 0; i < 3; i++) {
+                    for (i = 0; i < 3; i++) {
                         var result = this.editor.sorption.detectY(posYList[i] + y);
                         if (result) {
                             y = result.axis - posYList[i];
@@ -116,7 +116,7 @@ define(
                 lang.extend(coverShape, shape);
 
             });
-            
+
             // 更新边界
             boundShape.points = pathAdjust(
                 [
@@ -124,10 +124,10 @@ define(
                     {x: bound.x + bound.width, y:bound.y},
                     {x: bound.x + bound.width, y:bound.y + bound.height},
                     {x: bound.x, y:bound.y + bound.height}
-                ], 
+                ],
                 1, 1, x, y
             );
-            
+
             coverLayer.refresh();
 
         }

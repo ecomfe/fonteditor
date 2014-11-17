@@ -1,7 +1,7 @@
 /**
  * @file ShapesGroup.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 多个形状编辑组
  */
@@ -18,22 +18,15 @@ define(
         var rotateTransform = require('./rotateTransform');
 
         var BoundControl = require('./BoundControl');
-        
+
 
         /**
          * 获取多个shape的边界
          */
         function getBound(shapes) {
-            var points = [];
-            shapes.forEach(function(shape) {
-                var b = computeBoundingBox.computePath(shape.points);
-                points.push(b);
-                points.push({
-                    x: b.x + b.width,
-                    y: b.y + b.height
-                });
-            });
-            return computeBoundingBox.computeBounding(points);
+            return computeBoundingBox.computePath.apply(null, shapes.map(function(shape) {
+                return shape.points;
+            }));
         }
 
         /**
@@ -63,6 +56,23 @@ define(
             if (this.mode === 'move' && this.editor.sorption.isEnable()) {
                 var sorptionShapes = [];
                 var shapes = this.shapes;
+                var bound = this.bound;
+
+                // 加入bound
+                sorptionShapes.push({
+                    points: [
+                        {
+                            x: bound.x,
+                            y: bound.y,
+                            onCurve: true
+                        },
+                        {
+                            x: bound.x + bound.width,
+                            y: bound.y + bound.height,
+                            onCurve: true
+                        }
+                    ]
+                });
 
                 // 过滤需要吸附的对象
                 this.editor.fontLayer.shapes.forEach(function(shape) {
@@ -129,7 +139,7 @@ define(
             if(this.shapes) {
                 this.shapes = null;
             }
-            
+
             if (this.coverShapes) {
                 this.coverShapes.forEach(function(shape) {
                     coverLayer.removeShape(shape);
@@ -176,7 +186,7 @@ define(
             this.shapes.forEach(function(shape) {
                 pathAdjust(shape.points, 1, 1, mx, my);
             });
-            
+
             this.editor.fontLayer.refresh();
             this.editor.coverLayer.move(mx, my);
             this.editor.coverLayer.refresh();
