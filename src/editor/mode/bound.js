@@ -1,7 +1,7 @@
 /**
  * @file bound.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 轮廓模式处理事件
  */
@@ -13,7 +13,7 @@ define(
         var selectShape = require('render/util/selectShape');
         var referenceline = require('./referenceline');
         var mode = {
-            
+
             /**
              * 按下事件
              */
@@ -25,7 +25,7 @@ define(
                         this.setMode('referenceline', referenceline.newLine, e.x, e.y);
                         return;
                     }
-                    
+
                     // 字体模式
                     var result = this.fontLayer.getShapeIn(e);
                     if(result) {
@@ -43,6 +43,15 @@ define(
                     }
 
                     this.setMode('range');
+                }
+            },
+
+            /**
+             * 按键
+             */
+            keydown: function(e) {
+                if(e.keyCode == 32) {
+                    this.setMode('pan');
                 }
             },
 

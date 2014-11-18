@@ -1,7 +1,7 @@
 /**
  * @file support.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 编辑器模式集合
  */
@@ -12,6 +12,7 @@ define(
         return {
             'point': require('./point'),
             'range': require('./range'),
+            'pan': require('./pan'),
             'default': require('./bound'),
             'shapes': require('./shapes'),
             'addshapes': require('./addshapes'),
