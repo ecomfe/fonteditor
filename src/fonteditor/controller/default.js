@@ -1,7 +1,7 @@
 /**
  * @file default.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 默认的页面控制器
  */
@@ -12,7 +12,7 @@ define(
         var lang = require('common/lang');
         var clipboard = require('editor/widget/clipboard');
         var string = require('common/string');
-        
+
         // 获取ttf的编辑选项
         function getEditingOpt(ttf) {
 
@@ -33,7 +33,7 @@ define(
 
             /**
              * 初始化控制器
-             * 
+             *
              * @param {Object} program 项目组件
              */
             init: function(program) {
@@ -176,7 +176,7 @@ define(
                         }
                     }
                 }).on('function', function(e) {
-                    // F4
+                    // F2
                     if (e.keyCode === 113) {
                         if (!program.editor.isVisible()) {
                             showEditor();

@@ -1,7 +1,7 @@
 /**
  * @file directory.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * directory 表, 读取ttf表索引
  */
@@ -12,7 +12,7 @@ define(
         var table = require('./table');
 
         var directory = table.create(
-            'directory', 
+            'directory',
             [
             ],
             {
@@ -23,7 +23,7 @@ define(
 
                     for (var i = offset, l = numTables * 16; i < l; i += 16) {
                         var name = reader.readString(i, 4);
-                        //console.log(name);
+
                         tables[name] = {
                             name : name,
                             checkSum : reader.readUint32(i + 4),
@@ -35,7 +35,7 @@ define(
                     return tables;
                 },
                 write: function(writer, ttf) {
-                    
+
                     var tables = ttf.support.tables;
                     for (var i = 0, l = tables.length; i < l; i++) {
                         writer.writeString(tables[i].name);

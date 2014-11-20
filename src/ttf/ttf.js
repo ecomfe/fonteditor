@@ -1,9 +1,9 @@
 /**
  * @file ttf.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- * 
+ *
  * ttf 信息读取函数
  */
 
@@ -20,12 +20,12 @@ define(
 
         /**
          * 合并两个ttfObject，此处仅合并简单字形
-         * 
+         *
          * @param {Object} ttf ttfObject
          * @param {Object} imported ttfObject
          * @param {Object} options 参数选项
          * @param {boolean} options.scale 是否自动缩放
-         * 
+         *
          * @return {Object} 合并后的ttfObject
          */
         function merge(ttf, imported, options) {
@@ -41,7 +41,7 @@ define(
             var list = imported.glyf.filter(function(g, index) {
                 return g.contours && g.contours.length //简单轮廓
                     && g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn'; // 非预定义字形
-                    
+
             });
 
             list.forEach(function(g) {
@@ -54,13 +54,13 @@ define(
 
                 // 重新计算xmin，xmax，ymin，ymax
                 if (
-                    undefined === g.xMin 
-                    || undefined === g.yMax 
-                    || undefined === g.leftSideBearing 
+                    undefined === g.xMin
+                    || undefined === g.yMax
+                    || undefined === g.leftSideBearing
                     || undefined === g.advanceWidth
                 ) {
                     var bound = computeBoundingBox.computePathBox.apply(this, g.contours);
-                    
+
                     g.xMin = bound.x;
                     g.xMax = bound.x + bound.width;
                     g.yMin = bound.y;
@@ -80,8 +80,6 @@ define(
                     g.advanceWidth = Math.round(g.advanceWidth * scale);
                 }
 
-                //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
-
                 ttf.glyf.push(g);
             });
 
@@ -90,7 +88,7 @@ define(
 
         /**
          * ttf读取函数
-         * 
+         *
          * @constructor
          * @param {Object} ttf ttf文件结构
          */
@@ -100,7 +98,7 @@ define(
 
         /**
          * 获取所有的字符信息
-         * 
+         *
          * @return {Object} 字符信息
          */
         TTF.prototype.codes = function() {
@@ -110,7 +108,7 @@ define(
         /**
          * 根据编码获取字形索引
          * @param {string} c 字符或者字符编码
-         * 
+         *
          * @return {?number} 返回glyf索引号
          */
         TTF.prototype.getCodeGlyfIndex = function(c) {
@@ -122,7 +120,7 @@ define(
         /**
          * 根据编码获取字形
          * @param {string} c 字符或者字符编码
-         * 
+         *
          * @return {?Object} 返回glyf对象
          */
         TTF.prototype.getCodeGlyf = function(c) {
@@ -133,7 +131,7 @@ define(
         /**
          * 根据索引获取字形
          * @param {number} glyfIndex glyf的索引
-         * 
+         *
          * @return {?Object} 返回glyf对象
          */
         TTF.prototype.getIndexGlyf = function(glyfIndex) {
@@ -144,7 +142,7 @@ define(
 
         /**
          * 设置ttf对象
-         * 
+         *
          * @return {this}
          */
         TTF.prototype.set = function(ttf) {
@@ -155,7 +153,7 @@ define(
 
         /**
          * 获取ttf对象
-         * 
+         *
          * @return {ttfObject} ttf ttf对象
          */
         TTF.prototype.get = function() {
@@ -164,9 +162,9 @@ define(
 
         /**
          * 添加glyf
-         * 
+         *
          * @param {Object} glyf glyf对象
-         * 
+         *
          * @return {Number} 添加的glyf
          */
         TTF.prototype.addGlyf = function(glyf) {
@@ -175,7 +173,7 @@ define(
 
         /**
          * 插入glyf
-         * 
+         *
          * @param {Object} glyf glyf对象
          * @param {Object} insertIndex 插入的索引
          * @return {Number} 添加的glyf
@@ -193,11 +191,11 @@ define(
 
         /**
          * 合并两个ttfObject，此处仅合并简单字形
-         * 
+         *
          * @param {Object} imported ttfObject
          * @param {Object} options 参数选项
          * @param {boolean} options.scale 是否自动缩放
-         * 
+         *
          * @return {Array} 添加的glyf
          */
         TTF.prototype.mergeGlyf = function(imported, options) {
@@ -208,7 +206,7 @@ define(
 
         /**
          * 删除指定字形
-         * 
+         *
          * @param {Array} indexList 索引列表
          * @return {Array} 删除的glyf
          */
@@ -227,7 +225,7 @@ define(
 
         /**
          * 设置unicode代码
-         * 
+         *
          * @param {string} unicode unicode代码 $E021, $22
          * @param {Array} indexList 索引列表
          * @return {Array} 改变的glyf
@@ -263,7 +261,7 @@ define(
 
         /**
          * 添加并体替换指定的glyf
-         * 
+         *
          * @param {Array} glyfList 添加的列表
          * @param {Array} indexList 需要替换的索引列表
          * @return {Array} 改变的glyf
@@ -289,13 +287,13 @@ define(
 
         /**
          * 调整glyf位置
-         * 
+         *
          * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
          * @return {Array} 改变的glyf
          */
         TTF.prototype.adjustGlyfPos = function(setting, indexList) {
-            
+
             var glyfList = this.getGlyf(indexList);
             var changed = false;
 
@@ -312,7 +310,7 @@ define(
                         var offset = setting.leftSideBearing - g.leftSideBearing;
                         g.leftSideBearing = g.xMin = setting.leftSideBearing;
                         g.xMax += offset;
-                        
+
                         if (undefined !== setting.rightSideBearing) {
                             g.advanceWidth = g.xMax + offset;
                         }
@@ -323,14 +321,13 @@ define(
                         if (g.contours && g.contours.length) {
                             g.contours.forEach(function(contour) {
                                 pathAdjust(contour, 1, 1, offset);
-                            }); 
+                            });
                         }
                     }
                     else if (undefined !== setting.rightSideBearing) {
                         g.advanceWidth = g.xMax + setting.rightSideBearing;
                     }
 
-                    //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
                 });
             }
 
@@ -344,7 +341,7 @@ define(
                     if (g.contours && g.contours.length) {
                         var bound = computeBoundingBox.computePath.apply(this, g.contours);
                         var offset = verticalAlign - bound.y;
-                        
+
                         g.yMin += offset;
                         g.yMax += offset;
 
@@ -364,13 +361,13 @@ define(
 
         /**
          * 调整glyf
-         * 
+         *
          * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
          * @return {boolean}
          */
         TTF.prototype.adjustGlyf = function(setting, indexList) {
-            
+
             var glyfList = this.getGlyf(indexList);
             var changed = false;
 
@@ -390,7 +387,7 @@ define(
                 });
             }
 
-           
+
             if (setting.scale && setting.scale != 1) {
 
                 changed = true;
@@ -414,7 +411,7 @@ define(
                         g.leftSideBearing = g.xMin;
                         g.advanceWidth = g.xMax + rightSideBearing;
                     }
-                    //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
+
                 });
             }
             // 缩放到embox
@@ -453,7 +450,6 @@ define(
                         }
                     }
 
-                    //console.log(g.xMin, g.xMax, g.yMin, g.yMax, g.leftSideBearing, g.advanceWidth);
                 });
             }
 
@@ -462,7 +458,7 @@ define(
 
         /**
          * 获取glyf列表
-         * 
+         *
          * @param {Array} indexList 索引列表
          * @return {Array} glyflist
          */
@@ -471,7 +467,7 @@ define(
             if (indexList && indexList.length) {
                 return indexList.map(function(item) {
                     return glyf[item];
-                }); 
+                });
             }
             else {
                 return glyf;
@@ -480,7 +476,7 @@ define(
 
         /**
          * 更新指定的glyf
-         * 
+         *
          * @param {Object} glyf glyfobject
          * @param {string} index 需要替换的索引列表
          * @return {Array} 改变的glyf
@@ -495,7 +491,7 @@ define(
 
         /**
          * 设置glyf
-         * 
+         *
          * @param {Array} glyfList glyf列表
          * @return {Array} 设置的glyf列表
          */
@@ -508,7 +504,7 @@ define(
 
         /**
          * 设置名字
-         * 
+         *
          * @return {Object} 名字对象
          */
         TTF.prototype.setName = function(name) {
@@ -523,7 +519,7 @@ define(
 
         /**
          * 设置head信息
-         * 
+         *
          * @param {Object} head 头部信息
          * @return {Object} 头对象
          */
@@ -548,7 +544,7 @@ define(
 
         /**
          * 设置hhea信息
-         * 
+         *
          * @param {Object} fields 字段值
          * @return {Object} 头对象
          */
@@ -559,15 +555,15 @@ define(
 
         /**
          * 设置OS2信息
-         * 
+         *
          * @param {Object} fields 字段值
          * @return {Object} 头对象
          */
         TTF.prototype.setOS2 = function(fields) {
             lang.overwrite(
-                this.ttf['OS/2'], fields, 
+                this.ttf['OS/2'], fields,
                 [
-                    'usWinAscent', 'usWinDescent', 
+                    'usWinAscent', 'usWinDescent',
                     'sTypoAscender', 'sTypoDescender', 'sTypoLineGap',
                     'sxHeight', 'bXHeight', 'usWeightClass', 'usWidthClass',
                     'yStrikeoutPosition', 'yStrikeoutSize',
@@ -582,13 +578,13 @@ define(
 
         /**
          * 设置post信息
-         * 
+         *
          * @param {Object} fields 字段值
          * @return {Object} 头对象
          */
         TTF.prototype.setPost = function(fields) {
             lang.overwrite(
-                this.ttf.post, fields, 
+                this.ttf.post, fields,
                 [
                     'underlinePosition', 'underlineThickness'
                 ]
@@ -599,7 +595,7 @@ define(
 
         /**
          * 计算度量信息
-         * 
+         *
          * @return {Object} 度量信息
          */
         TTF.prototype.calcMetrics = function() {
@@ -635,7 +631,7 @@ define(
                 descent: usWinDescent,
                 sTypoAscender: usWinAscent,
                 sTypoDescender: usWinDescent,
-                
+
                 // 自动设置项目
                 usWinAscent: usWinAscent,
                 usWinDescent: -usWinDescent,
