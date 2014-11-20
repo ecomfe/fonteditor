@@ -30,6 +30,7 @@
         <a id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-success btn-sm">导出woff</a>
         <a id="export-btn-svg" href="#" data-action="export" data-type="svg" class="btn btn-success btn-sm">导出svg</a>
         <a id="export-btn-eot" href="#" data-action="export" data-type="eot" class="btn btn-success btn-sm">导出eot</a>
+        <a id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-success btn-sm">导出zip</a>
 
         <button data-action="save" type="button" class="btn btn-warning btn-sm">保存项目</button>
 
@@ -114,7 +115,8 @@
             paths: {
                 deflate: '../dep/pako_deflate.min',
                 inflate: '../dep/pako_inflate.min',
-                utpl: '../dep/utpl.min'
+                utpl: '../dep/utpl.min',
+                JSZip: '../dep/jszip/jszip'
             }
         });
         define('jquery', $);
