@@ -18,6 +18,9 @@ exports.getProcessors = function () {
             }
         }),
         new ModuleCompiler( {
+            files: [
+                'src/fonteditor/main.js'
+            ],
             configFile: './module.conf'
         }),
 
@@ -36,6 +39,7 @@ exports.getProcessors = function () {
                 'src/editor/*/*',
                 'src/editor/*/*/*',
                 'src/graphics/*',
+                'src/graphics/join/*',
                 'src/math/*',
                 'src/render/*',
                 'src/render/*/*',
@@ -44,7 +48,9 @@ exports.getProcessors = function () {
                 'src/ttf/*/*',
                 'src/ttf/*/*/*',
                 'src/fonteditor/dialog/*',
-                'src/fonteditor/widget/*'
+                'src/fonteditor/widget/*',
+                'src/fonteditor/controller/*',
+                'src/fonteditor/data/*'
             ]
         })
     ];
