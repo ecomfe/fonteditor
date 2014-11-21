@@ -11,14 +11,10 @@ define(
     function(require) {
 
         var TTFWriter = require('ttf/ttfwriter');
-        var deflate = require('deflate');
         var ttf2woff = require('ttf/ttf2woff');
         var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
-        var ttf2base64 = require('ttf/ttf2base64');
-        var woff2base64 = require('ttf/woff2base64');
-        var eot2base64 = require('ttf/eot2base64');
-        var svg2base64 = require('ttf/svg2base64');
+        var bytes2base64 = require('ttf/util/bytes2base64');
         var JSZip = require('JSZip');
 
         /**
@@ -32,28 +28,27 @@ define(
          *
          * @return {String} base64ed font
          */
-        function font2base64(ttf, options) {
-
-            var base64Str = '';
+        function font2buffer(ttf, options) {
             var buffer = null;
             if (options.type === 'woff') {
-                buffer = ttf2woff(new TTFWriter().write(ttf), deflate);
-                base64Str = woff2base64(buffer);
+                buffer = ttf2woff(new TTFWriter().write(ttf), {
+                    deflate: function(input) {
+                        return JSZip.compressions.DEFLATE.compress(input);
+                    }
+                });
             }
             else if (options.type === 'eot') {
                 buffer = ttf2eot(new TTFWriter().write(ttf));
-                base64Str = eot2base64(buffer);
             }
             else if(options.type === 'svg') {
-                base64Str = svg2base64(ttf2svg(ttf));
+                buffer = ttf2svg(ttf);
             }
             else {
                 buffer = new TTFWriter().write(ttf);
-                base64Str = ttf2base64(buffer);
                 options.type = 'ttf';
             }
 
-            return base64Str;
+            return buffer;
         }
 
         /**
@@ -80,18 +75,15 @@ define(
                     if (options.type === 'zip') {
 
                         var zip = new JSZip();
-                        var fontzip = zip.folder('font');
+                        var fontzip = zip.folder('fonteditor');
 
                         ['woff', 'eot', 'svg', 'ttf'].forEach(function(fileType) {
 
                             fontzip.file(
                                 fileName + '.' + fileType,
-                                font2base64(ttf, {
+                                font2buffer(ttf, {
                                     type: fileType
-                                }).split('base64,')[1],
-                                {
-                                    base64: true
-                                }
+                                })
                             );
 
                         });
@@ -102,7 +94,14 @@ define(
 
                     }
                     else {
-                        base64Str = font2base64.apply(this, arguments);
+                        var buffer = font2buffer(ttf, options);
+                        if (options.type == 'svg') {
+                            base64Str = btoa(buffer);
+                        }
+                        else {
+                            base64Str = bytes2base64(buffer);
+                        }
+                        base64Str = 'data:font/'+ options.type +';charset=utf-8;base64,' + base64Str;
                     }
 
                     var target = $(options.target);

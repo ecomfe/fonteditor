@@ -14,11 +14,13 @@ define(
         var woff2ttf = require('ttf/woff2ttf');
         var eot2ttf = require('ttf/eot2ttf');
         var svg2ttfobject = require('ttf/svg2ttfobject');
-        
+        var JSZip = require('JSZip');
         var loading = require('./loading');
 
         var woffOptions = {
-            inflate: require('inflate').inflate
+            inflate: function(input) {
+                return JSZip.compressions.DEFLATE.uncompress(input);
+            }
         };
 
 
