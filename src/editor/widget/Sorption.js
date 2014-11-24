@@ -24,7 +24,7 @@ define(
             var r = arr.length - 1;
             var mid;
             var axis;
-            while(l <= r) {
+            while (l <= r) {
                 mid = (l + r) >> 1;
                 axis = arr[mid].axis;
 
@@ -49,8 +49,8 @@ define(
          * @param {Object} options 参数选项
          */
         function Sorption(options) {
-            this.gridDelta = options.gridDelta || 5; // 吸附检查offset
-            this.delta = options.delta || 5; // 吸附检查offset
+            this.gridDelta = options.gridDelta || 5; // 吸附网格 offset
+            this.delta = options.delta || 5; // 吸附对象 offset
             this.enableGrid = options.enableGrid || false;
             this.enableShape = options.enableShape || true;
         }

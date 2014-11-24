@@ -33,7 +33,7 @@ define(
         History.prototype.add = function(object) {
             this.queue.splice(this.index + 1, this.maxRecord);
             this.queue.push(object);
-            if(this.queue.length > this.maxRecord) {
+            if (this.queue.length > this.maxRecord) {
                 this.queue.shift();
             }
             this.index = this.queue.length - 1;
@@ -55,7 +55,7 @@ define(
          * @return {Object}
          */
         History.prototype.forward = function() {
-            if(this.index < this.queue.length - 1) {
+            if (this.index < this.queue.length - 1) {
                 this.index++;
             }
             return lang.clone(this.queue[this.index]);
@@ -67,7 +67,7 @@ define(
          * @return {Object}
          */
         History.prototype.back = function() {
-            if(this.index > 0) {
+            if (this.index > 0) {
                 this.index--;
             }
             return lang.clone(this.queue[this.index]);

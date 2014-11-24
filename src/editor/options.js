@@ -20,7 +20,8 @@ define(
                     enableGrid: false, // 吸附到网格
                     enableShape: true, // 吸附到对象
                     gridDelta: 5, // 网格delta
-                    delta: 5 // 对象delta
+                    delta: 5, // 对象delta
+                    sorptionColor: '#4AFF4A'
                 },
 
                 // 辅助线

@@ -37,6 +37,7 @@ define(
             if (elableSorption) {
                 var centerX = bound.x + bound.width / 2;
                 var centerY = bound.y + bound.height / 2;
+                var sorptionColor = this.editor.options.sorption.sorptionColor;
 
                 if (!fixX) {
 
@@ -47,7 +48,7 @@ define(
                             type: 'line',
                             id: 'sorptionX',
                             style: {
-                                strokeColor: '#4AFF4A'
+                                strokeColor: sorptionColor
                             },
                             p0: {},
                             p1: {}
@@ -82,7 +83,7 @@ define(
                             type: 'line',
                             id: 'sorptionY',
                             style: {
-                                strokeColor: '#4AFF4A'
+                                strokeColor: sorptionColor
                             },
                             p0: {},
                             p1: {}

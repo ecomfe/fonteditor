@@ -174,7 +174,7 @@ define(
          * 设置操作的shapes
          */
         ShapesGroup.prototype.setMode = function(mode) {
-            this.mode = mode; // 两种变化模式，scale和rotate
+            this.mode = mode; // 三种变化模式，scale/rotate/move
         };
 
 

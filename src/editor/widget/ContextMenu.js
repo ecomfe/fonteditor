@@ -41,7 +41,7 @@ define(
             this.commands = {};
 
             var me = this;
-            me.main.addEventListener('click', me['_command_click'] = function(e) {
+            me['_command_click'] = function(e) {
 
                 var id = e.target.getAttribute('data-id');
                 var superId = e.target.getAttribute('data-super');
@@ -54,7 +54,8 @@ define(
                     };
                     me.onClick && me.onClick(event);
                 }
-            } , false);
+            };
+            me.main.addEventListener('click', me['_command_click'], false);
 
             me['_hide_click'] = function(e) {
                 me.hide();
@@ -149,11 +150,11 @@ define(
              */
             dispose: function() {
                 this.hide();
-                this.main.removeEventListener('click', this['_command_click'], false);
-                this.container.removeEventListener('click', this['_hide_click'], false);
+                this.main.removeEventListener('click', this['_command_click']);
+                this.container.removeEventListener('click', this['_hide_click']);
+                this['_command_click'] = this['_hide_click'] = null;
                 this.main.remove();
                 this.main = this.container = this.pos = null;
-                this['_command_click'] = this['_hide_click'] = null;
                 this.onClick = null;
             }
         });

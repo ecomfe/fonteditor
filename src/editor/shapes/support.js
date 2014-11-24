@@ -5,8 +5,6 @@
  * @description
  * 支持的自选形状
  */
-
-
 define(
     function(require) {
         return {

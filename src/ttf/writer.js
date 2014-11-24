@@ -305,7 +305,7 @@ define(
              * 
              * @return {ArrayBuffer}
              */
-            getBuffer: function(begin, end) {
+            getBuffer: function() {
                 return this.view.buffer;
             },
 
