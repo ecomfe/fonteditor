@@ -1,7 +1,7 @@
 /**
  * @file loader.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 加载器
  */
@@ -14,19 +14,18 @@ define(
         var woff2ttf = require('ttf/woff2ttf');
         var eot2ttf = require('ttf/eot2ttf');
         var svg2ttfobject = require('ttf/svg2ttfobject');
+        var inflate = require('inflate');
         var JSZip = require('JSZip');
         var loading = require('./loading');
 
         var woffOptions = {
-            inflate: function(input) {
-                return JSZip.compressions.DEFLATE.uncompress(input);
-            }
+            inflate: inflate.inflate
         };
 
 
         /**
          * 加载sfnt结构字体
-         * 
+         *
          * @param {File} file file对象
          * @param {Object} options 参数
          * @param {Object} options.type 文件类型
@@ -72,7 +71,7 @@ define(
 
         /**
          * 加载sfnt结构字体
-         * 
+         *
          * @param {ArrayBuffer} buffer 二进制流
          * @param {Object} options 参数
          * @param {Object} options.type 文件类型
@@ -104,7 +103,7 @@ define(
 
         /**
          * 加载svg结构字体
-         * 
+         *
          * @param {File} file file对象
          * @param {Object} options 参数
          * @param {Function} options.success 成功回调
@@ -141,7 +140,7 @@ define(
 
         /**
          * 加载svg结构字体
-         * 
+         *
          * @param {File} svg svg文本
          * @param {Object} options 参数
          * @param {Function} options.success 成功回调
@@ -165,7 +164,7 @@ define(
 
             /**
              * 加载字体
-             * 
+             *
              * @param {File} file file对象
              * @param {Object} options 参数
              * @param {Object} options.type 文件类型
@@ -198,7 +197,7 @@ define(
 
             /**
              * 支持的加载类型
-             * 
+             *
              * @param {string} fileName 文件类型
              * @return {boolean}
              */
@@ -208,7 +207,7 @@ define(
 
             /**
              * 支持的导入类型
-             * 
+             *
              * @param {string} fileName 文件类型
              * @return {boolean}
              */

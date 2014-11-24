@@ -15,6 +15,7 @@ define(
         var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
         var bytes2base64 = require('ttf/util/bytes2base64');
+        var deflate = require('deflate');
         var JSZip = require('JSZip');
 
         /**
@@ -31,11 +32,7 @@ define(
         function font2buffer(ttf, options) {
             var buffer = null;
             if (options.type === 'woff') {
-                buffer = ttf2woff(new TTFWriter().write(ttf), {
-                    deflate: function(input) {
-                        return JSZip.compressions.DEFLATE.compress(input);
-                    }
-                });
+                buffer = ttf2woff(new TTFWriter().write(ttf), deflate);
             }
             else if (options.type === 'eot') {
                 buffer = ttf2eot(new TTFWriter().write(ttf));
