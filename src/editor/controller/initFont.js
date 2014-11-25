@@ -15,6 +15,7 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var guid = require('render/util/guid');
         var compoundGlyf = require('graphics/compoundGlyf');
+        var getFontHash = require('../util/getFontHash');
 
         /**
          * 初始化字体
@@ -24,6 +25,8 @@ define(
         function setFont(font) {
 
             this.font = font;
+            this.fontHash = getFontHash(font);
+            
             var originX = this.axis.x;
             var originY = this.axis.y;
             // 设置字形
@@ -55,7 +58,6 @@ define(
                 var shapes = fontLayer.shapes;
 
                 // 重置历史
-                this.changed = false;
                 this.history.reset();
                 this.history.add(lang.clone(shapes));
 

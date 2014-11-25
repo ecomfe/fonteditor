@@ -17,13 +17,7 @@ define(
             var me = this;
             // 保存历史记录
             this.on('change', function(e) {
-                me.changed = true;
                 me.history.add(me.getShapes());
-            });
-
-            // 是否改变
-            this.on('save', function(e) {
-                me.changed = false;
             });
         }
 

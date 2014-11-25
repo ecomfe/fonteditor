@@ -54,7 +54,7 @@ define(
                 $('#setting-glyf-unicode').on('blur', function(e) {
                     var val = $(this).val();
                     var ctlGlyfName = $('#setting-glyf-name');
-                    if (!ctlGlyfName.val() && val.match(unicodeREG)) {
+                    if (val.match(unicodeREG)) {
                         val = Number('0x' + val.split(',')[0].slice(1));
                         ctlGlyfName.val(string.getUnicodeName(val));
                     }

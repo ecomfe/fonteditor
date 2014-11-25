@@ -16,6 +16,7 @@ define(
         var clipboard = require('./widget/clipboard');
         var History = require('./widget/History');
         var Sorption = require('./widget/Sorption');
+        var getFontHash = require('./util/getFontHash');
 
         // editor 的控制器
         var initLayer = require('./controller/initLayer');
@@ -164,7 +165,8 @@ define(
          * @return {boolean}
          */
         Editor.prototype.isChanged = function() {
-            return this.changed;
+            var font = this.getFont();
+            return this.fontHash !== getFontHash(font);
         };
 
         /**
