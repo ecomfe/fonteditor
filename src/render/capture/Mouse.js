@@ -45,7 +45,7 @@ define(
                 x: getX(e),
                 y: getY(e),
                 which: e.which,
-                ctrlKey: e.ctrlKey,
+                ctrlKey: e.ctrlKey || e.metaKey,
                 metaKey: e.metaKey,
                 altKey: e.altKey,
                 shiftKey: e.shiftKey,

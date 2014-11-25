@@ -50,6 +50,8 @@ define(
                 if (!program.listening) {
                     return;
                 }
+                
+                e.ctrlKey = e.ctrlKey || e.metaKey;
 
                 // 全选
                 if (65 === e.keyCode && e.ctrlKey) {

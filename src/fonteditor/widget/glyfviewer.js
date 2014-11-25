@@ -158,7 +158,8 @@ define(
         // 按下事件
         function downlistener(e) {
             var me = this;
-
+            e.ctrlKey = e.ctrlKey || e.metaKey;
+            
             if (me.listening) {
                 // 阻止ctrl+A默认事件
                  if (65 === e.keyCode && e.ctrlKey) {

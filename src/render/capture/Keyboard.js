@@ -44,7 +44,7 @@ define(
             return {
                 keyCode: e.keyCode,
                 key: keyCodeMap[e.keyCode],
-                ctrlKey: e.ctrlKey,
+                ctrlKey: e.ctrlKey || e.metaKey,
                 metaKey: e.metaKey,
                 altKey: e.altKey,
                 shiftKey: e.shiftKey,
