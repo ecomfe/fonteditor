@@ -10,7 +10,7 @@ define(
     function(require) {
 
         var string = require('ttf/util/string');
-        var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/i;
+        var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
 
         var tpl = ''
             + '<div class="form-inline">'
@@ -51,11 +51,12 @@ define(
             },
 
             set: function(setting) {
-                $('#setting-glyf-name').on('focus', function(e) {
-                    var val = $('#setting-glyf-unicode').val();
-                    if (val.match(unicodeREG)) {
+                $('#setting-glyf-unicode').on('blur', function(e) {
+                    var val = $(this).val();
+                    var ctlGlyfName = $('#setting-glyf-name');
+                    if (!ctlGlyfName.val() && val.match(unicodeREG)) {
                         val = Number('0x' + val.split(',')[0].slice(1));
-                        this.value = string.getUnicodeName(val);
+                        ctlGlyfName.val(string.getUnicodeName(val));
                     }
                 });
                 this.setFields(setting || {});

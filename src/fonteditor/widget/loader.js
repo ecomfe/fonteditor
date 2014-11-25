@@ -180,7 +180,7 @@ define(
                         loadSVGFile(file, options);
                     }
                 }
-                else if (options.type == 'ttf' || options.type == 'woff' || options.type == 'eot'){
+                else if (options.type == 'ttf' || options.type == 'woff' || options.type == 'eot') {
                     if (file instanceof ArrayBuffer) {
                         loadSFNTBinary(file, options);
                     }

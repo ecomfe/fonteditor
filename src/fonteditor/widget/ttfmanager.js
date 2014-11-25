@@ -12,6 +12,7 @@ define(
         var lang = require('common/lang');
         var History = require('editor/widget/History'); 
         var TTF = require('ttf/ttf');
+        var string = require('ttf/util/string');
 
         /**
          * 清除glyf编辑状态
@@ -94,8 +95,23 @@ define(
          * @return {this}
          */
         Manager.prototype.insertGlyf = function(glyf, beforeIndex) {
+            var glyfList = this.ttf.getGlyf();
+            var unicode = 0x20;
 
+            // 找到unicode的最大值
+            for (var i = glyfList.length - 1; i > 0 ; i--) {
+                var g = glyfList[i];
+                if (g.unicode && g.unicode.length) {
+                    var u = Math.max.apply(null, g.unicode);
+                    unicode = Math.max(u, unicode);
+                }
+            }
+
+            unicode++;
+            glyf.unicode = [unicode];
+            glyf.name = string.getUnicodeName(unicode);
             glyf.modify = 'new';
+
             this.ttf.insertGlyf(glyf, beforeIndex);
             this.fireChange(true);
 

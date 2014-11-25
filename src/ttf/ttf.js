@@ -297,26 +297,19 @@ define(
             var glyfList = this.getGlyf(indexList);
             var changed = false;
 
-            // 左右边轴
-            if (undefined !== setting.leftSideBearing || undefined !== setting.rightSideBearing) {
+            // 左边轴
+            if (undefined !== setting.leftSideBearing) {
 
                 changed = true;
 
                 glyfList.forEach(function(g) {
 
-                    // 设置左边轴
-                    if (undefined !== setting.leftSideBearing && g.leftSideBearing != setting.leftSideBearing) {
+                    if (g.leftSideBearing != setting.leftSideBearing) {
 
                         var offset = setting.leftSideBearing - g.leftSideBearing;
                         g.leftSideBearing = g.xMin = setting.leftSideBearing;
                         g.xMax += offset;
-
-                        if (undefined !== setting.rightSideBearing) {
-                            g.advanceWidth = g.xMax + offset;
-                        }
-                        else {
-                            g.advanceWidth += offset;
-                        }
+                        g.advanceWidth += offset;
 
                         if (g.contours && g.contours.length) {
                             g.contours.forEach(function(contour) {
@@ -324,10 +317,17 @@ define(
                             });
                         }
                     }
-                    else if (undefined !== setting.rightSideBearing) {
-                        g.advanceWidth = g.xMax + setting.rightSideBearing;
-                    }
 
+                });
+            }
+
+            // 右边轴
+            if (undefined !== setting.rightSideBearing) {
+
+                changed = true;
+
+                glyfList.forEach(function(g) {
+                    g.advanceWidth = g.xMax + setting.rightSideBearing;
                 });
             }
 
