@@ -110,11 +110,42 @@ define(
                 : zCount  < 0 ? 1 : -1;
         }
 
+
+        /**
+         * 获取点的hash
+         * 
+         * @return {number} 哈希值
+         */
+        function getPointHash(p) {
+            return (p.x * 31 + p.y) * 31 + (p.onCurve ? 1 : 0);
+        }
+        
+        /**
+         * 移除重复点
+         * 
+         * @param {Array} points 点集合
+         * @return {Array} 移除后点集合
+         */
+        function removeOverlap(points) {
+            var hash = {};
+            var ret = [];
+            for (var i = 0, l = points.length; i < l ; i++) {
+                var hashcode = points[i].x * 31 + points[i].y;
+                if (!hash[hashcode]) {
+                    ret.push(points[i]);
+                    hash[hashcode] = 1;
+                }
+            }
+            return ret;
+        }
+
         return {
             ceil: ceil,
             ceilPoint: ceilPoint,
             isPointInBound: isPointInBound,
-            isClockWise: isClockWise
+            isClockWise: isClockWise,
+            removeOverlap: removeOverlap,
+            getPointHash: getPointHash
         };
     }
 );

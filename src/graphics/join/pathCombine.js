@@ -90,7 +90,7 @@ define(
 
             for (var i = 0; i < splitedPaths0.length; i++) {
                 var curPath = splitedPaths0[i];
-                var cross = curPath.cross; // 起始cross
+                var cross = !!curPath.cross; // 起始cross
                 var length = curPath.length;
                 
                 // 对于求相切的情况，外轮廓不需要处理，内轮廓需要根据另一个轮廓的方向调整反向
@@ -109,12 +109,13 @@ define(
 
                     var paths = nextHash[hashcode(end)];
 
-                    // 选取异向
+                    // 这里如果是相交或者合并的情况，不需要处理，如果是相切的情况则需要取反向的曲线
                     var p = paths[0];
-                    if (relation === Relation.tangency && cross == p.cross && paths.length > 1) {
+                    if (relation === Relation.tangency && cross == !!p.cross && paths.length > 1) {
                         p = paths[1];
                     }
 
+                    // 选取异向
                     if (end.x == p[0].x && end.y == p[0].y) {
                     }
                     else {

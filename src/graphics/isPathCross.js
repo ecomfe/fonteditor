@@ -12,6 +12,7 @@ define(
         var getPathJoint = require('./join/getPathJoint');
         var isInsidePath = require('./isInsidePath');
         var isBoundingBoxCross = require('./isBoundingBoxCross');
+        var util = require('./util');
 
         /**
          * 判断x轴射线是否穿过线段
@@ -22,14 +23,13 @@ define(
          * 
          * 2: path0 包含 path1
          * 3: path1 包含 path0
+         * 4: 重叠
          */
         function isPathCross(path0, path1, bound0, bound1) {
             bound0 = bound0 || computeBoundingBox.computePath(path0);
             bound1 = bound1 || computeBoundingBox.computePath(path1);
 
-            var boundCross = isBoundingBoxCross(bound0, bound1);
-
-            if (boundCross) {
+            if (isBoundingBoxCross(bound0, bound1)) {
                 var result = getPathJoint(path0, path1);
                 if (!result) {
                     // 0 包含 1
@@ -42,7 +42,7 @@ define(
                     }
                 }
                 else {
-                    return result;
+                    return util.removeOverlap(result);
                 }
             }
 

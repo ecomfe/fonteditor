@@ -12,6 +12,7 @@ define(
 
         var isPathCross = require('../isPathCross');
         var isInsidePath = require('../isInsidePath');
+        //var isPathOverlap = require('../isPathOverlap');
         var getBezierQ2Point = require('math/getBezierQ2Point');
         var util = require('../util');
         var Relation = require('./relation');
@@ -27,13 +28,18 @@ define(
          * @return {boolean} 是否相交
          */
         function getPathCross(path, splitedPath) {
+
+            // if (isPathOverlap(splitedPath, path)) {
+            //     return 0;
+            // }
+
             var inPath = isInsidePath(
                 path, 
                 splitedPath[1].onCurve 
                     ? splitedPath[1]
                     : getBezierQ2Point(splitedPath[0], splitedPath[1], splitedPath[2], 0.5)
             );
-            return !!inPath;
+            return inPath ? 1 : 0;
         }
 
         /**
@@ -67,7 +73,9 @@ define(
                 var inPath = false;
                 var partInPath = false;
                 var inPathBefore = -1;
-                // 求path0的分割曲线
+                var isOverlap = false;
+
+                // 判断path0的相交情况
                 splitedPaths0 = splitedPaths0.map(function(splitedPath) {
 
                     splitedPath.cross = getPathCross(path1, splitedPath);
@@ -76,15 +84,13 @@ define(
                         inPath = true;
                     }
 
+                    if (2 === splitedPath.cross) {
+                        isOverlap = true;
+                    }
+
                     // 这里需要判断整个曲线有相交区域，但是部分曲线只有交点没有相交轮廓的情况
-                    if (inPathBefore === splitedPath.cross) {
-                        if (false === inPathBefore) {
-                            partInPath = true;
-                        }
-                        else {
-                            // 这里需要修正相交边缘重叠的情况，不然组合路径的时候会出问题
-                            // TODO
-                        }
+                    if (inPathBefore === splitedPath.cross && 0 === inPathBefore) {
+                        partInPath = true;
                     }
                     
 
@@ -115,13 +121,22 @@ define(
                     console.warn('part cross');
                 }
                 else {
-                    // 这里只需要判断第一个就可以知道曲线相交情况了
-                    inPath = getPathCross(path0, splitedPaths1[0]);
-                    splitedPaths1 = splitedPaths1.map(function(path) {
-                        path.cross = inPath;
-                        inPath = !inPath;
-                        return path;
-                    });
+                    // 没有重叠的部分只需要判断第一个就可以知道曲线相交情况了
+                    if (!isOverlap) {
+                        inPath = getPathCross(path0, splitedPaths1[0]);
+                        splitedPaths1 = splitedPaths1.map(function(path) {
+                            path.cross = inPath;
+                            inPath = !inPath;
+                            return path;
+                        });
+                    }
+                    else {
+                        // 判断path1的相交情况
+                        splitedPaths1 = splitedPaths1.map(function(splitedPath) {
+                            splitedPath.cross = getPathCross(path0, splitedPath);
+                            return splitedPath;
+                        });
+                    }
                 }
 
                 //异向的 combine 等于相切
