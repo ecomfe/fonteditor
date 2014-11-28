@@ -1,7 +1,7 @@
 /**
  * @file GLYFEditor.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 编辑器组件
  */
@@ -53,7 +53,7 @@ define(
 
         /**
          * font查看器
-         * 
+         *
          * @constructor
          * @param {HTMLElement} main 主元素
          * @param {Object} options 参数
@@ -151,7 +151,7 @@ define(
         };
 
         // 导出editor的函数
-        ['reset','setFont', 'getFont', 'addContours', 'isChanged', 'setAxis', 'adjustFont'].forEach(function(fn) {
+        ['reset','setFont', 'getFont', 'addContours', 'isChanged', 'setChanged', 'setAxis', 'adjustFont'].forEach(function(fn) {
             GLYFEditor.prototype[fn] = function() {
                 return this.editor ? this.editor[fn].apply(this.editor, arguments) : undefined;
             };

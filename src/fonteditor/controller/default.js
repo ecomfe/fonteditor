@@ -137,6 +137,7 @@ define(
                     if (program.ttfManager.get()) {
 
                         if (program.editor.isEditing()) {
+
                             // 如果是正在编辑的
                             if (program.data.editingIndex !== -1) {
                                  program.ttfManager.replaceGlyf(program.editor.getFont(), program.data.editingIndex);
@@ -145,6 +146,7 @@ define(
                             else {
                                 program.ttfManager.insertGlyf(program.editor.getFont());
                             }
+                            program.editor.setChanged(false);
                         }
 
                         if (program.data.projectName) {

@@ -1,7 +1,7 @@
 /**
  * @file Editor.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 字体编辑控制器
  */
@@ -61,7 +61,7 @@ define(
 
         /**
          * 切换编辑模式
-         * 
+         *
          * @param {string} modeName 模式名称
          * @return {Editor} 本对象
          */
@@ -98,7 +98,7 @@ define(
 
         /**
          * 执行指定命令
-         * 
+         *
          * @param {string...} command 指令名，后续为命令参数集合
          * @return {boolean} 是否执行成功
          */
@@ -125,7 +125,7 @@ define(
 
         /**
          * 是否支持指令
-         * 
+         *
          * @param {string} command 指令名
          * @return {boolean} 是否
          */
@@ -135,7 +135,7 @@ define(
 
         /**
          * 添加指令
-         * 
+         *
          * @param {string} command 指令名
          * @param {Function} worker 执行函数
          * @return {boolean} 是否成功
@@ -150,7 +150,7 @@ define(
 
         /**
          * 添加到剪切板
-         * 
+         *
          * @param {Array} 形状集合
          * @return {this}
          */
@@ -161,7 +161,7 @@ define(
 
         /**
          * 是否改变过
-         * 
+         *
          * @return {boolean}
          */
         Editor.prototype.isChanged = function() {
@@ -170,8 +170,23 @@ define(
         };
 
         /**
+         * 重置改变状态
+         * @param {boolean} changed 状态
+         * @return {boolean}
+         */
+        Editor.prototype.setChanged = function(changed) {
+            if (changed) {
+                this.fontHash = 0;
+            }
+            else {
+                var font = this.getFont();
+                this.fontHash = getFontHash(font);
+            }
+        };
+
+        /**
          * 从剪切板中获取
-         * 
+         *
          * @param {Array} 形状集合
          * @return {this}
          */
@@ -181,7 +196,7 @@ define(
 
         /**
          * 获取焦点
-         * 
+         *
          */
         Editor.prototype.focus = function() {
             this.render.focus();
@@ -189,7 +204,7 @@ define(
 
         /**
          * 离开焦点
-         * 
+         *
          */
         Editor.prototype.blur = function() {
             this.render.blur();
@@ -203,7 +218,7 @@ define(
             this.contextMenu.dispose();
             this.render && this.render.dispose();
             this.graduationMarker.dispose();
-            
+
             this.options = this.contextMenu = this.render = null;
             this.fontLayer = this.coverLayer = this.axisLayer = this.graduationLayer = null;
             this.axis = this.rightSideBearing = this.graduation = this.graduationMarker = this.font = null;

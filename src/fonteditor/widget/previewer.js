@@ -1,7 +1,7 @@
 /**
  * @file previewer.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 预览组件
  */
@@ -24,7 +24,7 @@ define(
         var previewTplRender = null; // 模板渲染函数
 
 
-        var isIE = !!navigator.userAgent.match(/\bMSIE\s+\d+\b/);
+        var isIE = !!window.ActiveXObject || "ActiveXObject" in window;
 
         // 列出unicode
         function listUnicode(unicode) {
@@ -35,7 +35,7 @@ define(
 
         /**
          * 生成预览模板
-         * 
+         *
          * @param {Object} ttf ttfObject
          * @param {string} fontFormat 字体类型
          * @return {string} html字符串
@@ -65,7 +65,7 @@ define(
 
             // 过滤不显示的字形
             var filtered = ttf.glyf.filter(function(g) {
-                return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn' 
+                return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn'
                     && g.unicode && g.unicode.length;
             });
 
@@ -101,7 +101,7 @@ define(
 
             /**
              * 加载预览按钮
-             * 
+             *
              * @param {Object} ttf ttfObject
              * @param {string} fontFormat 字体类型
              */
