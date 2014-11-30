@@ -14,9 +14,9 @@ define(
         var getJoint = require('./join/getJoint');
         var pathSplit = require('./join/pathSplit');
         var isBoundingBoxSegmentCross = require('./isBoundingBoxSegmentCross');
-        var interpolate = require('./join/interpolate');
-        var deInterpolate = require('./join/deInterpolate');
-        var util = require('./util');
+        var util = require('./pathUtil');
+        var interpolate = util.interpolate;
+        var deInterpolate = util.deInterpolate;
 
         /**
          * 线段切割路径

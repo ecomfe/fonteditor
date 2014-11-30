@@ -9,9 +9,14 @@
 
 define(
     function(require) {
-        var deInterpolate = require('./deInterpolate');
+        var util = require('../pathUtil');
+        var deInterpolate = util.deInterpolate;
         var Relation = require('./relation');
+        var getPathHash = util.getPathHash;
         var splice = Array.prototype.splice;
+
+        // 最多组合50个路径段组成轮廓
+        var MAX_COMBINE_PATHS = 50;
 
         /**
          * 两个交点的hash
@@ -21,7 +26,7 @@ define(
          * @return {number}
          */
         function hashcode(p0) {
-            return p0.x + ',' + p0.y;
+            return p0.x * 31 + p0.y;
         }
 
         /**
@@ -30,28 +35,30 @@ define(
          * @param {Array} splitedPath 分割的路径
          * @return {Object} 哈希值
          */
-        function getSplitedPathHash(splitedPath) {
-            var splitHash = {};
+        function getPathStartHash(paths) {
+            var pathHash = {};
             var code;
 
             // 根据起始点创建hash
-            splitedPath.forEach(function(path) {
+            paths.forEach(function(splitedPath) {
+                var path = splitedPath.path;
+
                 // 开始点
                 code = hashcode(path[0]);
-                if (!splitHash[code]) {
-                    splitHash[code] = [];
+                if (!pathHash[code]) {
+                    pathHash[code] = [];
                 }
-                splitHash[code].push(path);
+                pathHash[code].push(splitedPath);
 
                 // 结束点
                 code = hashcode(path[path.length - 1]);
-                if (!splitHash[code]) {
-                    splitHash[code] = [];
+                if (!pathHash[code]) {
+                    pathHash[code] = [];
                 }
 
-                splitHash[code].push(path);
+                pathHash[code].push(splitedPath);
             });
-            return splitHash;
+            return pathHash;
         }
 
         /**
@@ -63,95 +70,172 @@ define(
          * @return {Array} 组合后的路径
          */
         function pathCombine(splitedPaths0, splitedPaths1, relation) {
-            var direction0 = splitedPaths0.direction;
-            var direction1 = splitedPaths1.direction;
-            var newPaths = [];
 
-            // 过滤路径
-            var filterPath = function(path){
-                if (relation === Relation.intersect) {
-                    return path.cross;
-                }
-                else if (relation === Relation.join) {
-                    return !path.cross;
-                }
-                else {
-                    return true;
-                }
-            };
+            // 待选集合
+            var selectedPaths = [];
+            // 重叠部分只需要一条路径
+            var overlapHash = {};
+            [splitedPaths0, splitedPaths1].forEach(function(splitedPaths) {
+                for (var i = 0, l = splitedPaths.length; i < l ; i ++) {
 
-            splitedPaths0 = splitedPaths0.filter(filterPath);
-            splitedPaths1 = splitedPaths1.filter(filterPath);
-
-
-            // 计算哈希，用来辅助组合点
-            var splitHash0 = getSplitedPathHash(splitedPaths0);
-            var splitHash1 = getSplitedPathHash(splitedPaths1);
-
-            for (var i = 0; i < splitedPaths0.length; i++) {
-                var curPath = splitedPaths0[i];
-                var cross = !!curPath.cross; // 起始cross
-                var length = curPath.length;
-                
-                // 对于求相切的情况，外轮廓不需要处理，内轮廓需要根据另一个轮廓的方向调整反向
-                if (relation === Relation.tangency && cross && direction0 == direction1) {
-                    curPath = curPath.reverse();
-                }
-                
-                var newPath = curPath.slice(0, length - 1);
-                var start = curPath[0];
-                var end = curPath[length - 1];
-                
-                var nextHash = splitHash1;
-                var loops = 0; // 防止死循环，最多组合100个路径段
-
-                while (++loops < 100 && (Math.abs(start.x - end.x) > 0.001 || Math.abs(start.y - end.y) > 0.001)) {
-
-                    var paths = nextHash[hashcode(end)];
-
-                    // 这里如果是相交或者合并的情况，不需要处理，如果是相切的情况则需要取反向的曲线
-                    var p = paths[0];
-                    if (relation === Relation.tangency && cross == !!p.cross && paths.length > 1) {
-                        p = paths[1];
-                    }
-
-                    // 选取异向
-                    if (end.x == p[0].x && end.y == p[0].y) {
+                    // 重叠部分
+                    if (splitedPaths[i].cross == 2) {
+                        var hash = getPathHash(splitedPaths[i].path);
+                        if (!overlapHash[hash]) {
+                            selectedPaths.push(splitedPaths[i]);
+                            overlapHash[hash] = 1;
+                            overlapHash[getPathHash(splitedPaths[i].path.reverse())] = 1;
+                        }
                     }
                     else {
-                        p = p.reverse();
+                        if (relation === Relation.join && splitedPaths[i].cross == 0) {
+                            selectedPaths.push(splitedPaths[i]);
+                        }
+                        else if (relation === Relation.intersect && splitedPaths[i].cross == 1) {
+                            selectedPaths.push(splitedPaths[i]);
+                        }
+                        else if (relation === Relation.tangency) {
+                            selectedPaths.push(splitedPaths[i]);
+                        }
                     }
 
-                    splice.apply(newPath, [newPath.length, 0].concat(p.slice(0, p.length - 1)));
+                }
+            });
 
-                    cross = !cross;
-                    end = p[p.length - 1];
+            //console.log(selectedPaths);
 
-                    if (nextHash === splitHash1) {
-                        nextHash = splitHash0;
+            // 起始点hash
+            var pathStartHash = getPathStartHash(selectedPaths);
+            // 待选的起始路径集合
+            var startPaths = selectedPaths.filter(function(path) {
+                if (relation === Relation.join || relation === Relation.tangency) {
+                    return path.cross === 0;
+                }
+                else if (relation === Relation.intersect) {
+                    return path.cross === 1;
+                }
+                return false;
+            });
+
+            var combinedPaths = [];
+            for (var pathIndex = 0; pathIndex < startPaths.length; pathIndex++) {
+                var curPath = startPaths[pathIndex];
+                var combinedPath = curPath.path.slice(0, curPath.path.length - 1);
+                var start = curPath.path[0];
+                var end = curPath.path[curPath.path.length - 1];
+                
+                // 防止找不到可组合的轮廓，最多组合MAX_COMBINE_PATHS个路径段
+                var loops = 0;
+                var paths;
+                while (++loops < MAX_COMBINE_PATHS && (Math.abs(start.x - end.x) > 0.001 || Math.abs(start.y - end.y) > 0.001)) {
+
+                    paths = pathStartHash[hashcode(end)];
+
+                    if (!paths.length) {
+                        throw 'can\'t find paths to combine.';
+                        return [];
+                    }
+
+                    // 下一个路径
+                    var path = null;
+
+                    if (paths.length === 2) {
+                        path = paths[0] === curPath ? paths[1] : paths[0];
                     }
                     else {
-                        nextHash = splitHash1;
-                        // 这里需要去掉已经使用的splitedPaths0上的点
-                        splitedPaths0.splice(splitedPaths0.indexOf(p), 1);
+                        var overlapPath;
+                        for (var i = 0, l = paths.length; i < l ; i++) {
+                            if (paths[i] !== curPath) {
+                                if (paths[i].cross === 2) {
+                                    overlapPath = paths[i];
+                                }
+                                // 相切的情况需要优先寻找与当前相交性质相反并且不在同一路径上的路径段
+                                else if (relation === Relation.tangency 
+                                    && curPath.cross !== paths[i].cross && curPath.origin !== paths[i].origin
+                                ) {
+                                   path =  paths[i];
+                                   break;
+                                }
+                                else if (relation === Relation.join && paths[i].cross == 0) {
+                                   path =  paths[i];
+                                   break;
+                                }
+                                else if (relation === Relation.intersect && paths[i].cross == 1) {
+                                   path =  paths[i];
+                                   break;
+                                }
+                            }
+                        }
+
+                        // 如果找不到，则使用重叠的路径
+                        if (!path) {
+                            if (overlapPath) {
+                                // 这里由于相切需要取另一路径上的路径段，
+                                // 因此这里需要重新设置origin
+                                overlapPath.origin = curPath.origin;
+                                path = overlapPath;
+                            }
+                            else {
+                                console.warn('can\'t find paths to combine.');
+                                break;
+                            }
+                        }
                     }
+
+                    // 反转起始点
+                    if ((Math.abs(end.x - path.path[0].x) > 0.001 || Math.abs(end.y - path.path[0].y) > 0.001)) {
+                        path.path = path.path.reverse();
+                    }
+
+                    splice.apply(combinedPath, [combinedPath.length, 0].concat(path.path.slice(0, path.path.length - 1)));
+                    end = path.path[path.path.length - 1];
+                    curPath = path;
+
+                    // 有一种边缘重叠的情况，没有相交区域，不应该移除相切路径段
+                    // 否则会导致组合错误
+                    if (relation === Relation.tangency && path.cross === 2) {
+                        // do nothing
+                    }
+                    // 使用过的路径在哈希中移除
+                    else {
+                        [path.path[0], end].forEach(function(p) {
+                            paths = pathStartHash[hashcode(p)];
+                            var index = paths.indexOf(path);
+                            if (index >= 0) {
+                                paths.splice(index, 1);
+                                if (!paths.length) {
+                                    delete pathStartHash[hashcode(p)];
+                                }
+                            }
+                        });
+                    }
+
+
+                    // 这里需要去掉已经使用的待选路径
+                    var index = startPaths.indexOf(path);
+                    if (index >= 0) {
+                        startPaths.splice(index, 1);
+                    }
+
                 }
-                newPaths.push(newPath);
+
+                if (loops >= MAX_COMBINE_PATHS) {
+                    throw 'can\'t find paths to combine.';
+                    return [];
+                }
+
+                combinedPaths.push(combinedPath);
             }
 
-            if (loops >= 100) {
-                throw 'can\'t find paths to combine.';
-                return [];
-            }
-
-            if (newPaths.length) {
-                return newPaths.map(function(path){
+            if (combinedPaths.length) {
+                return combinedPaths.map(function(path){
                     return deInterpolate(path); 
                 });
             }
             else {
                 return [];
             }
+           
         }
 
 

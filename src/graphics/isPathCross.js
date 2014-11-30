@@ -12,7 +12,7 @@ define(
         var getPathJoint = require('./join/getPathJoint');
         var isInsidePath = require('./isInsidePath');
         var isBoundingBoxCross = require('./isBoundingBoxCross');
-        var util = require('./util');
+        var util = require('./pathUtil');
 
         /**
          * 判断x轴射线是否穿过线段

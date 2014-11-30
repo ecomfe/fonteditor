@@ -16,7 +16,7 @@ define(
         var pathIterator = require('../pathIterator');
 
         function hashcode(p) {
-            return p.x / 7 + p.y / 13 + (p.x + p.y) / 17;
+            return (p.x * 31 + p.y) * 31;
         }
 
         /**

@@ -19,8 +19,9 @@ define(
         var pathRotate = require('./pathRotate');
         var quadraticEquation = require('math/quadraticEquation');
         var isPathCross = require('./isPathCross');
-        var interpolate = require('./join/interpolate');
-        var deInterpolate = require('./join/deInterpolate');
+        var pathUtil = require('./pathUtil');
+        var interpolate = pathUtil.interpolate;
+        var deInterpolate = pathUtil.deInterpolate;
         var getJoint = require('./join/getJoint');
         var pathSplit = require('./join/pathSplit');
         var lang = require('common/lang');

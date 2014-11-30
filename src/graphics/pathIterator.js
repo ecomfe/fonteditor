@@ -49,7 +49,7 @@ define(
 
                 // 直线
                 if (curPoint.onCurve && nextPoint.onCurve) {
-                    if (false === callBack('L', cursorPoint, nextPoint, 0, i)) {
+                    if (false === callBack('L', curPoint, nextPoint, 0, i)) {
                         break;
                     }
                     cursorPoint = nextPoint;

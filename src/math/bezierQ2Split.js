@@ -39,7 +39,7 @@ define(
             }
 
             if (t == 0 || t == 1) {
-                return [t];
+                return [[p0, p1, p2]];
             }
 
             return [

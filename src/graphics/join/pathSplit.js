@@ -80,6 +80,19 @@ define(
 
                 // 直线
                 if (path[cur].onCurve && path[next].onCurve) {
+
+                    // 在开始点相交
+                    if (Math.abs(path[cur].x - p.x) < 0.001 && Math.abs(path[cur].y - p.y) < 0.001) {
+                        p.index = cur;
+                        continue;
+                    }
+
+                    // 在结束点相交
+                    if (Math.abs(path[next].x - p.x) < 0.001 && Math.abs(path[next].y - p.y) < 0.001) {
+                        p.index = next;
+                        continue;
+                    }
+
                     path.splice(cur + 1, 0, {
                         x: p.x,
                         y: p.y,
@@ -91,31 +104,39 @@ define(
 
                 // 贝塞尔开始点，插入2个节点
                 else if (!path[cur].onCurve) {
+
                     var prev = cur == 0 ? length - 1 : cur - 1;
+                    // 在开始点相交
+                    if (Math.abs(path[prev].x - p.x) < 0.001 && Math.abs(path[prev].y - p.y) < 0.001) {
+                        p.index = prev;
+                        continue;
+                    }
+
+                    // 在结束点相交
+                    if (Math.abs(path[next].x - p.x) < 0.001 && Math.abs(path[next].y - p.y) < 0.001) {
+                        p.index = next;
+                        continue;
+                    }
+
                     var bezierArray = bezierQ2Split(path[prev], path[cur], path[next], p);
                     
                     if (!bezierArray) {
                         throw 'can\'t find bezier split point';
                     }
 
-                    // 端点情况
-                    if (bezierArray.length === 1) {
-                        p.index = bezierArray[0] === 0 ? prev : next;
-                    }
-                    else {
-                        path.splice(cur, 1, 
-                            bezierArray[0][1], 
-                            {
-                                x: p.x,
-                                y: p.y,
-                                onCurve: true
-                            }, 
-                            bezierArray[1][1]
-                        );
+                    path.splice(cur, 1, 
+                        bezierArray[0][1], 
+                        {
+                            x: p.x,
+                            y: p.y,
+                            onCurve: true
+                        }, 
+                        bezierArray[1][1]
+                    );
 
-                        p.index = cur + 1;
-                        jointOffset += 2;
-                    }
+                    p.index = cur + 1;
+                    jointOffset += 2;
+
                 }
                 else {
                     throw 'joint incorrect';
@@ -141,6 +162,7 @@ define(
             start = end;
             end = joint[0];
             splitedPaths.push(path.slice(start.index).concat(path.slice(0, end.index + 1)));
+
             return splitedPaths;
         }
 

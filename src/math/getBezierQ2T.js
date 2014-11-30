@@ -42,17 +42,13 @@ define(
             }
 
             var t = false;
-            
-            if (result.length === 1) {
-                t =  result[0];
-            }
-            else {
-                var pt = getPoint(p0, p1, p2, result[0]);
+
+            // 这里需要验证下，有些情况下公式有解，但是点不在曲线上。。
+            for (var i = 0, l = result.length; i < l ; i++) {
+                var pt = getPoint(p0, p1, p2, result[i]);
                 if (Math.abs(pt.x - p.x) < 0.001 && Math.abs(pt.y - p.y) < 0.001) {
-                    t = result[0];
-                }
-                else {
-                    t = result[1];
+                    t = result[i];
+                    break;
                 }
             }
 
