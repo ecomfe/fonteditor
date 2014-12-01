@@ -11,7 +11,7 @@ define(
     function(require) {
 
         var computeBoundingBox = require('./computeBoundingBox');
-        var getJoint = require('./join/getJoint');
+        var getSegmentPathJoint = require('./join/getSegmentPathJoint');
         var pathSplit = require('./join/pathSplit');
         var isBoundingBoxSegmentCross = require('./isBoundingBoxSegmentCross');
         var util = require('./pathUtil');
@@ -36,7 +36,7 @@ define(
             }
 
             path = interpolate(path);
-            var result = getJoint(path, 'L', p0, p1);
+            var result = getSegmentPathJoint(path, p0, p1);
 
             // 有交点
             if (result && result.length > 1) {

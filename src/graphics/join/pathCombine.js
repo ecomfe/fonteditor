@@ -123,7 +123,7 @@ define(
                 var combinedPath = curPath.path.slice(0, curPath.path.length - 1);
                 var start = curPath.path[0];
                 var end = curPath.path[curPath.path.length - 1];
-                
+
                 // 防止找不到可组合的轮廓，最多组合MAX_COMBINE_PATHS个路径段
                 var loops = 0;
                 var paths;
@@ -139,8 +139,11 @@ define(
                     // 下一个路径
                     var path = null;
 
-                    if (paths.length === 2) {
-                        path = paths[0] === curPath ? paths[1] : paths[0];
+                    if (paths.length === 2 && paths[0] === curPath) {
+                        path = paths[1];
+                    }
+                    else if (paths.length === 2 && paths[1] === curPath) {
+                        path = paths[0];
                     }
                     else {
                         var overlapPath;
@@ -225,6 +228,7 @@ define(
                 }
 
                 combinedPaths.push(combinedPath);
+                
             }
 
             if (combinedPaths.length) {

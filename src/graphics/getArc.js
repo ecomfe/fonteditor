@@ -18,11 +18,10 @@ define(
         var pathAdjust = require('./pathAdjust');
         var pathRotate = require('./pathRotate');
         var quadraticEquation = require('math/quadraticEquation');
-        var isPathCross = require('./isPathCross');
         var pathUtil = require('./pathUtil');
         var interpolate = pathUtil.interpolate;
         var deInterpolate = pathUtil.deInterpolate;
-        var getJoint = require('./join/getJoint');
+        var getSegmentPathJoint = require('./join/getSegmentPathJoint');
         var pathSplit = require('./join/pathSplit');
         var lang = require('common/lang');
 
@@ -133,7 +132,7 @@ define(
 
             // 这里弧度有负向的情况，需要转换成正向
             var ovalPath = interpolate(getOval(2 * rx, 2 * ry, f >= 0 ? f : (f + Math.PI), {x: cx, y: cy}));
-            var result = getJoint(ovalPath, 'L', p0_, p1_);
+            var result = getSegmentPathJoint(ovalPath, p0_, p1_);
 
             // 这里必定会有交点，如果没有，则说明计算错误
             if (result && result.length > 1) {

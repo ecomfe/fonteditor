@@ -45,7 +45,9 @@ define(
                 var startPaths = [paths[0]];
                 var leftPath = paths.slice(1);
                 var curPath;
-                var joinFlag = 0; // 两个轮廓如果是由同一个合并生成的，则不需要进行比较了
+                // 两个轮廓如果是由同一个合并生成的，则不需要进行比较了
+                // 这里用位来标记是哪个路径分割出来的
+                var joinFlag = 0; 
 
                 while (curPath = leftPath.shift()) {
                     for (var i = 0, l = startPaths.length; i < l; i++) {

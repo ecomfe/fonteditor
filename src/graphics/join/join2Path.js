@@ -20,6 +20,8 @@ define(
         var removeLinePoint = util.removeLinePoint;
         var pathSplit = require('./pathSplit');
         var pathCombine = require('./pathCombine');
+        var getVirtualJoint = require('./getVirtualJoint');
+
 
         /**
          * 获取一个路径段和另一个路径的关系
@@ -33,11 +35,12 @@ define(
             if (isPathOverlap(path0, path1)) {
                 return 2;
             }
-
+            
+            // 这里取第一个路径段的第一段中间结点作为检查点
             var inPath = isInsidePath(
                 path1, 
                 path0[1].onCurve 
-                    ? path0[1]
+                    ? {x: (path0[0].x + path0[1].x) / 2, y: (path0[0].y + path0[1].y) / 2}
                     : getBezierQ2Point(path0[0], path0[1], path0[2], 0.5)
             );
             return inPath ? 1 : 0;
@@ -72,6 +75,23 @@ define(
             var newPath0 = interpolate(removeLinePoint(path0));
             var newPath1 = interpolate(removeLinePoint(path1));
             var joint = isPathCross(newPath0, newPath1);
+
+
+            // 检查是否都是虚交点
+            if (joint) {
+                var virtualJoint = getVirtualJoint(newPath0, newPath1, joint);
+                //console.log(virtualJoint);
+
+                // 0在1内部
+                if (virtualJoint.inCount === joint.length) {
+                    joint = 3;
+                }
+                // 1在0内部
+                else if (virtualJoint.outCount === joint.length) {
+                    joint = 2;
+                }  
+            }
+
             var splitedPaths0;
             var splitedPaths1;
 
@@ -136,9 +156,10 @@ define(
                     return p;
                 }));
 
-                // 部分只有交点没有轮廓，需要去掉此交点
+                // 部分只有交点没有轮廓，不需要处理，原样返回
                 if (onlyPointCross) {
                     console.warn('only point cross');
+                    return [path0, path1];
                 }
                 else {
                     // 没有重叠的部分只需要判断第一个就可以知道曲线相交情况了

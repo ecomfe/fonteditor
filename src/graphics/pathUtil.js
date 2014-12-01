@@ -154,7 +154,7 @@ define(
          * @param {Array} points 点集合
          * @return {Array} 移除后点集合
          */
-        function removeOverlap(points) {
+        function removeOverlapPoints(points) {
             var hash = {};
             var ret = [];
             for (var i = 0, l = points.length; i < l ; i++) {
@@ -172,7 +172,7 @@ define(
             deInterpolate: deInterpolate,
             removeLinePoint: removeLinePoint,
             isClockWise: isClockWise,
-            removeOverlap: removeOverlap,
+            removeOverlapPoints: removeOverlapPoints,
             getPointHash: getPointHash,
             getPathHash: getPathHash
         };

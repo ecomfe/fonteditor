@@ -11,11 +11,12 @@ define(
         var computeBoundingBox = require('./computeBoundingBox');
         var getPathJoint = require('./join/getPathJoint');
         var isInsidePath = require('./isInsidePath');
+        var getBezierQ2Point = require('math/getBezierQ2Point');
         var isBoundingBoxCross = require('./isBoundingBoxCross');
         var util = require('./pathUtil');
 
         /**
-         * 判断x轴射线是否穿过线段
+         * 判断路径的包含关系
          * 
          * @param {Array} path0 路径0
          * @param {Array} path1 路径1
@@ -42,7 +43,7 @@ define(
                     }
                 }
                 else {
-                    return util.removeOverlap(result);
+                    return util.removeOverlapPoints(result);
                 }
             }
 
