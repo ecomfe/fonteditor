@@ -186,11 +186,12 @@ define(
                     }
 
                     // 反转起始点
+                    var pathPoints = path.path.slice();
                     if ((Math.abs(end.x - path.path[0].x) > 0.001 || Math.abs(end.y - path.path[0].y) > 0.001)) {
-                        path.path = path.path.reverse();
+                        pathPoints = pathPoints.reverse();
                     }
 
-                    splice.apply(combinedPath, [combinedPath.length, 0].concat(path.path.slice(0, path.path.length - 1)));
+                    splice.apply(combinedPath, [combinedPath.length, 0].concat(pathPoints.slice(0, pathPoints.length - 1)));
                     end = path.path[path.path.length - 1];
                     curPath = path;
 

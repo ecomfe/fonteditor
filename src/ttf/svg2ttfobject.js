@@ -58,14 +58,22 @@ define(
          * @return {Object} ttfObject
          */
         function resolve(ttf) {
-            
+
+            var scale = 1;
+
+            // 对于小尺寸svg进行合理的缩放
+            if (ttf.head.unitsPerEm && ttf.head.unitsPerEm < 256) {
+                scale = 1024 / ttf.head.unitsPerEm;
+                ttf.head.unitsPerEm = 1024;
+            }
+
             ttf.glyf.forEach(function(glyf) {
                 if (glyf.contours && glyf.contours.length) {
 
                     glyf.contours.forEach(function(contour) {
                         contour.forEach(function(p) {
-                            p.x = Math.round(p.x);
-                            p.y = Math.round(p.y);
+                            p.x = Math.round(p.x * scale);
+                            p.y = Math.round(p.y * scale);
                         });
                     });
 
@@ -76,14 +84,14 @@ define(
                     glyf.yMax = bound.y + bound.height;
 
                     if (glyf.leftSideBearing) {
-                        glyf.leftSideBearing = Math.round(glyf.leftSideBearing);
+                        glyf.leftSideBearing = Math.round(glyf.leftSideBearing * scale);
                     }
                     else {
                         glyf.leftSideBearing = glyf.xMin;
                     }
 
                     if (glyf.advanceWidth) {
-                        glyf.advanceWidth = Math.round(glyf.advanceWidth);
+                        glyf.advanceWidth = Math.round(glyf.advanceWidth * scale);
                     }
                     else {
                         glyf.advanceWidth = glyf.xMax + 10;
@@ -92,10 +100,10 @@ define(
             });
     
             if (undefined !== ttf.head.xMin && undefined !== ttf.head.yMax) {
-                ttf.head.xMin = Math.round(ttf.head.xMin);
-                ttf.head.xMax = Math.round(ttf.head.xMax);
-                ttf.head.yMin = Math.round(ttf.head.yMin);
-                ttf.head.yMax = Math.round(ttf.head.yMax);
+                ttf.head.xMin = Math.round(ttf.head.xMin * scale);
+                ttf.head.xMax = Math.round(ttf.head.xMax * scale);
+                ttf.head.yMin = Math.round(ttf.head.yMin * scale);
+                ttf.head.yMax = Math.round(ttf.head.yMax * scale);
             }
 
             ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 1024;
