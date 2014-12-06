@@ -8,77 +8,80 @@
 </head>
 <body>
 
-    <section class="navbar navbar-inverse" role="navigation">
-        <button data-action="new" type="button" class="btn btn-primary btn-sm" title="新建ttf字体文件">新建</button>
-        <button data-action="open" type="button" class="btn btn-primary btn-sm" title="打开ttf,woff,eot格式字体文件">打开</button>
+    <section class="navbar" role="navigation">
+        <div class="logo"></div>
+        <div class="action-groups">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                    插入
+                    <span class="caret"></span>
+                </button>
 
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                插入
-                <span class="caret"></span>
-            </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li data-action="add-new"><a>新字形</a></li>
+                    <li data-action="import"  title="导入ttf,woff,svg,eot格式字体文件"><a>从文件中导入</a></li>
+                    <li data-action="add-online"><a>在线字体</a></li>
+                    <li data-action="add-url"><a>字体URL</a></li>
+                </ul>
+            </div>
 
-            <ul class="dropdown-menu" role="menu">
-                <li data-action="add-new"><a>新字形</a></li>
-                <li data-action="import"  title="导入ttf,woff,svg,eot格式字体文件"><a>从文件中导入</a></li>
-                <li data-action="add-online"><a>在线字体</a></li>
-                <li data-action="add-url"><a>字体URL</a></li>
-            </ul>
+            <a id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-success btn-sm">导出ttf</a>
+            <a id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-success btn-sm">导出woff</a>
+            <a id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-success btn-sm" title="包含ttf,woff,eot,svg等格式">导出zip</a>
+
+            <button data-action="save" type="button" class="btn btn-warning btn-sm">保存项目</button>
+
+            <div class="btn-group">
+
+                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                    调整字形
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu">
+                    <li><a data-action="setting-glyf">字形信息</a></li>
+                    <li><a data-action="setting-adjust-pos">调整位置</a></li>
+                    <li><a data-action="setting-adjust-glyf">缩放字形</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+
+                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                    设置
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu">
+                    <li><a data-action="setting-unicode">代码点</a></li>
+                    <li><a data-action="setting-name">字体信息</a></li>
+                    <li><a data-action="setting-metrics">字体度量</a></li>
+                    <li><a data-action="setting-editor">编辑器</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+
+                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                    预览
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu">
+                    <li><a data-format="ttf" data-action="preview">ttf字体</a></li>
+                    <li><a data-format="woff" data-action="preview">woff字体</a></li>
+                    <li><a data-format="svg" data-action="preview" title="仅支持Safari">svg字体</a></li>
+                    <li><a data-format="eot" data-action="preview" title="仅支持IE">eot字体</a></li>
+                </ul>
+            </div>
         </div>
-
-        <a id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-success btn-sm">导出ttf</a>
-        <a id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-success btn-sm">导出woff</a>
-        <a id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-success btn-sm" title="包含ttf,woff,eot,svg等格式">导出zip</a>
-
-        <button data-action="save" type="button" class="btn btn-warning btn-sm">保存项目</button>
-
-        <div class="btn-group">
-
-            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                调整字形
-                <span class="caret"></span>
-            </button>
-
-            <ul class="dropdown-menu" role="menu">
-                <li><a data-action="setting-glyf">字形信息</a></li>
-                <li><a data-action="setting-adjust-pos">调整位置</a></li>
-                <li><a data-action="setting-adjust-glyf">缩放字形</a></li>
-            </ul>
-        </div>
-
-        <div class="btn-group">
-
-            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                设置
-                <span class="caret"></span>
-            </button>
-
-            <ul class="dropdown-menu" role="menu">
-                <li><a data-action="setting-unicode">代码点</a></li>
-                <li><a data-action="setting-name">字体信息</a></li>
-                <li><a data-action="setting-metrics">字体度量</a></li>
-                <li><a data-action="setting-editor">编辑器</a></li>
-            </ul>
-        </div>
-
-        <div class="btn-group">
-
-            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                预览
-                <span class="caret"></span>
-            </button>
-
-            <ul class="dropdown-menu" role="menu">
-                <li><a data-format="ttf" data-action="preview">ttf字体</a></li>
-                <li><a data-format="woff" data-action="preview">woff字体</a></li>
-                <li><a data-format="svg" data-action="preview" title="仅支持Safari">svg字体</a></li>
-                <li><a data-format="eot" data-action="preview" title="仅支持IE">eot字体</a></li>
-            </ul>
-        </div>
-        <a class="i-github forkme" href="https://github.com/kekee000/fonteditor" target="_blank">Fork me on Github</a>
+        <a class="ico i-github forkme" href="https://github.com/kekee000/fonteditor" target="_blank">Fork me on Github</a>
     </section>
 
     <section class="sidebar">
+        <div class="project-btns action-groups">
+            <button data-action="new" type="button" class="btn btn-flat btn-sm" title="新建ttf字体文件"><i class="ico i-new"></i>新建</button><button data-action="open" type="button" class="btn btn-flat btn-sm" title="打开ttf,woff,eot格式字体文件"><i class="ico i-open"></i>打开</button>
+        </div>
         <div class="project">
             <div class="project-title">项目列表</div>
             <div id="project-list" class="project-list"></div>
@@ -90,7 +93,7 @@
     </section>
 
     <section class="editor" oncontextMenu="return false">
-        <i class="close-editor" title="点击或者按'F2'键关闭编辑器"></i>
+        <i class="ico i-del close-editor" title="点击或者按'F2'键关闭编辑器"></i>
         <div id="glyf-editor" class="glyf-editor"></div>
     </section>
 

@@ -15,8 +15,8 @@ define(
 
         var GLYF_ITEM_TPL = ''
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected}">'
-            +   '<i data-action="edit" class="i-edit" title="编辑"></i>'
-            +   '<i data-action="del" class="i-del" title="删除"></i>'
+            +   '<i data-action="edit" class="ico i-edit" title="编辑"></i>'
+            +   '<i data-action="del" class="ico i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
             +           '<path class="path" ${fillColor} ${d}/></g>'

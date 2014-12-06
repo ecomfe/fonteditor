@@ -40,9 +40,11 @@ body, html {
 .navbar {
     border-radius: 0;
     margin: 0;
+    padding: 0;
     position: fixed;
     z-index: 10;
     width: 100%;
+    height: 51px;
     min-width: 1024px;
     top: 0;
     
@@ -51,10 +53,19 @@ body, html {
         margin-top: 10px;
     }
 
-    >.btn:first-child {
-        margin-left: 10px;
+    >.logo {
+        width: 180px;
+        height: 50px;
+        background: url(./img/logo.png) no-repeat;
+        float: left;
+    }
+
+    >.action-groups {
+        margin-left: 180px;
+        padding-left: 8px;
     }
 }
+
 
 #export-btn {
     margin-right: 10px;
@@ -72,20 +83,23 @@ body, html {
 
 .sidebar {
     position: fixed;
-    width: 200px;
+    width: 180px;
     top: @top-height;
     bottom: 0;
-    background: #FCFCFC;
-    padding: 4px;
-    border-right: 1px solid #DDD;
+    background: #232830;
 }
 
 .main {
-    margin-left: 200px;
-    padding: 4px 0 4px 10px;
+    margin-left: 180px;
     padding-top: @top-height;
     height: 100%;
+    background: #BCC5CD;
+    .glyf-list {
+        padding: 10px 0 0 10px;
+    }
 }
+
+
 
 .main.editing {
     margin-left: 70%;
@@ -138,10 +152,9 @@ body, html {
 }
 
 .forkme {
-    float: right;
+    position: absolute;
     color: #FFF;
-
-    &:hover {
-        color: #EEE
-    }
+    right: 2px;
+    top: 2px;
+    color: #333
 }

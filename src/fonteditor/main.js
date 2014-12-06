@@ -60,7 +60,7 @@ define(
 
         // 绑定组件
         function bindEvent() {
-            $('.navbar').delegate('[data-action]', 'click',  function(e) {
+            $('.action-groups').delegate('[data-action]', 'click',  function(e) {
                 var action = $(this).attr('data-action');
                 if (actions[action]) {
                     program.data.action = action;

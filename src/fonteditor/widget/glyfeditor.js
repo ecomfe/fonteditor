@@ -80,6 +80,8 @@ define(
             }
 
             this.editor.focus();
+            this.editor.refresh();
+            
             this.editing = true;
         };
 

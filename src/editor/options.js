@@ -64,9 +64,9 @@ define(
                         gap: 100,
                         thickness: 20, // 厚度
                         markHeight: 3, // 标记高度
-                        markBackgroundColor: '#EEE', // 背景色
-                        markColor: '#000', // 前景色
-                        color: '#000' // 文字颜色
+                        markBackgroundColor: '#C3CBD2', // 背景色
+                        markColor: '#65737E', // 前景色
+                        color: '#65737E' // 文字颜色
                     }
                 },
                 // 命令栏

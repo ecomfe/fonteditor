@@ -11,24 +11,24 @@ define(
     function(require) {
         return [
             {
-                name: 'iconfont.ttf',
-                url: './font/iconfont.ttf',
-                from: '阿里妈妈图标库'
+                name: 'fonteditor.ttf',
+                url: './font/fonteditor.ttf',
+                from: 'fonteditor图标库'
             },
             {
-                name: 'iconfont.woff',
-                url: './font/iconfont.woff',
-                from: '阿里妈妈图标库'
+                name: 'fonteditor.woff',
+                url: './font/fonteditor.woff',
+                from: 'fonteditor图标库'
             },
             {
-                name: 'iconfont.svg',
-                url: './font/iconfont.svg',
-                from: '阿里妈妈图标库'
+                name: 'fonteditor.svg',
+                url: './font/fonteditor.svg',
+                from: 'fonteditor图标库'
             },
             {
-                name: 'iconfont.eot',
-                url: './font/iconfont.eot',
-                from: '阿里妈妈图标库'
+                name: 'fonteditor.eot',
+                url: './font/fonteditor.eot',
+                from: 'fonteditor图标库'
             }
         ];
     }

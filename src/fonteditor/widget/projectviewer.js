@@ -44,7 +44,7 @@ define(
             var str = '';
             (projects || []).forEach(function(proj) {
                 str += '<div data-name="'+ proj.name +'" data-id="'+ proj.id +'">'
-                    +       '<i title="删除" data-action="del" class="i-del"></i>'
+                    +       '<i title="删除" data-action="del" class="ico i-del"></i>'
                     +       '<a href="#">'+ proj.name +'</a>'
                     +   '</div>';
             });

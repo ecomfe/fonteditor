@@ -17,48 +17,46 @@ a:hover {
 }
 @font-face {
   font-family: 'fonteditor';
-  src: url('../font/iconfont.ttf') format('truetype');
+  src: url('../font/fonteditor.ttf') format('truetype');
 }
-.i-edit,
-.i-del {
+.ico {
   display: inline-block;
-  font-size: 12px;
 }
-.i-edit:before,
-.i-del:before,
-.i-edit:after,
-.i-del:after {
+.ico:before,
+.ico:after {
   font-family: 'fonteditor';
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.1px;
+}
+.i-edit,
+.i-del {
+  font-size: 12px;
 }
 .i-edit:hover,
 .i-del:hover {
   cursor: pointer;
-  color: blue;
+  color: #4A90E2;
 }
 .i-edit:before {
-  content: '\e605';
+  content: '\e021';
 }
 .i-del:before {
-  content: '\e611';
-}
-.i-github {
-  display: inline-block;
-}
-.i-github:before,
-.i-github:after {
-  font-family: 'fonteditor';
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.1px;
+  content: '\e020';
 }
 .i-github:before {
-  content: '\e600';
+  content: '\e01e';
+}
+.i-new:before {
+  content: '\e019';
+}
+.i-open:before {
+  content: '\e01A';
+}
+.i-add:before {
+  content: '\e003';
 }
 .close-editor {
-  display: inline-block;
   position: absolute;
   right: 0;
   top: 0;
@@ -68,16 +66,6 @@ a:hover {
   background: #FFF;
   border-left: 1px solid #000;
   display: none;
-}
-.close-editor:before,
-.close-editor:after {
-  font-family: 'fonteditor';
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.1px;
-}
-.close-editor:before {
-  content: '\e611';
 }
 .close-editor:hover {
   cursor: pointer;
@@ -134,7 +122,7 @@ a:hover {
   margin-left: 120px;
 }
 .editor-contextmenu > li[data-sub] {
-  color: green;
+  color: #4A90E2;
 }
 .editor-contextmenu > li[data-sub]:after {
   content: '>';
@@ -154,9 +142,12 @@ a:hover {
   -webkit-text-stroke-width: 0.1px;
 }
 .editor-contextmenu li[data-tag="selected"]:after {
-  content: '\e610';
+  content: '\e01f';
+}
+.editor-contextmenu li[data-tag="selected"]:after {
   float: right;
   margin-right: 10px;
+  color: #4A90E2;
 }
 .editor-contextmenu li:hover {
   background: #EEE;

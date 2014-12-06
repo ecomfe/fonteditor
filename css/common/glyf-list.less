@@ -1,0 +1,96 @@
+.glyf-list {
+    height: 100%;
+    overflow: auto;
+
+    >.glyf-item {
+
+        float: left;
+        position: relative;
+        margin: 10px;
+        width: 80px;
+        box-shadow: 1px 1px 4px #999;
+        cursor: pointer;
+        background: #ECECEC;
+
+        .unicode,
+        .name {
+            font-size: 12px;
+            line-height: 20px;
+            height: 20px;
+            padding-left: 4px;
+            color: #45283F;
+            .ellipsis();
+        }
+        
+        .unicode {
+            color: #70A9D6;
+        }
+
+        .glyf {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #FFF;
+            background: #FFF;
+            box-sizing: border-box;
+            display: block;
+            .path {
+                fill: #232830;
+            }
+        }
+
+        .i-del,
+        .i-edit {
+            position: absolute;
+            right: 6px;
+            display: none;
+        }
+
+        .i-edit {
+            right: 20px;
+        }
+    }
+
+    >.glyf-item:hover,
+    >.selected {
+        background: #232830;
+        .glyf {
+            border-color: #232830;
+        }
+    }
+
+    >.glyf-item:hover {
+        .name {
+            color: #FFF;
+        }
+        .i-del {
+            display: block;
+        }
+    }
+
+    >.compound {
+        .path {
+            fill: lighten(#232830, 10%) !important;
+        }
+    }
+
+    >.new,
+    >.edit {
+        .path {
+            fill: blue!important;
+        }
+    }
+
+
+    >.glyf-item:hover {
+        .i-edit {
+            display: block;
+        }
+    }
+}
+
+
+.glyf-list.no-hover {
+  .glyf-item {
+    pointer-events: none;
+  }
+}

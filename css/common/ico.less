@@ -3,10 +3,10 @@
 // fontface
 @font-face {
     font-family: 'fonteditor';
-    src: url('../font/iconfont.ttf') format('truetype');
+    src: url('../font/fonteditor.ttf') format('truetype');
 }
 
-.ico() {
+.icon() {
     display: inline-block;
     &:before,
     &:after {
@@ -23,33 +23,51 @@
     }
 }
 
+.i-ico(@unicode, @pos) when (@pos = 'after'){
+    &:after {
+        content: @unicode;
+    }
+}
+
+.ico {
+    .icon();
+}
+
 .i-edit,
 .i-del {
-    .ico();
     font-size: 12px;
     &:hover {
         cursor: pointer;
-        color: blue;
+        color: #4A90E2;
     }
 }
 
 .i-edit {
-    .i-ico('\e605');
+    .i-ico('\e021');
 }
 
 .i-del {
-    .i-ico('\e611');
+    .i-ico('\e020');
 }
 
 .i-github {
-    .ico();
-    .i-ico('\e600');
+    .i-ico('\e01e');
+}
+
+// 编辑器按钮组
+.i-new {
+    .i-ico('\e019');
+}
+
+.i-open {
+    .i-ico('\e01A');
+}
+
+.i-add {
+    .i-ico('\e003');
 }
 
 .close-editor {
-    .ico();
-    .i-ico('\e611');
-
     position: absolute;
     right: 0;
     top: 0;
