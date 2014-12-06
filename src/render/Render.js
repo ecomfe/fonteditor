@@ -78,6 +78,12 @@ define(
             if(this.options.enableResize) {
                 this.resizeCapture = new ResizeCapture(this.main);
                 this.resizeCapture.on('resize', function(e) {
+                    // 对象被隐藏, 不做处理
+                    if (me.main.style.display === 'none') {
+                        me.hasResized = true;
+                        return;
+                    }
+
                     var prevSize = me.painter.getSize();
                     me.painter.resetSize();
                     var size = me.painter.getSize();
@@ -138,6 +144,10 @@ define(
          * @return {this}
          */
         Render.prototype.refresh = function() {
+            if (this.hasResized) {
+                this.painter.resetSize();
+                this.hasResized = false;
+            }
             this.painter.refresh();
             return this;
         };
