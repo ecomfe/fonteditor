@@ -57,7 +57,7 @@ define(
 
             ttf.head.modified = Date.now();
 
-            if (!ttf.glyf) {
+            if (!ttf.glyf || ttf.glyf.length === 0) {
                 error.raise(10201);
             }
 

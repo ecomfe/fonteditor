@@ -56,6 +56,30 @@ a:hover {
 .i-add:before {
   content: '\e003';
 }
+.i-undo:before {
+  content: '\e001';
+}
+.i-redo:before {
+  content: '\e002';
+}
+.i-down:before {
+  content: '\e00e';
+}
+.i-left:before {
+  content: '\e00a';
+}
+.i-ttf:before {
+  content: '\e00f';
+}
+.i-woff:before {
+  content: '\e010';
+}
+.i-zip:before {
+  content: '\e011';
+}
+.i-save:before {
+  content: '\e022';
+}
 .close-editor {
   position: absolute;
   right: 0;
