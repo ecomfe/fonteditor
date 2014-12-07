@@ -70,7 +70,8 @@ define(
                 this.history.add(lang.clone(this.ttf.getGlyf()));
 
                 this.changed = false;
-                this.fire('change', {
+
+                this.fire('set', {
                     ttf: this.ttf.get()
                 });
             }

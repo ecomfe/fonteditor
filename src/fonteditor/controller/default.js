@@ -47,8 +47,9 @@ define(
                     if (ttf) {
                         $('.main').addClass('editing');
                         $('.editor').addClass('editing');
+                        
+                        program.viewer.setMode('editor');
 
-                        program.viewerCommandMenu.hide();
                         program.viewer.blur();
                         program.editor.show();
 
@@ -75,7 +76,8 @@ define(
 
                     program.data.editingIndex = -1;
                     program.editor && program.editor.hide();
-                    program.viewerCommandMenu.show();
+
+                    program.viewer.setMode('list');
                     program.viewer.focus();
                 };
 
@@ -125,7 +127,6 @@ define(
                         }
                         program.ttfManager.set(imported);
                         program.data.projectName = e.projectName;
-                        program.viewerCommandMenu.show();
                         program.viewer.focus();
                     }
                 }).on('del', function(e) {
@@ -136,6 +137,7 @@ define(
                 });
 
                 program.ttfManager.on('change', function(e) {
+                    // 保存正在编辑的字形
                     if (program.editor.isEditing() && program.data.editingIndex !== -1) {
                         program.viewer.refresh(e.ttf, [program.data.editingIndex]);
                     }
@@ -143,6 +145,15 @@ define(
                         program.viewer.show(e.ttf, program.viewer.getSelected());
                         program.viewer.focus();
                     }
+                }).on('set', function(e) {
+
+                    // 未初始化状态，命令栏是不显示的，需要设置下编辑模式
+                    if (!program.viewer.inited) {
+                        program.viewer.setMode('list');
+                        program.viewer.inited = true;
+                    }
+                    program.viewer.show(e.ttf, program.viewer.getSelected());
+                    program.viewer.focus();
                 });
 
 

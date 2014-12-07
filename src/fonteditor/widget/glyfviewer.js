@@ -319,6 +319,7 @@ define(
         function GLYFViewer(main, options) {
             this.options = options || {};
             this.main = $(main);
+            this.mode = 'list';
 
             bindEvents.call(this);
 
@@ -410,6 +411,17 @@ define(
          */
         GLYFViewer.prototype.clearSelected = function() {
             this.main.children().removeClass('selected');
+        };
+
+        /**
+         * 设置编辑模式
+         * @param {string} mode 编辑模式
+         */
+        GLYFViewer.prototype.setMode = function(mode) {
+            this.mode = mode || 'list';
+            if (this.options.commandMenu) {
+                this.options.commandMenu[this.mode === 'list' ? 'show' : 'hide']();
+            }
         };
 
         /**

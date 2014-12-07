@@ -61,7 +61,6 @@ define(
                 }
                 
                 $.getJSON('./font/empty.json', function(imported) {
-                    program.viewerCommandMenu.show();
                     program.ttfManager.set(imported);
                     program.data.projectName = null;
                 });
