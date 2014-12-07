@@ -16,6 +16,7 @@ define(
         var program = require('./widget/program');
         var controller = require('./controller/default');
         var actions = require('./widget/actions');
+        var CommandMenu = require('./widget/commandmenu');
 
         // 打开文件
         function onUpFile(e) {
@@ -25,6 +26,7 @@ define(
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
                     success: function(imported) {
                         program.viewer.clearSelected();
+                        program.viewerCommandMenu.show();
                         program.ttfManager.set(imported);
                         program.data.projectName = null;
                     }
@@ -85,8 +87,14 @@ define(
             init: function () {
                 bindEvent();
 
+                program.viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
+                    commands: require('./widget/menu/viewer')
+                });
+
                 // glyf查看器
-                program.viewer = new GLYFViewer($('#glyf-list'));
+                program.viewer = new GLYFViewer($('#glyf-list'), {
+                    commandMenu: program.viewerCommandMenu
+                });
 
                 // 字体查看器
                 program.editor = new GLYFEditor($('#glyf-editor'));

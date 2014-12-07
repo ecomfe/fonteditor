@@ -106,11 +106,6 @@ define(
         }
 
         // 点击item
-        function clickItem(e) {
-            $(this).toggleClass('selected');
-        }
-
-        // 点击item
         function clickAction(e) {
             e.stopPropagation();
             var target = $(e.target);
@@ -120,7 +115,7 @@ define(
                 return;
             }
 
-            var selected = [+target.parent().attr('data-index')];
+            var selected = [+target.parent('[data-index]').attr('data-index')];
             this.fire(action, {
                 list: selected
             });
@@ -153,6 +148,8 @@ define(
                     }
                 }
             });
+
+            this.fire('selection:change');
         }
 
         // 按下事件
@@ -164,6 +161,7 @@ define(
                 // 阻止ctrl+A默认事件
                  if (65 === e.keyCode && e.ctrlKey) {
                     me.main.children().addClass('selected');
+                    me.fire('selection:change');
                 }
                 // 撤销
                 else if(e.keyCode == 90 && e.ctrlKey) {
@@ -179,6 +177,7 @@ define(
                 else if (27 === e.keyCode) {
                     e.stopPropagation();
                     me.clearSelected();
+                    me.fire('selection:change');
                 }
                 // 其他操作
                 else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
@@ -188,6 +187,7 @@ define(
                     // 取消选中的glyf
                     if (e.keyCode == 46 || e.keyCode == 88) {
                         me.clearSelected();
+                        me.fire('selection:change');
                     }
 
                     // 粘贴和有选择的操作需要发事件
@@ -202,21 +202,18 @@ define(
         }
 
         /**
-         * glyf查看器
-         * 
-         * @constructor
-         * @param {HTMLElement} main 主元素
-         * @param {Object} options 参数
+         * 绑定dom事件
          */
-        function GLYFViewer(main, options) {
-            this.options = options || {};
-            this.main = $(main);
-
-            this.main.delegate('[data-index]', 'click', clickItem)
-                .delegate('[data-action]', 'click', lang.bind(clickAction, this));
-
+        function bindEvents() {
 
             var me = this;
+            me.main
+            .delegate('[data-index]', 'click', function() {
+                $(this).toggleClass('selected');
+                me.fire('selection:change');
+            })
+            .delegate('[data-action]', 'click', lang.bind(clickAction, this));
+
             me.downlistener = lang.bind(downlistener, this);
 
             me.capture = new MouseCapture(me.main.get(0), {
@@ -253,15 +250,81 @@ define(
 
                 var x = e.originEvent.pageX;
                 var y = e.originEvent.pageY;
+                var width = Math.abs(me.startX - x);
+                var height = Math.abs(me.startY - y);
+                if (width < 20 && height < 20) {
+                    return;
+                }
 
                 selectRangeItem.call(me, {
                     x: Math.min(me.startX, x),
                     y:  Math.min(me.startY, y),
-                    width: Math.abs(me.startX - x),
-                    height: Math.abs(me.startY - y)
+                    width: width,
+                    height: height 
                 }, e.ctrlKey, e.shiftKey);
             });
+        }
 
+        /**
+         * 绑定命令菜单
+         */
+        function bindCommandMenu() {
+            var commandMenu = this.options.commandMenu;
+
+            var me = this;
+            me.on('selection:change', lang.debounce(function() {
+                var selected = me.getSelected();
+                if (selected.length) {
+                    commandMenu.enableCommands(['copy', 'cut', 'del']);
+                    commandMenu[selected.length === 1 ? 'enableCommands' : 'disableCommands'](['info']);
+                }
+                else {
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'info']);  
+                }
+
+            }, 20));
+
+            commandMenu.on('command', function(e) {
+                var command = e.command;
+                if (command === 'paste' || command === 'adjust-pos' || command === 'adjust-glyf') {
+                    me.fire(command);
+                }
+                else {
+                    var selected = me.getSelected();
+
+                    // 取消选中的glyf
+                    if (command === 'cut' || command === 'del') {  
+                        me.clearSelected();
+                    }
+
+                    me.fire(command, {
+                        list: selected
+                    });
+                }
+
+                // 这里延时进行focus
+                setTimeout(function() {
+                    me.focus();
+                }, 20);
+            });
+        }
+
+        /**
+         * glyf查看器
+         * 
+         * @constructor
+         * @param {HTMLElement} main 主元素
+         * @param {Object} options 参数
+         */
+        function GLYFViewer(main, options) {
+            this.options = options || {};
+            this.main = $(main);
+
+            bindEvents.call(this);
+
+            if (this.options.commandMenu) {
+                bindCommandMenu.call(this);
+            }
         }
 
         /**
@@ -292,6 +355,7 @@ define(
          */
         GLYFViewer.prototype.show = function(ttf, selectedList) {
             showGLYF.call(this, ttf, selectedList);
+            this.fire('selection:change');
         };
 
         /**
@@ -307,6 +371,7 @@ define(
             else {
                 refreshGLYF.call(this, ttf, indexList);
             }
+            this.fire('selection:change');
         };
 
         /**

@@ -143,3 +143,39 @@ hr {
         margin-right: 0;
     }
 }
+
+
+// 命令组
+.command-groups {
+    height: 40px;
+    line-height: 40px;
+    padding-left: 8px;
+    background: rgba(112, 119, 128, 0.8);
+
+    >li {
+        float: left;
+        padding: 0 8px;
+        color: #FFF;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+
+        >i {
+            font-style: normal;
+            text-decoration: underline;
+        }
+
+        &:hover {
+            background: lighten(#707781, 10%);
+        }
+    }
+
+    >li[data-disabled] {
+        color: #B9BDC1;
+    }
+
+    >li[data-on] {
+        background: darken(#707781, 10%);
+    }
+}

@@ -12,6 +12,7 @@ define(
         var lang = require('common/lang');
         var clipboard = require('editor/widget/clipboard');
         var string = require('common/string');
+        var actions = require('../widget/actions');
 
         // 获取ttf的编辑选项
         function getEditingOpt(ttf) {
@@ -47,6 +48,7 @@ define(
                         $('.main').addClass('editing');
                         $('.editor').addClass('editing');
 
+                        program.viewerCommandMenu.hide();
                         program.viewer.blur();
                         program.editor.show();
 
@@ -73,6 +75,7 @@ define(
 
                     program.data.editingIndex = -1;
                     program.editor && program.editor.hide();
+                    program.viewerCommandMenu.show();
                     program.viewer.focus();
                 };
 
@@ -98,10 +101,20 @@ define(
                     var list = program.ttfManager.getGlyf(e.list);
                     clipboard.set(list, 'glyf');
                     program.ttfManager.removeGlyf(e.list);
-                }).on('undo', function(e) {
+                }).on('paste', function(e) {
+                    var glyfList = clipboard.get('glyf');
+                    program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
+                })
+                .on('undo', function(e) {
                     program.ttfManager.undo();
                 }).on('redo', function(e) {
                     program.ttfManager.redo();
+                }).on('adjust-pos', function(e) {
+                    actions['setting-adjust-pos']();
+                }).on('adjust-glyf', function(e) {
+                    actions['setting-adjust-glyf']();
+                }).on('info', function(e) {
+                    actions['setting-glyf']();
                 });
 
                 program.projectViewer.on('open', function(e) {
@@ -112,6 +125,7 @@ define(
                         }
                         program.ttfManager.set(imported);
                         program.data.projectName = e.projectName;
+                        program.viewerCommandMenu.show();
                         program.viewer.focus();
                     }
                 }).on('del', function(e) {

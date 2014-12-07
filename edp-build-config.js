@@ -10,8 +10,7 @@ exports.getProcessors = function () {
     return [ 
         new LessCompiler( {
             files: [
-                'css/main.less',
-                'css/preview.less'
+                'css/main.less'
             ],
             compileOptions: {
                 relativeUrls: false
@@ -26,7 +25,8 @@ exports.getProcessors = function () {
 
         new JsCompressor({
             files: [
-                'src/fonteditor/main.js'
+                'src/fonteditor/main.js',
+                'dep/*'
             ]
         }),
 
@@ -49,6 +49,7 @@ exports.getProcessors = function () {
                 'src/ttf/*/*/*',
                 'src/fonteditor/dialog/*',
                 'src/fonteditor/widget/*',
+                'src/fonteditor/widget/menu/*',
                 'src/fonteditor/controller/*',
                 'src/fonteditor/data/*'
             ]

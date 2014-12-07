@@ -46,12 +46,22 @@ define(
 
         var actions = {
 
+            'undo': function() {
+                program.ttfManager.undo();
+            },
+
+            'redo': function() {
+                program.ttfManager.redo();
+            },
+
             // 新建
             'new': function() {
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                     return;
                 }
+                
                 $.getJSON('./font/empty.json', function(imported) {
+                    program.viewerCommandMenu.show();
                     program.ttfManager.set(imported);
                     program.data.projectName = null;
                 });

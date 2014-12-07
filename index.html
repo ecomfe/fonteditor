@@ -16,8 +16,8 @@
 
             <i class="split"></i>
 
-            <button data-action="undo" type="button" class="btn btn-flat btn-ico"><i class="ico i-undo"></i></button>
-            <button data-action="redo" type="button" class="btn btn-flat btn-ico"><i class="ico i-redo"></i></button>
+            <button data-action="undo" type="button" class="btn btn-flat btn-ico" title="撤销"><i class="ico i-undo"></i></button>
+            <button data-action="redo" type="button" class="btn btn-flat btn-ico" title="重做"><i class="ico i-redo"></i></button>
 
             <i class="split"></i>
 
@@ -43,22 +43,6 @@
 
 
             <button data-action="save" type="button" class="btn btn-flat btn-sm"><i class="ico ico-left i-save"></i>保存项目</button>
-
-            <i class="split"></i>
-
-            <div class="btn-group">
-
-                <button type="button" class="btn btn-flat btn-sm dropdown-toggle" data-toggle="dropdown">
-                    调整字形
-                    <span class="drop ico i-down"></span>
-                </button>
-
-                <ul class="dropdown-menu" role="menu">
-                    <li><a data-action="setting-glyf">字形信息</a></li>
-                    <li><a data-action="setting-adjust-pos">调整位置</a></li>
-                    <li><a data-action="setting-adjust-glyf">缩放字形</a></li>
-                </ul>
-            </div>
 
             <div class="btn-group">
 
@@ -106,6 +90,7 @@
     </section>
 
     <section class="main">
+        <ul id="glyf-list-commandmenu" class="command-groups"></ul>
         <div id="glyf-list" class="glyf-list"></div>
     </section>
 

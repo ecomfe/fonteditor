@@ -76,11 +76,17 @@ body, html {
 
 .main {
     margin-left: 180px;
-    padding-top: @top-height;
+    padding-top: @top-height + @command-groups-height;
     height: 100%;
     background: #BCC5CD;
+
     .glyf-list {
         padding: 10px 0 0 10px;
+    }
+
+    .command-groups {
+        margin-top: -40px;
+        display: none;
     }
 }
 
@@ -88,6 +94,11 @@ body, html {
 
 .main.editing {
     margin-left: 70%;
+    padding-top: @top-height;
+    
+    .command-groups {
+        display: none;
+    }
 }
 
 // loading 动画
