@@ -84,6 +84,15 @@ define(
 
                 program.viewer.on('del', function(e) {
                     if (e.list) {
+
+                        // 正在编辑中的不可被删除
+                        if (program.data.editingIndex !== -1) {
+                            var editingIndex = e.list.indexOf(program.data.editingIndex);
+                            if (editingIndex >= 0) {
+                                e.list.splice(editingIndex, 1);
+                            }
+                        }
+
                         program.ttfManager.removeGlyf(e.list);
                     }
                 }).on('edit', function(e) {
@@ -138,7 +147,7 @@ define(
 
                 program.ttfManager.on('change', function(e) {
                     // 保存正在编辑的字形
-                    if (program.editor.isEditing() && program.data.editingIndex !== -1) {
+                    if (e.changeType === 'update' && program.editor.isEditing() && program.data.editingIndex !== -1) {
                         program.viewer.refresh(e.ttf, [program.data.editingIndex]);
                     }
                     else {

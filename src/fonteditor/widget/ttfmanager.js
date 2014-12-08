@@ -43,13 +43,16 @@ define(
          * 触发change
          * 
          * @param {boolean} pushHistory 是否存入history列表
+         * @param {string} changeType 改变类型
+         * 
          * @return {this}
          */
-        Manager.prototype.fireChange = function(pushHistory) {
+        Manager.prototype.fireChange = function(pushHistory, changeType) {
             pushHistory && this.history.add(lang.clone(this.ttf.getGlyf()));
             this.changed = true;
             this.fire('change', {
-                ttf: this.ttf.get()
+                ttf: this.ttf.get(),
+                changeType: changeType || 'change'
             });
             return this;
         };
@@ -210,7 +213,7 @@ define(
             var list = this.ttf.replaceGlyf(glyf, index);
             if (list.length) {
                 list[0].modify = 'edit';
-                this.fireChange(true);
+                this.fireChange(true, 'replace');
             }
             return this;
         };
