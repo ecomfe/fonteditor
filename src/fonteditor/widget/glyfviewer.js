@@ -14,7 +14,7 @@ define(
         var MouseCapture = require('render/capture/Mouse');
 
         var GLYF_ITEM_TPL = ''
-            + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected}">'
+            + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected} ${editing}">'
             +   '<i data-action="edit" class="ico i-edit" title="编辑"></i>'
             +   '<i data-action="del" class="ico i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
@@ -37,6 +37,7 @@ define(
                 index: opt.index,
                 compound: glyf.compound ? 'compound' : '',
                 selected: opt.selected ? 'selected' : '',
+                editing: opt.editing ? 'editing' : '',
                 modify: glyf.modify,
                 unitsPerEm: opt.unitsPerEm,
                 descent: opt.descent,
@@ -65,12 +66,14 @@ define(
 
             var glyfStr = '';
             var color = this.options.color;
+            var editing = this.getEditing();
             ttf.glyf.forEach(function(glyf, index) {
                 glyfStr += getGlyfHTML(glyf, ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
                     selected: selectedHash[index],
+                    editing: editing === index,
                     color: color
                 });
             });
@@ -91,12 +94,14 @@ define(
 
             var main = this.main;
             var color = this.options.color;
+            var editing = this.getEditing();
             indexList.forEach(function (index) {
                 var glyfStr = getGlyfHTML(ttf.glyf[index], ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
                     selected: selectedHash[index],
+                    editing: editing === index,
                     color: color
                 });
                 var before = main.find('[data-index="'+ index +'"]');
@@ -110,12 +115,18 @@ define(
             e.stopPropagation();
             var target = $(e.target);
             var action = target.attr('data-action');
+            var editing = this.getEditing();
+            var selectedGlyf = target.parent('[data-index]');
+            var selected = [+selectedGlyf.attr('data-index')];
 
             if (action == 'del' && !window.confirm('确定删除字形么？')) {
                 return;
             }
+            else if (action == 'edit') {
+                this.clearEditing();
+                selectedGlyf.addClass('editing');
+            }
 
-            var selected = [+target.parent('[data-index]').attr('data-index')];
             this.fire(action, {
                 list: selected
             });
@@ -177,9 +188,10 @@ define(
                 else if (27 === e.keyCode) {
                     e.stopPropagation();
                     me.clearSelected();
+                    me.clearEditing();
                     me.fire('selection:change');
                 }
-                // 其他操作
+                // 其他操作, del, copy, cut
                 else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
                     e.stopPropagation();
                     var selected = me.getSelected();
@@ -187,6 +199,11 @@ define(
                     // 取消选中的glyf
                     if (e.keyCode == 46 || e.keyCode == 88) {
                         me.clearSelected();
+                        // 正在编辑的
+                        var editing = selected.indexOf(me.getEditing());
+                        if (editing >= 0) {
+                            me.clearEditing();
+                        }
                         me.fire('selection:change');
                     }
 
@@ -386,6 +403,25 @@ define(
                 selected.push(+item.getAttribute('data-index'));
             });
             return selected;
+        };
+
+        /**
+         * 获取正在编辑的元素
+         * 
+         * @return {Array} 选中的indexList
+         */
+        GLYFViewer.prototype.getEditing = function() {
+            var editing = this.main.find('.editing')[0];
+            return editing ? +editing.getAttribute('data-index') : -1;
+        };
+
+        /**
+         * 清除正在编辑的元素
+         * 
+         * @return {Array} 选中的indexList
+         */
+        GLYFViewer.prototype.clearEditing = function() {
+            this.main.find('.editing').removeClass('editing');
         };
 
         /**

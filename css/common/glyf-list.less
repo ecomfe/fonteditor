@@ -46,13 +46,12 @@
         }
 
         .i-edit {
-            right: 20px;
+            right: 22px;
         }
     }
 
     >.glyf-item:hover,
     >.selected {
-        background: #232830;
         .glyf {
             border-color: #232830;
         }
@@ -62,6 +61,8 @@
     }
 
     >.glyf-item:hover {
+        background: #3C619B;
+
         .name {
             color: #FFF;
         }
@@ -73,9 +74,21 @@
         }
     }
 
+    >.selected,
+    >.selected:hover {
+        background: #232830;
+    }
+
+    >.editing,
+    >.editing:hover {
+        .glyf {
+            border-color: #066BC5;
+        }
+    }
+
     >.compound {
         .path {
-            fill: lighten(#232830, 10%) !important;
+            fill: lighten(#232830, 20%) !important;
         }
     }
 

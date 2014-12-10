@@ -62,10 +62,10 @@ define(
                                 alert('暂不支持复合字形!');
                             }
                             else {
-                                program.data.editingIndex = glyfIndex;
                                 program.editor.setFont(lang.clone(font));
                             }
                         }
+                        program.editor.focus();
                     }
                 };
 
@@ -74,9 +74,9 @@ define(
                     $('.main').removeClass('editing');
                     $('.editor').removeClass('editing');
 
-                    program.data.editingIndex = -1;
                     program.editor && program.editor.hide();
 
+                    program.viewer.clearEditing();
                     program.viewer.setMode('list');
                     program.viewer.focus();
                 };
@@ -84,15 +84,6 @@ define(
 
                 program.viewer.on('del', function(e) {
                     if (e.list) {
-
-                        // 正在编辑中的不可被删除
-                        if (program.data.editingIndex !== -1) {
-                            var editingIndex = e.list.indexOf(program.data.editingIndex);
-                            if (editingIndex >= 0) {
-                                e.list.splice(editingIndex, 1);
-                            }
-                        }
-
                         program.ttfManager.removeGlyf(e.list);
                     }
                 }).on('edit', function(e) {
@@ -147,8 +138,9 @@ define(
 
                 program.ttfManager.on('change', function(e) {
                     // 保存正在编辑的字形
-                    if (e.changeType === 'update' && program.editor.isEditing() && program.data.editingIndex !== -1) {
-                        program.viewer.refresh(e.ttf, [program.data.editingIndex]);
+                    var editing = program.viewer.getEditing();
+                    if (e.changeType === 'update' && program.editor.isEditing() && editing !== -1) {
+                        program.viewer.refresh(e.ttf, [editing]);
                     }
                     else {
                         program.viewer.show(e.ttf, program.viewer.getSelected());
@@ -173,8 +165,9 @@ define(
                         if (program.editor.isEditing()) {
 
                             // 如果是正在编辑的
-                            if (program.data.editingIndex !== -1) {
-                                 program.ttfManager.replaceGlyf(program.editor.getFont(), program.data.editingIndex);
+                            var editing = program.viewer.getEditing();
+                            if (editing !== -1) {
+                                 program.ttfManager.replaceGlyf(program.editor.getFont(), editing);
                             }
                             // 否则新建font
                             else {

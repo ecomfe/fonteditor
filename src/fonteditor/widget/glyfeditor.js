@@ -79,9 +79,7 @@ define(
                 this.editor.setFont(font);
             }
 
-            this.editor.focus();
             this.editor.refresh();
-            
             this.editing = true;
         };
 
