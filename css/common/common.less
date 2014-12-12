@@ -95,7 +95,7 @@ body, html {
 .main.editing {
     margin-left: 70%;
     padding-top: @top-height;
-    
+
     .command-groups {
         display: none;
     }
@@ -112,7 +112,7 @@ body, html {
     text-align: center;
     z-index: 1000;
     display: none;
-    
+
     span {
         display: inline-block;
         padding: 0 6px;
@@ -153,4 +153,41 @@ body, html {
     right: 2px;
     top: 2px;
     color: #333
+}
+
+// modal
+
+.modal {
+    background: -webkit-radial-gradient(center, circle contain, rgba(255,255,255,0.6) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-header {
+    background: #fff;
+    color: #202430;
+}
+
+.modal-body {
+    background: #F8F9F9;
+}
+
+.modal-footer {
+
+    border-top: 0;
+    background: #F8F9F9;
+
+    .btn-default {
+        border-radius: 0;
+        color: #FFF;
+        background: #738089;
+    }
+
+    .btn-primary {
+        border-radius: 0;
+        background: #4A90E2;
+    }
+
 }
