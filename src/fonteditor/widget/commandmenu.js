@@ -41,7 +41,7 @@ define(
                             command.on = false;
                             me.fire('command:un', {
                                 command: name,
-
+                                args: command
                             });
                             return;
                         }
@@ -86,13 +86,28 @@ define(
             commands = commands || this.commands;
             var str = '';
             commands.forEach(function(item, i) {
-                str += '<li data-id="'+ i +'"'
-                    + (item.disabled ? ' data-disabled="1"' : '')
-                    + (item.on ? ' data-on="1"' : '')
-                    + '>'
-                    + item.title
-                    + (item.quickKey ? '(<i>'+ item.quickKey +'</i>)' : '')
-                    +'</li>';
+
+                if (item.type === 'split') {
+                    str += '<li data-id="-1" data-split="1"></li>';
+                }
+                else {
+
+                    str += '<li data-id="'+ i +'"'
+                        + (item.disabled ? ' data-disabled="1"' : '')
+                        + (item.on ? ' data-on="1"' : '')
+                        + (item.ico ? 'data-theme="ico" title="'+ item.title +'"' : '')
+                        + '>';
+
+                    if (item.ico) {
+                        str += '<i class="ico i-'+ item.ico +'"></i>';
+                    }
+                    else {
+                        str += item.title
+                            + (item.quickKey ? '(<i>'+ item.quickKey +'</i>)' : '');
+                    }
+
+                    str +='</li>';
+                }
             });
             this.main.html(str);
             this.commands = commands;

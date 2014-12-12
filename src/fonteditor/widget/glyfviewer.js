@@ -293,13 +293,13 @@ define(
                 var selected = me.getSelected();
                 if (selected.length) {
                     commandMenu.enableCommands(['copy', 'cut', 'del']);
-                    commandMenu[selected.length === 1 ? 'enableCommands' : 'disableCommands'](['info']);
+                    commandMenu[selected.length === 1 ? 'enableCommands' : 'disableCommands'](['fontsetting']);
                 }
                 else {
-                    commandMenu.disableCommands(['copy', 'cut', 'del', 'info']);  
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'fontsetting']);  
                 }
 
-            }, 20));
+            }, 100));
 
             commandMenu.on('command', function(e) {
                 var command = e.command;

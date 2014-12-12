@@ -94,9 +94,10 @@
         <div id="glyf-list" class="glyf-list"></div>
     </section>
 
-    <section class="editor" oncontextMenu="return false">
-        <i class="ico i-del close-editor" title="点击或者按'F2'键关闭编辑器"></i>
-        <div id="glyf-editor" class="glyf-editor"></div>
+    <section class="editor">
+        <ul id="editor-commandmenu" class="command-groups"></ul>
+        <i class="ico i-leave close-editor" title="点击或者按'F2'键关闭编辑器"></i>
+        <div id="glyf-editor" class="glyf-editor" oncontextMenu="return false"></div>
     </section>
 
     <div id="selection-range" class="selection-range"></div>
@@ -112,8 +113,8 @@
           </div>
           <div class="modal-body"></div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary btn-sm btn-confirm">确定</button>
+            <button type="button" class="btn btn-flat btn-sm" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-flat btn-sm btn-confirm">确定</button>
           </div>
         </div>
       </div>

@@ -21,10 +21,10 @@ define(
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
              */
-            align: function(shapes, align) {
+            alignshapes: function(shapes, align) {
 
-                if (!shapes.length) {
-                    return;
+                if (!shapes || !shapes.length) {
+                    return false;
                 }
 
                 var contours = shapes.map(function(shape) {
@@ -67,6 +67,7 @@ define(
                 });
 
                 this.fontLayer.refresh();
+                this.refreshSelected(shapes);
             },
 
             /**
@@ -75,10 +76,10 @@ define(
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
              */
-            verticalalign: function(shapes, align) {
+            verticalalignshapes: function(shapes, align) {
 
-                if (!shapes.length) {
-                    return;
+                if (!shapes || !shapes.length) {
+                    return false;
                 }
                 
                 var contours = shapes.map(function(shape) {
@@ -113,7 +114,50 @@ define(
                 });
 
                 this.fontLayer.refresh();
+                this.refreshSelected(shapes);
+            },
+
+            /**
+             * 字体水平对齐
+             * 
+             * @param {Array} shapes 形状集合
+             * @param {string} align 对齐方式
+             */
+            horizontalalignshapes: function(shapes, align) {
+
+                if (!shapes || !shapes.length) {
+                    return false;
+                }
+                
+                var contours = shapes.map(function(shape) {
+                    return shape.points;
+                });
+
+                var xbaseline = this.axis.x; // 基线
+                var rightSideBearing = this.rightSideBearing.p0.x;
+
+                // 求边界线
+                var bound = computeBoundingBox.computePath.apply(null, contours);
+                var xOffset = 0;
+
+                if ('left' === align) {
+                    xOffset = xbaseline - bound.x;
+                }
+                else if ('center' === align) {
+                    xOffset = (xbaseline + rightSideBearing) / 2 - bound.x - bound.width / 2;
+                }
+                else if ('right' === align) {
+                    xOffset = rightSideBearing - bound.x - bound.width;
+                }
+
+                contours.forEach(function(contour) {
+                    pathAdjust(contour, 1, 1, xOffset, 0);
+                });
+
+                this.fontLayer.refresh();
+                this.refreshSelected(shapes);
             }
+
         };
 
         return support;

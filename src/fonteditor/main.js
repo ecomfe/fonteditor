@@ -86,6 +86,7 @@ define(
             init: function () {
                 bindEvent();
 
+                // glyf查看器命令组
                 program.viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
                     commands: require('./widget/menu/viewer')
                 });
@@ -95,8 +96,15 @@ define(
                     commandMenu: program.viewerCommandMenu
                 });
 
+                // 字体查看器命令组
+                program.editorCommandMenu = new CommandMenu($('#editor-commandmenu'), {
+                    commands: require('./widget/menu/editor')
+                });
+
                 // 字体查看器
-                program.editor = new GLYFEditor($('#glyf-editor'));
+                program.editor = new GLYFEditor($('#glyf-editor'), {
+                    commandMenu: program.editorCommandMenu
+                });
 
                 // 项目管理
                 program.project = require('./widget/project');

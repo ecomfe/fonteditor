@@ -133,6 +133,11 @@ hr {
     background: #28B4A0;
 }
 
+.btn-confirm {
+    color: #FFF;
+    background: #4A90E2;
+}
+
 .btn-ico {
     padding: 5px 10px;
     font-size: 12px;
@@ -148,12 +153,14 @@ hr {
 // 命令组
 .command-groups {
     height: 40px;
-    line-height: 40px;
     padding-left: 8px;
+    overflow: hidden;
     background: rgba(112, 119, 128, 0.8);
 
     >li {
+
         float: left;
+        line-height: 40px;
         padding: 0 8px;
         color: #FFF;
         cursor: pointer;
@@ -166,9 +173,18 @@ hr {
             text-decoration: underline;
         }
 
+        >.ico {
+            font-size: 20px;
+            text-decoration: none;
+        }
+
         &:hover {
             background: lighten(#707781, 10%);
         }
+    }
+
+    >li[data-theme="ico"] {
+        padding: 0 12px;
     }
 
     >li[data-disabled] {
@@ -177,5 +193,13 @@ hr {
 
     >li[data-on] {
         background: darken(#707781, 10%);
+    }
+
+    >[data-split] {
+        padding: 0;
+        width: 1px;
+        height: 40px;
+        background: lighten(#707781, 15%);
+        pointer-events: none;
     }
 }

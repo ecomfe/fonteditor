@@ -47,11 +47,28 @@ define(
         var actions = {
 
             'undo': function() {
-                program.ttfManager.undo();
+                if (program.editor.isEditing()) {
+                    program.editor.undo();
+                    setTimeout(function(){
+                        program.editor.focus();
+                    }, 20);
+                    
+                }
+                else {
+                    program.ttfManager.undo();
+                }
             },
 
             'redo': function() {
-                program.ttfManager.redo();
+                if (program.editor.isEditing()) {
+                    program.editor.redo();
+                    setTimeout(function(){
+                        program.editor.focus();
+                    }, 20);
+                }
+                else {
+                    program.ttfManager.redo();
+                }
             },
 
             // 新建

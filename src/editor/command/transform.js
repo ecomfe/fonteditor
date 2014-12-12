@@ -18,9 +18,12 @@ define(
          * 旋转图形
          * 
          * @param {Array} shapes 图形集合
-         * @param {number} angle 角度
+         * @param {number} angle 弧度
          */
         function rotate(shapes, angle) {
+            if (!angle) {
+                return false;
+            }
             var points = shapes.map(function(shape) {return shape.points;});
             var bound = computeBoundingBox.computePath.apply(null, points);
 
@@ -69,35 +72,68 @@ define(
         var support = {
 
             /**
+             * 旋转指定角度
+             * @param {Array} shapes 图形集合
+             * @param {number} angle 弧度
+             */
+            rotate: function(shapes, angle) {
+
+                if (!shapes || !shapes.length) {
+                    return false;
+                }
+
+                var ret = rotate(shapes, angle);
+                if (false !== ret) {
+                    this.fontLayer.refresh();
+                    this.refreshSelected(shapes);
+                }
+                return ret;
+            },
+
+            /**
              * 向左旋转
+             * @param {Array} shapes 图形集合
              */
             rotateleft: function(shapes) {
-                rotate(shapes, - Math.PI / 2);
-                this.fontLayer.refresh();
+                return support.rotate.call(this, shapes, - Math.PI / 2);
             },
 
             /**
              * 向右旋转
+             * @param {Array} shapes 图形集合
              */
             rotateright: function(shapes) {
-                rotate(shapes, Math.PI / 2);
-                this.fontLayer.refresh();
+                return support.rotate.call(this, shapes, Math.PI / 2);
             },
 
             /**
              * 翻转
+             * @param {Array} shapes 图形集合
              */
-            reverseshapes: function(shapes) {
+            flipshapes: function(shapes) {
+
+                if (!shapes || !shapes.length) {
+                    return false;
+                }
+
                 mirror(shapes, 1, -1);
                 this.fontLayer.refresh();
+                this.refreshSelected(shapes);
             },
 
             /**
              * 镜像
+             * @param {Array} shapes 图形集合
              */
             mirrorshapes: function(shapes) {
+                
+                if (!shapes || !shapes.length) {
+                    return false;
+                }
+
                 mirror(shapes, -1, 1);
                 this.fontLayer.refresh();
+                this.refreshSelected(shapes);
             }
         };
 

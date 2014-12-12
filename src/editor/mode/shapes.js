@@ -31,114 +31,55 @@ define(
          * @param {string} command 命令
          */
         function onContextMenu(e) {
-            if(this.currentGroup.shapes.length === 0) {
-                return;
-            }
 
-            this.fire('command', e);
-            if(e.returnValue === false) {
+            if(!this.currentGroup.shapes.length) {
                 return;
             }
 
             this.contextMenu.hide();
 
             var command = e.command;
-
-            // 是否编辑器支持
-            if(this.supportCommand(command)) {
-                this.execCommand(command, e);
-                return;
-            }
-
+            var args = e.args;
             var shapes = this.currentGroup.shapes;
-            var shape = shapes[0];
 
-            if (command == 'remove') {
-                this.execCommand('removeshapes', shapes);
-                this.setMode();
+            switch (command) {
+                case 'topshape':
+                case 'bottomshape':
+                case 'upshape':
+                case 'downshape':
+                    this.execCommand(command, shapes[0]);
+                    break;
+                case 'joinshapes':
+                case 'intersectshapes':
+                case 'tangencyshapes':
+                case 'rotateleft':
+                case 'rotateright':
+                case 'flipshapes':
+                case 'mirrorshapes':
+                case 'cutshapes':
+                case 'copyshapes':
+                case 'removeshapes':
+                case 'reversepoints':
+                    this.execCommand(command, shapes);
+                    break;
+                case 'alignshapes':
+                case 'verticalalignshapes':
+                case 'horizontalalignshapes':
+                    this.execCommand(command, shapes, args.align);
+                    break;
+                case 'addreferenceline':
+                    var bound = this.currentGroup.getBound();
+                    if(bound) {
+                        this.execCommand(command, bound.x, bound.y);
+                        this.execCommand(command, bound.x + bound.width, bound.y + bound.height);
+                    }
+                    break;
+                default:
+                    // 是否编辑器支持
+                    if(this.supportCommand(command)) {
+                        this.execCommand(command, e);
+                    }
             }
-            else if (command == 'reverse_point') {
-                this.execCommand('reversepoint', shapes);
-            }
-            else if (command == 'top') {
-                this.execCommand('topshape', shape);
-            }
-            else if (command == 'bottom') {
-                this.execCommand('bottomshape', shape);
-            }
-            else if (command == 'up') {
-                this.execCommand('upshape', shape);
-            }
-            else if (command == 'down') {
-                this.execCommand('downshape', shape);
-            }
-
-            // 相交，结合和相切
-            else if (command == 'join_shapes') {
-                this.execCommand('joinshapes', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'intersect_shapes') {
-                this.execCommand('intersectshapes', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'tangency_shapes') {
-                this.execCommand('tangencyshapes', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-
-            else if (command == 'rotate_left') {
-                this.execCommand('rotateleft', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'rotate_right') {
-                this.execCommand('rotateright', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'reverse_shapes') {
-                this.execCommand('reverseshapes', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'mirror_shapes') {
-                this.execCommand('mirrorshapes', shapes);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'add_referenceline') {
-                var bound = this.currentGroup.getBound();
-                if(bound) {
-                    this.execCommand('addreferenceline', bound.x, bound.y);
-                    this.execCommand(
-                        'addreferenceline', 
-                        bound.x + bound.width, bound.y + bound.height
-                    );
-                }
-            }
-            else if (command == 'cut') {
-                this.execCommand('cutshapes', shapes);
-                this.setMode();
-                this.fire('change');
-            }
-            else if (command == 'copy') {
-                this.execCommand('copyshapes', shapes);
-            }
-            else if (command == 'shapes_align') {
-                this.execCommand('align', shapes, e.args.type);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            else if (command == 'shapes_verticalalign') {
-                this.execCommand('verticalalign', shapes, e.args.type);
-                this.currentGroup.setShapes(shapes);
-                this.currentGroup.refresh();
-            }
-            this.fire('change');
         }
 
 
@@ -169,23 +110,25 @@ define(
                         var shapeIndex = this.currentGroup.shapes.indexOf(shape);
                         if(shapeIndex >= 0) {
 
+                            // ctl多选，点选2次, !altKey 防止复制冲突
                             if (e.ctrlKey && !e.altKey) {
                                 this.currentGroup.shapes.splice(shapeIndex, 1);
-                                this.currentGroup.setShapes(this.currentGroup.shapes);
-                                this.currentGroup.refresh();
+                                this.refreshSelected(this.currentGroup.shapes.slice(0));
                                 this.clicked = false;
                             }
 
                             return;
                         }
                         else {
+
                             var shapes = [shape];
+                            // 多选
                             if (e.ctrlKey) {
                                 shapes = shapes.concat(this.currentGroup.shapes);;
                             }
-                            this.currentGroup.setShapes(shapes);
+
                             this.currentGroup.setMode('scale');
-                            this.currentGroup.refresh();
+                            this.refreshSelected(shapes);
                             this.clicked = false;
                             return;
                         }
@@ -298,7 +241,6 @@ define(
                 if (e.key == 'delete') {
                     this.execCommand('removeshapes', this.currentGroup.shapes);
                     this.setMode();
-                    this.fire('change');
                 }
                 // 全选
                 else if(e.keyCode == 65 && e.ctrlKey) {
@@ -322,10 +264,6 @@ define(
                 if (e.keyCode == 88 && e.ctrlKey) {
                     if (this.currentGroup.shapes.length) {
                         this.execCommand('cutshapes', this.currentGroup.shapes);
-                        this.currentGroup.shapes.length = 0;
-                        this.coverLayer.clearShapes();
-                        this.coverLayer.refresh();
-                        this.fire('change');
                     }
                 }
                 // 复制
@@ -344,15 +282,21 @@ define(
              * 开始模式
              */
             begin: function(shapes, prevMode) {
+
                 this.currentGroup = new ShapesGroup(shapes, this);
                 this.currentGroup.refresh();
                 this.currentGroup.setMode('scale');
+
                 if (prevMode == 'bound') {
                     this.clicked = false;
                 }
                 else {
                     this.clicked = true;
                 }
+
+                this.fire('selection:change', {
+                    shapes: shapes
+                });
             },
 
 
@@ -364,8 +308,8 @@ define(
                 this.currentPoint = null;
                 this.currentGroup.dispose();
                 this.currentGroup = null;
-
                 this.render.setCursor('default');
+                this.fire('selection:change');
             }
         };
 

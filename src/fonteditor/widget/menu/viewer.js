@@ -9,40 +9,44 @@
 
 define(
     function(require) {
+
         return [
             {
-                name: "copy",
-                title: "复制",
+                name: 'copy',
+                title: '复制',
                 quickKey: 'C',
                 disabled: true
             },
             {
-                name: "cut",
-                title: "剪切",
+                name: 'cut',
+                title: '剪切',
                 quickKey: 'X'
             },
             {
-                name: "paste",
-                title: "粘贴",
+                name: 'paste',
+                title: '粘贴',
                 quickKey: 'V'
             },
             {
-                name: "del",
-                title: "删除",
+                name: 'del',
+                title: '删除',
                 quickKey: 'D',
                 disabled: true
             },
             {
-                name: "adjust-pos",
-                title: "调整位置"
+                type: 'split'
             },
             {
-                name: "adjust-glyf",
-                title: "调整字形"
+                name: 'adjust-pos',
+                title: '调整位置'
             },
             {
-                name: "info",
-                title: "字形信息",
+                name: 'adjust-glyf',
+                title: '调整字形'
+            },
+            {
+                name: 'fontsetting',
+                title: '字形信息',
                 disabled: true
             }
         ];

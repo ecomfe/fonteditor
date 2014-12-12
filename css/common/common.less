@@ -127,11 +127,38 @@ body, html {
     position: fixed;
     width: 70%;
     top: @top-height;
+    padding-top: @command-groups-height;
     bottom: 0;
     z-index: 1;
     background: #FEFEFE;
     border-right: 1px solid #DDD;
     display: none;
+
+    .command-groups {
+        background: rgba(112, 119, 128, 1);
+        margin-top: -40px;
+    }
+    
+    .close-editor {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding-right: 5px;
+        z-index: 100;
+        font-size: 20px;
+        line-height: 38px;
+        color: #FFF;
+        display: none;
+        &:hover {
+            cursor: pointer
+        }
+    }
+
+    &:hover {
+        .close-editor {
+            display: block;
+        }
+    }
 }
 
 .editor.editing {
