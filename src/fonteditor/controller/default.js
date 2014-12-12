@@ -47,7 +47,7 @@ define(
                     if (ttf) {
                         $('.main').addClass('editing');
                         $('.editor').addClass('editing');
-                        
+
                         program.viewer.setMode('editor');
 
                         program.viewer.blur();
@@ -105,7 +105,9 @@ define(
                     program.ttfManager.removeGlyf(e.list);
                 }).on('paste', function(e) {
                     var glyfList = clipboard.get('glyf');
-                    program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
+                    if (glyfList) {
+                        program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
+                    }
                 })
                 .on('undo', function(e) {
                     program.ttfManager.undo();
