@@ -14,6 +14,21 @@ define(
         var editorOptions = require('editor/options');
         var setting = require('./setting');
         var program = require('./program');
+        var lang = require('common/lang');
+
+
+        // 支持的命令列表
+        var COMMAND_SUPPORT = {
+            // 形状组
+            shapes: [
+                'copyshapes', 'removeshapes',
+                'horizontalalignshapes', 'verticalalignshapes',
+                'rotateleft', 'rotateright', 'flipshapes', 'mirrorshapes'
+            ],
+            // 单个形状
+            shape: ['upshape', 'downshape', 'reversepoints']
+        };
+
 
         /**
          * 绑定editor编辑器
@@ -49,6 +64,87 @@ define(
                     editor: e.setting
                 });
             });
+
+            var commandMenu = this.options.commandMenu;
+            if (commandMenu) {
+
+                editor.on('selection:change', lang.debounce(function(e) {
+                    var length = e.shapes ? e.shapes.length : 0;
+                    if (!length) {
+                        commandMenu.disableCommands(COMMAND_SUPPORT.shapes);
+                        commandMenu.disableCommands(COMMAND_SUPPORT.shape);
+                    }
+                    else {
+                        commandMenu.enableCommands(COMMAND_SUPPORT.shapes);
+                        commandMenu[length === 1 ? 'enableCommands' : 'disableCommands'](COMMAND_SUPPORT.shape);
+                    }
+                }), 100);
+
+                commandMenu.on('command', function(e) {
+
+                    var command = e.command;
+                    var args = e.args;
+                    var shapes;
+
+                    if (command === 'pasteshapes') {
+                        shapes = editor.getClipBoard();
+                    }
+                    else {
+                        shapes = editor.getSelected();
+                    }
+
+                    if (shapes && shapes.length) {
+                        switch (command) {
+                            case 'topshape':
+                            case 'bottomshape':
+                            case 'upshape':
+                            case 'downshape':
+                                editor.execCommand(command, shapes[0]);
+                                break;
+
+                            case 'copyshapes':
+                            case 'pasteshapes':
+                            case 'removeshapes':
+                            case 'joinshapes':
+                            case 'intersectshapes':
+                            case 'tangencyshapes':
+                            case 'rotateleft':
+                            case 'rotateright':
+                            case 'flipshapes':
+                            case 'mirrorshapes':
+                            case 'cutshapes':
+                            case 'copyshapes':
+                            case 'removeshapes':
+                            case 'reversepoints':
+                                editor.execCommand(command, shapes);
+                                break;
+
+                            case 'alignshapes':
+                            case 'verticalalignshapes':
+                            case 'horizontalalignshapes':
+                                editor.execCommand(command, shapes, args.align);
+                                break;
+                        }
+                    }
+                    
+                    // 这里延时进行focus
+                    setTimeout(function() {
+                        me.focus();
+                    }, 20);
+                });
+            }
+
+        }
+
+        /**
+         * 执行指定命令
+         * 
+         * @param {string} command 命令名
+         */
+        function execCommand(command) {
+            if (this.editor) {
+                this.editor.execCommand.apply(this.editor, arguments); 
+            }
         }
 
         /**
@@ -79,7 +175,6 @@ define(
                 this.editor.setFont(font);
             }
 
-            this.editor.focus();
             this.editor.refresh();
             this.editing = true;
         };
@@ -121,6 +216,20 @@ define(
         GLYFEditor.prototype.blur = function() {
             this.editing = false;
             this.editor && this.editor.blur();
+        };
+
+        /**
+         * 撤销
+         */
+        GLYFEditor.prototype.undo = function() {
+            execCommand.call(this, 'undo');
+        };
+
+        /**
+         * 重做
+         */
+        GLYFEditor.prototype.redo = function() {
+            execCommand.call(this, 'redo');
         };
 
         /**

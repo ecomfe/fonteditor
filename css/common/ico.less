@@ -3,10 +3,10 @@
 // fontface
 @font-face {
     font-family: 'fonteditor';
-    src: url('../font/iconfont.ttf') format('truetype');
+    src: url('../font/fonteditor.ttf') format('truetype');
 }
 
-.ico() {
+.icon() {
     display: inline-block;
     &:before,
     &:after {
@@ -23,44 +23,143 @@
     }
 }
 
+.i-ico(@unicode, @pos) when (@pos = 'after'){
+    &:after {
+        content: @unicode;
+    }
+}
+
+.ico {
+    .icon();
+}
+
+.i-leave {
+    .i-ico('\e00c');
+}
+
 .i-edit,
-.i-del {
-    .ico();
+.i-del,
+.i-leave {
     font-size: 12px;
     &:hover {
         cursor: pointer;
-        color: blue;
+        color: #4A90E2;
     }
 }
 
 .i-edit {
-    .i-ico('\e605');
+    .i-ico('\e021');
 }
 
 .i-del {
-    .i-ico('\e611');
+    .i-ico('\e020');
 }
 
 .i-github {
-    .ico();
-    .i-ico('\e600');
+    .i-ico('\e01e');
 }
 
-.close-editor {
-    .ico();
-    .i-ico('\e611');
+// 编辑器按钮组
+.i-new {
+    .i-ico('\e019');
+}
 
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 100;
-    padding: 0 3px;
-    z-index: 100;
-    font-size: 14px;
-    background: #FFF;
-    border-left: 1px solid #000;
-    display: none;
-    &:hover {
-        cursor: pointer
-    }
+.i-open {
+    .i-ico('\e01A');
+}
+
+.i-add {
+    .i-ico('\e003');
+}
+
+.i-undo {
+    .i-ico('\e001');
+}
+
+.i-redo {
+    .i-ico('\e002');
+}
+
+.i-down {
+    .i-ico('\e00e');
+}
+
+.i-left {
+    .i-ico('\e00a');
+}
+
+.i-ttf {
+    .i-ico('\e00f');
+}
+
+.i-woff {
+    .i-ico('\e010');
+}
+
+.i-zip {
+    .i-ico('\e011');
+}
+
+.i-save {
+    .i-ico('\e022');
+}
+
+
+
+// glyf编辑器
+
+.i-upshape {
+    .i-ico('\e014');
+}
+
+.i-downshape {
+    .i-ico('\e00b');
+}
+
+.i-reversepoints {
+    .i-ico('\e00d');
+}
+
+.i-alignleft {
+    .i-ico('\e006');
+}
+
+.i-aligncenter {
+    .i-ico('\e004');
+}
+
+.i-alignright {
+    .i-ico('\e007');
+}
+
+.i-aligntop {
+    .i-ico('\e008');
+}
+
+.i-alignmiddle {
+    .i-ico('\e005');
+}
+
+.i-aligndescent {
+    .i-ico('\e009');
+}
+
+.i-alignbaseline {
+    .i-ico('\e009');
+}
+
+.i-rotateleft {
+    .i-ico('\e01c');
+}
+
+.i-rotateright {
+    .i-ico('\e01d');
+}
+
+.i-flip {
+    .i-ico('\e013');
+}
+
+.i-mirror {
+    .i-ico('\e012');
 }

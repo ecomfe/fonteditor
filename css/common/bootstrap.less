@@ -38,8 +38,19 @@
 }
 
 .dropdown-menu {
-    a {
+    margin-top: 0;
+    border-radius: 0;
+    background: #323842;
+    border: none;
+    >li>a {
         cursor: pointer;
+        color: #B6CBDD;
+
+        &:hover,
+        &:focus {
+            color: #FFF;
+            background: #232830;
+        }
     }
 }
 
@@ -64,5 +75,131 @@ hr {
     .form-group {
         margin-right: 10px;
         width: 30%;
+    }
+}
+
+
+.navbar {
+    height: 50px;
+    background: #F9F9F9;
+}
+
+.btn-groups {
+    line-height: 50px;
+
+    >.split {
+        width: 1px;
+        height: 30px;
+        line-height: 30px;
+        background: #D8D8D8;
+        margin: 0 8px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+.btn-flat {
+    border-radius: 0;
+    color: #FFF;
+    background: #738089;
+
+    &:hover,
+    &:focus, {
+        background: #323842;
+        color: #B6CBDD;
+        outline: none;
+    }
+
+    >.ico-left {
+        margin-right: 8px;
+    }
+
+    >.ico {
+        pointer-events: none;
+    }
+
+    >.drop {
+        display: inline-block;
+    }
+}
+
+.btn-new {
+    color: #FFF;
+    background: #4A90E2;
+}
+
+.btn-preview {
+    color: #FFF;
+    background: #28B4A0;
+}
+
+.btn-confirm {
+    color: #FFF;
+    background: #4A90E2;
+}
+
+.btn-ico {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    >.ico {
+        font-size: 16px;
+        line-height: 18px;
+        margin-right: 0;
+    }
+}
+
+
+// 命令组
+.command-groups {
+    height: 40px;
+    padding-left: 8px;
+    overflow: hidden;
+    background: rgba(112, 119, 128, 0.8);
+
+    >li {
+
+        float: left;
+        line-height: 40px;
+        padding: 0 8px;
+        color: #FFF;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+
+        >i {
+            font-style: normal;
+            text-decoration: underline;
+        }
+
+        >.ico {
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        &:hover {
+            background: lighten(#707781, 10%);
+        }
+    }
+
+    >li[data-theme="ico"] {
+        padding: 0 12px;
+    }
+
+    >li[data-disabled] {
+        color: #B9BDC1;
+    }
+
+    >li[data-on] {
+        background: darken(#707781, 10%);
+    }
+
+    >[data-split] {
+        padding: 0;
+        width: 1px;
+        height: 40px;
+        background: lighten(#707781, 15%);
+        pointer-events: none;
     }
 }

@@ -11,19 +11,19 @@ define(
     function(require) {
         return [
             {
-                name: 'remove',
+                name: 'removeshapes',
                 title: '删除轮廓'
             },
             {
-                name: 'reverse_point',
+                name: 'reversepoints',
                 title: '改变方向'
             },
             {
-                name: 'cut',
+                name: 'cutshapes',
                 title: '剪切'
             },
             {
-                name: 'copy',
+                name: 'copyshapes',
                 title: '复制'
             },
             {
@@ -31,19 +31,19 @@ define(
                 title: '顺序',
                 items: [
                     {
-                        name: 'top',
+                        name: 'topshape',
                         title: '置前'
                     },
                     {
-                        name: 'bottom',
+                        name: 'bottomshape',
                         title: '置后'
                     },
                     {
-                        name: 'up',
+                        name: 'upshape',
                         title: '上移一层'
                     },
                     {
-                        name: 'down',
+                        name: 'downshape',
                         title: '下移一层'
                     }
                 ]
@@ -53,51 +53,72 @@ define(
                 title: '变换',
                 items: [
                     {
-                        name: 'rotate_left',
+                        name: 'rotateleft',
                         title: '向左旋转'
                     },
                     {
-                        name: 'rotate_right',
+                        name: 'rotateright',
                         title: '向右旋转'
                     },
                     {
-                        name: 'reverse_shapes',
+                        name: 'flipshapes',
                         title: '翻转'
                     },
                     {
-                        name: 'mirror_shapes',
+                        name: 'mirrorshapes',
                         title: '镜像'
                     }
                 ]
             },
             {
-                name: 'shapes_verticalalign',
-                title: '垂直方向',
+                name: 'horizontalalignshapes_',
+                title: '水平方向',
                 items: [
                     {
-                        name: 'shapes_verticalalign',
-                        type: 'ascent',
-                        title: '顶端对齐'
+                        name: 'horizontalalignshapes',
+                        align: 'left',
+                        title: '左对齐'
                     },
                     {
-                        name: 'shapes_verticalalign',
-                        type: 'middle',
+                        name: 'horizontalalignshapes',
+                        align: 'center',
                         title: '居中对齐'
                     },
                     {
-                        name: 'shapes_verticalalign',
-                        type: 'descent',
+                        name: 'horizontalalignshapes',
+                        align: 'right',
+                        title: '右对齐'
+                    }
+                ]
+            },
+            {
+                name: 'verticalalignshapes_',
+                title: '垂直方向',
+                items: [
+                    {
+                        name: 'verticalalignshapes',
+                        align: 'ascent',
+                        title: '顶端对齐'
+                    },
+                    {
+                        name: 'verticalalignshapes',
+                        align: 'middle',
+                        title: '居中对齐'
+                    },
+                    {
+                        name: 'verticalalignshapes',
+                        align: 'descent',
                         title: '底端对齐'
                     },
                     {
-                        name: 'shapes_verticalalign',
-                        type: 'baseline',
+                        name: 'verticalalignshapes',
+                        align: 'baseline',
                         title: '基线对齐'
                     }
                 ]
             },
             {
-                name: 'add_referenceline',
+                name: 'addreferenceline',
                 title: '添加边界参考线'
             }
         ];

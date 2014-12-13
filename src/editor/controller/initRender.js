@@ -13,8 +13,6 @@ define(
         var commandList = require('../menu/commandList');
         var lang = require('common/lang');
         var modeSupport = require('../mode/support');
-        var pathAdjust = require('graphics/pathAdjust');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
         var selectShape = require('render/util/selectShape');
         
         /**
@@ -22,9 +20,9 @@ define(
          */
         function onContextMenu(e) {
             this.contextMenu.hide();
-            if (e.command == 'add_referenceline') {
-                var pos = e.pos;
-                this.execCommand('addreferenceline', pos.x, pos.y);
+
+            if (e.command == 'addreferenceline') {
+                this.execCommand('addreferenceline', e.pos.x, e.pos.y);
             }
             else if (e.command == 'split') {
                 this.setMode('split');
@@ -32,27 +30,10 @@ define(
             else if (e.command == 'paste') {
                 var shapes = this.getClipBoard();
                 if(shapes) {
-                    var bound = computeBoundingBox.computePath.apply(null, 
-                        shapes.map(function(shape){
-                            return shape.points;
-                        })
-                    );
-                    // 需要根据坐标原点以及缩放换算成鼠标位置移动
-                    var origin = this.axis;
-                    var pos = e.pos;
-                    var scale = this.render.camera.scale;
-                    var x = (pos.x - origin.x) / scale;
-                    var y = (origin.y - pos.y) / scale;
-
-                    shapes.forEach(function(shape) {
-                        pathAdjust(shape.points, 1, 1, x - bound.x, y - bound.y - bound.height);
-                    });
-                    this.setShapes(shapes);
-                    this.setMode('shapes', shapes);
-                    this.fire('change');
+                    this.execCommand('pasteshapes', shapes, e.pos);
                 }
             }
-            else if (e.command == 'add_supportshapes') {
+            else if (e.command == 'addsupportshapes') {
                 var type = e.args.type;
                 this.execCommand('addsupportshapes', type);
             }
@@ -214,9 +195,7 @@ define(
                 else if (e.keyCode == 86 && e.ctrlKey) {
                     var shapes = me.getClipBoard();
                     if(shapes) {
-                        me.setShapes(shapes);
-                        me.setMode('shapes', shapes);
-                        me.fire('change');
+                        me.execCommand('pasteshapes', shapes);
                     }
                 }
                 // 放大

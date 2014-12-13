@@ -32,6 +32,20 @@ define(
 
                     if((joint = isSegmentRayCross(p0, p1, p))) {
 
+                        if (joint.length === 2) {
+                            // 水平重叠
+                            if (
+                                p.x >= Math.min(joint[0].x, joint[1].x )
+                                && p.x <= Math.max(joint[0].x, joint[1].x)
+                            ) {
+                                zCount = 1;
+                                return false;
+                            }
+                            else {
+                                return;
+                            }
+                        }
+
                         // 在直线上
                         if(joint[0].x == p.x) {
                             zCount = 1;

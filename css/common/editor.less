@@ -60,7 +60,7 @@
     }
 
     >li[data-sub] {
-        color: green;
+        color: #4A90E2;
         &:after {
             content:'>';
             margin-right: 10px;
@@ -70,12 +70,13 @@
     }
 
     li[data-tag="selected"] {
-        .ico();
+        .icon();
+        .i-ico('\e01f', 'after');
         display: block;
         &:after {
-            content:'\e610';
             float: right;
             margin-right: 10px;
+            color: #4A90E2;
         }
     }
 
@@ -88,12 +89,6 @@
 
     li:last-child {
         border-bottom: none;
-    }
-}
-
-.editor:hover {
-    .close-editor {
-        display: block;
     }
 }
 

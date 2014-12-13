@@ -95,6 +95,39 @@ define(
             return this;
         };
 
+        /**
+         * 设置选中的shapes
+         * @param {Array} shapes 选中的shapes
+         */
+        Editor.prototype.setSelected = function(shapes) {
+            this.setMode('shapes', shapes);
+        };
+
+        /**
+         * 刷新选中的shapes
+         * @param {Array} shapes 选中的shapes
+         */
+        Editor.prototype.refreshSelected = function(shapes) {
+            if (this.currentGroup) {
+                var lastShapes = this.currentGroup.shapes;
+                this.currentGroup.setShapes(shapes);
+                this.currentGroup.refresh();
+
+                if (shapes !== lastShapes) {
+                    this.fire('selection:change', {
+                        shapes: shapes
+                    });
+                }
+            }
+        };
+
+        /**
+         * 获取选中的shapes
+         * @return {Array} 选中的shapes
+         */
+        Editor.prototype.getSelected = function() {
+            return this.currentGroup ? this.currentGroup.shapes : null;
+        };
 
         /**
          * 执行指定命令
@@ -109,15 +142,17 @@ define(
                 command: command,
                 args: args
             };
-            this.fire('command', event);
+            this.fire('beforecommand', event);
 
             if(event.returnValue === false) {
                 return false;
             }
 
             if (commandSupport[command]) {
-                commandSupport[command].apply(this, args);
-                return true;
+                var ret = commandSupport[command].apply(this, args);
+                event.result = ret;
+                this.fire('command', event);
+                return ret;
             }
 
             return false;
@@ -149,17 +184,6 @@ define(
         };
 
         /**
-         * 添加到剪切板
-         *
-         * @param {Array} 形状集合
-         * @return {this}
-         */
-        Editor.prototype.setClipBoard = function(shapes) {
-            clipboard.set(shapes, 'editor-shape');
-            return this;
-        };
-
-        /**
          * 是否改变过
          *
          * @return {boolean}
@@ -182,6 +206,17 @@ define(
                 var font = this.getFont();
                 this.fontHash = getFontHash(font);
             }
+        };
+
+        /**
+         * 添加到剪切板
+         *
+         * @param {Array} 形状集合
+         * @return {this}
+         */
+        Editor.prototype.setClipBoard = function(shapes) {
+            clipboard.set(shapes, 'editor-shape');
+            return this;
         };
 
         /**

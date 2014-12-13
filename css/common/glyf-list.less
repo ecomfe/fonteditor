@@ -1,0 +1,108 @@
+.glyf-list {
+    height: 100%;
+    overflow: auto;
+
+    >.glyf-item {
+
+        float: left;
+        position: relative;
+        margin: 10px;
+        width: 80px;
+        box-shadow: 1px 1px 4px #999;
+        cursor: pointer;
+        background: #ECECEC;
+
+        .unicode,
+        .name {
+            font-size: 12px;
+            line-height: 20px;
+            height: 20px;
+            padding-left: 4px;
+            color: #45283F;
+            .ellipsis();
+        }
+        
+        .unicode {
+            color: #70A9D6;
+        }
+
+        .glyf {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #FFF;
+            background: #FFF;
+            box-sizing: border-box;
+            display: block;
+            .path {
+                fill: #232830;
+            }
+        }
+
+        .i-del,
+        .i-edit {
+            position: absolute;
+            right: 6px;
+            display: none;
+        }
+
+        .i-edit {
+            right: 22px;
+        }
+    }
+
+    >.glyf-item:hover,
+    >.selected {
+        .glyf {
+            border-color: #232830;
+        }
+        .name {
+            color: #FFF;
+        }
+    }
+
+    >.glyf-item:hover {
+        background: #3C619B;
+
+        .name {
+            color: #FFF;
+        }
+        .i-del {
+            display: block;
+        }
+        .i-edit {
+            display: block;
+        }
+    }
+
+    >.selected,
+    >.selected:hover {
+        background: #232830;
+    }
+
+    >.editing,
+    >.editing:hover {
+        .glyf {
+            border-color: #066BC5;
+        }
+    }
+
+    >.compound {
+        .path {
+            fill: lighten(#232830, 20%) !important;
+        }
+    }
+
+    >.new,
+    >.edit {
+        .path {
+            fill: blue!important;
+        }
+    }
+}
+
+
+.glyf-list.no-hover {
+  .glyf-item {
+    pointer-events: none;
+  }
+}

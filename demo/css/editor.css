@@ -17,70 +17,115 @@ a:hover {
 }
 @font-face {
   font-family: 'fonteditor';
-  src: url('../font/iconfont.ttf') format('truetype');
+  src: url('../font/fonteditor.ttf') format('truetype');
+}
+.ico {
+  display: inline-block;
+}
+.ico:before,
+.ico:after {
+  font-family: 'fonteditor';
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.1px;
+}
+.i-leave:before {
+  content: '\e00c';
 }
 .i-edit,
-.i-del {
-  display: inline-block;
+.i-del,
+.i-leave {
   font-size: 12px;
 }
-.i-edit:before,
-.i-del:before,
-.i-edit:after,
-.i-del:after {
-  font-family: 'fonteditor';
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.1px;
-}
 .i-edit:hover,
-.i-del:hover {
+.i-del:hover,
+.i-leave:hover {
   cursor: pointer;
-  color: blue;
+  color: #4A90E2;
 }
 .i-edit:before {
-  content: '\e605';
+  content: '\e021';
 }
 .i-del:before {
-  content: '\e611';
-}
-.i-github {
-  display: inline-block;
-}
-.i-github:before,
-.i-github:after {
-  font-family: 'fonteditor';
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.1px;
+  content: '\e020';
 }
 .i-github:before {
-  content: '\e600';
+  content: '\e01e';
 }
-.close-editor {
-  display: inline-block;
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 0 3px;
-  z-index: 100;
-  font-size: 14px;
-  background: #FFF;
-  border-left: 1px solid #000;
-  display: none;
+.i-new:before {
+  content: '\e019';
 }
-.close-editor:before,
-.close-editor:after {
-  font-family: 'fonteditor';
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.1px;
+.i-open:before {
+  content: '\e01A';
 }
-.close-editor:before {
-  content: '\e611';
+.i-add:before {
+  content: '\e003';
 }
-.close-editor:hover {
-  cursor: pointer;
+.i-undo:before {
+  content: '\e001';
+}
+.i-redo:before {
+  content: '\e002';
+}
+.i-down:before {
+  content: '\e00e';
+}
+.i-left:before {
+  content: '\e00a';
+}
+.i-ttf:before {
+  content: '\e00f';
+}
+.i-woff:before {
+  content: '\e010';
+}
+.i-zip:before {
+  content: '\e011';
+}
+.i-save:before {
+  content: '\e022';
+}
+.i-upshape:before {
+  content: '\e014';
+}
+.i-downshape:before {
+  content: '\e00b';
+}
+.i-reversepoints:before {
+  content: '\e00d';
+}
+.i-alignleft:before {
+  content: '\e006';
+}
+.i-aligncenter:before {
+  content: '\e004';
+}
+.i-alignright:before {
+  content: '\e007';
+}
+.i-aligntop:before {
+  content: '\e008';
+}
+.i-alignmiddle:before {
+  content: '\e005';
+}
+.i-aligndescent:before {
+  content: '\e009';
+}
+.i-alignbaseline:before {
+  content: '\e009';
+}
+.i-rotateleft:before {
+  content: '\e01c';
+}
+.i-rotateright:before {
+  content: '\e01d';
+}
+.i-flip:before {
+  content: '\e013';
+}
+.i-mirror:before {
+  content: '\e012';
 }
 .glyf-editor {
   width: 100%;
@@ -134,7 +179,7 @@ a:hover {
   margin-left: 120px;
 }
 .editor-contextmenu > li[data-sub] {
-  color: green;
+  color: #4A90E2;
 }
 .editor-contextmenu > li[data-sub]:after {
   content: '>';
@@ -154,9 +199,12 @@ a:hover {
   -webkit-text-stroke-width: 0.1px;
 }
 .editor-contextmenu li[data-tag="selected"]:after {
-  content: '\e610';
+  content: '\e01f';
+}
+.editor-contextmenu li[data-tag="selected"]:after {
   float: right;
   margin-right: 10px;
+  color: #4A90E2;
 }
 .editor-contextmenu li:hover {
   background: #EEE;
@@ -166,9 +214,6 @@ a:hover {
 }
 .editor-contextmenu li:last-child {
   border-bottom: none;
-}
-.editor:hover .close-editor {
-  display: block;
 }
 body,
 html {

@@ -12,6 +12,7 @@ define(
         var lang = require('common/lang');
         var clipboard = require('editor/widget/clipboard');
         var string = require('common/string');
+        var actions = require('../widget/actions');
 
         // 获取ttf的编辑选项
         function getEditingOpt(ttf) {
@@ -47,6 +48,8 @@ define(
                         $('.main').addClass('editing');
                         $('.editor').addClass('editing');
 
+                        program.viewer.setMode('editor');
+
                         program.viewer.blur();
                         program.editor.show();
 
@@ -59,10 +62,10 @@ define(
                                 alert('暂不支持复合字形!');
                             }
                             else {
-                                program.data.editingIndex = glyfIndex;
                                 program.editor.setFont(lang.clone(font));
                             }
                         }
+                        program.editor.focus();
                     }
                 };
 
@@ -71,8 +74,10 @@ define(
                     $('.main').removeClass('editing');
                     $('.editor').removeClass('editing');
 
-                    program.data.editingIndex = -1;
                     program.editor && program.editor.hide();
+
+                    program.viewer.clearEditing();
+                    program.viewer.setMode('list');
                     program.viewer.focus();
                 };
 
@@ -98,10 +103,22 @@ define(
                     var list = program.ttfManager.getGlyf(e.list);
                     clipboard.set(list, 'glyf');
                     program.ttfManager.removeGlyf(e.list);
-                }).on('undo', function(e) {
+                }).on('paste', function(e) {
+                    var glyfList = clipboard.get('glyf');
+                    if (glyfList) {
+                        program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
+                    }
+                })
+                .on('undo', function(e) {
                     program.ttfManager.undo();
                 }).on('redo', function(e) {
                     program.ttfManager.redo();
+                }).on('adjust-pos', function(e) {
+                    actions['setting-adjust-pos']();
+                }).on('adjust-glyf', function(e) {
+                    actions['setting-adjust-glyf']();
+                }).on('info', function(e) {
+                    actions['setting-glyf']();
                 });
 
                 program.projectViewer.on('open', function(e) {
@@ -122,13 +139,24 @@ define(
                 });
 
                 program.ttfManager.on('change', function(e) {
-                    if (program.editor.isEditing() && program.data.editingIndex !== -1) {
-                        program.viewer.refresh(e.ttf, [program.data.editingIndex]);
+                    // 保存正在编辑的字形
+                    var editing = program.viewer.getEditing();
+                    if (e.changeType === 'update' && program.editor.isEditing() && editing !== -1) {
+                        program.viewer.refresh(e.ttf, [editing]);
                     }
                     else {
                         program.viewer.show(e.ttf, program.viewer.getSelected());
                         program.viewer.focus();
                     }
+                }).on('set', function(e) {
+
+                    // 未初始化状态，命令栏是不显示的，需要设置下编辑模式
+                    if (!program.viewer.inited) {
+                        program.viewer.setMode('list');
+                        program.viewer.inited = true;
+                    }
+                    program.viewer.show(e.ttf, program.viewer.getSelected());
+                    program.viewer.focus();
                 });
 
 
@@ -139,8 +167,9 @@ define(
                         if (program.editor.isEditing()) {
 
                             // 如果是正在编辑的
-                            if (program.data.editingIndex !== -1) {
-                                 program.ttfManager.replaceGlyf(program.editor.getFont(), program.data.editingIndex);
+                            var editing = program.viewer.getEditing();
+                            if (editing !== -1) {
+                                 program.ttfManager.replaceGlyf(program.editor.getFont(), editing);
                             }
                             // 否则新建font
                             else {

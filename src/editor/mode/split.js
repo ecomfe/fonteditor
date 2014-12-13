@@ -56,12 +56,8 @@ define(
                         var p1 = this.splitLine.p1;
                         // 对shape进行多选
                         if (Math.abs(p0.x - p1.x) >= 20 || Math.abs(p0.y - p1.y) >= 20) {
-                            var shapes = [];
-                            this.execCommand('splitshapes', p0, p1, shapes);
-                            if (shapes.length) {
-                                this.setMode('shapes', shapes);
-                                this.fire('change');
-                                return;                       
+                            if (false !== this.execCommand('splitshapes', p0, p1)) {
+                                return;
                             }
                         }
                     }

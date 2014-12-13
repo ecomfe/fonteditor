@@ -19,27 +19,27 @@ define(
                 title: '添加形状',
                 items: [
                     {
-                        name: 'add_supportshapes',
+                        name: 'addsupportshapes',
                         type: 'circle',
                         title: '添加圆'
                     },
                     {
-                        name: 'add_supportshapes',
+                        name: 'addsupportshapes',
                         type: 'rect',
                         title: '添加矩形'
                     },
                     {
-                        name: 'add_supportshapes',
+                        name: 'addsupportshapes',
                         type: 'roundrect',
                         title: '添加圆角矩形'
                     },
                     {
-                        name: 'add_supportshapes',
+                        name: 'addsupportshapes',
                         type: 'star',
                         title: '添加五角星'
                     },
                     {
-                        name: 'add_supportshapes',
+                        name: 'addsupportshapes',
                         type: 'arrow',
                         title: '添加箭头'
                     }
@@ -84,7 +84,7 @@ define(
                 ]
             },
             {
-                name: 'add_referenceline',
+                name: 'addreferenceline',
                 title: '添加参考线'
             },
             {
@@ -96,7 +96,7 @@ define(
                 title: '重置缩放'
             },
             {
-                name: 'setfont',
+                name: 'fontsetting',
                 title: '字形信息'
             }
         ];

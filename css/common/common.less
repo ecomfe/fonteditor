@@ -40,28 +40,24 @@ body, html {
 .navbar {
     border-radius: 0;
     margin: 0;
+    padding: 0;
     position: fixed;
     z-index: 10;
     width: 100%;
+    height: 51px;
     min-width: 1024px;
     top: 0;
-    
-    .btn {
-        margin-right: 10px;
-        margin-top: 10px;
+
+    >.logo {
+        width: 180px;
+        height: 50px;
+        background: url(./img/logo.png) no-repeat;
+        float: left;
     }
 
-    >.btn:first-child {
-        margin-left: 10px;
-    }
-}
-
-#export-btn {
-    margin-right: 10px;
-    margin-top: 10px;
-    display: inline-block;
-    .btn {
-      margin: 0;
+    >.action-groups {
+        margin-left: 180px;
+        padding-left: 8px;
     }
 }
 
@@ -72,23 +68,37 @@ body, html {
 
 .sidebar {
     position: fixed;
-    width: 200px;
+    width: 180px;
     top: @top-height;
     bottom: 0;
-    background: #FCFCFC;
-    padding: 4px;
-    border-right: 1px solid #DDD;
+    background: #232830;
 }
 
 .main {
-    margin-left: 200px;
-    padding: 4px 0 4px 10px;
-    padding-top: @top-height;
+    margin-left: 180px;
+    padding-top: @top-height + @command-groups-height;
     height: 100%;
+    background: #BCC5CD;
+
+    .glyf-list {
+        padding: 10px 0 0 10px;
+    }
+
+    .command-groups {
+        margin-top: -40px;
+        display: none;
+    }
 }
+
+
 
 .main.editing {
     margin-left: 70%;
+    padding-top: @top-height;
+
+    .command-groups {
+        display: none;
+    }
 }
 
 // loading 动画
@@ -102,7 +112,7 @@ body, html {
     text-align: center;
     z-index: 1000;
     display: none;
-    
+
     span {
         display: inline-block;
         padding: 0 6px;
@@ -117,11 +127,38 @@ body, html {
     position: fixed;
     width: 70%;
     top: @top-height;
+    padding-top: @command-groups-height;
     bottom: 0;
     z-index: 1;
     background: #FEFEFE;
     border-right: 1px solid #DDD;
     display: none;
+
+    .command-groups {
+        background: rgba(112, 119, 128, 1);
+        margin-top: -40px;
+    }
+    
+    .close-editor {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding-right: 5px;
+        z-index: 100;
+        font-size: 20px;
+        line-height: 38px;
+        color: #FFF;
+        display: none;
+        &:hover {
+            cursor: pointer
+        }
+    }
+
+    &:hover {
+        .close-editor {
+            display: block;
+        }
+    }
 }
 
 .editor.editing {
@@ -138,10 +175,46 @@ body, html {
 }
 
 .forkme {
-    float: right;
+    position: absolute;
     color: #FFF;
+    right: 2px;
+    top: 2px;
+    color: #333
+}
 
-    &:hover {
-        color: #EEE
+// modal
+
+.modal {
+    background: -webkit-radial-gradient(center, circle contain, rgba(255,255,255,0.6) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-header {
+    background: #fff;
+    color: #202430;
+}
+
+.modal-body {
+    background: #F8F9F9;
+}
+
+.modal-footer {
+
+    border-top: 0;
+    background: #F8F9F9;
+
+    .btn-default {
+        border-radius: 0;
+        color: #FFF;
+        background: #738089;
     }
+
+    .btn-primary {
+        border-radius: 0;
+        background: #4A90E2;
+    }
+
 }

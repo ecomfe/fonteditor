@@ -46,11 +46,37 @@ define(
 
         var actions = {
 
+            'undo': function() {
+                if (program.editor.isEditing()) {
+                    program.editor.undo();
+                    setTimeout(function(){
+                        program.editor.focus();
+                    }, 20);
+                    
+                }
+                else {
+                    program.ttfManager.undo();
+                }
+            },
+
+            'redo': function() {
+                if (program.editor.isEditing()) {
+                    program.editor.redo();
+                    setTimeout(function(){
+                        program.editor.focus();
+                    }, 20);
+                }
+                else {
+                    program.ttfManager.redo();
+                }
+            },
+
             // 新建
             'new': function() {
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
                     return;
                 }
+                
                 $.getJSON('./font/empty.json', function(imported) {
                     program.ttfManager.set(imported);
                     program.data.projectName = null;

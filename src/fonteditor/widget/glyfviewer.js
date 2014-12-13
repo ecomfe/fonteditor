@@ -14,9 +14,9 @@ define(
         var MouseCapture = require('render/capture/Mouse');
 
         var GLYF_ITEM_TPL = ''
-            + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected}">'
-            +   '<i data-action="edit" class="i-edit" title="编辑"></i>'
-            +   '<i data-action="del" class="i-del" title="删除"></i>'
+            + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected} ${editing}">'
+            +   '<i data-action="edit" class="ico i-edit" title="编辑"></i>'
+            +   '<i data-action="del" class="ico i-del" title="删除"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
             +           '<path class="path" ${fillColor} ${d}/></g>'
@@ -37,6 +37,7 @@ define(
                 index: opt.index,
                 compound: glyf.compound ? 'compound' : '',
                 selected: opt.selected ? 'selected' : '',
+                editing: opt.editing ? 'editing' : '',
                 modify: glyf.modify,
                 unitsPerEm: opt.unitsPerEm,
                 descent: opt.descent,
@@ -65,12 +66,14 @@ define(
 
             var glyfStr = '';
             var color = this.options.color;
+            var editing = this.getEditing();
             ttf.glyf.forEach(function(glyf, index) {
                 glyfStr += getGlyfHTML(glyf, ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
                     selected: selectedHash[index],
+                    editing: editing === index,
                     color: color
                 });
             });
@@ -91,12 +94,14 @@ define(
 
             var main = this.main;
             var color = this.options.color;
+            var editing = this.getEditing();
             indexList.forEach(function (index) {
                 var glyfStr = getGlyfHTML(ttf.glyf[index], ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
                     selected: selectedHash[index],
+                    editing: editing === index,
                     color: color
                 });
                 var before = main.find('[data-index="'+ index +'"]');
@@ -106,21 +111,22 @@ define(
         }
 
         // 点击item
-        function clickItem(e) {
-            $(this).toggleClass('selected');
-        }
-
-        // 点击item
         function clickAction(e) {
             e.stopPropagation();
             var target = $(e.target);
             var action = target.attr('data-action');
+            var editing = this.getEditing();
+            var selectedGlyf = target.parent('[data-index]');
+            var selected = [+selectedGlyf.attr('data-index')];
 
             if (action == 'del' && !window.confirm('确定删除字形么？')) {
                 return;
             }
+            else if (action == 'edit') {
+                this.clearEditing();
+                selectedGlyf.addClass('editing');
+            }
 
-            var selected = [+target.parent().attr('data-index')];
             this.fire(action, {
                 list: selected
             });
@@ -153,6 +159,8 @@ define(
                     }
                 }
             });
+
+            this.fire('selection:change');
         }
 
         // 按下事件
@@ -164,6 +172,7 @@ define(
                 // 阻止ctrl+A默认事件
                  if (65 === e.keyCode && e.ctrlKey) {
                     me.main.children().addClass('selected');
+                    me.fire('selection:change');
                 }
                 // 撤销
                 else if(e.keyCode == 90 && e.ctrlKey) {
@@ -179,8 +188,10 @@ define(
                 else if (27 === e.keyCode) {
                     e.stopPropagation();
                     me.clearSelected();
+                    me.clearEditing();
+                    me.fire('selection:change');
                 }
-                // 其他操作
+                // 其他操作, del, copy, cut
                 else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
                     e.stopPropagation();
                     var selected = me.getSelected();
@@ -188,6 +199,12 @@ define(
                     // 取消选中的glyf
                     if (e.keyCode == 46 || e.keyCode == 88) {
                         me.clearSelected();
+                        // 正在编辑的
+                        var editing = selected.indexOf(me.getEditing());
+                        if (editing >= 0) {
+                            me.clearEditing();
+                        }
+                        me.fire('selection:change');
                     }
 
                     // 粘贴和有选择的操作需要发事件
@@ -202,21 +219,18 @@ define(
         }
 
         /**
-         * glyf查看器
-         * 
-         * @constructor
-         * @param {HTMLElement} main 主元素
-         * @param {Object} options 参数
+         * 绑定dom事件
          */
-        function GLYFViewer(main, options) {
-            this.options = options || {};
-            this.main = $(main);
-
-            this.main.delegate('[data-index]', 'click', clickItem)
-                .delegate('[data-action]', 'click', lang.bind(clickAction, this));
-
+        function bindEvents() {
 
             var me = this;
+            me.main
+            .delegate('[data-index]', 'click', function() {
+                $(this).toggleClass('selected');
+                me.fire('selection:change');
+            })
+            .delegate('[data-action]', 'click', lang.bind(clickAction, this));
+
             me.downlistener = lang.bind(downlistener, this);
 
             me.capture = new MouseCapture(me.main.get(0), {
@@ -253,15 +267,82 @@ define(
 
                 var x = e.originEvent.pageX;
                 var y = e.originEvent.pageY;
+                var width = Math.abs(me.startX - x);
+                var height = Math.abs(me.startY - y);
+                if (width < 20 && height < 20) {
+                    return;
+                }
 
                 selectRangeItem.call(me, {
                     x: Math.min(me.startX, x),
                     y:  Math.min(me.startY, y),
-                    width: Math.abs(me.startX - x),
-                    height: Math.abs(me.startY - y)
+                    width: width,
+                    height: height 
                 }, e.ctrlKey, e.shiftKey);
             });
+        }
 
+        /**
+         * 绑定命令菜单
+         */
+        function bindCommandMenu() {
+            var commandMenu = this.options.commandMenu;
+
+            var me = this;
+            me.on('selection:change', lang.debounce(function() {
+                var selected = me.getSelected();
+                if (selected.length) {
+                    commandMenu.enableCommands(['copy', 'cut', 'del']);
+                    commandMenu[selected.length === 1 ? 'enableCommands' : 'disableCommands'](['fontsetting']);
+                }
+                else {
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'fontsetting']);  
+                }
+
+            }, 100));
+
+            commandMenu.on('command', function(e) {
+                var command = e.command;
+                if (command === 'paste' || command === 'adjust-pos' || command === 'adjust-glyf') {
+                    me.fire(command);
+                }
+                else {
+                    var selected = me.getSelected();
+
+                    // 取消选中的glyf
+                    if (command === 'cut' || command === 'del') {  
+                        me.clearSelected();
+                    }
+
+                    me.fire(command, {
+                        list: selected
+                    });
+                }
+
+                // 这里延时进行focus
+                setTimeout(function() {
+                    me.focus();
+                }, 20);
+            });
+        }
+
+        /**
+         * glyf查看器
+         * 
+         * @constructor
+         * @param {HTMLElement} main 主元素
+         * @param {Object} options 参数
+         */
+        function GLYFViewer(main, options) {
+            this.options = options || {};
+            this.main = $(main);
+            this.mode = 'list';
+
+            bindEvents.call(this);
+
+            if (this.options.commandMenu) {
+                bindCommandMenu.call(this);
+            }
         }
 
         /**
@@ -292,6 +373,7 @@ define(
          */
         GLYFViewer.prototype.show = function(ttf, selectedList) {
             showGLYF.call(this, ttf, selectedList);
+            this.fire('selection:change');
         };
 
         /**
@@ -307,6 +389,7 @@ define(
             else {
                 refreshGLYF.call(this, ttf, indexList);
             }
+            this.fire('selection:change');
         };
 
         /**
@@ -320,6 +403,25 @@ define(
                 selected.push(+item.getAttribute('data-index'));
             });
             return selected;
+        };
+
+        /**
+         * 获取正在编辑的元素
+         * 
+         * @return {Array} 选中的indexList
+         */
+        GLYFViewer.prototype.getEditing = function() {
+            var editing = this.main.find('.editing')[0];
+            return editing ? +editing.getAttribute('data-index') : -1;
+        };
+
+        /**
+         * 清除正在编辑的元素
+         * 
+         * @return {Array} 选中的indexList
+         */
+        GLYFViewer.prototype.clearEditing = function() {
+            this.main.find('.editing').removeClass('editing');
         };
 
         /**
@@ -345,6 +447,17 @@ define(
          */
         GLYFViewer.prototype.clearSelected = function() {
             this.main.children().removeClass('selected');
+        };
+
+        /**
+         * 设置编辑模式
+         * @param {string} mode 编辑模式
+         */
+        GLYFViewer.prototype.setMode = function(mode) {
+            this.mode = mode || 'list';
+            if (this.options.commandMenu) {
+                this.options.commandMenu[this.mode === 'list' ? 'show' : 'hide']();
+            }
         };
 
         /**

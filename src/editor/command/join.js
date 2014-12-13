@@ -1,5 +1,5 @@
 /**
- * @file shapes.js
+ * @file join.js
  * @author mengke01
  * @date 
  * @description
@@ -74,7 +74,6 @@ define(
             return shapes;
         }
 
-
         var support = {
 
             /**
@@ -82,6 +81,7 @@ define(
              */
             joinshapes: function(shapes) {
                 combineShape.call(this, shapes, pathJoin.Relation.join);
+                this.refreshSelected(shapes);
             },
 
             /**
@@ -89,6 +89,7 @@ define(
              */
             intersectshapes: function(shapes) {
                 combineShape.call(this, shapes, pathJoin.Relation.intersect);
+                this.refreshSelected(shapes);
             },
 
             /**
@@ -96,13 +97,15 @@ define(
              */
             tangencyshapes: function(shapes) {
                 combineShape.call(this, shapes, pathJoin.Relation.tangency);
+                this.refreshSelected(shapes);
             },
 
             /**
              * 切割路径
              */
-            splitshapes: function(p0, p1, outShapes) {
+            splitshapes: function(p0, p1) {
                 var shapes = this.fontLayer.shapes;
+                var outShapes = [];
                 for(var i = shapes.length - 1; i >=0; i--) {
                     var result = pathSplitBySegment(shapes[i].points, p0, p1);
                     if (result) {
@@ -122,6 +125,10 @@ define(
 
                 if (outShapes.length) {
                     this.fontLayer.refresh();
+                    this.setMode('shapes', outShapes);
+                }
+                else {
+                    return false;
                 }
             }
         };

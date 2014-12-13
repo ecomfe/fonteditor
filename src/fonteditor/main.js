@@ -16,6 +16,7 @@ define(
         var program = require('./widget/program');
         var controller = require('./controller/default');
         var actions = require('./widget/actions');
+        var CommandMenu = require('./widget/commandmenu');
 
         // 打开文件
         function onUpFile(e) {
@@ -60,7 +61,7 @@ define(
 
         // 绑定组件
         function bindEvent() {
-            $('.navbar').delegate('[data-action]', 'click',  function(e) {
+            $('.action-groups').delegate('[data-action]', 'click',  function(e) {
                 var action = $(this).attr('data-action');
                 if (actions[action]) {
                     program.data.action = action;
@@ -85,11 +86,25 @@ define(
             init: function () {
                 bindEvent();
 
+                // glyf查看器命令组
+                program.viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
+                    commands: require('./widget/menu/viewer')
+                });
+
                 // glyf查看器
-                program.viewer = new GLYFViewer($('#glyf-list'));
+                program.viewer = new GLYFViewer($('#glyf-list'), {
+                    commandMenu: program.viewerCommandMenu
+                });
+
+                // 字体查看器命令组
+                program.editorCommandMenu = new CommandMenu($('#editor-commandmenu'), {
+                    commands: require('./widget/menu/editor')
+                });
 
                 // 字体查看器
-                program.editor = new GLYFEditor($('#glyf-editor'));
+                program.editor = new GLYFEditor($('#glyf-editor'), {
+                    commandMenu: program.editorCommandMenu
+                });
 
                 // 项目管理
                 program.project = require('./widget/project');
