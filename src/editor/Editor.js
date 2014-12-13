@@ -255,8 +255,10 @@ define(
             this.graduationMarker.dispose();
 
             this.options = this.contextMenu = this.render = null;
-            this.fontLayer = this.coverLayer = this.axisLayer = this.graduationLayer = null;
-            this.axis = this.rightSideBearing = this.graduation = this.graduationMarker = this.font = null;
+            this.fontLayer = this.coverLayer = this.axisLayer 
+                = this.referenceLineLayer = this.graduationLayer = null;
+            this.axis = this.rightSideBearing = this.graduation
+                = this.graduationMarker = this.font = null;
 
             this.sorption.dispose();
             this.sorption = null;

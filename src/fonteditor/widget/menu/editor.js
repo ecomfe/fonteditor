@@ -126,7 +126,33 @@ define(
                 title: '镜像',
                 ico: 'mirror',
                 disabled: true
-            }
+            },
+            {
+                type: 'split'
+            },
+            {
+                name: 'splitshapes',
+                title: '切割轮廓',
+                ico: 'splitshapes'
+            },
+            {
+                name: 'joinshapes',
+                title: '合并轮廓',
+                ico: 'joinshapes',
+                disabled: true
+            },
+            {
+                name: 'intersectshapes',
+                title: '相交轮廓',
+                ico: 'intersectshapes',
+                disabled: true
+            },
+            {
+                name: 'tangencyshapes',
+                title: '相切轮廓',
+                ico: 'tangencyshapes',
+                disabled: true
+            },
         ];
     }
 );

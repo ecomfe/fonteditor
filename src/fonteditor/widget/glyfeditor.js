@@ -25,6 +25,9 @@ define(
                 'horizontalalignshapes', 'verticalalignshapes',
                 'rotateleft', 'rotateright', 'flipshapes', 'mirrorshapes'
             ],
+            shapes2: [
+                'joinshapes', 'intersectshapes', 'tangencyshapes'
+            ],
             // 单个形状
             shape: ['upshape', 'downshape', 'reversepoints']
         };
@@ -72,19 +75,31 @@ define(
                     var length = e.shapes ? e.shapes.length : 0;
                     if (!length) {
                         commandMenu.disableCommands(COMMAND_SUPPORT.shapes);
+                        commandMenu.disableCommands(COMMAND_SUPPORT.shapes2);
                         commandMenu.disableCommands(COMMAND_SUPPORT.shape);
                     }
                     else {
                         commandMenu.enableCommands(COMMAND_SUPPORT.shapes);
+                        commandMenu[length >= 2 ? 'enableCommands' : 'disableCommands'](COMMAND_SUPPORT.shapes2);
                         commandMenu[length === 1 ? 'enableCommands' : 'disableCommands'](COMMAND_SUPPORT.shape);
                     }
                 }), 100);
 
                 commandMenu.on('command', function(e) {
 
+                    // 这里延时进行focus
+                    setTimeout(function() {
+                        me.focus();
+                    }, 20);
+
                     var command = e.command;
                     var args = e.args;
                     var shapes;
+
+                    if (command === 'splitshapes') {
+                        editor.setMode('split');
+                        return;
+                    }
 
                     if (command === 'pasteshapes') {
                         shapes = editor.getClipBoard();
@@ -116,6 +131,9 @@ define(
                             case 'copyshapes':
                             case 'removeshapes':
                             case 'reversepoints':
+                            case 'joinshapes':
+                            case 'intersectshapes':
+                            case 'tangencyshapes':
                                 editor.execCommand(command, shapes);
                                 break;
 
@@ -127,10 +145,6 @@ define(
                         }
                     }
                     
-                    // 这里延时进行focus
-                    setTimeout(function() {
-                        me.focus();
-                    }, 20);
                 });
             }
 
