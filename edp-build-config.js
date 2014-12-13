@@ -26,7 +26,9 @@ exports.getProcessors = function () {
         new JsCompressor({
             files: [
                 'src/fonteditor/main.js',
-                'dep/*'
+                'dep/*',
+                'dep/*/*',
+                'dep/*/*/*'
             ]
         }),
 
