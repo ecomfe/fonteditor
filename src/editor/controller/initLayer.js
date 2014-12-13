@@ -16,12 +16,10 @@ define(
          */
         function initLayer() {
 
-            this.coverLayer = this.render.addLayer('cover', lang.extend({
-                level: 30,
-                fill: false,
-                strokeColor: 'green',
-                fillColor: 'white'
-            }, this.options.coverLayer));
+            this.axisLayer = this.render.addLayer('axis', {
+                level: 10,
+                fill: false
+            });
 
             this.fontLayer = this.render.addLayer('font', lang.extend({
                 level: 20,
@@ -31,13 +29,22 @@ define(
                 strokeSeparate: false
             }, this.options.fontLayer));
 
-            this.axisLayer = this.render.addLayer('axis', {
-                level: 10,
-                fill: false
+            this.coverLayer = this.render.addLayer('cover', lang.extend({
+                level: 30,
+                fill: false,
+                strokeColor: 'green',
+                fillColor: 'white'
+            }, this.options.coverLayer));
+
+            this.referenceLineLayer = this.render.addLayer('referenceline', {
+                level: 40,
+                fill: false,
+                strokeColor: this.options.referenceline.style.strokeColor
             });
 
+
             this.graduationLayer = this.render.addLayer('graduation', {
-                level: 40,
+                level: 50,
                 fill: false,
                 disabled: true
             });

@@ -74,7 +74,7 @@ define(
             // 设置参考线
             var advanceWidth = font.advanceWidth;
             this.rightSideBearing.p0.x = originX + (advanceWidth || this.options.unitsPerEm) * scale;
-            this.axisLayer.refresh();
+            this.referenceLineLayer.refresh();
 
             this.setMode();
             return this;
@@ -249,7 +249,7 @@ define(
                 if (undefined !== options.rightSideBearing) {
                     this.font.rightSideBearing = options.rightSideBearing;
                     this.rightSideBearing.p0.x = box.x + box.width + offset + options.rightSideBearing * scale;
-                    this.axisLayer.refresh();
+                    this.referenceLineLayer.refresh();
                 }
             }
             else {

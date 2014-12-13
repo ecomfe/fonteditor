@@ -37,7 +37,7 @@ define(
             }));
 
             // 右支撑
-            this.rightSideBearing = this.axisLayer.addShape('line', {
+            this.rightSideBearing = this.referenceLineLayer.addShape('line', {
                 id: 'rightSideBearing',
                 p0: {
                     x: options.unitsPerEm / 2

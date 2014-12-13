@@ -27,7 +27,7 @@ define(
                 // 辅助线
                 referenceline: {
                     style: {
-                        strokeColor: 'darkblue'
+                        strokeColor: '#0FF'
                     }
                 },
 

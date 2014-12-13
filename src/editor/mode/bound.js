@@ -35,7 +35,7 @@ define(
                     }
 
                     // 参考线模式
-                    var result = this.axisLayer.getShapeIn(e);
+                    var result = this.referenceLineLayer.getShapeIn(e);
                     if(result) {
                         var line = result[0];
                         this.setMode('referenceline', referenceline.dragLine, line, e);
