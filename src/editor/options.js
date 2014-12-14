@@ -41,15 +41,16 @@ define(
                 fontLayer: {
                     lineWidth: 1,
                     strokeColor: '#999',
+                    fill: true,
                     fillColor: '#555',
                 },
 
                 // 轴线
                 axis: {
                     showGrid: true, // 显示网格
-                    gapColor: '#A6A6FF',
-                    gridColor: 'red',
-                    emColor: 'red',
+                    gapColor: '#A6A6FF', // 网格线颜色
+                    metricsColor: 'red', // 测量辅助线颜色
+                    emColor: 'red', // em框颜色
 
                     // 字体测量规格
                     metrics: {

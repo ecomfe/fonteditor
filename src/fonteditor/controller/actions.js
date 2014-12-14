@@ -13,7 +13,8 @@ define(
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
-
+        var lang = require('common/lang');
+        
         // 读取在线字体
         function readOnlineFont(type, url) {
             ajaxFile({
@@ -298,16 +299,14 @@ define(
             'setting-editor': function(e) {
                 var dlg = new setting.editor({
                     onChange: function(setting) {
+                        program.setting.set('editor', setting, setting.saveSetting);
                         setTimeout(function() {
                             program.viewer.setSetting(setting.viewer);
                             program.editor.setSetting(setting.editor);
                         }, 20);
                     }
                 });
-                dlg.show({
-                    viewer: program.viewer.getSetting(),
-                    editor: program.editor.getSetting()
-                });
+                dlg.show(program.setting.get('editor'));
             }
         };
 

@@ -58,7 +58,7 @@ define(
                 }
 
                 ctx.beginPath();
-                ctx.strokeStyle = config.gridColor || 'red';
+                ctx.strokeStyle = config.metricsColor || 'red';
 
                 ctx.moveTo(0, y);
                 ctx.lineTo(xMax, y);
@@ -84,10 +84,10 @@ define(
                 ctx.stroke();
 
                 // em 框
-                ctx.beginPath();
-                ctx.strokeStyle = config.emColor || 'red';
-                var mx = Math.round(x + config.unitsPerEm);
-                dashedLineTo(ctx, mx, 0, mx, yMax , 4);
+                // ctx.beginPath();
+                // ctx.strokeStyle = config.emColor || 'red';
+                // var mx = Math.round(x + config.unitsPerEm);
+                // dashedLineTo(ctx, mx, 0, mx, yMax , 4);
 
                 ctx.stroke();
 

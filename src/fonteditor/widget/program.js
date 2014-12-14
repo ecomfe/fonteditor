@@ -101,6 +101,8 @@ define(
              */
             data: {},
 
+            setting: {},
+
             viewer: null, // glyf查看器
 
             project: null, // 项目管理器

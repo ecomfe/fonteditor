@@ -12,7 +12,8 @@ define(
         var lang = require('common/lang');
         var clipboard = require('editor/widget/clipboard');
         var string = require('common/string');
-        var actions = require('../widget/actions');
+
+        var actions = require('./actions');
 
         // 获取ttf的编辑选项
         function getEditingOpt(ttf) {

@@ -286,7 +286,7 @@ define(
          * 绑定命令菜单
          */
         function bindCommandMenu() {
-            var commandMenu = this.options.commandMenu;
+            var commandMenu = this.commandMenu;
 
             var me = this;
             me.on('selection:change', lang.debounce(function() {
@@ -334,13 +334,19 @@ define(
          * @param {Object} options 参数
          */
         function GLYFViewer(main, options) {
-            this.options = options || {};
+            
+            this.options = lang.extend({
+                color: '',
+                shapeSize: 'normal'
+            }, options);
             this.main = $(main);
             this.mode = 'list';
 
             bindEvents.call(this);
 
             if (this.options.commandMenu) {
+                this.commandMenu = this.options.commandMenu;
+                delete this.options.commandMenu;
                 bindCommandMenu.call(this);
             }
         }
@@ -428,11 +434,17 @@ define(
          * 获取设置项目
          */
         GLYFViewer.prototype.setSetting = function(options) {
+
             var oldOptions = this.options;
-            this.options = options; 
             if (options.color !== oldOptions.color) {
                 this.main.find('path').css('fill', options.color);
             }
+
+            if (options.shapeSize !== oldOptions.shapeSize) {
+                this.main.removeClass(oldOptions.shapeSize);
+                this.main.addClass(options.shapeSize);
+            }
+            this.options = lang.overwrite(oldOptions, options);
         };
 
         /**
@@ -455,8 +467,8 @@ define(
          */
         GLYFViewer.prototype.setMode = function(mode) {
             this.mode = mode || 'list';
-            if (this.options.commandMenu) {
-                this.options.commandMenu[this.mode === 'list' ? 'show' : 'hide']();
+            if (this.commandMenu) {
+                this.commandMenu[this.mode === 'list' ? 'show' : 'hide']();
             }
         };
 

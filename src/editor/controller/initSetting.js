@@ -44,10 +44,14 @@ define(
             this.execCommand('shapesorption', options.sorption.enableShape);
             this.execCommand('showgrid', options.axis.showGrid);
 
+            this.fontLayer.options.fill = !!options.fontLayer.fill;
             this.fontLayer.options.fillColor = options.fontLayer.fillColor;
+            this.fontLayer.options.strokeColor = options.fontLayer.strokeColor;
             this.fontLayer.refresh();
 
             this.axis.gapColor = options.axis.gapColor;
+            this.axis.metricsColor = options.axis.metricsColor;
+            this.axis.emColor = options.axis.emColor;
             this.axis.graduation.gap = options.axis.graduation.gap || 100;
             this.axisLayer.refresh();
             this.graduationLayer.refresh();

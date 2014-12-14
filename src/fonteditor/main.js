@@ -9,14 +9,16 @@
 define(
     function(require) {
 
+        var lang = require('common/lang');
         var GLYFViewer = require('./widget/glyfviewer');
         var GLYFEditor = require('./widget/glyfeditor');
         var ProjectViewer = require('./widget/projectviewer');
         var TTFManager = require('./widget/ttfmanager');
         var program = require('./widget/program');
-        var controller = require('./controller/default');
-        var actions = require('./widget/actions');
         var CommandMenu = require('./widget/commandmenu');
+        
+        var controller = require('./controller/default');
+        var actions = require('./controller/actions');
 
         // 打开文件
         function onUpFile(e) {
@@ -86,24 +88,26 @@ define(
             init: function () {
                 bindEvent();
 
+                program.setting = require('./widget/settingmanager');
+
                 // glyf查看器命令组
-                program.viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
+                var viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
                     commands: require('./widget/menu/viewer')
                 });
 
                 // glyf查看器
                 program.viewer = new GLYFViewer($('#glyf-list'), {
-                    commandMenu: program.viewerCommandMenu
+                    commandMenu: viewerCommandMenu
                 });
 
                 // 字体查看器命令组
-                program.editorCommandMenu = new CommandMenu($('#editor-commandmenu'), {
+                var editorCommandMenu = new CommandMenu($('#editor-commandmenu'), {
                     commands: require('./widget/menu/editor')
                 });
 
                 // 字体查看器
                 program.editor = new GLYFEditor($('#glyf-editor'), {
-                    commandMenu: program.editorCommandMenu
+                    commandMenu: editorCommandMenu
                 });
 
                 // 项目管理
@@ -124,6 +128,14 @@ define(
 
                 // 加载项目
                 program.projectViewer.show(program.project.items());
+
+
+                // 加载用户设置
+                if (program.setting.isStored('editor')) {
+                    var setting = program.setting.get('editor');
+                    program.viewer.setSetting(setting.viewer);
+                    program.editor.setSetting(setting.editor);
+                }
 
             }
         };
