@@ -159,7 +159,26 @@ body, html {
             display: block;
         }
     }
+    @media screen and (min-width:1300px) and (max-width:1600px){
+        .command-groups {
+            >li,
+            >li[data-theme="ico"] {
+                padding: 0 8px;
+            }
+        }
+    }
+
+    @media screen and (max-width:1300px){
+        .command-groups {
+            >li,
+            >li[data-theme="ico"] {
+                padding: 0 4px;
+            }
+        }
+    }
 }
+
+
 
 .editor.editing {
     display: block;

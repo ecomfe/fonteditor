@@ -29,7 +29,7 @@ define(
                 'joinshapes', 'intersectshapes', 'tangencyshapes'
             ],
             // 单个形状
-            shape: ['upshape', 'downshape', 'reversepoints']
+            shape: ['pointmode', 'upshape', 'downshape', 'reversepoints']
         };
 
 
@@ -68,7 +68,7 @@ define(
                 });
             });
 
-            var commandMenu = this.options.commandMenu;
+            var commandMenu = this.commandMenu;
             if (commandMenu) {
 
                 editor.on('selection:change', lang.debounce(function(e) {
@@ -110,6 +110,9 @@ define(
 
                     if (shapes && shapes.length) {
                         switch (command) {
+                            case 'pointmode':
+                                editor.setMode('point', shapes[0]);
+                                break;
                             case 'topshape':
                             case 'bottomshape':
                             case 'upshape':
@@ -144,7 +147,10 @@ define(
                                 break;
                         }
                     }
-                    
+                    else if (command === 'rangemode') {
+                        editor.setMode('bound');
+                    }
+
                 });
             }
 
@@ -169,8 +175,14 @@ define(
          * @param {Object} options 参数
          */
         function GLYFEditor(main, options) {
+            
             this.main = $(main);
-            this.options = options || {};
+            this.options = lang.extend({}, options);
+
+            if (this.options.commandMenu) {
+                this.commandMenu = this.options.commandMenu;
+                delete this.options.commandMenu;
+            }
         }
 
         /**
@@ -255,7 +267,7 @@ define(
                 this.editor.setOptions(options);
             }
             else {
-                editorOptions.editor = options;
+               lang.overwrite(editorOptions.editor, options);
             }
         };
 

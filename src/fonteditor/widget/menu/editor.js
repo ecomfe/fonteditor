@@ -31,6 +31,19 @@ define(
                 type: 'split'
             },
             {
+                name: 'rangemode',
+                title: '轮廓模式',
+                ico: 'rangemode'
+            },
+            {
+                name: 'pointmode',
+                title: '点模式',
+                ico: 'pointmode'
+            },
+            {
+                type: 'split'
+            },
+            {
                 name: 'upshape',
                 title: '上移一层',
                 ico: 'upshape',
