@@ -233,25 +233,39 @@ define(
         TTF.prototype.setUnicode = function(unicode, indexList) {
             var glyf = this.ttf.glyf, list;
             if (indexList && indexList.length) {
+                var first = indexList.indexOf(0);
+                if (first >= 0) {
+                    indexList.splice(first, 1);
+                }
                 list = indexList.map(function(item) {
                     return glyf[item];
                 });
             }
             else {
-                list = glyf;
+                list = glyf.slice(1);
             }
 
+            // 需要选出 unicode >32 的glyf
             if (list.length > 1) {
+                var less32 = function(u) {
+                    return u < 33;
+                };
                 list = list.filter(function(g) {
-                    return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn';
+                    return !g.unicode || !g.unicode.some(less32);
                 });
             }
 
             if (list.length) {
                 unicode = Number('0x' + unicode.slice(1));
                 list.forEach(function(g) {
+                    // 空格有可能会放入 nonmarkingreturn 因此不做编码
+                    if (unicode === 0xA0 || unicode === 0x3000) {
+                        unicode++;
+                    }
+                    
                     g.unicode = [unicode];
                     g.name = string.getUnicodeName(unicode);
+
                     unicode++;
                 });
             }
