@@ -15,6 +15,7 @@ define(
         var struct = require('./struct');
         var string = require('../util/string');
         var postName = require('../enum/postName');
+        var unicodeName = require('../enum/unicodeName');
 
         var Posthead = table.create(
             'posthead', 
@@ -106,46 +107,28 @@ define(
 
                     // 获取 name的大小
                     for(var i = 0; i < numberOfGlyphs; i++) {
-                        var glyf = ttf.glyf[i];
-                        
-                        // 这里需要注意，"" 有可能是"\3" length不为0，但是是空字符串
-                        if (glyf.name && glyf.name.charCodeAt(0) > 31) {
-
-
-                            if (glyf.name == '.notdef') {
-                                nameIndexs.push(0);
-                            }
-                            else if (glyf.name == '.null') {
-                                nameIndexs.push(1);
-                            }
-                            else if (glyf.name == 'nonmarkingreturn') {
-                                nameIndexs.push(2);
-                            }
-                            // 这里需要注意
-                            // unicode如果小于258，并且glyph名字与默认的名字相等，
-                            // 则不需要放入name tbl
-                            else if (glyf.unicode 
-                                && glyf.unicode[0] - 29 < 258
-                                && postName[glyf.unicode[0] - 29] == glyf.name
-                            )
-                            {
-                                nameIndexs.push(glyf.unicode[0] - 29);
+                        // .notdef
+                        if (i === 0) {
+                            nameIndexs.push(0);
+                        }
+                        else {
+                            var glyf = ttf.glyf[i];
+                            var unicode = glyf.unicode ? glyf.unicode[0] : 0;
+                            var unicodeNameIndex = unicodeName[unicode];
+                            if (undefined !== unicodeNameIndex) {
+                                nameIndexs.push(unicodeNameIndex);
                             }
                             else {
+                                // 这里需要注意，"" 有可能是"\3" length不为0，但是是空字符串
+                                if (!glyf.name || glyf.name.charCodeAt(0) < 32) {
+                                    glyf.name = string.getUnicodeName(unicode);
+                                }
+
                                 nameIndexs.push(258 + nameIndex++);
-                                var bytes = string.getPascalStringBytes(ttf.glyf[i].name); //pascal string bytes
+                                var bytes = string.getPascalStringBytes(glyf.name || ''); //pascal string bytes
                                 glyphNames.push(bytes);
                                 size += bytes.length;
                             }
-
-                        }
-                        // 如果代码点有名字，则按默认的名字
-                        else if (glyf.unicode && glyf.unicode[0] - 29 < 258) {
-                            nameIndexs.push(glyf.unicode[0] - 29);
-                        }
-                        // 否则命名为 .notdef
-                        else {
-                            nameIndexs.push(0);
                         }
                     }
 

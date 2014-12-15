@@ -12,6 +12,7 @@
 define(
     function(require) {
 
+        var unicodeName = require('../enum/unicodeName');
         var postName = require('../enum/postName');
 
         /**
@@ -35,11 +36,12 @@ define(
              * @return {string} 名字
              */
             getUnicodeName: function(unicode) {
-                if (unicode === 0 || unicode === 1 || unicode === 2) {
-                    return postName[unicode];
+                var unicodeNameIndex = unicodeName[unicode];
+                if (undefined !== unicodeNameIndex) {
+                    return postName[unicodeNameIndex];
                 }
                 else {
-                    return unicode - 29 < 258 ? postName[unicode - 29] : 'uni' + unicode.toString(16).toUpperCase();
+                    return 'uni' + unicode.toString(16).toUpperCase();
                 }
             },
 
