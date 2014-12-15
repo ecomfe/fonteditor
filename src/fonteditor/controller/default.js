@@ -12,7 +12,7 @@ define(
         var lang = require('common/lang');
         var clipboard = require('editor/widget/clipboard');
         var string = require('common/string');
-
+        var setting = require('../widget/setting');
         var actions = require('./actions');
 
         // 获取ttf的编辑选项
@@ -115,11 +115,81 @@ define(
                 }).on('redo', function(e) {
                     program.ttfManager.redo();
                 }).on('adjust-pos', function(e) {
-                    actions['setting-adjust-pos']();
+
+                    var ttf = program.ttfManager.get();
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    var opt = {};
+
+                    if (selected.length === 1) {
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
+                        opt = {
+                            unicode: glyf.unicode,
+                            leftSideBearing: glyf.leftSideBearing,
+                            rightSideBearing: glyf.advanceWidth - glyf.xMax
+                        };
+                    }
+
+                    !new setting['adjust-pos']({
+                        onChange: function(setting) {
+                            setTimeout(function() {
+                                program.ttfManager.adjustGlyfPos(setting, selected);
+                            }, 20);
+                        }
+                    }).show(opt);
+
                 }).on('adjust-glyf', function(e) {
-                    actions['setting-adjust-glyf']();
-                }).on('info', function(e) {
-                    actions['setting-glyf']();
+
+                    var ttf = program.ttfManager.get();
+                    var dlg = new setting['adjust-glyf']({
+                        onChange: function(setting) {
+                            setTimeout(function() {
+                                program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
+                            }, 20);
+                        }
+                    });
+                    
+                    dlg.show();
+
+                }).on('fontsetting', function(e) {
+
+                    var ttf = program.ttfManager.get();
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    if (selected.length) {
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
+
+                        !new setting['glyf']({
+                            onChange: function(setting) {
+                                program.ttfManager.updateGlyf(setting, selected[0]);
+                            }
+                        }).show({
+                            unicode: glyf.unicode,
+                            leftSideBearing: glyf.leftSideBearing,
+                            rightSideBearing: glyf.advanceWidth - (glyf.xMax || 0),
+                            name: glyf.name
+                        });
+                    }
+
+                }).on('find-glyf', function(e) {
+
+                    var dlg = new setting['find-glyf']({
+                        onChange: function(setting) {
+                            var index = program.ttfManager.findGlyf(setting.unicode[0]);
+                            if (-1 !== index) {
+                                var pageSize = program.setting.get('editor').viewer.pageSize;
+                                var page = Math.ceil(index / pageSize);
+                                showTTF(program.ttfManager.get(), page, [index]);
+                            }
+                            else {
+                                alert('未找到相关字形!');
+                            }
+                        }
+                    });
+                    dlg.show();
+
+                }).on('refresh', function() {
+                    showTTF(program.ttfManager.get(), 1);
                 });
 
                 program.projectViewer.on('open', function(e) {
@@ -139,6 +209,30 @@ define(
                     program.viewer.focus();
                 });
 
+                program.viewerPager.on('change', function(e) {
+                    showTTF(program.ttfManager.get(), e.page);
+                });
+
+                // 显示ttf列表
+                var showTTF = function(ttf, page, selected) {
+                    
+                    program.viewer.setPage(page - 1);
+
+                    program.viewer.show(ttf, selected || program.viewer.getSelected());
+                    program.viewer.focus();
+
+                    // 设置翻页
+                    var glyfTotal = ttf.glyf.length;
+                    var pageSize = program.setting.get('editor').viewer.pageSize;
+
+                    if (glyfTotal > pageSize) {
+                        program.viewerPager.show(page, pageSize, glyfTotal);
+                    }
+                    else {
+                        program.viewerPager.hide();
+                    }
+                }
+
                 program.ttfManager.on('change', function(e) {
                     // 保存正在编辑的字形
                     var editing = program.viewer.getEditing();
@@ -146,9 +240,9 @@ define(
                         program.viewer.refresh(e.ttf, [editing]);
                     }
                     else {
-                        program.viewer.show(e.ttf, program.viewer.getSelected());
-                        program.viewer.focus();
+                        showTTF(e.ttf, program.viewer.getPage() + 1);
                     }
+
                 }).on('set', function(e) {
 
                     // 未初始化状态，命令栏是不显示的，需要设置下编辑模式
@@ -156,8 +250,9 @@ define(
                         program.viewer.setMode('list');
                         program.viewer.inited = true;
                     }
-                    program.viewer.show(e.ttf, program.viewer.getSelected());
-                    program.viewer.focus();
+
+                    showTTF(e.ttf, 1);
+
                 });
 
 

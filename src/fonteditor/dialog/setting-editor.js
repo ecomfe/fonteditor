@@ -32,6 +32,12 @@ define(
             +           '</select>'
             +       '</div>'
             +   '</div>'
+            +   '<div class="form-group">'
+            +       '<div class="input-group input-group-sm">'
+            +         '<span class="input-group-addon">分页个数</span>'
+            +         '<input data-field="viewer.pageSize" type="number" class="form-control">'
+            +       '</div>'
+            +   '</div>'
             + '</div>'
             + '<hr>'
 

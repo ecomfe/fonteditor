@@ -88,7 +88,7 @@ define(
                 commandMenu.on('command', function(e) {
 
                     // 这里延时进行focus
-                    setTimeout(function() {
+                    lang.debounce(function() {
                         me.focus();
                     }, 20);
 

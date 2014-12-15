@@ -16,7 +16,8 @@ define(
         var TTFManager = require('./widget/ttfmanager');
         var program = require('./widget/program');
         var CommandMenu = require('./widget/commandmenu');
-        
+        var Pager = require('./widget/pager');
+
         var controller = require('./controller/default');
         var actions = require('./controller/actions');
 
@@ -94,6 +95,8 @@ define(
                 var viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
                     commands: require('./widget/menu/viewer')
                 });
+
+                program.viewerPager = new Pager($('#glyf-list-pager'));
 
                 // glyf查看器
                 program.viewer = new GLYFViewer($('#glyf-list'), {

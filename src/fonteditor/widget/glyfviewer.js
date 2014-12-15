@@ -60,14 +60,19 @@ define(
             var unitsPerEm = ttf.head.unitsPerEm;
             var descent = unitsPerEm + ttf.hhea.descent;
             var selectedHash = {};
-            (selectedList || []).forEach(function(i) {
+            selectedList.forEach(function(i) {
                 selectedHash[i] = true;
             });
 
             var glyfStr = '';
             var color = this.options.color;
             var editing = this.getEditing();
-            ttf.glyf.forEach(function(glyf, index) {
+            var startIndex = this.page * this.options.pageSize;
+            var endIndex = startIndex + this.options.pageSize;
+            var glyfsegment = ttf.glyf.slice(startIndex, endIndex);
+
+            glyfsegment.forEach(function(glyf, i) {
+                var index = startIndex + i;
                 glyfStr += getGlyfHTML(glyf, ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
@@ -95,6 +100,7 @@ define(
             var main = this.main;
             var color = this.options.color;
             var editing = this.getEditing();
+
             indexList.forEach(function (index) {
                 var glyfStr = getGlyfHTML(ttf.glyf[index], ttf, {
                     index: index,
@@ -105,8 +111,10 @@ define(
                     color: color
                 });
                 var before = main.find('[data-index="'+ index +'"]');
-                $(glyfStr).insertBefore(before);
-                before.remove();
+                if (before.length) {
+                    $(glyfStr).insertBefore(before);
+                    before.remove();
+                }
             });
         }
 
@@ -320,7 +328,7 @@ define(
                 }
 
                 // 这里延时进行focus
-                setTimeout(function() {
+                lang.debounce(function() {
                     me.focus();
                 }, 20);
             });
@@ -336,11 +344,14 @@ define(
         function GLYFViewer(main, options) {
             
             this.options = lang.extend({
-                color: '',
-                shapeSize: 'normal'
+                color: '', // 字形颜色
+                shapeSize: 'normal', // 字形大小
+                pageSize: 100 // 分页大小，如果字形个数超过100 则自动分页
             }, options);
+
             this.main = $(main);
             this.mode = 'list';
+            this.page = 0;
 
             bindEvents.call(this);
 
@@ -372,13 +383,32 @@ define(
         };
 
         /**
+         * 设置分页
+         * 
+         * @param {number} page 页码
+         */
+        GLYFViewer.prototype.setPage = function(page) {
+            this.page = page || 0;
+        };
+
+        /**
+         * 获取分页
+         * 
+         * @param {number} page 页码
+         */
+        GLYFViewer.prototype.getPage = function() {
+            return this.page;
+        };
+
+        /**
          * 显示ttf文档
          * 
          * @param {Object} ttf ttfObject
          * @param {Array?} selectedList 选中的列表
+         * 
          */
         GLYFViewer.prototype.show = function(ttf, selectedList) {
-            showGLYF.call(this, ttf, selectedList);
+            showGLYF.call(this, ttf, selectedList || []);
             this.fire('selection:change');
         };
 
@@ -436,15 +466,25 @@ define(
         GLYFViewer.prototype.setSetting = function(options) {
 
             var oldOptions = this.options;
-            if (options.color !== oldOptions.color) {
-                this.main.find('path').css('fill', options.color);
-            }
-
             if (options.shapeSize !== oldOptions.shapeSize) {
                 this.main.removeClass(oldOptions.shapeSize);
                 this.main.addClass(options.shapeSize);
             }
+
+            var needRefresh = false
+            if (options.color !== oldOptions.color) {
+                needRefresh = true;
+            }
+
+            if (options.pageSize !== oldOptions.pageSize) {
+                needRefresh = true;
+            }
+
             this.options = lang.overwrite(oldOptions, options);
+
+            if (needRefresh) {
+                this.fire('refresh');
+            }
         };
 
         /**

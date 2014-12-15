@@ -48,6 +48,13 @@ define(
                 name: 'fontsetting',
                 title: '字形信息',
                 disabled: true
+            },
+            {
+                type: 'split'
+            },
+            {
+                name: 'find-glyf',
+                title: '查找字形'
             }
         ];
     }
