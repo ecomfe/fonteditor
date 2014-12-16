@@ -102,7 +102,7 @@ define(
                     var numberOfGlyphs = ttf.glyf.length;
                     var glyphNames = [];
                     var nameIndexs = [];
-                    var size = 34 + numberOfGlyphs * 2; // header + nameIndex
+                    var size = 34 + numberOfGlyphs * 2; // header + numberOfGlyphs * 2
                     var nameIndex = 0;
 
                     // 获取 name的大小
@@ -120,12 +120,13 @@ define(
                             }
                             else {
                                 // 这里需要注意，"" 有可能是"\3" length不为0，但是是空字符串
-                                if (!glyf.name || glyf.name.charCodeAt(0) < 32) {
-                                    glyf.name = string.getUnicodeName(unicode);
+                                var name = glyf.name;
+                                if (!name || name.charCodeAt(0) < 32) {
+                                    name = string.getUnicodeName(unicode);
                                 }
 
                                 nameIndexs.push(258 + nameIndex++);
-                                var bytes = string.getPascalStringBytes(glyf.name || ''); //pascal string bytes
+                                var bytes = string.getPascalStringBytes(name); //pascal string bytes
                                 glyphNames.push(bytes);
                                 size += bytes.length;
                             }

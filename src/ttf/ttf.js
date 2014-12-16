@@ -16,7 +16,7 @@ define(
         var pathAdjust = require('graphics/pathAdjust');
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
-
+        var glyfAdjust = require('./util/glyfAdjust');
 
         /**
          * 合并两个ttfObject，此处仅合并简单字形
@@ -31,9 +31,8 @@ define(
         function merge(ttf, imported, options) {
             options = options || {};
 
-            // 调整glyf以适应打开的文件
             var scale = 1;
-            // 对导入的轮廓进行缩放处理
+            // 调整glyf对导入的轮廓进行缩放处理
             if (options.scale && imported.head.unitsPerEm && imported.head.unitsPerEm != ttf.head.unitsPerEm) {
                 scale = ttf.head.unitsPerEm / imported.head.unitsPerEm;
             }
@@ -45,41 +44,7 @@ define(
             });
 
             list.forEach(function(g) {
-                if (scale !== 1) {
-                    g.contours.forEach(function(contour) {
-                        pathAdjust(contour, scale, scale);
-                        pathCeil(contour);
-                    });
-                }
-
-                // 重新计算xmin，xmax，ymin，ymax
-                if (
-                    undefined === g.xMin
-                    || undefined === g.yMax
-                    || undefined === g.leftSideBearing
-                    || undefined === g.advanceWidth
-                ) {
-                    var bound = computeBoundingBox.computePathBox.apply(this, g.contours);
-
-                    g.xMin = bound.x;
-                    g.xMax = bound.x + bound.width;
-                    g.yMin = bound.y;
-                    g.yMax = bound.y + bound.height;
-
-                    g.leftSideBearing = g.xMin;
-
-                    // 如果设置了advanceWidth就是用默认的，否则为10
-                    g.advanceWidth = g.xMax + 10;
-                }
-                else {
-                    g.xMin = Math.round(g.xMin * scale);
-                    g.xMax = Math.round(g.xMax * scale);
-                    g.yMin = Math.round(g.yMin * scale);
-                    g.yMax = Math.round(g.yMax * scale);
-                    g.leftSideBearing = Math.round(g.leftSideBearing * scale);
-                    g.advanceWidth = Math.round(g.advanceWidth * scale);
-                }
-
+                glyfAdjust(g, scale, scale);
                 ttf.glyf.push(g);
             });
 
@@ -317,21 +282,9 @@ define(
                 changed = true;
 
                 glyfList.forEach(function(g) {
-
                     if (g.leftSideBearing != setting.leftSideBearing) {
-
-                        var offset = setting.leftSideBearing - g.leftSideBearing;
-                        g.leftSideBearing = g.xMin = setting.leftSideBearing;
-                        g.xMax += offset;
-                        g.advanceWidth += offset;
-
-                        if (g.contours && g.contours.length) {
-                            g.contours.forEach(function(contour) {
-                                pathAdjust(contour, 1, 1, offset);
-                            });
-                        }
+                        glyfAdjust(g, 1, 1, setting.leftSideBearing - g.leftSideBearing);
                     }
-
                 });
             }
 
@@ -339,7 +292,6 @@ define(
             if (undefined !== setting.rightSideBearing) {
 
                 changed = true;
-
                 glyfList.forEach(function(g) {
                     g.advanceWidth = g.xMax + setting.rightSideBearing;
                 });
@@ -355,15 +307,7 @@ define(
                     if (g.contours && g.contours.length) {
                         var bound = computeBoundingBox.computePath.apply(this, g.contours);
                         var offset = verticalAlign - bound.y;
-
-                        g.yMin += offset;
-                        g.yMax += offset;
-
-                        if (g.contours && g.contours.length) {
-                            g.contours.forEach(function(contour) {
-                                pathAdjust(contour, 1, 1, 0, offset);
-                            });
-                        }
+                        glyfAdjust(g, 1, 1, 0, offset);
                     }
                 });
 
@@ -409,23 +353,8 @@ define(
                 var scale = setting.scale;
                 glyfList.forEach(function(g) {
                     if (g.contours && g.contours.length) {
-
-                        var rightSideBearing = g.advanceWidth - g.xMax;
-
-                        g.contours.forEach(function(contour) {
-                            pathAdjust(contour, scale, scale);
-                            pathCeil(contour);
-                        });
-
-                        g.xMin = Math.round(g.xMin * scale);
-                        g.xMax = Math.round(g.xMax * scale);
-                        g.yMin = Math.round(g.yMin * scale);
-                        g.yMax = Math.round(g.yMax * scale);
-
-                        g.leftSideBearing = g.xMin;
-                        g.advanceWidth = g.xMax + rightSideBearing;
+                        glyfAdjust(g, scale, scale);
                     }
-
                 });
             }
             // 缩放到embox

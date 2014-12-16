@@ -181,23 +181,6 @@ define(
                 }
             },
 
-            // 设置unicode
-            'setting-unicode': function() {
-                var dlg = new setting.unicode({
-                    onChange: function(unicode) {
-                        // 此处延迟处理
-                        setTimeout(function(){
-                            if (program.ttfManager.get()) {
-                                var glyfList = program.viewer.getSelected();
-                                program.ttfManager.setUnicode(unicode, glyfList);
-                            }
-                        }, 20);
-                    }
-                });
-
-                dlg.show();
-            },
-
             // 设置字体名称
             'setting-name': function() {
                 var ttf = program.ttfManager.get();

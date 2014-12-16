@@ -328,10 +328,10 @@ define(
 
                 if (selected.length) {
                     commandMenu.enableCommands(['copy', 'cut', 'del']);
-                    commandMenu[selected.length === 1 ? 'enableCommands' : 'disableCommands'](['fontsetting']);
+                    commandMenu[selected.length === 1 ? 'enableCommands' : 'disableCommands'](['setting-font']);
                 }
                 else {
-                    commandMenu.disableCommands(['copy', 'cut', 'del', 'fontsetting']);
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font']);
                 }
 
             }, 100));

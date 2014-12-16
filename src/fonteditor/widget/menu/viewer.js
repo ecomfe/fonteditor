@@ -45,7 +45,7 @@ define(
                 title: '调整字形'
             },
             {
-                name: 'fontsetting',
+                name: 'setting-font',
                 title: '字形信息',
                 disabled: true
             },
@@ -55,6 +55,10 @@ define(
             {
                 name: 'find-glyf',
                 title: '查找字形'
+            },
+            {
+                name: 'setting-unicode',
+                title: '设置代码点'
             }
         ];
     }

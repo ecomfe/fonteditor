@@ -17,14 +17,9 @@ define(
             'glyf': require('./glyf'),
             'cmap': require('./cmap'),
             'name': require('./name'),
-            //'gasp': require('./gasp'),
             'hhea': require('./hhea'),
             'hmtx': require('./hmtx'),
             'post': require('./post'),
-            //'DSIG': require('./DSIG'),
-            //'GDEF': require('./GDEF'),
-            //'GPOS': require('./GPOS'),
-            //'GSUB': require('./GSUB'),
             'OS/2': require('./OS2')
         };
 

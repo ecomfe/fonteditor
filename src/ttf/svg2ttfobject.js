@@ -94,7 +94,7 @@ define(
                         glyf.advanceWidth = Math.round(glyf.advanceWidth * scale);
                     }
                     else {
-                        glyf.advanceWidth = glyf.xMax + 10;
+                        glyf.advanceWidth = glyf.xMax + Math.abs(glyf.xMin);
                     }
                 }
             });
