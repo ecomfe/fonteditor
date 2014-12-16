@@ -1,7 +1,7 @@
 /**
  * @file setting-editor.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 编辑器设置选项
  */
@@ -115,7 +115,7 @@ define(
             + '</div>';
 
         return require('./setting').derive({
-            
+
             title: '编辑器设置',
 
             getTpl: function() {
@@ -132,7 +132,7 @@ define(
                     me.setFields(me.setting);
                 });
             },
-            
+
             validate: function() {
                 var setting = this.getFields(this.setting);
                 return setting;

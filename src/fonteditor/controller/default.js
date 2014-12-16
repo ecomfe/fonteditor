@@ -148,7 +148,7 @@ define(
                             }, 20);
                         }
                     });
-                    
+
                     dlg.show();
 
                 }).on('fontsetting', function(e) {
@@ -215,7 +215,7 @@ define(
 
                 // 显示ttf列表
                 var showTTF = function(ttf, page, selected) {
-                    
+
                     program.viewer.setPage(page - 1);
 
                     program.viewer.show(ttf, selected || program.viewer.getSelected());
@@ -251,7 +251,7 @@ define(
                         program.viewer.inited = true;
                     }
 
-                    showTTF(e.ttf, 1);
+                    showTTF(e.ttf, 1, []);
 
                 });
 

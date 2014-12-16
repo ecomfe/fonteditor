@@ -1,7 +1,7 @@
 /**
  * @file settingmanager.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 编辑器设置管理
  */
@@ -24,7 +24,7 @@ define(
              * 1. 首先从缓存中读取
              * 2. 如果没有则加载保存的配置
              * 3. 如果没有则加载默认的
-             * 
+             *
              * @param {string} name 设置名字
              * @return {Object} 设置对象
              */
@@ -42,7 +42,8 @@ define(
                 var data = storage.getItem('setting.' + name);
 
                 if (data) {
-                    setting = JSON.parse(data);
+                    // 因为有可能版本更新导致字段缺失，这里需要覆盖一下字段
+                    setting = lang.overwrite(this.getDefault(name), JSON.parse(data));
                 }
                 else {
                     setting = this.getDefault(name);
@@ -53,7 +54,7 @@ define(
 
             /**
              * 保存设置
-             * 
+             *
              * @param {string} name 设置名字
              * @param {Object} setting 设置对象
              * @param {boolean} store 是否保存对象
@@ -85,7 +86,7 @@ define(
 
             /**
              * 是否已保存配置
-             * 
+             *
              * @param {string} name 名字
              * @return {boolean} 是否已保存
              */
@@ -95,7 +96,7 @@ define(
 
             /**
              * 根据名字获取设置
-             * 
+             *
              * @param {string} name 设置名字
              * @return {Object} 设置对象
              */

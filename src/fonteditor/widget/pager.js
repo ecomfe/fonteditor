@@ -1,14 +1,14 @@
 /**
  * @file pager.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 分页组件
  */
 
 define(
     function(require) {
-        
+
         var lang = require('common/lang');
         var observable = require('common/observable');
 
@@ -22,7 +22,7 @@ define(
 
         /**
          * pager构造函数
-         * 
+         *
          * @constructor
          * @param {HTMLElement} main 主元素
          * @param {Object} options 参数
@@ -32,6 +32,7 @@ define(
             this.options = options || {};
 
             this.main.html(PAGER_TPL);
+            this.textPage = this.main.find('input[data-pager="text"]');
 
             var me = this;
             me.main.on('click', 'button[data-pager]', function(e) {
@@ -49,11 +50,16 @@ define(
                     page = me.page < me.totalPage ? me.page + 1 : me.totalPage;
                 }
                 else if (action === 'goto') {
-                    var p = +me.main.find('[data-pager="text"]').val();
+                    var p = +me.textPage.val();
                     if (p >= 1 && p <= me.totalPage) {
                         page = p;
                     }
+                    else {
+                        page = me.page;
+                    }
                 }
+
+                me.textPage.val(page);
 
                 if (page !== me.page) {
                     me.page = page;
@@ -62,11 +68,26 @@ define(
                     });
                 }
             });
+
+            me.textPage.on('keyup', function(e) {
+                if (e.keyCode === 13) {
+                    var page = +this.value.trim();
+                    if (page >= 1 && page <= me.totalPage) {
+                        me.page = page;
+                        me.fire('change', {
+                            page: page
+                        });
+                    }
+                    else {
+                        this.value = me.page;
+                    }
+                }
+            });
         }
 
         /**
          * 显示pager
-         * 
+         *
          * @param {number} page 当前页码
          * @param {number} pageSize 分页大小
          * @param {number} total 总个数
@@ -97,7 +118,8 @@ define(
          * 注销
          */
         Pager.prototype.dispose = function() {
-            this.main.off('click', 'button[data-pager]');
+            this.main.un('click', 'button[data-pager]');
+            me.main.find('input[data-pager="text"]').un('keyup');
         };
 
         observable.mixin(Pager.prototype);
