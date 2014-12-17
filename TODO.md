@@ -1,0 +1,1 @@
+1. 新建字体文件之后，存在大于0xFFFF的unicode，生成的ttf无法识别小于0xFFFF的字体
