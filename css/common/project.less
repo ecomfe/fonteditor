@@ -24,32 +24,41 @@
     }
 
     .project-list {
-        line-height: 28px;
-
-        a {
-            color: #9EB0C0;
-        }
-
-        div {
+        dl {
             padding: 0 10px 0 15px;
+            cursor: pointer;
+
+            dt {
+                line-height: 28px;
+                font-weight: normal;
+                color: #9EB0C0;
+            }
+
+            dd {
+                display: none;
+                line-height: 28px;
+                color: #6F7D88;
+                span {
+                    margin-right: 10px;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
         }
 
-        div:hover {
-            background: #323842;
-            
-            a {
+        dl:hover {
+            background: lighten(#323842, 10%);
+            dt {
                 color: #FFF;
             }
-
-            .i-del {
-                display: block;
-            }
         }
 
-        .i-del {
-            float: right;
-            display: none;
-            color: #FFF;
+        dl.selected {
+            background: #323842;
+            dd {
+                display: block;
+            }
         }
     }
 }

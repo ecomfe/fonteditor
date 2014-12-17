@@ -54,33 +54,54 @@ define(
 
             // 设置吸附选项
             if (this.mode === 'move' && this.editor.sorption.isEnable()) {
-                var sorptionShapes = [];
-                var shapes = this.shapes;
-                var bound = this.bound;
 
-                // 加入bound
-                sorptionShapes.push({
-                    points: [
-                        {
-                            x: bound.x,
-                            y: bound.y,
-                            onCurve: true
-                        },
-                        {
-                            x: bound.x + bound.width,
-                            y: bound.y + bound.height,
-                            onCurve: true
+                if (this.editor.sorption.enableShape) {
+                    var sorptionShapes = [];
+                    var shapes = this.shapes;
+                    var bound = this.bound;
+
+                    // 加入此group的bound
+                    sorptionShapes.push({
+                        points: [
+                            {
+                                x: bound.x,
+                                y: bound.y,
+                                onCurve: true
+                            },
+                            {
+                                x: bound.x + bound.width,
+                                y: bound.y + bound.height,
+                                onCurve: true
+                            }
+                        ]
+                    });
+
+                    // 过滤需要吸附的对象
+                    this.editor.fontLayer.shapes.forEach(function(shape) {
+                        if (shapes.indexOf(shape) < 0) {
+                            sorptionShapes.push(shape);
                         }
-                    ]
-                });
+                    });
 
-                // 过滤需要吸附的对象
-                this.editor.fontLayer.shapes.forEach(function(shape) {
-                    if (shapes.indexOf(shape) < 0) {
-                        sorptionShapes.push(shape);
-                    }
-                });
-                this.editor.sorption.setShapes(sorptionShapes);
+                    // 添加参考线
+                    var referenceLines = this.editor.referenceLineLayer.shapes;
+                    var xAxisArray = [];
+                    var yAxisArray = [];
+                    referenceLines.forEach(function(shape) {
+                        if (undefined !== shape.p0.x) {
+                            xAxisArray.push(shape.p0.x);
+                        }
+                        if (undefined !== shape.p0.y) {
+                            yAxisArray.push(shape.p0.y);
+                        }
+                    });
+
+
+                    this.editor.sorption.clear();
+                    sorptionShapes.length && this.editor.sorption.addShapes(sorptionShapes);
+                    xAxisArray.length && this.editor.sorption.addXAxis(xAxisArray);
+                    yAxisArray.length && this.editor.sorption.addYAxis(yAxisArray);
+                }
             }
 
         };
@@ -91,7 +112,8 @@ define(
         ShapesGroup.prototype.transform = function(point, camera, key) {
             if (this.mode === 'move') {
                 moveTransform.call(
-                    this, camera,
+                    this, 
+                    camera,
                     key.ctrlKey ? false :  key.altKey,
                     key.ctrlKey ? false : key.shiftKey,
                     this.editor.sorption.isEnable()

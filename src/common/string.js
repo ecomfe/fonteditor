@@ -107,6 +107,23 @@ define(
                     return str.slice(str.length - size);
                 }
                 return new Array(size - str.length + 1).join(ch || '0') + str;
+            },
+
+            /**
+             * 获取字符串哈希编码
+             * @param {string} str 字符串
+             * @return {number} 哈希值
+             */
+            hashcode: function(str) {
+                if (!str) {
+                    return 0;
+                }
+
+                var hash = 0;
+                for (var i = 0, l = str.length; i < l; i++) {
+                    hash = 0x7FFFFFFFF & (hash * 31 + str.charCodeAt(i));
+                }
+                return hash;
             }
         };
 

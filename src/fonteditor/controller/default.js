@@ -12,7 +12,10 @@ define(
         var lang = require('common/lang');
         var clipboard = require('editor/widget/clipboard');
         var string = require('common/string');
-        var actions = require('../widget/actions');
+        var setting = require('../widget/setting');
+        var actions = require('./actions');
+        var glyfAdjust = require('ttf/util/glyfAdjust');
+        var defaultProgram;
 
         // 获取ttf的编辑选项
         function getEditingOpt(ttf) {
@@ -29,6 +32,68 @@ define(
             return opt;
         }
 
+        // 显示editor
+        function showEditor(glyfIndex) {
+
+            // 重置editor缩放
+            var ttf = defaultProgram.ttfManager.get();
+            if (ttf) {
+                $('.main').addClass('editing');
+                $('.editor').addClass('editing');
+
+                defaultProgram.viewer.setMode('editor');
+
+                defaultProgram.viewer.blur();
+                defaultProgram.editor.show();
+
+                // 调整显示级别
+                defaultProgram.editor.setAxis(getEditingOpt(ttf));
+
+                var font = ttf.glyf[glyfIndex];
+                if (font) {
+                    if (font.compond) {
+                        alert('暂不支持复合字形!');
+                    }
+                    else {
+                        defaultProgram.editor.setFont(lang.clone(font));
+                    }
+                }
+                defaultProgram.editor.focus();
+            }
+        }
+
+        // 隐藏editor
+        function hideEditor() {
+            $('.main').removeClass('editing');
+            $('.editor').removeClass('editing');
+
+            defaultProgram.editor && defaultProgram.editor.hide();
+
+            defaultProgram.viewer.clearEditing();
+            defaultProgram.viewer.setMode('list');
+            defaultProgram.viewer.focus();
+        }
+
+        // 显示ttf列表
+        function showTTF(ttf, page, selected) {
+
+            defaultProgram.viewer.setPage(page - 1);
+
+            defaultProgram.viewer.show(ttf, selected || defaultProgram.viewer.getSelected());
+            defaultProgram.viewer.focus();
+
+            // 设置翻页
+            var glyfTotal = ttf.glyf.length;
+            var pageSize = defaultProgram.setting.get('editor').viewer.pageSize;
+
+            if (glyfTotal > pageSize) {
+                defaultProgram.viewerPager.show(page, pageSize, glyfTotal);
+            }
+            else {
+                defaultProgram.viewerPager.hide();
+            }
+        }
+
 
         return {
 
@@ -39,48 +104,7 @@ define(
              */
             init: function(program) {
 
-                // 显示editor
-                var showEditor = function(glyfIndex) {
-
-                    // 重置editor缩放
-                    var ttf = program.ttfManager.get();
-                    if (ttf) {
-                        $('.main').addClass('editing');
-                        $('.editor').addClass('editing');
-
-                        program.viewer.setMode('editor');
-
-                        program.viewer.blur();
-                        program.editor.show();
-
-                        // 调整显示级别
-                        program.editor.setAxis(getEditingOpt(ttf));
-
-                        var font = ttf.glyf[glyfIndex];
-                        if (font) {
-                            if (font.compond) {
-                                alert('暂不支持复合字形!');
-                            }
-                            else {
-                                program.editor.setFont(lang.clone(font));
-                            }
-                        }
-                        program.editor.focus();
-                    }
-                };
-
-                // 隐藏editor
-                var hideEditor = function() {
-                    $('.main').removeClass('editing');
-                    $('.editor').removeClass('editing');
-
-                    program.editor && program.editor.hide();
-
-                    program.viewer.clearEditing();
-                    program.viewer.setMode('list');
-                    program.viewer.focus();
-                };
-
+                defaultProgram = program;
 
                 program.viewer.on('del', function(e) {
                     if (e.list) {
@@ -88,7 +112,7 @@ define(
                     }
                 }).on('edit', function(e) {
 
-                    if (program.editor.isChanged() && !confirm('是否放弃保存编辑的字形?')) {
+                    if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
                         return;
                     }
 
@@ -97,16 +121,34 @@ define(
                     showEditor(e.list[0]);
 
                 }).on('copy', function(e) {
+
                     var list = program.ttfManager.getGlyf(e.list);
-                    clipboard.set(list, 'glyf');
+                    var clip = {
+                        unitsPerEm: program.ttfManager.get().head.unitsPerEm,
+                        glyf: list
+                    };
+                    clipboard.set(clip, 'glyf');
+
                 }).on('cut', function(e) {
                     var list = program.ttfManager.getGlyf(e.list);
-                    clipboard.set(list, 'glyf');
+                    var clip = {
+                        unitsPerEm: program.ttfManager.get().head.unitsPerEm,
+                        glyf: list
+                    };
+                    clipboard.set(clip, 'glyf');
                     program.ttfManager.removeGlyf(e.list);
+
                 }).on('paste', function(e) {
-                    var glyfList = clipboard.get('glyf');
-                    if (glyfList) {
-                        program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
+                    var clip = clipboard.get('glyf');
+                    if (clip && clip.glyf.length) {
+                        // 根据 unitsPerEm 调整形状
+                        if (program.ttfManager.get().head.unitsPerEm !== clip.unitsPerEm) {
+                            var scale = program.ttfManager.get().head.unitsPerEm / (clip.unitsPerEm || 1024);
+                            clip.glyf.forEach(function(g) {
+                                glyfAdjust(g, scale, scale);
+                            });
+                        }
+                        program.ttfManager.appendGlyf(clip.glyf, program.viewer.getSelected());
                     }
                 })
                 .on('undo', function(e) {
@@ -114,28 +156,124 @@ define(
                 }).on('redo', function(e) {
                     program.ttfManager.redo();
                 }).on('adjust-pos', function(e) {
-                    actions['setting-adjust-pos']();
+
+                    var ttf = program.ttfManager.get();
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    var opt = {};
+
+                    if (selected.length === 1) {
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
+                        opt = {
+                            unicode: glyf.unicode,
+                            leftSideBearing: glyf.leftSideBearing,
+                            rightSideBearing: glyf.advanceWidth - glyf.xMax
+                        };
+                    }
+
+                    !new setting['adjust-pos']({
+                        onChange: function(setting) {
+                            setTimeout(function() {
+                                program.ttfManager.adjustGlyfPos(setting, selected);
+                            }, 20);
+                        }
+                    }).show(opt);
+
                 }).on('adjust-glyf', function(e) {
-                    actions['setting-adjust-glyf']();
-                }).on('info', function(e) {
-                    actions['setting-glyf']();
+
+                    var ttf = program.ttfManager.get();
+                    var dlg = new setting['adjust-glyf']({
+                        onChange: function(setting) {
+                            setTimeout(function() {
+                                program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
+                            }, 20);
+                        }
+                    });
+
+                    dlg.show();
+
+                }).on('setting-font', function(e) {
+
+                    var ttf = program.ttfManager.get();
+                    // 如果仅选择一个字形，则填充现有值
+                    var selected = program.viewer.getSelected();
+                    if (selected.length) {
+                        var glyf = program.ttfManager.getGlyf(selected)[0];
+
+                        !new setting['glyf']({
+                            onChange: function(setting) {
+                                program.ttfManager.updateGlyf(setting, selected[0]);
+                            }
+                        }).show({
+                            unicode: glyf.unicode,
+                            leftSideBearing: glyf.leftSideBearing,
+                            rightSideBearing: glyf.advanceWidth - (glyf.xMax || 0),
+                            name: glyf.name
+                        });
+                    }
+
+                }).on('find-glyf', function(e) {
+
+                    var dlg = new setting['find-glyf']({
+                        onChange: function(setting) {
+                            var index = program.ttfManager.findGlyf(setting.unicode[0]);
+                            if (-1 !== index) {
+                                var pageSize = program.setting.get('editor').viewer.pageSize;
+                                var page = Math.ceil(index / pageSize);
+                                showTTF(program.ttfManager.get(), page, [index]);
+                            }
+                            else {
+                                alert('未找到相关字形!');
+                            }
+                        }
+                    });
+                    dlg.show();
+
+                }).on('setting-unicode', function() {
+                    var dlg = new setting.unicode({
+                        onChange: function(unicode) {
+                            // 此处延迟处理
+                            setTimeout(function(){
+                                if (program.ttfManager.get()) {
+                                    var glyfList = program.viewer.getSelected();
+                                    program.ttfManager.setUnicode(unicode, glyfList);
+                                }
+                            }, 20);
+                        }
+                    });
+
+                    dlg.show();
+                }).on('refresh', function() {
+                    showTTF(program.ttfManager.get(), 1);
                 });
 
                 program.projectViewer.on('open', function(e) {
-                    var imported = program.project.get(e.projectName);
+                    var imported = program.project.get(e.projectId);
                     if (imported) {
-                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
+
+                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
                             return;
                         }
+
                         program.ttfManager.set(imported);
-                        program.data.projectName = e.projectName;
+                        program.data.projectId = e.projectId;
+                        program.projectViewer.select(e.projectId);
                         program.viewer.focus();
                     }
+                }).on('saveas', function(e) {
+                    program.data.projectId = null;
+                    actions.save();
+                    program.viewer.focus();
                 }).on('del', function(e) {
-                    if (e.projectName && window.confirm('是否删除项目?')) {
-                        program.projectViewer.show(program.project.remove(e.projectName));
+                    program.project.remove(e.projectId);
+                    if (e.projectId === program.data.projectId) {
+                        program.data.projectId = null;
                     }
                     program.viewer.focus();
+                });
+
+                program.viewerPager.on('change', function(e) {
+                    showTTF(program.ttfManager.get(), e.page);
                 });
 
                 program.ttfManager.on('change', function(e) {
@@ -145,9 +283,9 @@ define(
                         program.viewer.refresh(e.ttf, [editing]);
                     }
                     else {
-                        program.viewer.show(e.ttf, program.viewer.getSelected());
-                        program.viewer.focus();
+                        showTTF(e.ttf, program.viewer.getPage() + 1);
                     }
+
                 }).on('set', function(e) {
 
                     // 未初始化状态，命令栏是不显示的，需要设置下编辑模式
@@ -155,8 +293,9 @@ define(
                         program.viewer.setMode('list');
                         program.viewer.inited = true;
                     }
-                    program.viewer.show(e.ttf, program.viewer.getSelected());
-                    program.viewer.focus();
+
+                    showTTF(e.ttf, 1, []);
+
                 });
 
 
@@ -177,33 +316,18 @@ define(
                             }
                             program.editor.setChanged(false);
                         }
-
-                        if (program.data.projectName) {
-                            program.project.add(program.data.projectName, program.ttfManager.get());
-                            program.ttfManager.setState('new');
-                            program.loading.show('保存成功..', 400);
-                        }
                         else {
-                            var name = '';
-                            if ((name = window.prompt('请输入项目名称：'))) {
-                                name = string.encodeHTML(name);
-                                var list = program.project.add(name, program.ttfManager.get());
-                                program.projectViewer.show(list);
-                                program.data.projectName = name;
-                                program.ttfManager.setState('new');
-                                program.loading.show('保存成功..', 400);
-                            }
+                            actions.save();
                         }
-
                     }
                 }).on('paste', function(e) {
-                    var glyfList = clipboard.get('glyf');
-                    if (glyfList && glyfList.length) {
+                    var clip = clipboard.get('glyf');
+                    if (clip && clip.glyf.length) {
                         if (!program.editor.isEditing()) {
-                            program.ttfManager.appendGlyf(glyfList, program.viewer.getSelected());
+                            program.viewer.fire('paste');
                         }
                         else {
-                            program.editor.addContours(glyfList[0].contours);
+                            program.editor.addContours(clip.glyf[0].contours);
                         }
                     }
                 }).on('function', function(e) {
@@ -229,7 +353,7 @@ define(
 
                 window.onbeforeunload = function() {
                     if (program.ttfManager.isChanged()) {
-                        return '是否放弃保存当前项目?';
+                        return '是否放弃保存当前编辑的项目?';
                     }
                 };
             }

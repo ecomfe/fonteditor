@@ -196,10 +196,31 @@ hr {
     }
 
     >[data-split] {
-        padding: 0;
+        padding: 0!important;
         width: 1px;
         height: 40px;
         background: lighten(#707781, 15%);
         pointer-events: none;
     }
+}
+
+.pager {
+    margin: 0;
+    .form-control {
+        display: inline-block;
+        width: 40px;
+        height: 30px;
+        padding: 6px;
+        margin: 0 5px;
+    }
+
+    [data-pager="goto"] {
+        margin-right: 5px;
+    }
+
+    [data-pager="info"] {
+        margin: 0 5px;
+        color: #FFF;
+    }
+
 }

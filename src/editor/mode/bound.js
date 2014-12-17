@@ -35,7 +35,7 @@ define(
                     }
 
                     // 参考线模式
-                    var result = this.axisLayer.getShapeIn(e);
+                    var result = this.referenceLineLayer.getShapeIn(e);
                     if(result) {
                         var line = result[0];
                         this.setMode('referenceline', referenceline.dragLine, line, e);
@@ -53,13 +53,7 @@ define(
                 if(e.keyCode == 32) {
                     this.setMode('pan');
                 }
-            },
-
-            /**
-             * 按键
-             */
-            keyup: function(e) {
-                if(e.keyCode == 65 && e.ctrlKey) {
+                else if(e.keyCode == 65 && e.ctrlKey) {
                     this.setMode('shapes', this.fontLayer.shapes.slice());
                 }
             },

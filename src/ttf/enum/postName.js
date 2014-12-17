@@ -3,7 +3,10 @@
  * @author mengke01
  * @date 
  * @description
- * graph编码名字表
+ * Mac 编码名字表
+ * 
+ * see:
+ * http://www.microsoft.com/typography/otspec/WGL4.htm
  */
 
 

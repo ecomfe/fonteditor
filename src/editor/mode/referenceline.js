@@ -32,12 +32,12 @@ define(
                         else {
                             line.p0.y += camera.my;
                         }
-                        this.axisLayer.refresh();
+                        this.referenceLineLayer.refresh();
                     }
                     else if (this._dragMode === mode.newLine) {
 
                         if (e.startX <= 20 && e.x > 20) {
-                            this.currentLine = this.axisLayer.addShape('line', {
+                            this.currentLine = this.referenceLineLayer.addShape('line', {
                                 p0: {
                                     x: e.x
                                 },
@@ -46,7 +46,7 @@ define(
                             this.render.setCursor('col-resize');
                         }
                         else if (e.startY <= 20 && e.y > 20) {
-                            this.currentLine = this.axisLayer.addShape('line', {
+                            this.currentLine = this.referenceLineLayer.addShape('line', {
                                 p0: {
                                     y: e.y
                                 },
@@ -72,7 +72,7 @@ define(
                         // 如果右支撑被移除去了
                         if(line === this.rightSideBearing && line.p0.x < 20) {
                             line.p0.x = this.p0.x;
-                            this.axisLayer.refresh();
+                            this.referenceLineLayer.refresh();
                         }
                         // 拖出刻度线，代表删除
                         else if (

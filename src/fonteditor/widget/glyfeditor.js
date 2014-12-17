@@ -25,8 +25,11 @@ define(
                 'horizontalalignshapes', 'verticalalignshapes',
                 'rotateleft', 'rotateright', 'flipshapes', 'mirrorshapes'
             ],
+            shapes2: [
+                'joinshapes', 'intersectshapes', 'tangencyshapes'
+            ],
             // 单个形状
-            shape: ['upshape', 'downshape', 'reversepoints']
+            shape: ['pointmode', 'upshape', 'downshape', 'reversepoints']
         };
 
 
@@ -65,26 +68,38 @@ define(
                 });
             });
 
-            var commandMenu = this.options.commandMenu;
+            var commandMenu = this.commandMenu;
             if (commandMenu) {
 
                 editor.on('selection:change', lang.debounce(function(e) {
                     var length = e.shapes ? e.shapes.length : 0;
                     if (!length) {
                         commandMenu.disableCommands(COMMAND_SUPPORT.shapes);
+                        commandMenu.disableCommands(COMMAND_SUPPORT.shapes2);
                         commandMenu.disableCommands(COMMAND_SUPPORT.shape);
                     }
                     else {
                         commandMenu.enableCommands(COMMAND_SUPPORT.shapes);
+                        commandMenu[length >= 2 ? 'enableCommands' : 'disableCommands'](COMMAND_SUPPORT.shapes2);
                         commandMenu[length === 1 ? 'enableCommands' : 'disableCommands'](COMMAND_SUPPORT.shape);
                     }
                 }), 100);
 
                 commandMenu.on('command', function(e) {
 
+                    // 这里延时进行focus
+                    lang.debounce(function() {
+                        me.focus();
+                    }, 20);
+
                     var command = e.command;
                     var args = e.args;
                     var shapes;
+
+                    if (command === 'splitshapes') {
+                        editor.setMode('split');
+                        return;
+                    }
 
                     if (command === 'pasteshapes') {
                         shapes = editor.getClipBoard();
@@ -95,6 +110,9 @@ define(
 
                     if (shapes && shapes.length) {
                         switch (command) {
+                            case 'pointmode':
+                                editor.setMode('point', shapes[0]);
+                                break;
                             case 'topshape':
                             case 'bottomshape':
                             case 'upshape':
@@ -116,6 +134,9 @@ define(
                             case 'copyshapes':
                             case 'removeshapes':
                             case 'reversepoints':
+                            case 'joinshapes':
+                            case 'intersectshapes':
+                            case 'tangencyshapes':
                                 editor.execCommand(command, shapes);
                                 break;
 
@@ -126,11 +147,10 @@ define(
                                 break;
                         }
                     }
-                    
-                    // 这里延时进行focus
-                    setTimeout(function() {
-                        me.focus();
-                    }, 20);
+                    else if (command === 'rangemode') {
+                        editor.setMode('bound');
+                    }
+
                 });
             }
 
@@ -155,8 +175,14 @@ define(
          * @param {Object} options 参数
          */
         function GLYFEditor(main, options) {
+            
             this.main = $(main);
-            this.options = options || {};
+            this.options = lang.extend({}, options);
+
+            if (this.options.commandMenu) {
+                this.commandMenu = this.options.commandMenu;
+                delete this.options.commandMenu;
+            }
         }
 
         /**
@@ -241,7 +267,7 @@ define(
                 this.editor.setOptions(options);
             }
             else {
-                editorOptions.editor = options;
+               lang.overwrite(editorOptions.editor, options);
             }
         };
 

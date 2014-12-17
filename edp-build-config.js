@@ -53,6 +53,7 @@ exports.getProcessors = function () {
                 'src/fonteditor/widget/*',
                 'src/fonteditor/widget/menu/*',
                 'src/fonteditor/controller/*',
+                'src/fonteditor/setting/*',
                 'src/fonteditor/data/*'
             ]
         })

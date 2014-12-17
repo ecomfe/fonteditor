@@ -127,6 +127,18 @@ a:hover {
 .i-mirror:before {
   content: '\e012';
 }
+.i-splitshapes:before {
+  content: '\e024';
+}
+.i-joinshapes:before {
+  content: '\e025';
+}
+.i-intersectshapes:before {
+  content: '\e026';
+}
+.i-tangencyshapes:before {
+  content: '\e027';
+}
 .glyf-editor {
   width: 100%;
   height: 100%;

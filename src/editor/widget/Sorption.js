@@ -53,6 +53,8 @@ define(
             this.delta = options.delta || 5; // 吸附对象 offset
             this.enableGrid = options.enableGrid || false;
             this.enableShape = options.enableShape || true;
+            this.xAxis = [];
+            this.yAxis = [];
         }
 
         /**
@@ -70,9 +72,10 @@ define(
          * 
          * @return {this}
          */
-        Sorption.prototype.setShapes = function(shapes) {
-            var xAxis = [];
-            var yAxis = [];
+        Sorption.prototype.addShapes = function(shapes) {
+            var xAxis = this.xAxis;
+            var yAxis = this.yAxis;
+
             for (var i = shapes.length - 1; i >= 0; i--) {
                 var box = computeBoundingBox.computePath(shapes[i].points);
                 var cx = box.x + box.width / 2;
@@ -113,14 +116,47 @@ define(
             yAxis.sort(function(a, b) {
                 return a.axis - b.axis;
             });
+        };
 
-            this.xAxis = xAxis;
-            this.yAxis = yAxis;
+        /**
+         * 设置x轴吸附
+         * @param {Array.<number>} xAxisArray x轴坐标集合
+         * @return {this}
+         */
+        Sorption.prototype.addXAxis = function(xAxisArray) {
+            var xAxis = this.xAxis;
+            xAxisArray.forEach(function(x) {
+                xAxis.push({
+                    axis: x,
+                    y: 0
+                });
+            });
+            xAxis.sort(function(a, b) {
+                return a.axis - b.axis;
+            });
+        };
+
+        /**
+         * 设置y轴吸附
+         * @param {Array.<number>} yAxisArray y轴坐标集合
+         * @return {this}
+         */
+        Sorption.prototype.addYAxis = function(yAxisArray) {
+            var yAxis = this.yAxis;
+            yAxisArray.forEach(function(y) {
+                yAxis.push({
+                    axis: y,
+                    x: 0
+                });
+            });
+            yAxis.sort(function(a, b) {
+                return a.axis - b.axis;
+            });
         };
 
         /**
          * 检查x轴是否有可用的吸附
-         * 
+         * @param {number} x x坐标
          * @return {this}
          */
         Sorption.prototype.detectX = function(x) {
@@ -149,7 +185,7 @@ define(
 
         /**
          * 检查y轴是否有可用的吸附
-         * 
+         * @param {number} y y坐标
          * @return {this}
          */
         Sorption.prototype.detectY = function(y) {
@@ -189,7 +225,8 @@ define(
          * @return {this}
          */
         Sorption.prototype.clear = function() {
-            this.xAxis = this.yAxis = null;
+            this.xAxis.length = 0;
+            this.yAxis.length = 0;
         };
 
         /**

@@ -88,6 +88,16 @@ body, html {
         margin-top: -40px;
         display: none;
     }
+
+    .pager {
+        position: absolute;
+        z-index: 10;
+        padding: 5px;
+        right: 0;
+        bottom: 0;
+        background: #707780;
+        display: none;
+    }
 }
 
 
@@ -159,7 +169,26 @@ body, html {
             display: block;
         }
     }
+    @media screen and (min-width:1300px) and (max-width:1600px){
+        .command-groups {
+            >li,
+            >li[data-theme="ico"] {
+                padding: 0 8px;
+            }
+        }
+    }
+
+    @media screen and (max-width:1300px){
+        .command-groups {
+            >li,
+            >li[data-theme="ico"] {
+                padding: 0 4px;
+            }
+        }
+    }
 }
+
+
 
 .editor.editing {
     display: block;

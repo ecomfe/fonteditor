@@ -27,62 +27,66 @@ define(
             /**
              * 添加一个项目
              * 
-             * @param {string} projectName 项目名称
+             * @param {string} name 项目名称
              * @param {Object} ttf ttfObject
              * @return {Array} 现有项目列表
              */
-            add: function(projectName, ttf) {
+            add: function(name, ttf) {
                 var list = this.items();
-                var exist = list.filter(function(l) {
-                    return l.name == projectName;
-                });
 
-                var id;
-                if (exist.length) {
-                    id = exist[0].id;
-                }
-                else {
-                    id = Date.now();
-                    list.push({
-                        name: projectName,
-                        id: id
-                    });
-                }
+                var id = Date.now();
+                list.push({
+                    name: name,
+                    id: id
+                });
 
                 storage.setItem('project-list', JSON.stringify(list));
                 storage.setItem(id, JSON.stringify(ttf));
-                return list;
+
+                return id;
+            },
+
+            /**
+             * 更新一个项目
+             * 
+             * @param {string} id 编号
+             * @param {Object} ttf ttf对象
+             * @return {string} 项目编号
+             */
+            update: function(id, ttf) {
+                storage.setItem(id, JSON.stringify(ttf));
+                return id;
             },
 
             /**
              * 删除一个项目
              * 
-             * @param {string} projectName 项目名称
+             * @param {string} id 项目名称
              * @return {Array} 现有项目列表
              */
-            remove: function(projectName) {
+            remove: function(id) {
                 var list = this.items();
                 for(var i = list.length - 1; i >= 0; i--) {
-                    if (list[i].name == projectName) {
+                    if (list[i].id == id) {
                         storage.removeItem(list[i].id);
                         list.splice(i, 1);
                     }
                 }
+
                 storage.setItem('project-list', JSON.stringify(list));
-                
                 return list;
             },
 
             /**
              * 获取一个项目
              * 
-             * @param {string} projectName 项目名称
+             * @param {string} id 项目编号
              * @return {Object=} 项目对象
              */
-            get: function(projectName) {
+            get: function(id) {
                 var list = this.items();
                 for(var i = 0, l = list.length; i < l ; i++) {
-                    if (list[i].name == projectName) {
+                    if (list[i].id == id) {
                         var item = storage.getItem(list[i].id);
                         if (item) {
                             return JSON.parse(item);

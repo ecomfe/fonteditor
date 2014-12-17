@@ -17,23 +17,21 @@ define(
              */
             addreferenceline: function(x, y) {
                 if(x > 20) {
-                    this.axisLayer.addShape('line', {
+                    this.referenceLineLayer.addShape('line', {
                         p0: {
                             x: x
-                        },
-                        style: this.options.referenceline.style
+                        }
                     });
                 }
 
                 if(y > 20) {
-                    this.axisLayer.addShape('line', {
+                    this.referenceLineLayer.addShape('line', {
                         p0: {
                             y: y
-                        },
-                        style: this.options.referenceline.style
+                        }
                     });
                 }
-                this.axisLayer.refresh();
+                this.referenceLineLayer.refresh();
             },
 
             /**
@@ -46,12 +44,12 @@ define(
                     lines.push(x);
                 }
 
-                var axisLayer = this.axisLayer;
+                var referenceLineLayer = this.referenceLineLayer;
                 var rightSideBearing = this.rightSideBearing;
 
                 // 获取选中的参考线
                 if(x > 20 || y > 20) {
-                    var result = this.axisLayer.getShapeIn(x, y);
+                    var result = this.referenceLineLayer.getShapeIn(x, y);
                     lines = lines.concat(result);
                 }
 
@@ -61,25 +59,25 @@ define(
                 });
 
                 lines.forEach(function(l) {
-                    axisLayer.removeShape(l);
+                    referenceLineLayer.removeShape(l);
                 });
-                axisLayer.refresh();
+                referenceLineLayer.refresh();
             },
 
             /**
              * 清除参考线
              */
             clearreferenceline: function() {
-                var axisLayer = this.axisLayer;
+                var referenceLineLayer = this.referenceLineLayer;
                 var rightSideBearing = this.rightSideBearing;
-                var lines = axisLayer.shapes.filter(function(line) {
+                var lines = referenceLineLayer.shapes.filter(function(line) {
                     return line.type === 'line' && line !== rightSideBearing;
                 });
 
                 lines.forEach(function(l) {
-                    axisLayer.removeShape(l);
+                    referenceLineLayer.removeShape(l);
                 });
-                axisLayer.refresh();
+                referenceLineLayer.refresh();
             }
         };
     }

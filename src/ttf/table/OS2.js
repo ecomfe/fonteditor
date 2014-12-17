@@ -71,9 +71,11 @@ define(
 
                 ['usWinAscent', struct.Uint16],
                 ['usWinDescent', struct.Uint16],
+                // version 0 above 39
 
                 ['ulCodePageRange1', struct.Uint32],
                 ['ulCodePageRange2', struct.Uint32],
+                // version 1 above 41
 
                 ['sxHeight', struct.Int16],
                 ['sCapHeight', struct.Int16],
@@ -81,9 +83,39 @@ define(
                 ['usDefaultChar', struct.Uint16],
                 ['usBreakChar', struct.Uint16],
                 ['usMaxContext', struct.Uint16]
+                // version 2,3,4 above 46
             ],
-
             {
+
+                read: function(reader, ttf) {
+                    var format = reader.readUint16(this.offset);
+                    var struct = this.struct;
+
+                    // format2
+                    if(format === 0) {
+                        struct = struct.slice(0, 39);
+                    }
+                    else if(format === 1) {
+                        struct = struct.slice(0, 41);
+                    }
+
+                    var OS2Head = table.create('os2head', struct);
+                    var tbl = new OS2Head(this.offset).read(reader, ttf);
+
+                    // 补齐其他version的字段
+                    var os2Fields = {
+                        ulCodePageRange1: 1,
+                        ulCodePageRange2: 0,
+                        sxHeight: 0,
+                        sCapHeight: 0,
+                        usDefaultChar: 0,
+                        usBreakChar: 32,
+                        usMaxContext: 0
+                    };
+
+                    return lang.extend(os2Fields, tbl);
+                },
+
                 size: function(ttf) {
 
                     //更新其他表的统计信息
@@ -187,7 +219,8 @@ define(
                         }
                     });
 
-                    // os2
+                    // 重新设置version 4
+                    ttf['OS/2'].version = 0x4;
                     ttf['OS/2'].achVendID = (ttf['OS/2'].achVendID + '    ').slice(0, 4);
                     ttf['OS/2'].xAvgCharWidth = xAvgCharWidth / (glyfNotEmpty || 1);
                     ttf['OS/2'].ulUnicodeRange2 = 268435456;

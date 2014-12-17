@@ -13,7 +13,8 @@ define(
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
-
+        var lang = require('common/lang');
+        
         // 读取在线字体
         function readOnlineFont(type, url) {
             ajaxFile({
@@ -31,7 +32,7 @@ define(
                             }
                             else {
                                 program.ttfManager.set(imported);
-                                program.data.projectName = null;
+                                program.data.projectId = null;
                             }
 
                         }
@@ -73,13 +74,13 @@ define(
 
             // 新建
             'new': function() {
-                if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
+                if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
                     return;
                 }
                 
                 $.getJSON('./font/empty.json', function(imported) {
                     program.ttfManager.set(imported);
-                    program.data.projectName = null;
+                    program.data.projectId = null;
                 });
             },
 
@@ -118,13 +119,23 @@ define(
             // 保存项目
             'save': function() {
                 if (program.ttfManager.get()) {
-                    var name = '';
-                    if ((name = window.prompt('请输入项目名称：'))) {
-                        name = string.encodeHTML(name);
-                        var list = program.project.add(name, program.ttfManager.get());
-                        program.projectViewer.show(list);
-                        program.data.projectName = name;
+                    if (program.data.projectId) {
+                        program.project.update(program.data.projectId, program.ttfManager.get());
                         program.ttfManager.setState('new');
+                        program.loading.show('保存成功..', 400);
+                    }
+                    else {
+                        var name = '';
+                        if ((name = window.prompt('请输入项目名称：'))) {
+                            name = string.encodeHTML(name);
+                            var id = program.project.add(name, program.ttfManager.get());
+                            program.data.projectId = id;
+                            program.ttfManager.setState('saved');
+
+                            program.projectViewer.show(program.project.items());
+                            program.projectViewer.select(id);
+                            program.loading.show('保存成功..', 400);
+                        }
                     }
                 }
             },
@@ -180,93 +191,6 @@ define(
                 }
             },
 
-            // 设置unicode
-            'setting-unicode': function() {
-                var dlg = new setting.unicode({
-                    onChange: function(unicode) {
-                        // 此处延迟处理
-                        setTimeout(function(){
-                            if (program.ttfManager.get()) {
-                                var glyfList = program.viewer.getSelected();
-                                program.ttfManager.setUnicode(unicode, glyfList);
-                            }
-                        }, 20);
-                    }
-                });
-
-                dlg.show();
-            },
-
-            // 调整字形信息
-            'setting-glyf': function() {
-                var ttf = program.ttfManager.get();
-                if (ttf) {
-
-                    // 如果仅选择一个字形，则填充现有值
-                    var selected = program.viewer.getSelected();
-                    if (selected.length) {
-                        var glyf = program.ttfManager.getGlyf(selected)[0];
-
-                        !new setting['glyf']({
-                            onChange: function(setting) {
-                                program.ttfManager.updateGlyf(setting, selected[0]);
-                            }
-                        }).show({
-                            unicode: glyf.unicode,
-                            leftSideBearing: glyf.leftSideBearing,
-                            rightSideBearing: glyf.advanceWidth - (glyf.xMax || 0),
-                            name: glyf.name
-                        });
-                    }
-                    else {
-                        alert('请选中一个字形!');
-                    }
-                }
-            },
-
-            // 调整字形位置
-            'setting-adjust-pos': function() {
-                var ttf = program.ttfManager.get();
-                if (ttf) {
-                    // 如果仅选择一个字形，则填充现有值
-                    var selected = program.viewer.getSelected();
-                    var opt = {};
-
-                    if (selected.length === 1) {
-                        var glyf = program.ttfManager.getGlyf(selected)[0];
-                        opt = {
-                            unicode: glyf.unicode,
-                            leftSideBearing: glyf.leftSideBearing,
-                            rightSideBearing: glyf.advanceWidth - glyf.xMax
-                        };
-                    }
-
-                    !new setting['adjust-pos']({
-                        onChange: function(setting) {
-                            setTimeout(function() {
-                                program.ttfManager.adjustGlyfPos(setting, selected);
-                            }, 20);
-                        }
-                    }).show(opt);
-                }
-            },
-
-            // 调整字形
-            'setting-adjust-glyf': function() {
-                var ttf = program.ttfManager.get();
-                if (ttf) {
-                    var dlg = new setting['adjust-glyf']({
-                        onChange: function(setting) {
-                            setTimeout(function() {
-                                program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
-                            }, 20);
-                        }
-                    });
-                    
-                    dlg.show();
-                }
-            },
-
             // 设置字体名称
             'setting-name': function() {
                 var ttf = program.ttfManager.get();
@@ -298,16 +222,14 @@ define(
             'setting-editor': function(e) {
                 var dlg = new setting.editor({
                     onChange: function(setting) {
+                        program.setting.set('editor', setting, setting.saveSetting);
                         setTimeout(function() {
                             program.viewer.setSetting(setting.viewer);
                             program.editor.setSetting(setting.editor);
                         }, 20);
                     }
                 });
-                dlg.show({
-                    viewer: program.viewer.getSetting(),
-                    editor: program.editor.getSetting()
-                });
+                dlg.show(program.setting.get('editor'));
             }
         };
 

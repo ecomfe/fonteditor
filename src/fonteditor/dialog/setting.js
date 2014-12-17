@@ -141,6 +141,7 @@ define(
         /**
          * 设置field字段值
          * 
+         * @param {Object} setting 原始对象
          * @return {boolean}
          */
         Setting.prototype.setFields = function(setting) {
@@ -188,6 +189,7 @@ define(
         /**
          * 获取field字段值
          * 
+         * @param {Object} setting 原始对象
          * @return {Object}
          */
         Setting.prototype.getFields = function(setting) {

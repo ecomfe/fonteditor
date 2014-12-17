@@ -39,12 +39,6 @@ define(
             this.contextMenu.hide();
 
             var command = e.command;
-            // 是否编辑器支持
-            if(this.supportCommand(command)) {
-                this.execCommand(command);
-                return;
-            }
-
             var fontLayer = this.fontLayer;
             var command = e.command;
             var shape = this.curShape;
@@ -73,6 +67,10 @@ define(
             }
             else if (command == 'asStart') {
                 shape.points = points.slice(pointId).concat(points.slice(0, pointId));
+            }
+            else if(this.supportCommand(command)) {
+                this.execCommand(command);
+                return;
             }
 
             refreshControlPoints.call(this, shape);
@@ -161,6 +159,37 @@ define(
                     this.curPoint._style = lang.clone(this.curPoint.style);
                     this.curPoint.style.fillColor = 'green';
 
+                    // 设置吸附选项
+                    if (this.sorption.isEnable()) {
+
+                        if (this.sorption.enableShape) {
+
+                            var xAxisArray = [];
+                            var yAxisArray = [];
+
+                            // 过滤需要吸附的对象
+                            this.curShape.points.forEach(function(p) {
+                                xAxisArray.push(p.x);
+                                yAxisArray.push(p.y);
+                            });
+
+                            // 添加参考线
+                            var referenceLines = this.referenceLineLayer.shapes;
+                            referenceLines.forEach(function(shape) {
+                                if (undefined !== shape.p0.x) {
+                                    xAxisArray.push(shape.p0.x);
+                                }
+                                if (undefined !== shape.p0.y) {
+                                    yAxisArray.push(shape.p0.y);
+                                }
+                            });
+
+                            this.sorption.clear();
+                            xAxisArray.length && this.sorption.addXAxis(xAxisArray);
+                            yAxisArray.length && this.sorption.addYAxis(yAxisArray);
+                        }
+                    }
+
                     this.coverLayer.refresh();
                 }
             },
@@ -189,6 +218,18 @@ define(
                         current.y = reserved.y + camera.event.deltaY;
                     }
 
+                    if (this.sorption.isEnable()) {
+                        var result;
+
+                        if (result = this.sorption.detectX(current.x)) {
+                            current.x = result.axis;
+                        }
+
+                        if (result = this.sorption.detectY(current.y)) {
+                            current.y = result.axis;
+                        }
+                    }
+
                     current.point.x = current.x;
                     current.point.y = current.y;
 
@@ -201,6 +242,11 @@ define(
                     var reserved = this.curShape.points[this.curPoint.pointId];
                     reserved.x = this.curPoint.x;
                     reserved.y = this.curPoint.y;
+
+                    if (this.sorption.isEnable()) {
+                        this.sorption.clear();
+                    }
+
                     this.fontLayer.refresh();
                 }
                 this.fire('change');

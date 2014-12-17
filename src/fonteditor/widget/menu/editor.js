@@ -31,6 +31,19 @@ define(
                 type: 'split'
             },
             {
+                name: 'rangemode',
+                title: '轮廓模式',
+                ico: 'rangemode'
+            },
+            {
+                name: 'pointmode',
+                title: '点模式',
+                ico: 'pointmode'
+            },
+            {
+                type: 'split'
+            },
+            {
                 name: 'upshape',
                 title: '上移一层',
                 ico: 'upshape',
@@ -126,7 +139,33 @@ define(
                 title: '镜像',
                 ico: 'mirror',
                 disabled: true
-            }
+            },
+            {
+                type: 'split'
+            },
+            {
+                name: 'splitshapes',
+                title: '切割轮廓',
+                ico: 'splitshapes'
+            },
+            {
+                name: 'joinshapes',
+                title: '合并轮廓',
+                ico: 'joinshapes',
+                disabled: true
+            },
+            {
+                name: 'intersectshapes',
+                title: '相交轮廓',
+                ico: 'intersectshapes',
+                disabled: true
+            },
+            {
+                name: 'tangencyshapes',
+                title: '相切轮廓',
+                ico: 'tangencyshapes',
+                disabled: true
+            },
         ];
     }
 );

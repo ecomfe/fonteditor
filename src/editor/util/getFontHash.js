@@ -47,10 +47,9 @@ define(
             // 使用BKDR算法计算哈希
             // http://www.cnblogs.com/uvsjoh/archive/2012/03/27/2420120.html
 
-            var seed = 131;
             var hash = 0;
             for (var i = 0, l = sequence.length; i < l ; i++) {
-                hash = 0x7FFFFFFF & (hash * seed + sequence[i]);
+                hash = 0x7FFFFFFF & (hash * 131 + sequence[i]);
             }
 
             return hash;

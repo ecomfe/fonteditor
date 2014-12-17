@@ -23,30 +23,48 @@ define(
 
             var me = this;
 
-            me.main.delegate('[data-action]', 'click', function(e) {
+            me.main.on('click', '[data-action]', function(e) {
                 e.stopPropagation();
-                var the = $(this);
-                me.fire(the.attr('data-action'), {
-                    projectName: the.parent().attr('data-name')
+                var target = $(e.target);
+                var action = target.attr('data-action');
+                var id = target.parents('[data-id]').attr('data-id');
+                if ('del' === action) {
+
+                    if (!window.confirm('是否删除项目?')) {
+                        return;
+                    }
+
+                    me.current && me.current.remove();
+                    me.current = null;
+                }
+
+                me.fire(action, {
+                    projectId: id
                 });
             });
 
-            me.main.delegate('[data-name]', 'click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+            me.main.on('click', '[data-id]', function(e) {
                 me.fire('open', {
-                    projectName: $(this).attr('data-name')
+                    projectId: $(this).attr('data-id')
                 });
             });
         }
 
+        ProjectViewer.prototype.select = function(id) {
+            this.current && this.current.removeClass('selected');
+            this.current = $('[data-id="'+ id +'"]').addClass('selected');
+        };
+
         ProjectViewer.prototype.show = function(projects) {
             var str = '';
             (projects || []).forEach(function(proj) {
-                str += '<div data-name="'+ proj.name +'" data-id="'+ proj.id +'">'
-                    +       '<i title="删除" data-action="del" class="ico i-del"></i>'
-                    +       '<a href="#">'+ proj.name +'</a>'
-                    +   '</div>';
+                str += '<dl data-id="'+ proj.id +'">'
+                    +       '<dt>'+ proj.name +'</dt>'
+                    +       '<dd>'
+                    +           '<span data-action="saveas">另存为</span>'
+                    +           '<span data-action="del">删除</span>'
+                    +       '</dd>'
+                    +   '</dl>';
             });
 
             this.main.html(str);

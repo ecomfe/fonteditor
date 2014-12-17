@@ -17,7 +17,8 @@ define(
             'online': require('../dialog/font-online'),
             'url': require('../dialog/font-url'),
             'glyf': require('../dialog/setting-glyf'),
-            'editor': require('../dialog/setting-editor')
+            'editor': require('../dialog/setting-editor'),
+            'find-glyf': require('../dialog/setting-find-glyf')
         };
     }
 );
