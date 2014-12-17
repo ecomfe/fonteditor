@@ -112,7 +112,7 @@ define(
                     }
                 }).on('edit', function(e) {
 
-                    if (program.editor.isChanged() && !confirm('是否放弃保存编辑的字形?')) {
+                    if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
                         return;
                     }
 
@@ -248,18 +248,26 @@ define(
                 });
 
                 program.projectViewer.on('open', function(e) {
-                    var imported = program.project.get(e.projectName);
+                    var imported = program.project.get(e.projectId);
                     if (imported) {
-                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
+
+                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
                             return;
                         }
+
                         program.ttfManager.set(imported);
-                        program.data.projectName = e.projectName;
+                        program.data.projectId = e.projectId;
+                        program.projectViewer.select(e.projectId);
                         program.viewer.focus();
                     }
+                }).on('saveas', function(e) {
+                    program.data.projectId = null;
+                    actions.save();
+                    program.viewer.focus();
                 }).on('del', function(e) {
-                    if (e.projectName && window.confirm('是否删除项目?')) {
-                        program.projectViewer.show(program.project.remove(e.projectName));
+                    program.project.remove(e.projectId);
+                    if (e.projectId === program.data.projectId) {
+                        program.data.projectId = null;
                     }
                     program.viewer.focus();
                 });
@@ -308,24 +316,9 @@ define(
                             }
                             program.editor.setChanged(false);
                         }
-
-                        if (program.data.projectName) {
-                            program.project.add(program.data.projectName, program.ttfManager.get());
-                            program.ttfManager.setState('new');
-                            program.loading.show('保存成功..', 400);
-                        }
                         else {
-                            var name = '';
-                            if ((name = window.prompt('请输入项目名称：'))) {
-                                name = string.encodeHTML(name);
-                                var list = program.project.add(name, program.ttfManager.get());
-                                program.projectViewer.show(list);
-                                program.data.projectName = name;
-                                program.ttfManager.setState('new');
-                                program.loading.show('保存成功..', 400);
-                            }
+                            actions.save();
                         }
-
                     }
                 }).on('paste', function(e) {
                     var clip = clipboard.get('glyf');
@@ -360,7 +353,7 @@ define(
 
                 window.onbeforeunload = function() {
                     if (program.ttfManager.isChanged()) {
-                        return '是否放弃保存当前项目?';
+                        return '是否放弃保存当前编辑的项目?';
                     }
                 };
             }

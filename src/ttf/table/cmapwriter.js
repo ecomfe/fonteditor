@@ -4,6 +4,9 @@
  * @date 
  * @description
  * cmap 写方法
+ * thanks to fontello/svg2ttf
+ * @reference
+ * https://github.com/fontello/svg2ttf/blob/master/lib/ttf/tables/cmap.js
  */
 
 
@@ -29,17 +32,17 @@ define(
         /**
          * 根据bound获取glyf segment
          * 
-         * @param {Object} ttf ttf数据结构
+         * @param {Array} glyfUnicodes glyf编码集合
          * @param {number} bound 编码范围
          * @return {Array} 码表
          */
-        function getSegments(unicodes, bound) {
+        function getSegments(glyfUnicodes, bound) {
 
             var prevGlyph = null;
             var result = [];
             var segment = {};
 
-            unicodes.forEach(function (glyph) {
+            glyfUnicodes.forEach(function (glyph) {
 
                 if (bound === undefined || glyph.unicode <= bound) {
                     // 初始化编码头部，这里unicode和graph id 都必须连续
@@ -78,19 +81,12 @@ define(
         }
 
         /**
-         * 创建子表 0 
+         * 获取format0编码集合
          * 
-         * @param {Writer} writer 写对象
-         * @param {Object} ttf ttf对象
-         * @return {Writer}
+         * @param {Array} glyfUnicodes glyf编码集合
+         * @return {Array} 码表
          */
-        function writeSubTable0(writer, glyfUnicodes) {
-
-            writer.writeUint16(0); // format
-            writer.writeUint16(262); // length
-            writer.writeUint16(0); // language
-
-            // Array of unicodes 0..255
+        function getFormat0Segment(glyfUnicodes) {
             var unicodes = [];
             glyfUnicodes.forEach(function(u) {
                 if (u.unicode !== undefined && u.unicode < 256) {
@@ -103,6 +99,23 @@ define(
                 return a[0] - b[0];
             });
 
+            return unicodes;
+        }
+
+        /**
+         * 创建子表 0 
+         * 
+         * @param {Writer} writer 写对象
+         * @param {Array} unicodes unicodes列表
+         * @return {Writer}
+         */
+        function writeSubTable0(writer, unicodes) {
+
+            writer.writeUint16(0); // format
+            writer.writeUint16(262); // length
+            writer.writeUint16(0); // language
+
+            // Array of unicodes 0..255
             var i = -1, unicode;
             while ((unicode = unicodes.shift())) {
                 while(++i < unicode[0]) {
@@ -225,6 +238,7 @@ define(
                 // header size
                 var subTableOffset = 4 + (hasGLyphsOver2Bytes ? 32 : 24);
                 var format4Size = ttf.support.cmap.format4Size;
+                var format0Size = ttf.support.cmap.format0Size;
 
                 // subtable 4, unicode
                 writeSubTableHeader(writer, 0, 3, subTableOffset);
@@ -236,12 +250,12 @@ define(
                 writeSubTableHeader(writer, 3, 1, subTableOffset);
 
                 if (hasGLyphsOver2Bytes) {
-                    writeSubTableHeader(writer, 3, 10, subTableOffset + 262 + format4Size);
+                    writeSubTableHeader(writer, 3, 10, subTableOffset + format4Size + format0Size);
                 }
 
                 // Write tables, order of table seem to be magic, it is taken from TTX tool
                 writeSubTable4(writer, ttf.support.cmap.format4Segments);
-                writeSubTable0(writer, ttf.support.cmap.unicodes);
+                writeSubTable0(writer, ttf.support.cmap.format0Segments);
 
                 if (hasGLyphsOver2Bytes) {
                     writeSubTable12(writer, ttf.support.cmap.format12Segments);
@@ -258,20 +272,20 @@ define(
                 ttf.glyf.forEach(function(glyph, index) {
 
                     var unicodes = glyph.unicode;
+
                     if (typeof glyph.unicode == 'number') {
                         unicodes = [glyph.unicode];
                     }
 
-                    if (lang.isArray(unicodes)) {
+                    if (unicodes && unicodes.length) {
                         unicodes.forEach(function(unicode) {
-                            if (unicode !== 0xFFFF) {
-                                glyfUnicodes.push({
-                                    unicode: unicode,
-                                    id: index
-                                });
-                            }
+                            glyfUnicodes.push({
+                                unicode: unicode,
+                                id: unicode !== 0xFFFF ? index : 0
+                            });
                         });
                     }
+
                 });
 
                 glyfUnicodes = glyfUnicodes.sort(function(a, b) {
@@ -280,13 +294,14 @@ define(
 
                 ttf.support.cmap.unicodes = glyfUnicodes;
 
-                var unicodes2Bytes = glyfUnicodes.filter(function(a) {
-                    return a.unicode > 29;
-                });
+                var unicodes2Bytes = glyfUnicodes;
 
                 ttf.support.cmap.format4Segments = getSegments(unicodes2Bytes, 0xFFFF);
                 ttf.support.cmap.format4Size = 24 
                     + ttf.support.cmap.format4Segments.length * 8;
+
+                ttf.support.cmap.format0Segments = getFormat0Segment(glyfUnicodes);
+                ttf.support.cmap.format0Size = 262;
 
                 // We need subtable 12 only if found unicodes with > 2 bytes.
                 var hasGLyphsOver2Bytes = unicodes2Bytes.some(function(glyph) {
@@ -295,14 +310,17 @@ define(
 
                 if (hasGLyphsOver2Bytes) {
                     ttf.support.cmap.hasGLyphsOver2Bytes = hasGLyphsOver2Bytes;
-                    ttf.support.cmap.format12Segments = getSegments(unicodes2Bytes);
+
+                    var unicodes4Bytes = glyfUnicodes;
+
+                    ttf.support.cmap.format12Segments = getSegments(unicodes4Bytes);
                     ttf.support.cmap.format12Size = 16 
                         + ttf.support.cmap.format12Segments.length * 12;
                 }
 
                 
                 var size = 4 + (hasGLyphsOver2Bytes ? 32 : 24) // cmap header
-                    + 262 // format 0
+                    + ttf.support.cmap.format0Size // format 0
                     + ttf.support.cmap.format4Size // format 4
                     + (hasGLyphsOver2Bytes ? ttf.support.cmap.format12Size : 0); // format 12
 

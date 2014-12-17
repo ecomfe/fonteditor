@@ -32,7 +32,7 @@ define(
                             }
                             else {
                                 program.ttfManager.set(imported);
-                                program.data.projectName = null;
+                                program.data.projectId = null;
                             }
 
                         }
@@ -74,13 +74,13 @@ define(
 
             // 新建
             'new': function() {
-                if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前项目?')) {
+                if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
                     return;
                 }
                 
                 $.getJSON('./font/empty.json', function(imported) {
                     program.ttfManager.set(imported);
-                    program.data.projectName = null;
+                    program.data.projectId = null;
                 });
             },
 
@@ -119,13 +119,23 @@ define(
             // 保存项目
             'save': function() {
                 if (program.ttfManager.get()) {
-                    var name = '';
-                    if ((name = window.prompt('请输入项目名称：'))) {
-                        name = string.encodeHTML(name);
-                        var list = program.project.add(name, program.ttfManager.get());
-                        program.projectViewer.show(list);
-                        program.data.projectName = name;
+                    if (program.data.projectId) {
+                        program.project.update(program.data.projectId, program.ttfManager.get());
                         program.ttfManager.setState('new');
+                        program.loading.show('保存成功..', 400);
+                    }
+                    else {
+                        var name = '';
+                        if ((name = window.prompt('请输入项目名称：'))) {
+                            name = string.encodeHTML(name);
+                            var id = program.project.add(name, program.ttfManager.get());
+                            program.data.projectId = id;
+                            program.ttfManager.setState('saved');
+
+                            program.projectViewer.show(program.project.items());
+                            program.projectViewer.select(id);
+                            program.loading.show('保存成功..', 400);
+                        }
                     }
                 }
             },
