@@ -30,7 +30,7 @@ define(
                     success: function(imported) {
                         program.viewer.clearSelected();
                         program.ttfManager.set(imported);
-                        program.data.projectName = null;
+                        program.data.projectId = null;
                     }
                 });
             }

@@ -25,12 +25,6 @@ define(
             +   '<div data-field="name" class="name" title="${name}">${name}</div>'
             + '</div>';
 
-        var keyMap = {
-            46: 'del',
-            67: 'copy',
-            88: 'cut'
-        };
-
         // 获取glyfhtml文本
         function getGlyfHTML(glyf, ttf, opt) {
             var g = {
@@ -195,12 +189,12 @@ define(
                     me.fire('selection:change');
                 }
                 // 撤销
-                else if(e.keyCode == 90 && e.ctrlKey) {
+                else if(90 === e.keyCode && e.ctrlKey) {
                     e.stopPropagation();
                      me.fire('undo');
                 }
                 // 重做
-                else if(e.keyCode == 89 && e.ctrlKey) {
+                else if(89 === e.keyCode && e.ctrlKey) {
                     e.stopPropagation();
                     me.fire('redo');
                 }
@@ -211,25 +205,30 @@ define(
                     me.clearEditing();
                     me.fire('selection:change');
                 }
-                // 其他操作, del, copy, cut
-                else if (keyMap[e.keyCode] && (e.keyCode == 46 || e.ctrlKey)) {
+                // del, cut
+                else if (46 === e.keyCode || (88 === e.keyCode && e.ctrlKey)) {
                     e.stopPropagation();
                     var selected = me.getSelected();
-
-                    // 取消选中的glyf
-                    if (e.keyCode == 46 || e.keyCode == 88) {
+                    if (selected.length) {
+                        // del, cut 取消选中的glyf
                         me.clearSelected();
                         // 正在编辑的
                         var editing = selected.indexOf(me.getEditing());
                         if (editing >= 0) {
                             me.clearEditing();
                         }
-                        me.fire('selection:change');
-                    }
 
-                    // 粘贴和有选择的操作需要发事件
+                        me.fire('selection:change');
+                        me.fire(46 === e.keyCode ? 'del' : 'cut', {
+                            list: selected
+                        });
+                    }
+                }
+                // copy
+                else if (67 === e.keyCode && e.ctrlKey) {
+                    var selected = me.getSelected();
                     if (selected.length) {
-                        me.fire(keyMap[e.keyCode], {
+                        me.fire('copy', {
                             list: selected
                         });
                     }
@@ -245,11 +244,11 @@ define(
 
             var me = this;
             me.main
-            .delegate('[data-index]', 'click', function() {
+            .on('click', '[data-index]', function() {
                 $(this).toggleClass('selected');
                 me.fire('selection:change');
             })
-            .delegate('[data-action]', 'click', lang.bind(clickAction, this));
+            .on('click', '[data-action]', lang.bind(clickAction, this));
 
             me.downlistener = lang.bind(downlistener, this);
 

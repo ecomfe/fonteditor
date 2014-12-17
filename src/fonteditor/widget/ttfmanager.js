@@ -409,7 +409,17 @@ define(
          * @return {this}
          */
         Manager.prototype.setState = function(state) {
-            if (state == 'new') {
+            if (state === 'new') {
+                this.changed = false;
+            }
+            else if (state === 'saved') {
+                this.ttf.get().glyf.forEach(function(g) {
+                    delete g.modify;
+                });
+                
+                this.fire('set', {
+                    ttf: this.ttf.get()
+                });
                 this.changed = false;
             }
         };

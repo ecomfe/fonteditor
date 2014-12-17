@@ -53,13 +53,7 @@ define(
                 if(e.keyCode == 32) {
                     this.setMode('pan');
                 }
-            },
-
-            /**
-             * 按键
-             */
-            keyup: function(e) {
-                if(e.keyCode == 65 && e.ctrlKey) {
+                else if(e.keyCode == 65 && e.ctrlKey) {
                     this.setMode('shapes', this.fontLayer.shapes.slice());
                 }
             },
