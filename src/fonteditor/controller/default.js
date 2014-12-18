@@ -77,15 +77,19 @@ define(
         // 显示ttf列表
         function showTTF(ttf, page, selected) {
 
+            var glyfTotal = ttf.glyf.length;
+            var pageSize = defaultProgram.setting.get('editor').viewer.pageSize;
+            var totalPage = Math.ceil(glyfTotal / pageSize);
+            if (page > totalPage) {
+                page = totalPage;
+            }
+
             defaultProgram.viewer.setPage(page - 1);
 
             defaultProgram.viewer.show(ttf, selected || defaultProgram.viewer.getSelected());
             defaultProgram.viewer.focus();
 
             // 设置翻页
-            var glyfTotal = ttf.glyf.length;
-            var pageSize = defaultProgram.setting.get('editor').viewer.pageSize;
-
             if (glyfTotal > pageSize) {
                 defaultProgram.viewerPager.show(page, pageSize, glyfTotal);
             }
