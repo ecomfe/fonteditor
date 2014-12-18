@@ -1,7 +1,7 @@
 /**
  * @file actions.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 命令接口
  */
@@ -14,7 +14,7 @@ define(
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
         var lang = require('common/lang');
-        
+
         // 读取在线字体
         function readOnlineFont(type, url) {
             ajaxFile({
@@ -53,7 +53,7 @@ define(
                     setTimeout(function(){
                         program.editor.focus();
                     }, 20);
-                    
+
                 }
                 else {
                     program.ttfManager.undo();
@@ -77,7 +77,7 @@ define(
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
                     return;
                 }
-                
+
                 $.getJSON('./font/empty.json', function(imported) {
                     program.ttfManager.set(imported);
                     program.data.projectId = null;
@@ -120,21 +120,27 @@ define(
             'save': function() {
                 if (program.ttfManager.get()) {
                     if (program.data.projectId) {
+
                         program.project.update(program.data.projectId, program.ttfManager.get());
-                        program.ttfManager.setState('new');
+                        program.ttfManager.setState('saved');
                         program.loading.show('保存成功..', 400);
+
                     }
                     else {
                         var name = '';
                         if ((name = window.prompt('请输入项目名称：'))) {
+
                             name = string.encodeHTML(name);
+
                             var id = program.project.add(name, program.ttfManager.get());
                             program.data.projectId = id;
-                            program.ttfManager.setState('saved');
+
+                            program.ttfManager.setState('new');
 
                             program.projectViewer.show(program.project.items());
                             program.projectViewer.select(id);
                             program.loading.show('保存成功..', 400);
+
                         }
                     }
                 }
@@ -213,7 +219,7 @@ define(
                             program.ttfManager.setMetrics(setting);
                         }
                     });
-                    
+
                     dlg.show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
                 }
             },
