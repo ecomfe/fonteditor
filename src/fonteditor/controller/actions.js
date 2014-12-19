@@ -44,16 +44,16 @@ define(
             });
         }
 
+        var editorDelayFocus = setTimeout(function(){
+            program.editor.focus();
+        }, 20);
 
         var actions = {
 
             'undo': function() {
                 if (program.editor.isEditing()) {
                     program.editor.undo();
-                    setTimeout(function(){
-                        program.editor.focus();
-                    }, 20);
-
+                    editorDelayFocus();
                 }
                 else {
                     program.ttfManager.undo();
@@ -63,9 +63,7 @@ define(
             'redo': function() {
                 if (program.editor.isEditing()) {
                     program.editor.redo();
-                    setTimeout(function(){
-                        program.editor.focus();
-                    }, 20);
+                    editorDelayFocus();
                 }
                 else {
                     program.ttfManager.redo();

@@ -335,6 +335,10 @@ define(
 
             }, 100));
 
+            var delayFocus = lang.debounce(function() {
+                me.focus();
+            }, 20);
+
             commandMenu.on('command', function(e) {
                 var command = e.command;
                 if (command === 'paste' || command === 'adjust-pos' || command === 'adjust-glyf') {
@@ -354,9 +358,7 @@ define(
                 }
 
                 // 这里延时进行focus
-                lang.debounce(function() {
-                    me.focus();
-                }, 20);
+                delayFocus();
             });
         }
 

@@ -21,7 +21,7 @@ define(
         var COMMAND_SUPPORT = {
             // 形状组
             shapes: [
-                'copyshapes', 'removeshapes',
+                'copyshapes', 'removeshapes', 'reversepoints',
                 'horizontalalignshapes', 'verticalalignshapes',
                 'rotateleft', 'rotateright', 'flipshapes', 'mirrorshapes'
             ],
@@ -29,7 +29,7 @@ define(
                 'joinshapes', 'intersectshapes', 'tangencyshapes'
             ],
             // 单个形状
-            shape: ['pointmode', 'upshape', 'downshape', 'reversepoints']
+            shape: ['pointmode', 'upshape', 'downshape']
         };
 
 
@@ -41,14 +41,16 @@ define(
             // 设置字形信息
             var me = this;
             var editor  = this.editor;
+            var delayFocus = lang.debounce(function() {
+                me.focus();
+            }, 20);
+
             editor.on('setting:font', function(e) {
                 !new setting['glyf']({
                     onChange: function(setting) {
                         editor.adjustFont(setting);
                         // 此处需要等待点击完成后设置focus状态
-                        setTimeout(function() {
-                            me.focus();
-                        });
+                        delayFocus();
                     }
                 }).show(e.setting);
             });
@@ -88,9 +90,7 @@ define(
                 commandMenu.on('command', function(e) {
 
                     // 这里延时进行focus
-                    lang.debounce(function() {
-                        me.focus();
-                    }, 20);
+                    delayFocus();
 
                     var command = e.command;
                     var args = e.args;
@@ -158,12 +158,12 @@ define(
 
         /**
          * 执行指定命令
-         * 
+         *
          * @param {string} command 命令名
          */
         function execCommand(command) {
             if (this.editor) {
-                this.editor.execCommand.apply(this.editor, arguments); 
+                this.editor.execCommand.apply(this.editor, arguments);
             }
         }
 
@@ -175,7 +175,7 @@ define(
          * @param {Object} options 参数
          */
         function GLYFEditor(main, options) {
-            
+
             this.main = $(main);
             this.options = lang.extend({}, options);
 
