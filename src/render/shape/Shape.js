@@ -21,7 +21,9 @@ define(
             lang.extend(this, options);
         }
 
-        lang.extend(Shape.prototype, {
+        Shape.prototype = {
+
+            constructor: Shape,
 
             /**
              * 对形状进行缩放平移调整
@@ -111,7 +113,7 @@ define(
             dispose: function() {
                 // TODO
             }
-        });
+        };
     
         /**
          * 派生出一个shape对象

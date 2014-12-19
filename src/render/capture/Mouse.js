@@ -279,7 +279,9 @@ define(
         }
 
 
-        lang.extend(MouseCapture.prototype, {
+        MouseCapture.prototype = {
+
+            constructor: MouseCapture,
 
             /**
              * 开始监听
@@ -347,7 +349,7 @@ define(
                 this.un();
                 this.main = this.events = null;
             }
-        });
+        };
 
 
         observable.mixin(MouseCapture.prototype);
