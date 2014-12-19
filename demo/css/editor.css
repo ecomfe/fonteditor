@@ -43,6 +43,10 @@ a:hover {
   cursor: pointer;
   color: #4A90E2;
 }
+.i-edit,
+.i-del {
+  color: #76abe9;
+}
 .i-edit:before {
   content: '\e021';
 }
@@ -138,6 +142,12 @@ a:hover {
 }
 .i-tangencyshapes:before {
   content: '\e027';
+}
+.i-rangemode:before {
+  content: '\e029';
+}
+.i-pointmode:before {
+  content: '\e028';
 }
 .glyf-editor {
   width: 100%;

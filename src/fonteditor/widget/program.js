@@ -103,14 +103,6 @@ define(
 
             setting: {},
 
-            viewer: null, // glyf查看器
-
-            project: null, // 项目管理器
-
-            projectViewer: null, // 项目查看器
-
-            ttfManager: null, // ttf管理器
-
             listening: true, // 正在监听事件
 
             loading: require('./loading')

@@ -130,7 +130,7 @@ define(
          *
          * @param {Object} glyf glyf对象
          *
-         * @return {Number} 添加的glyf
+         * @return {number} 添加的glyf
          */
         TTF.prototype.addGlyf = function(glyf) {
             return this.insertGlyf(glyf);
@@ -141,7 +141,7 @@ define(
          *
          * @param {Object} glyf glyf对象
          * @param {Object} insertIndex 插入的索引
-         * @return {Number} 添加的glyf
+         * @return {number} 添加的glyf
          */
         TTF.prototype.insertGlyf = function(glyf, insertIndex) {
             if (insertIndex >= 0 && insertIndex < this.ttf.glyf.length) {
