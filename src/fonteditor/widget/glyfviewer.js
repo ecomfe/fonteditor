@@ -136,9 +136,7 @@ define(
                 }
             }
             else if (action == 'edit') {
-                this.clearEditing();
                 this.setEditing(selected);
-                selectedGlyf.addClass('editing');
             }
 
             this.fire(action, {
@@ -204,6 +202,14 @@ define(
                     me.clearSelected();
                     me.clearEditing();
                     me.fire('selection:change');
+                }
+                // 左移
+                else if (37 === e.keyCode) {
+                    me.fire('moveleft');
+                }
+                // 右移
+                else if (39 === e.keyCode) {
+                    me.fire('moveright');
                 }
                 // del, cut
                 else if (46 === e.keyCode || (88 === e.keyCode && e.ctrlKey)) {
@@ -499,7 +505,11 @@ define(
          * @param {number} editingIndex 设置对象
          */
         GLYFViewer.prototype.setEditing = function(editingIndex) {
+            this.clearEditing();
             this.editingIndex = editingIndex >= 0 ? editingIndex : -1;
+            if (editingIndex !== -1) {
+                this.main.find('[data-index="'+ editingIndex +'"]').addClass('editing');
+            }
         };
 
         /**

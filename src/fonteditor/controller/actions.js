@@ -148,10 +148,7 @@ define(
             'add-new': function() {
                 if (program.ttfManager.get()) {
                     var selected = program.viewer.getSelected();
-                    program.ttfManager.insertGlyf({
-                        name: '',
-                        unicode:[]
-                    }, selected[0]);
+                    program.ttfManager.insertGlyf({}, selected[0]);
                 }
             },
 
@@ -219,6 +216,16 @@ define(
                     });
 
                     dlg.show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
+                }
+            },
+
+            // 设置字型名称
+            'setting-glyf-name': function() {
+                var ttf = program.ttfManager.get();
+                if (ttf) {
+                    if (window.confirm('生成的字形名称会覆盖原来的名称，确定生成？')) {
+                        program.ttfManager.genGlyfName(program.viewer.getSelected());
+                    }
                 }
             },
 

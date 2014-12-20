@@ -73,7 +73,7 @@ define(
                     me.fire('save');
                 }
                 // 粘贴
-                else if ((e.keyCode == 86 && e.ctrlKey)) {
+                else if ((86 === e.keyCode && e.ctrlKey)) {
                     e.preventDefault();
                     e.stopPropagation();
                     me.fire('paste');

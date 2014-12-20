@@ -114,9 +114,10 @@ define(
         };
 
         /**
-         * 添加glyf
-         *
-         * @param {Object} glyf glyf对象
+         * 在指定索引前面添加新的glyf
+         * 
+         * @param {Object} glyf 对象
+         * @param {number} beforeIndex 索引号
          *
          * @return {this}
          */
@@ -124,18 +125,29 @@ define(
             var glyfList = this.ttf.getGlyf();
             var unicode = 0x20;
 
-            // 找到unicode的最大值
-            for (var i = glyfList.length - 1; i > 0 ; i--) {
-                var g = glyfList[i];
-                if (g.unicode && g.unicode.length) {
-                    var u = Math.max.apply(null, g.unicode);
-                    unicode = Math.max(u, unicode);
+            if (!glyf.unicode || !glyf.unicode.length) {
+                // 找到unicode的最大值
+                for (var i = glyfList.length - 1; i > 0 ; i--) {
+                    var g = glyfList[i];
+                    if (g.unicode && g.unicode.length) {
+                        var u = Math.max.apply(null, g.unicode);
+                        unicode = Math.max(u, unicode);
+                    }
                 }
+
+                unicode++;
+
+                if (unicode === 0xFFFF) {
+                    unicode++;
+                }
+
+                glyf.unicode = [unicode];
             }
 
-            unicode++;
-            glyf.unicode = [unicode];
-            glyf.name = string.getUnicodeName(unicode);
+            if (!glyf.name) {
+                glyf.name = string.getUnicodeName(glyf.unicode[0]);
+            }
+
             glyf.modify = 'new';
 
             this.ttf.insertGlyf(glyf, beforeIndex);
@@ -194,6 +206,25 @@ define(
         Manager.prototype.setUnicode = function(unicode, indexList) {
 
             var list = this.ttf.setUnicode(unicode, indexList);
+            if (list.length) {
+                list.forEach(function(g) {
+                    g.modify = 'edit';
+                });
+                this.fireChange(true);
+            }
+
+            return this;
+        };
+
+        /**
+         * 生成字形名称
+         *
+         * @param {Array} indexList 索引列表
+         * @return {this}
+         */
+        Manager.prototype.genGlyfName = function(indexList) {
+
+            var list = this.ttf.genGlyfName(indexList);
             if (list.length) {
                 list.forEach(function(g) {
                     g.modify = 'edit';

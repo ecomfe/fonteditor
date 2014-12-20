@@ -196,7 +196,8 @@ define(
          * @return {Array} 改变的glyf
          */
         TTF.prototype.setUnicode = function(unicode, indexList) {
-            var glyf = this.ttf.glyf, list;
+            var glyf = this.ttf.glyf;
+            var list = [];
             if (indexList && indexList.length) {
                 var first = indexList.indexOf(0);
                 if (first >= 0) {
@@ -239,6 +240,45 @@ define(
         };
 
         /**
+         * 生成字形名称
+         *
+         * @param {Array} indexList 索引列表
+         * @return {Array} 改变的glyf
+         */
+        TTF.prototype.genGlyfName = function(indexList) {
+            var glyf = this.ttf.glyf;
+            var list = [];
+            if (indexList && indexList.length) {
+                list = indexList.map(function(item) {
+                    return glyf[item];
+                });
+            }
+            else {
+                list = glyf;
+            }
+
+            if (list.length) {
+                var first = this.ttf.glyf[0];
+                var unicode;
+                list.forEach(function(g) {
+                    if (g === first) {
+                        g.name = '.notdef';
+                    }
+                    else {
+                        if (g.unicode && g.unicode.length) {
+                            g.name = string.getUnicodeName(g.unicode[0]);
+                        }
+                        else {
+                            g.name = '.notdef';
+                        }
+                    }
+                });
+            }
+
+            return list;
+        };
+
+        /**
          * 添加并体替换指定的glyf
          *
          * @param {Array} glyfList 添加的列表
@@ -246,7 +286,8 @@ define(
          * @return {Array} 改变的glyf
          */
         TTF.prototype.appendGlyf = function(glyfList, indexList) {
-            var glyf = this.ttf.glyf, result = glyfList.slice(0);
+            var glyf = this.ttf.glyf;
+            var result = glyfList.slice(0);
 
             if (indexList && indexList.length) {
                 var l = Math.min(glyfList.length, indexList.length);
