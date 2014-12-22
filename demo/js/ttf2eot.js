@@ -48,7 +48,7 @@ define(
         function write() {
             ajaxFile({
                 type: 'binary',
-                url: '../font/iconfont.ttf',
+                url: '../font/fonteditor.ttf',
                 onSuccess: function(buffer) {
 
                     var eotBuffer = ttf2eot(buffer);
@@ -77,7 +77,7 @@ define(
         function readeot() {
             ajaxFile({
                 type: 'binary',
-                url: '../font/iconfont.eot',
+                url: '../font/fonteditor.eot',
                 onSuccess: function(buffer) {
 
 

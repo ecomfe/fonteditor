@@ -18,7 +18,7 @@ define(
 
             ajaxFile({
                 type: 'binary',
-                url: '../font/iconfont.woff',
+                url: '../font/fonteditor.woff',
                 onSuccess: function(buffer) {
 
                     var ttfBuffer = woff2ttf(buffer, {
