@@ -139,6 +139,12 @@ a:hover {
 .i-tangencyshapes:before {
   content: '\e027';
 }
+.i-rangemode:before {
+  content: '\e029';
+}
+.i-pointmode:before {
+  content: '\e028';
+}
 .glyf-editor {
   width: 100%;
   height: 100%;
