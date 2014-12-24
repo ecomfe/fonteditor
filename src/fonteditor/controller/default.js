@@ -83,6 +83,9 @@ define(
             if (page > totalPage) {
                 page = totalPage;
             }
+            else if (page < 1) {
+                page = 1;
+            }
 
             currentProgram.viewer.setPage(page - 1);
 
