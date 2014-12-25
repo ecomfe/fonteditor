@@ -42,6 +42,7 @@ define(
         function resolve(ttf) {
 
             // 头部信息
+            ttf.version = ttf.version || 0x1;
             ttf.numTables = tableList.length;
             ttf.entrySelector = Math.floor(Math.log(tableList.length)/Math.LN2);
             ttf.searchRange = Math.pow(2, ttf.entrySelector) * 16;

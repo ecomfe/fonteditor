@@ -41,6 +41,7 @@ define(
          */
         function getEmptyObject() {
             return {
+                'from': 'svg',
                 'OS/2': {},
                 'name': {},
                 'hhea': {},

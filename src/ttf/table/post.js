@@ -135,6 +135,7 @@ define(
                     }
 
                     ttf.post = ttf.post || {};
+                    ttf.post.format = ttf.post.format || 0x2;
                     ttf.post.maxMemType1 = numberOfGlyphs;
 
                     ttf.support.post = {

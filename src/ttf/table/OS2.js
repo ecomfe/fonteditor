@@ -228,12 +228,15 @@ define(
                     ttf['OS/2'].usLastCharIndex = usLastCharIndex;
 
                     // rewrite hhea
+                    ttf.hhea.version = ttf.hhea.version || 0x1;
                     ttf.hhea.advanceWidthMax = advanceWidthMax;
                     ttf.hhea.minLeftSideBearing = minLeftSideBearing;
                     ttf.hhea.minRightSideBearing = minRightSideBearing;
                     ttf.hhea.xMaxExtent = xMaxExtent;
 
                     // rewrite head
+                    ttf.head.version = ttf.head.version || 0x1;
+                    ttf.head.lowestRecPPEM = ttf.head.lowestRecPPEM || 0x8;
                     ttf.head.xMin = xMin;
                     ttf.head.yMin = yMin;
                     ttf.head.xMax = xMax;
