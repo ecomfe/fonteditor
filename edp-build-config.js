@@ -7,10 +7,11 @@ exports.output = path.resolve(__dirname, './release');
 exports.getProcessors = function () {
 
 
-    return [ 
+    return [
         new LessCompiler( {
             files: [
-                'css/main.less'
+                'css/main.less',
+                'css/preview.less'
             ],
             compileOptions: {
                 relativeUrls: false
@@ -26,35 +27,21 @@ exports.getProcessors = function () {
         new JsCompressor({
             files: [
                 'src/fonteditor/main.js',
-                'dep/*',
-                'dep/*/*',
-                'dep/*/*/*'
+                'dep/**/*.js',
             ]
         }),
 
         // 清除冗余文件，比如`less`
         new OutputCleaner({
             files: [
-                'css/common/*',
-                'src/common/*',
-                'src/editor/*',
-                'src/editor/*/*',
-                'src/editor/*/*/*',
-                'src/graphics/*',
-                'src/graphics/join/*',
-                'src/math/*',
-                'src/render/*',
-                'src/render/*/*',
-                'src/render/*/*/*',
-                'src/ttf/*',
-                'src/ttf/*/*',
-                'src/ttf/*/*/*',
-                'src/fonteditor/dialog/*',
-                'src/fonteditor/widget/*',
-                'src/fonteditor/widget/menu/*',
-                'src/fonteditor/controller/*',
-                'src/fonteditor/setting/*',
-                'src/fonteditor/data/*'
+                'css/common/**',
+                'src/common/**',
+                'src/editor/**',
+                'src/graphics/**',
+                'src/math/**',
+                'src/render/**',
+                'src/ttf/**',
+                'src/fonteditor/*/**',
             ]
         })
     ];
