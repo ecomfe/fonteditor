@@ -78,7 +78,7 @@ define(
             if(this.options.enableResize) {
                 this.resizeCapture = new ResizeCapture(this.main);
                 this.resizeCapture.on('resize', function(e) {
-                    // 对象被隐藏, 不做处理
+                    // 对象被隐藏，不做处理，仅作标记，refresh之后再处理
                     if (me.main.style.display === 'none') {
                         me.hasResized = true;
                         return;
@@ -100,8 +100,14 @@ define(
         /**
          * Render 构造函数
          * 
-         * @constructor
+         * @param {HTMLElement} main 主元素
          * @param {Object} options 参数选项
+         * @param {number} options.defaultRatio 默认的缩放比例
+         * @param {number} options.minScale 最小缩放
+         * @param {number} options.maxScale 最大缩放
+         * @param {boolean} options.enableScale 是否允许缩放
+         * @param {boolean} options.enableResize 是否允许大小改变
+         * @constructor
          */
         function Render(main, options) {
 

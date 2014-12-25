@@ -16,7 +16,7 @@ define(
          * 创建一个render
          * @param {HTMLElement} main 主控区域
          * @param {Object} options 创建参数
-         * @param {Controller} controller 控制器函数
+         * @param {Controller} options.controller 控制器
          * @return {Render} render对象
          */
         exports.create = function(main, options) {
@@ -29,7 +29,6 @@ define(
             if (!controller) {
                 controller = new Controller();
             }
-
 
             controller.setRender(render);
             

@@ -18,6 +18,9 @@ define(
          * 创建一个shape对象，这里仅创建数据结构，具体绘制由Shape对象完成
          * 
          * @param {Object} options shape参数
+         * @param {string} options.id 编号
+         * @param {string} options.type 类型
+         * 
          * @return {Object} shape数据结构
          */
         function createShape(options) {
@@ -31,6 +34,9 @@ define(
 
         /**
          * 设置canvas的绘制样式
+         * 
+         * @param {Canvas2D} context canvas context
+         * @param {Object} options 绘制参数
          */
         function setContextStyle(context, options) {
             context.fillStyle = options.fillColor || 'black';
@@ -43,6 +49,14 @@ define(
          * 层级基础对象
          * 
          * @constructor
+         * @param {Canvas2D} context canvas context
+         * @param {Object} options 绘制参数
+         * @param {boolean} options.stroke 是否描边
+         * @param {boolean} options.fill 是否填充
+         * @param {boolean} options.thin 是否细线模式
+         * @param {Painter} options.painter 父级Painter对象
+         * @param {string} options.id 对象编号
+         * @param {number} options.level 层级
          */
         function Layer(context, options) {
             this.context = context;
@@ -247,9 +261,7 @@ define(
              * 获取当前坐标下的shape
              * 
              * @param {Object} p 坐标值
-             * 
-             * 
-             * @return {Array} 选中的shapes
+             * @return {Array|boolean} 选中的shapes 或者false
              */
             getShapeIn: function(p) {
                 var support = this.painter.support;
@@ -268,7 +280,7 @@ define(
 
             /**
              * 根据镜头调整shape
-             * 
+             * @param {Object|string|number} shape shape对象
              * @return {this}
              */
             adjust: function(shape) {
@@ -304,7 +316,7 @@ define(
              * 移动指定的偏移量
              * @param {number} x 偏移
              * @param {number} y 偏移
-             * 
+             * @param {Object|string|number} shape shape对象
              * @return {this}
              */
             move: function(x, y, shape) {
@@ -338,7 +350,7 @@ define(
              * 
              * @param {number} x 偏移
              * @param {number} y 偏移
-             * 
+             * @param {Object|string|number} shape shape对象
              * @return {this}
              */
             moveTo: function(x, y, shape) {
@@ -373,7 +385,7 @@ define(
 
             /**
              * 获取Layer bound
-             * 
+             * @param {Array?} shape对象数组
              * @return {Object} bound对象
              */
             getBound: function(shapes) {
@@ -397,7 +409,9 @@ define(
                             var bound = drawer.getRect(shape);
                             if (bound) {
                                 boundPoints.push(bound);
-                                boundPoints.push({x: bound.x + bound.width, y: bound.y + bound.height});
+                                boundPoints.push(
+                                    {x: bound.x + bound.width, y: bound.y + bound.height}
+                                );
                             }
                         }
                     }

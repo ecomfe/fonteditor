@@ -25,7 +25,9 @@ define(
                 if (u < 0x20) {
                     return '';
                 }
-                return u >= 0x20 && u <= 255 ? string.encodeHTML(String.fromCharCode(u).toLowerCase()) : '&#x' + u.toString(16) + ';';
+                return u >= 0x20 && u <= 255 
+                    ? string.encodeHTML(String.fromCharCode(u).toLowerCase()) 
+                    : '&#x' + u.toString(16) + ';';
             }).join('');
         }
 

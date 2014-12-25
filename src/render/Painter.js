@@ -20,7 +20,12 @@ define(
 
         /**
          * 创建一个canvas对象
-         * 
+         * @param {Object} options 参数选项
+         * @param {string} options.id 编号
+         * @param {number} options.level 层级
+         * @param {number} options.width 宽度
+         * @param {number} options.height 高度
+         *
          * @return {Canvas} canvas对象 
          */
         function createCanvas(options) {
@@ -43,6 +48,11 @@ define(
 
         /**
          * 创建一个Layer对象
+         * @param {Object} options 参数选项
+         * @param {string} options.id 编号
+         * @param {number} options.level 层级
+         * @param {number} options.width 宽度
+         * @param {number} options.height 高度
          * 
          * @return {Layer} Layer对象
          */
@@ -63,6 +73,9 @@ define(
          * 画布对象
          * 
          * @constructor
+         * @param {HTMLElement} main 主元素
+         * @param {Object} options 参数选项
+         * 
          */
         function Painter(main, options){
             this.main = main;
@@ -76,6 +89,7 @@ define(
                 y: this.height /2
             });
 
+            // 保存支持的shape类型
             var support = {};
             Object.keys(SupportShape).forEach(function(shape) {
                 support[shape] = new SupportShape[shape]();
@@ -91,7 +105,7 @@ define(
              * 增加一个支持的shape类型
              * 
              * @param {Object} shape 支持类型
-             * 
+             * @see ./shape/Shape
              * @return {this}
              */
             addSupport: function(shape) {
@@ -116,7 +130,7 @@ define(
             /**
              * 根据编号或索引获取一个Layer
              * 
-             * @param {string|number} layer id或者layer index
+             * @param {Object|string|number} layer对象 或者layer id或者layer index
              * 
              * @return {Layer} layer对象
              */
@@ -138,7 +152,7 @@ define(
              * 添加一个Layer
              * 
              * @param {Layer|string} layer layer对象，或者layer id
-             * 
+             * @param {Object} options 参数
              * @return {Layer?} layer对象
              */
             addLayer: function(layer, options) {
@@ -184,7 +198,7 @@ define(
                     throw 'need layer id to be removed';
                 }
 
-                if(id >=0 && id < this.layers.length) {
+                if(id >= 0 && id < this.layers.length) {
                     layer = this.layers[id];
                     layer.dispose();
                     // 移除canvas
@@ -199,8 +213,9 @@ define(
             /**
              * 获取当前坐标下的shape
              * 
-             * @param {string} p [p description]
-             * 
+             * @param {Object} p 坐标对象
+             * @param {number} p.x 坐标对象
+             * @param {number} p.y 坐标对象
              * @return {Array} 选中的shape
              */
             getShapeIn: function(p) {
@@ -218,7 +233,7 @@ define(
             /**
              * 根据镜头调整坐标
              * 
-             * @param {Layer} layerId
+             * @param {Object|number|string} layerId layer对象
              * 
              * @return {this}
              */
@@ -245,7 +260,7 @@ define(
              * 
              * @param {number} x 偏移
              * @param {number} y 偏移
-             * @param {Layer} layerId
+             * @param {Object|number|string} layerId layer对象
              * 
              * @return {this}
              */
@@ -273,7 +288,7 @@ define(
              * 
              * @param {number} x 偏移
              * @param {number} y 偏移
-             * @param {Layer} layerId
+             * {Object|number|string} layerId layer对象
              * 
              * @return {this}
              */

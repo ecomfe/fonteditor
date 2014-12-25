@@ -3,11 +3,10 @@
  * @author mengke01
  * @date
  * @description
- * unicode 编码名字表
+ * unicode 编码与postName对照表
  *
  * see:
  * http://www.microsoft.com/typography/otspec/WGL4.htm
- * test
  */
 
 
