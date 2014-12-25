@@ -73,7 +73,7 @@ define(
                     me.fire('save');
                 }
                 // 粘贴
-                else if ((e.keyCode == 86 && e.ctrlKey)) {
+                else if ((86 === e.keyCode && e.ctrlKey)) {
                     e.preventDefault();
                     e.stopPropagation();
                     me.fire('paste');
@@ -102,14 +102,6 @@ define(
             data: {},
 
             setting: {},
-
-            viewer: null, // glyf查看器
-
-            project: null, // 项目管理器
-
-            projectViewer: null, // 项目查看器
-
-            ttfManager: null, // ttf管理器
 
             listening: true, // 正在监听事件
 

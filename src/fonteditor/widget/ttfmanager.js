@@ -1,7 +1,7 @@
 /**
  * @file ttf.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf相关操作类
  */
@@ -10,13 +10,13 @@
 define(
     function(require) {
         var lang = require('common/lang');
-        var History = require('editor/widget/History'); 
+        var History = require('editor/widget/History');
         var TTF = require('ttf/ttf');
         var string = require('ttf/util/string');
 
         /**
          * 清除glyf编辑状态
-         * 
+         *
          * @param {Array} glyfList glyf列表
          * @return {Array} glyf列表
          */
@@ -29,7 +29,7 @@ define(
 
         /**
          * 构造函数
-         * 
+         *
          * @constructor
          * @param {ttfObject} ttf ttf对象
          */
@@ -41,10 +41,10 @@ define(
 
         /**
          * 触发change
-         * 
+         *
          * @param {boolean} pushHistory 是否存入history列表
          * @param {string} changeType 改变类型
-         * 
+         *
          * @return {this}
          */
         Manager.prototype.fireChange = function(pushHistory, changeType) {
@@ -59,7 +59,7 @@ define(
 
         /**
          * 设置ttf
-         * 
+         *
          * @param {ttfObject} ttf ttf对象
          * @return {this}
          */
@@ -78,13 +78,13 @@ define(
                     ttf: this.ttf.get()
                 });
             }
-            
+
             return this;
         };
 
         /**
          * 获取ttf对象
-         * 
+         *
          * @return {ttfObject} ttf ttf对象
          */
         Manager.prototype.get = function() {
@@ -93,9 +93,9 @@ define(
 
         /**
          * 查找glyf
-         * 
+         *
          * @param {number} unicode 编码
-         * 
+         *
          * @return {number} 没有找到返回 -1, 找到返回glyf索引
          */
         Manager.prototype.findGlyf = function(unicode) {
@@ -114,28 +114,40 @@ define(
         };
 
         /**
-         * 添加glyf
+         * 在指定索引前面添加新的glyf
          * 
-         * @param {Object} glyf glyf对象
-         * 
+         * @param {Object} glyf 对象
+         * @param {number} beforeIndex 索引号
+         *
          * @return {this}
          */
         Manager.prototype.insertGlyf = function(glyf, beforeIndex) {
             var glyfList = this.ttf.getGlyf();
             var unicode = 0x20;
 
-            // 找到unicode的最大值
-            for (var i = glyfList.length - 1; i > 0 ; i--) {
-                var g = glyfList[i];
-                if (g.unicode && g.unicode.length) {
-                    var u = Math.max.apply(null, g.unicode);
-                    unicode = Math.max(u, unicode);
+            if (!glyf.unicode || !glyf.unicode.length) {
+                // 找到unicode的最大值
+                for (var i = glyfList.length - 1; i > 0 ; i--) {
+                    var g = glyfList[i];
+                    if (g.unicode && g.unicode.length) {
+                        var u = Math.max.apply(null, g.unicode);
+                        unicode = Math.max(u, unicode);
+                    }
                 }
+
+                unicode++;
+
+                if (unicode === 0xFFFF) {
+                    unicode++;
+                }
+
+                glyf.unicode = [unicode];
             }
 
-            unicode++;
-            glyf.unicode = [unicode];
-            glyf.name = string.getUnicodeName(unicode);
+            if (!glyf.name) {
+                glyf.name = string.getUnicodeName(glyf.unicode[0]);
+            }
+
             glyf.modify = 'new';
 
             this.ttf.insertGlyf(glyf, beforeIndex);
@@ -146,11 +158,11 @@ define(
 
         /**
          * 合并两个ttfObject，此处仅合并简单字形
-         * 
+         *
          * @param {Object} imported ttfObject
          * @param {Object} options 参数选项
          * @param {boolean} options.scale 是否自动缩放
-         * 
+         *
          * @return {this}
          */
         Manager.prototype.merge = function(imported, options) {
@@ -169,7 +181,7 @@ define(
 
         /**
          * 删除指定字形
-         * 
+         *
          * @param {Array} indexList 索引列表
          * @return {this}
          */
@@ -186,7 +198,7 @@ define(
 
         /**
          * 设置unicode代码
-         * 
+         *
          * @param {string} unicode unicode代码
          * @param {Array} indexList 索引列表
          * @return {this}
@@ -205,8 +217,27 @@ define(
         };
 
         /**
+         * 生成字形名称
+         *
+         * @param {Array} indexList 索引列表
+         * @return {this}
+         */
+        Manager.prototype.genGlyfName = function(indexList) {
+
+            var list = this.ttf.genGlyfName(indexList);
+            if (list.length) {
+                list.forEach(function(g) {
+                    g.modify = 'edit';
+                });
+                this.fireChange(true);
+            }
+
+            return this;
+        };
+
+        /**
          * 添加并体替换指定的glyf
-         * 
+         *
          * @param {Array} glyfList 添加的列表
          * @param {Array} indexList 需要替换的索引列表
          * @return {this}
@@ -226,7 +257,7 @@ define(
 
         /**
          * 替换指定的glyf
-         * 
+         *
          * @param {Object} glyf glyfobject
          * @param {string} index 需要替换的索引列表
          * @return {this}
@@ -242,7 +273,7 @@ define(
 
         /**
          * 调整glyf位置
-         * 
+         *
          * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
          * @return {boolean}
@@ -263,13 +294,13 @@ define(
 
         /**
          * 调整glyf
-         * 
+         *
          * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
          * @return {boolean}
          */
         Manager.prototype.adjustGlyf = function(setting, indexList) {
-           
+
             var list = this.ttf.adjustGlyf(setting, indexList);
             if (list.length) {
                 list.forEach(function(g) {
@@ -283,13 +314,13 @@ define(
 
         /**
          * 设置glyf
-         * 
+         *
          * @param {Object} setting 选项
          * @param {Array} index 索引
          * @return {boolean}
          */
         Manager.prototype.updateGlyf = function(setting, index) {
-            
+
             var glyf = this.getGlyf([index])[0];
             var changed = false;
 
@@ -306,7 +337,7 @@ define(
             }
 
             if (
-                (undefined !== setting.leftSideBearing && setting.leftSideBearing != glyf.leftSideBearing) 
+                (undefined !== setting.leftSideBearing && setting.leftSideBearing != glyf.leftSideBearing)
                 || (undefined !== setting.rightSideBearing && setting.rightSideBearing + (glyf.xMax || 0) != glyf.advanceWidth)
             ) {
                 var list = this.ttf.adjustGlyfPos(setting, [index]);
@@ -326,7 +357,7 @@ define(
 
         /**
          * 获取glyfList
-         * 
+         *
          * @param {Array} indexList 索引列表
          * @return {Array} glyflist
          */
@@ -369,7 +400,7 @@ define(
             if (changed) {
                 this.fireChange(false);
             }
-            
+
             return this;
         };
 
@@ -416,10 +447,12 @@ define(
                 this.ttf.get().glyf.forEach(function(g) {
                     delete g.modify;
                 });
-                
-                this.fire('set', {
-                    ttf: this.ttf.get()
+
+                this.fire('change', {
+                    ttf: this.ttf.get(),
+                    changeType: state
                 });
+
                 this.changed = false;
             }
         };

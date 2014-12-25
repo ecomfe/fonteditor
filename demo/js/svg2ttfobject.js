@@ -21,7 +21,7 @@ define(
             init: function () {
 
                 $.ajax({
-                    url: '../font/iconfont.svg',
+                    url: '../font/fonteditor.svg',
                     dataType: 'text'
                 }).done(function(data) {
 

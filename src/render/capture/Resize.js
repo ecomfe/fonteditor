@@ -61,7 +61,9 @@ define(
         }
 
 
-        lang.extend(ResizeCapture.prototype, {
+        ResizeCapture.prototype = {
+
+            constructor: ResizeCapture,
 
             /**
              * 开始监听
@@ -110,7 +112,7 @@ define(
                 this.main = this.events = null;
                 this.un();
             }
-        });
+        };
 
         observable.mixin(ResizeCapture.prototype);
 

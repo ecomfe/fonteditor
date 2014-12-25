@@ -61,7 +61,9 @@ define(
         }
 
 
-        lang.extend(Layer.prototype, {
+        Layer.prototype = {
+            
+            constructor: Layer,
 
             /**
              * 刷新layer
@@ -421,7 +423,7 @@ define(
             createShape: function(options) {
                 return createShape.call(this, options);
             }
-        });
+        };
 
         return Layer;
     }

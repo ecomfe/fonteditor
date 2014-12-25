@@ -83,7 +83,9 @@ define(
             this.support = support;
         }
 
-        lang.extend(Painter.prototype, {
+        Painter.prototype = {
+
+            constructor: Painter,
 
             /**
              * 增加一个支持的shape类型
@@ -402,7 +404,7 @@ define(
                 return createLayer.call(this, options);
             }
 
-        });
+        };
 
         return Painter;
     }

@@ -17,7 +17,9 @@ build_tpl() {
     cat ./release/index.html |
         sed -e "s#'\.\/src'#'./$version'#g" |
         tr -s "\n" " " |
-        sed 's#[[:space:]]\+# #g' > ./release/index.html
+        sed 's#[[:space:]]\+# #g' > ./release/index.tmp
+
+    mv ./release/index.tmp ./release/index.html
 }
 
 

@@ -95,7 +95,9 @@ define(
         }
 
 
-        lang.extend(KeyboardCapture.prototype, {
+        KeyboardCapture.prototype = {
+
+            constructor: KeyboardCapture,
 
             /**
              * 开始监听
@@ -152,7 +154,7 @@ define(
                 this.main = this.events = null;
                 this.un();
             }
-        });
+        };
 
         observable.mixin(KeyboardCapture.prototype);
 

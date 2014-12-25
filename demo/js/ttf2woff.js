@@ -70,7 +70,7 @@ define(
         function write() {
             ajaxFile({
                 type: 'binary',
-                url: '../font/iconfont.ttf',
+                url: '../font/fonteditor.ttf',
                 onSuccess: function(buffer) {
 
                     var woffBuffer = ttf2woff(buffer, ttf2woffoptions);

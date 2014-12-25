@@ -43,6 +43,10 @@ a:hover {
   cursor: pointer;
   color: #4A90E2;
 }
+.i-edit,
+.i-del {
+  color: #76abe9;
+}
 .i-edit:before {
   content: '\e021';
 }
