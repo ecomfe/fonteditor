@@ -156,10 +156,19 @@ define(
             'add-online': function() {
                 var dlg = new setting.online({
                     onChange: function(url) {
+
                         // 此处延迟处理
                         setTimeout(function(){
                             program.loading.show('正在加载..', 1000);
-                            readOnlineFont(url.slice(url.lastIndexOf('.') + 1), url);
+                            var type = url.slice(url.lastIndexOf('.') + 1);
+                            var fontUrl = url;
+
+                            if (/^https?:\/\//i.test(url)) {
+                                fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                            }
+
+                            readOnlineFont(type, fontUrl);
+
                         }, 20);
                     }
                 });
@@ -171,6 +180,7 @@ define(
             'add-url': function() {
                     var dlg = new setting.url({
                         onChange: function(url) {
+
                             // 此处延迟处理
                             setTimeout(function(){
                                 program.loading.show('正在加载..', 1000);
