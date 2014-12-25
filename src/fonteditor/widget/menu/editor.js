@@ -28,6 +28,11 @@ define(
                 disabled: true
             },
             {
+                name: 'save',
+                title: '保存',
+                quickKey: 'S'
+            },
+            {
                 type: 'split'
             },
             {

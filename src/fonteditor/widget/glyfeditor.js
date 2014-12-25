@@ -70,6 +70,12 @@ define(
                 });
             });
 
+            editor.on('save', function() {
+                program.fire('save', {
+                    type: 'editor'
+                });
+            });
+
             var commandMenu = this.commandMenu;
             if (commandMenu) {
 
@@ -95,6 +101,13 @@ define(
                     var command = e.command;
                     var args = e.args;
                     var shapes;
+
+                    if (command === 'save') {
+                        program.fire('save', {
+                            type: 'editor'
+                        });
+                        return;
+                    }
 
                     if (command === 'splitshapes') {
                         editor.setMode('split');

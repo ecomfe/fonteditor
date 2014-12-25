@@ -123,7 +123,7 @@ define(
             tableList.forEach(function(tableName) {
                 var offset = ttfSize;
                 var tableSize = new supportTables[tableName]().size(ttf); // 原始的表大小
-                var size = tableSize; // 对对齐后的表大小
+                var size = tableSize; // 对齐后的表大小
 
                 if (tableName == 'head') {
                     ttfHeadOffset = offset;

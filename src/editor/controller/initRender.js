@@ -46,6 +46,9 @@ define(
             else if (e.command == 'showgrid') {
                 this.execCommand('showgrid', !e.args.selected);
             }
+            else if (e.command == 'save') {
+                this.fire('save');
+            }
             else {
                 this.execCommand(e.command, e);
             }
@@ -187,9 +190,7 @@ define(
 
                 // 保存
                 if (e.keyCode == 83 && e.ctrlKey) {
-                    me.fire('save', {
-                        font: me.getFont()
-                    });
+                    me.fire('save');
                 }
                 // 粘贴
                 else if (e.keyCode == 86 && e.ctrlKey) {

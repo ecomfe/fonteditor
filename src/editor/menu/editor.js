@@ -98,6 +98,10 @@ define(
             {
                 name: 'fontsetting',
                 title: '字形信息'
+            },
+            {
+                name: 'save',
+                title: '保存'
             }
         ];
     }
