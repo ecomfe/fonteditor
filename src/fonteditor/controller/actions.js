@@ -125,8 +125,8 @@ define(
 
                     }
                     else {
-                        var name = '';
-                        if ((name = window.prompt('请输入项目名称：'))) {
+                        var name = program.ttfManager.get().name.fontFamily || '';
+                        if ((name = window.prompt('请输入项目名称：', name))) {
 
                             name = string.encodeHTML(name);
 
