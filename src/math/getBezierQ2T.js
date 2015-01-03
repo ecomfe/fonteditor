@@ -1,20 +1,20 @@
 /**
  * @file getBezierQ2T.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 获取贝塞尔曲线的参数t
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var bezierQ2Equation = require('math/bezierQ2Equation');
         var getPoint = require('./getBezierQ2Point');
 
         /**
          * 分割贝塞尔曲线
-         * 
+         *
          * @param {Object} p0 p0
          * @param {Object} p1 p1
          * @param {Object} p2 p2

@@ -1,18 +1,18 @@
 /**
  * @file pathCeil.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 对路径进行四舍五入
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         /**
          * 对path坐标进行调整
-         * 
+         * @param {Array} contour 轮廓点数组
          * @return {Object} contour 坐标点
          */
         function pathCeil(contour) {

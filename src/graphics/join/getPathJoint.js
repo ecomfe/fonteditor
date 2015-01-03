@@ -1,22 +1,22 @@
 /**
  * @file getPathJoint.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 获取路径交点
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var getJoint = require('./getJoint');
         var pathIterator = require('../pathIterator');
 
         /**
-         * 求两个路径的交点集合 
+         * 求两个路径的交点集合
          * @param {Array} path0 路径0
          * @param {Array} path1 路径1
-         * 
+         *
          * @return {Array} 交点数组
          */
         function getPathJoint(path0, path1) {
@@ -27,7 +27,7 @@ define(
                 if (c === 'L') {
                     result = getJoint(path1, 'L', p0, p1, 0, i);
                 }
-                else if(c === 'Q') {
+                else if (c === 'Q') {
                     result = getJoint(path1, 'Q', p0, p1, p2, i);
                 }
 
