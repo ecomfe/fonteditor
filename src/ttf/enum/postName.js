@@ -1,17 +1,16 @@
 /**
  * @file postName.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * Mac 编码名字表
- * 
+ *
  * see:
  * http://www.microsoft.com/typography/otspec/WGL4.htm
  */
 
-
 define(
-    function(require) {
+    function (require) {
         var postName = {
             0: '.notdef',
             1: '.null',

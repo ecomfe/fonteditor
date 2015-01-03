@@ -1,25 +1,27 @@
 /**
  * @file drawContour.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 绘制contour曲线
  */
 
 
 define(
-    function(require) {
-        
+    function (require) {
+
         /**
          * ctx绘制轮廓
-         * 
-         * @param {Canvas2DContext} ctx canvas会话
+         *
+         * @param {CanvasRenderingContext2D} ctx canvas会话
          * @param {Array} contour 轮廓序列
-         * @return {Canvas2DContext} canvas会话
          */
         function drawContour(ctx, contour) {
 
-            var curPoint, prevPoint, nextPoint;
+            var curPoint;
+            var prevPoint;
+            var nextPoint;
+
             for (var i = 0, l = contour.length; i < l; i++) {
                 curPoint = contour[i];
                 prevPoint = i === 0 ? contour[l - 1] : contour[i - 1];
@@ -50,8 +52,10 @@ define(
                     }
                     else {
                         ctx.quadraticCurveTo(
-                            curPoint.x, curPoint.y, 
-                            (curPoint.x + nextPoint.x) / 2, (curPoint.y + nextPoint.y) / 2
+                            curPoint.x,
+                            curPoint.y,
+                            (curPoint.x + nextPoint.x) / 2,
+                            (curPoint.y + nextPoint.y) / 2
                         );
                     }
                 }

@@ -1,29 +1,27 @@
 /**
  * @file loca.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * loca表
  */
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var loca = table.create(
-            'loca', 
-            [], 
+            'loca',
+            [],
             {
-                /**
-                 * 解析local表
-                 */
-                read: function(reader, ttf) {
+
+                read: function (reader, ttf) {
                     var offset = this.offset;
                     var indexToLocFormat = ttf.head.indexToLocFormat;
                     // indexToLocFormat有2字节和4字节的区别
                     var type = struct.names[(indexToLocFormat === 0) ? struct.Uint16 : struct.Uint32];
-                    var size = (indexToLocFormat === 0) ? 2 : 4; //字节大小
-                    var sizeRatio = (indexToLocFormat === 0) ? 2 : 1; //真实地址偏移
+                    var size = (indexToLocFormat === 0) ? 2 : 4; // 字节大小
+                    var sizeRatio = (indexToLocFormat === 0) ? 2 : 1; // 真实地址偏移
                     var wordOffset = [];
 
                     reader.seek(offset);
@@ -33,11 +31,11 @@ define(
                         wordOffset.push(reader.read(type, offset, false) * sizeRatio);
                         offset += size;
                     }
-                    
+
                     return wordOffset;
                 },
 
-                write: function(writer, ttf) {
+                write: function (writer, ttf) {
                     var glyfSupport = ttf.support.glyf;
                     var offset = ttf.support.glyf.offset || 0;
                     var indexToLocFormat = ttf.head.indexToLocFormat;
@@ -64,7 +62,8 @@ define(
 
                     return writer;
                 },
-                size: function(ttf) {
+
+                size: function (ttf) {
                     var locaCount = ttf.glyf.length + 1;
                     return ttf.head.indexToLocFormat ? locaCount * 4 : locaCount * 2;
                 }

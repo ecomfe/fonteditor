@@ -1,24 +1,24 @@
 /**
  * @file eot2ttf.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * eot转ttf
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var Reader = require('./reader');
         var error = require('./error');
 
         /**
          * eot格式转换成ttf字体格式
-         * 
+         *
          * @param {ArrayBuffer} eotBuffer eot缓冲数组
          * @param {Object} options 选项
-         * 
+         *
          * @return {ArrayBuffer} ttf格式byte流
          */
         function eot2ttf(eotBuffer, options) {
@@ -79,12 +79,11 @@ define(
             if (eotBuffer.slice) {
                 return eotBuffer.slice(fontOffset, fontOffset + fontSize);
             }
-            // not support eg. IE10
-            else {
-                var Writer = require('./writer');
-                var bytes = eotReader.readBytes(fontOffset, fontSize);
-                return new Writer(new ArrayBuffer(fontSize)).writeBytes(bytes).getBuffer();
-            }
+
+            // not support ArrayBuffer.slice eg. IE10
+            var Writer = require('./writer');
+            var bytes = eotReader.readBytes(fontOffset, fontSize);
+            return new Writer(new ArrayBuffer(fontSize)).writeBytes(bytes).getBuffer();
         }
 
         return eot2ttf;

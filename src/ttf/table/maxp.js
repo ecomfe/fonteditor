@@ -1,17 +1,17 @@
 /**
  * @file maxp.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * maxp 表
  */
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var maxp = table.create(
-            'maxp', 
+            'maxp',
             [
                 ['version', struct.Fixed],
                 ['numGlyphs', struct.Uint16],
@@ -30,11 +30,13 @@ define(
                 ['maxComponentDepth', struct.Int16]
             ],
             {
-                write: function(writer, ttf) {
+
+                write: function (writer, ttf) {
                     table.write.call(this, writer, ttf.support);
                     return writer;
                 },
-                size: function(ttf) {
+
+                size: function (ttf) {
                     return 32;
                 }
             }

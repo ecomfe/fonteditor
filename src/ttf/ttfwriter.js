@@ -1,14 +1,14 @@
 /**
  * @file ttfwriter.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 写ttf文件
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var Writer = require('./writer');
         var Directory = require('./table/directory');
@@ -36,7 +36,7 @@ define(
 
         /**
          * 处理ttf结构，以便于写
-         * 
+         *
          * @param {ttfObject} ttf ttf数据结构
          */
         function resolve(ttf) {
@@ -44,15 +44,15 @@ define(
             // 头部信息
             ttf.version = ttf.version || 0x1;
             ttf.numTables = tableList.length;
-            ttf.entrySelector = Math.floor(Math.log(tableList.length)/Math.LN2);
+            ttf.entrySelector = Math.floor(Math.log(tableList.length) / Math.LN2);
             ttf.searchRange = Math.pow(2, ttf.entrySelector) * 16;
             ttf.rangeShift = tableList.length * 16 - ttf.searchRange;
 
             // 重置校验码
             ttf.head.checkSumAdjustment = 0;
             ttf.head.magickNumber = 0x5F0F3CF5;
-            
-            if (typeof(ttf.head.created) == 'string') {
+
+            if (typeof ttf.head.created === 'string') {
                 ttf.head.created = /^\d+$/.test(ttf.head.created) ? +ttf.head.created : Date.parse(ttf.head.created);
             }
 
@@ -65,11 +65,11 @@ define(
             var checkUnicodeRepeat = {}; // 检查是否有重复代码点
 
             // 将glyf的代码点按小到大排序
-            ttf.glyf.forEach(function(glyf, index) {
+            ttf.glyf.forEach(function (glyf, index) {
                 if (glyf.unicode) {
                     glyf.unicode = glyf.unicode.sort();
 
-                    glyf.unicode.forEach(function(u) {
+                    glyf.unicode.forEach(function (u) {
                         if (checkUnicodeRepeat[u]) {
                             error.raise(10200, index);
                         }
@@ -83,7 +83,7 @@ define(
                 if (!glyf.compound && glyf.contours) {
 
                     // 整数化
-                    glyf.contours.forEach(function(contour) {
+                    glyf.contours.forEach(function (contour) {
                         pathCeil(contour);
                     });
 
@@ -106,7 +106,7 @@ define(
 
         /**
          * 写ttf文件
-         * 
+         *
          * @param {ttfObject} ttf ttf数据结构
          * @return {ArrayBuffer} 字节流
          */
@@ -118,14 +118,15 @@ define(
             // head + directory
             var ttfSize = 12 + tableList.length * 16;
             var ttfHeadOffset = 0; // 记录head的偏移
+
             // 构造tables
             ttf.support.tables = [];
-            tableList.forEach(function(tableName) {
+            tableList.forEach(function (tableName) {
                 var offset = ttfSize;
                 var tableSize = new supportTables[tableName]().size(ttf); // 原始的表大小
                 var size = tableSize; // 对齐后的表大小
 
-                if (tableName == 'head') {
+                if (tableName === 'head') {
                     ttfHeadOffset = offset;
                 }
 
@@ -158,11 +159,11 @@ define(
             !new Directory().write(writer, ttf);
 
             // 写支持的表数据
-            ttf.support.tables.forEach(function(table) {
+            ttf.support.tables.forEach(function (table) {
 
                 var tableStart = writer.offset;
                 !new supportTables[table.name]().write(writer, ttf);
-                
+
                 if (table.length % 4) {
                     // 对齐字节
                     writer.writeEmpty(4 - table.length % 4);
@@ -174,7 +175,7 @@ define(
             });
 
             // 重新写入每个表校验和
-            ttf.support.tables.forEach(function(table, index) {
+            ttf.support.tables.forEach(function (table, index) {
                 var offset = 12 + index * 16 + 4;
                 writer.writeUint32(table.checkSum, offset);
             });
@@ -194,7 +195,7 @@ define(
 
         /**
          * TTFWriter的构造函数
-         * 
+         *
          * @constructor
          */
         function TTFWriter() {
@@ -202,10 +203,10 @@ define(
 
         /**
          * 写一个ttf字体结构
-         * 
+         * @param {Object} ttf ttf数据结构
          * @return {ArrayBuffer} 缓冲数组
          */
-        TTFWriter.prototype.write = function(ttf) {
+        TTFWriter.prototype.write = function (ttf) {
             resolve.call(this, ttf);
             var buffer = write.call(this, ttf);
             return buffer;
@@ -214,7 +215,7 @@ define(
         /**
          * 注销
          */
-        TTFWriter.prototype.dispose = function() {
+        TTFWriter.prototype.dispose = function () {
         };
 
         return TTFWriter;

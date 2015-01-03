@@ -1,18 +1,18 @@
 /**
  * @file svg2base64.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * svg 二进制转base64编码
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         /**
          * svg 二进制转base64编码
-         * 
+         *
          * @param {string} svg svg对象
          * @return {string} base64编码
          */

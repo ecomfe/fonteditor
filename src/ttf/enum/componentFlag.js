@@ -1,18 +1,18 @@
 /**
  * @file componentFlag.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- *  
+ *
  * 复合图元标记位
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6glyf.html
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
-        var  componentFlag= {
+        var componentFlag = {
             ARG_1_AND_2_ARE_WORDS: 0x01,
             ARGS_ARE_XY_VALUES: 0x02,
             ROUND_XY_TO_GRID: 0x04,

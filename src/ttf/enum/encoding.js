@@ -1,15 +1,14 @@
 /**
  * @file encoding.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * Unicode Platform-specific Encoding Identifiers
  */
 
-
 define(
-    function(require) {
-        
+    function (require) {
+
         // mac encoding id
         var mac = {
             'Default': 0, // default use
@@ -21,9 +20,9 @@ define(
             'FullUnicodecoverage': 6
         };
 
-        //windows encoding id
+        // windows encoding id
         var windows = {
-            'Symbol': 0, 
+            'Symbol': 0,
             'UCS2': 1, // default use
             'ShiftJIS': 2,
             'PRC': 3,

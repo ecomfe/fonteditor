@@ -1,34 +1,36 @@
 /**
  * @file ScriptList.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 脚本表
  * 仅完成语言系统解析
- * 
  * http://www.microsoft.com/typography/otspec/chapter2.htm
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
 
-        var GSUB = table.create(
-            'GSUB', 
+        var scriptList = table.create(
+            'ScriptList',
             [],
             {
-                /**
-                 * 解析GSUB表
-                 */
-                read: function(reader) {
+
+                read: function (reader) {
                     reader.seek(this.offset);
                     var ScriptCount = reader.readUint16();
 
                     // script records
                     var records = [];
-                    for(var i = 0, l = ScriptCount; i < l; i++) {
-                        var record = {
+                    var record;
+                    var i;
+                    var j;
+                    var l;
+
+                    for (i = 0, l = ScriptCount; i < l; i++) {
+                        record = {
                             ScriptTag: reader.readUint32(),
                             Offset: reader.readUint16()
                         };
@@ -37,20 +39,20 @@ define(
 
                     // script table
                     var offset = this.offset;
-                    for(var i = 0, l = records.length; i < l; i++) {
-                        var record = records[i];
+                    for (i = 0, l = records.length; i < l; i++) {
+                        record = records[i];
                         reader.seek(offset + record.Offset);
                         record.DefaultLangSys = reader.readUint16();
                         var LangSysCount = reader.readUint16();
                         record.LangSysRecord = [];
 
                         // 此处解析语言系统
-                        for(var j = 0, l = LangSysCount; j < l; j++) {
-                            var LangSysRecord = {
+                        for (j = 0, l = LangSysCount; j < l; j++) {
+                            var langSysRecord = {
                                 LangSysTag: reader.readUint32(),
                                 LangSys: reader.readUint16()
                             };
-                            record.LangSysRecord.push(LangSysRecord);
+                            record.LangSysRecord.push(langSysRecord);
                         }
                     }
 
@@ -59,6 +61,6 @@ define(
             }
         );
 
-        return GSUB;
+        return scriptList;
     }
 );

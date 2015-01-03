@@ -1,10 +1,10 @@
 /**
  * @file ttf2eot.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf转eot
- * 
+ *
  * reference:
  * http://www.w3.org/Submission/EOT/
  * https://github.com/fontello/ttf2eot/blob/master/index.js
@@ -12,7 +12,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var Reader = require('./reader');
         var Writer = require('./writer');
         var string = require('./util/string');
@@ -22,7 +22,7 @@ define(
         var NameTbl =  require('./table/name');
 
         var EotHead = table.create(
-            'head', 
+            'head',
             [
                 ['EOTSize', struct.Uint32],
                 ['FontDataSize', struct.Uint32],
@@ -42,23 +42,23 @@ define(
             ]
         );
 
-        
+        /* eslint-disable fecs-max-statements */
         /**
          * ttf格式转换成eot字体格式
-         * 
+         *
          * @param {ArrayBuffer} ttfBuffer ttf缓冲数组
          * @param {Object} options 选项
          * @return {ArrayBuffer} eot格式byte流
          */
         function ttf2eot(ttfBuffer, options) {
-
+            options = options || {};
             // 构造eot头部
             var eotHead = new EotHead();
             var eotHeaderSize = eotHead.size();
             var eot = {};
             eot.head = eotHead.read(new Reader(new ArrayBuffer(eotHeaderSize)));
 
-            //set fields
+            // set fields
             eot.head.FontDataSize = ttfBuffer.byteLength || ttfBuffer.length;
             eot.head.Version = 0x20001;
             eot.head.Flags = 0;
@@ -67,8 +67,8 @@ define(
             eot.head.Padding1 = 0;
 
             var ttfReader = new Reader(ttfBuffer);
-            var tableEntries = [];
-            var numTables = ttfReader.readUint16(4); // 读取ttf表个数
+            // 读取ttf表个数
+            var numTables = ttfReader.readUint16(4);
 
             if (numTables <= 0 || numTables > 100) {
                 error.raise(10101);
@@ -76,7 +76,8 @@ define(
 
             // 读取ttf表索引信息
             ttfReader.seek(12);
-            var tblReaded = 0; // 需要读取3个表内容，设置3个byte 
+            // 需要读取3个表内容，设置3个byte
+            var tblReaded = 0;
             for (var i = 0; i < numTables && tblReaded !== 0x7; ++i) {
 
                 var tableEntry = {
@@ -88,11 +89,11 @@ define(
 
                 var entryOffset = ttfReader.offset;
 
-                if (tableEntry.tag == 'head') {
+                if (tableEntry.tag === 'head') {
                     eot.head.CheckSumAdjustment = ttfReader.readUint32(tableEntry.offset + 8);
                     tblReaded += 0x1;
                 }
-                else if (tableEntry.tag == 'OS/2') {
+                else if (tableEntry.tag === 'OS/2') {
                     eot.head.PANOSE = ttfReader.readBytes(tableEntry.offset + 32, 10);
                     eot.head.Italic = ttfReader.readUint16(tableEntry.offset + 62);
                     eot.head.Weight = ttfReader.readUint16(tableEntry.offset + 4);
@@ -103,7 +104,7 @@ define(
                 }
 
                 // 设置名字信息
-                else if (tableEntry.tag == 'name') {
+                else if (tableEntry.tag === 'name') {
                     var names = new NameTbl(tableEntry.offset).read(ttfReader);
 
                     eot.FamilyName = string.toUCS2Bytes(names.fontFamily || '');
@@ -125,7 +126,7 @@ define(
             }
 
             // 计算size
-            eot.head.EOTSize = eotHeaderSize 
+            eot.head.EOTSize = eotHeaderSize
                 + 4 + eot.FamilyNameSize
                 + 4 + eot.StyleNameSize
                 + 4 + eot.VersionNameSize
@@ -136,10 +137,10 @@ define(
             // 这里用小尾方式写入
             var eotWriter = new Writer(new ArrayBuffer(eot.head.EOTSize), 0, eot.head.EOTSize, true);
 
-            //write head
+            // write head
             eotHead.write(eotWriter, eot);
 
-            //write names
+            // write names
             eotWriter.writeUint16(eot.FamilyNameSize);
             eotWriter.writeBytes(eot.FamilyName, eot.FamilyNameSize);
             eotWriter.writeUint16(0);
@@ -161,10 +162,9 @@ define(
 
             eotWriter.writeBytes(ttfBuffer, eot.head.FontDataSize);
 
-
             return eotWriter.getBuffer();
         }
-
+        /* eslint-enable fecs-max-statements */
 
         return ttf2eot;
     }

@@ -1,34 +1,27 @@
 /**
  * @file GSUB.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * GSUB表
  * The Glyph Substitution Table
  * 暂不支持解析 ScriptList，FeatureList，LookupList 表
- * 
- * The GlyThe Glyph Substitution table (GSUB) contains information
- *  for substituting glyphs to render the scripts and language 
- * systems supported in a font. 
- * 
+ *
  * http://www.microsoft.com/typography/otspec/gsub.htm
- * 
  * http://www.microsoft.com/typography/otspec/chapter2.htm
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var ScriptList = require('./ScriptList');
         var GSUB = table.create(
-            'GSUB', 
+            'GSUB',
             [],
             {
-                /**
-                 * 解析GSUB表
-                 */
-                read: function(reader) {
+
+                read: function (reader) {
                     reader.seek(this.offset);
                     var gsub  = {};
                     gsub.Version = reader.readFixed();

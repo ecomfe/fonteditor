@@ -1,21 +1,21 @@
 /**
  * @file OS2.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * OS/2表
  * 字体的发行商，上标，下标，删除线位置
  * http://www.microsoft.com/typography/otspec/os2.htm
  */
+
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var lang = require('common/lang');
-        var error = require('../error');
-        
+
         var OS2 = table.create(
-            'OS/2', 
+            'OS/2',
             [
                 ['version', struct.Uint16],
 
@@ -40,7 +40,7 @@ define(
 
                 ['sFamilyClass', struct.Uint16],
 
-                //Panose
+                // Panose
                 ['bFamilyType', struct.Uint8],
                 ['bSerifStyle', struct.Uint8],
                 ['bWeight', struct.Uint8],
@@ -87,15 +87,15 @@ define(
             ],
             {
 
-                read: function(reader, ttf) {
+                read: function (reader, ttf) {
                     var format = reader.readUint16(this.offset);
                     var struct = this.struct;
 
                     // format2
-                    if(format === 0) {
+                    if (format === 0) {
                         struct = struct.slice(0, 39);
                     }
-                    else if(format === 1) {
+                    else if (format === 1) {
                         struct = struct.slice(0, 41);
                     }
 
@@ -116,64 +116,63 @@ define(
                     return lang.extend(os2Fields, tbl);
                 },
 
-                size: function(ttf) {
+                size: function (ttf) {
 
-                    //更新其他表的统计信息
-
+                    // 更新其他表的统计信息
                     // header
-                    var xMin = 16384,
-                        yMin = 16384,
-                        xMax = -16384,
-                        yMax = -16384;
+                    var xMin = 16384;
+                    var yMin = 16384;
+                    var xMax = -16384;
+                    var yMax = -16384;
 
-                    //hhea
-                     var advanceWidthMax = -1,
-                        minLeftSideBearing = 16384,
-                        minRightSideBearing = 16384,
-                        xMaxExtent = -16384;
+                    // hhea
+                    var advanceWidthMax = -1;
+                    var minLeftSideBearing = 16384;
+                    var minRightSideBearing = 16384;
+                    var xMaxExtent = -16384;
 
                     // os2 count
-                    var xAvgCharWidth = 0,
-                        usFirstCharIndex = 0xFFFF,
-                        usLastCharIndex = -1;
+                    var xAvgCharWidth = 0;
+                    var usFirstCharIndex = 0xFFFF;
+                    var usLastCharIndex = -1;
 
                     // maxp
-                    var maxPoints = 0,
-                        maxContours = 0,
-                        maxCompositePoints = 0,
-                        maxCompositeContours = 0,
-                        maxSizeOfInstructions = 0,
-                        maxComponentElements = 0;
+                    var maxPoints = 0;
+                    var maxContours = 0;
+                    var maxCompositePoints = 0;
+                    var maxCompositeContours = 0;
+                    var maxSizeOfInstructions = 0;
+                    var maxComponentElements = 0;
 
                     var glyfNotEmpty = 0; // 非空glyf
 
-                    ttf.glyf.forEach(function(glyf, index) {
+                    ttf.glyf.forEach(function (glyf, index) {
 
                         // 统计control point信息
                         if (glyf.compound) {
                             var compositeContours = 0;
                             var compositePoints = 0;
-                            glyf.glyfs.forEach(function(g) {
+                            glyf.glyfs.forEach(function (g) {
                                 var cglyf = ttf.glyf[g.glyphIndex];
                                 compositeContours += cglyf.contours ? cglyf.contours.length : 0;
                                 if (cglyf.contours && cglyf.contours.length) {
-                                    cglyf.contours.forEach(function(contour) {
+                                    cglyf.contours.forEach(function (contour) {
                                         compositePoints += contour.length;
                                     });
                                 }
 
                             });
 
-                            maxComponentElements ++;
+                            maxComponentElements++;
                             maxCompositePoints = Math.max(maxCompositePoints, compositePoints);
                             maxCompositeContours = Math.max(maxCompositeContours, compositeContours);
                         }
                         // 简单图元
                         else if (glyf.contours && glyf.contours.length) {
                             maxContours = Math.max(maxContours, glyf.contours.length);
-                            
+
                             var points = 0;
-                            glyf.contours.forEach(function(contour) {
+                            glyf.contours.forEach(function (contour) {
                                 points += contour.length;
                             });
                             maxPoints = Math.max(maxPoints, points);
@@ -185,15 +184,19 @@ define(
                             if (glyf.xMin < xMin) {
                                 xMin = glyf.xMin;
                             }
+
                             if (glyf.yMin < yMin) {
                                 yMin = glyf.yMin;
                             }
+
                             if (glyf.xMax > xMax) {
                                 xMax = glyf.xMax;
                             }
+
                             if (glyf.yMax > yMax) {
                                 yMax = glyf.yMax;
                             }
+
                             advanceWidthMax = Math.max(advanceWidthMax, glyf.advanceWidth);
                             minLeftSideBearing = Math.min(minLeftSideBearing, glyf.leftSideBearing);
                             minRightSideBearing = Math.min(minRightSideBearing, glyf.advanceWidth - glyf.xMax);
@@ -205,12 +208,13 @@ define(
                         }
 
                         var unicodes = glyf.unicode;
-                        if (typeof glyf.unicode == 'number') {
+
+                        if (typeof glyf.unicode === 'number') {
                             unicodes = [glyf.unicode];
                         }
 
                         if (lang.isArray(unicodes)) {
-                            unicodes.forEach(function(unicode) {
+                            unicodes.forEach(function (unicode) {
                                 if (unicode !== 0xFFFF) {
                                     usFirstCharIndex = Math.min(usFirstCharIndex, unicode);
                                     usLastCharIndex = Math.max(usLastCharIndex, unicode);

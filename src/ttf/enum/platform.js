@@ -1,14 +1,14 @@
 /**
  * @file platform.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 字体所属平台
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var platform = {
             Unicode: 0,

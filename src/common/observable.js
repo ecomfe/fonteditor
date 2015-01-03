@@ -1,33 +1,34 @@
 /**
  * @file observable.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 事件观察器
- * 
+ *
  * copy from :
  * https://github.com/ecomfe/moye/blob/master/src/ui/lib.js
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var extend = require('./lang').extend;
 
         /**
          * 事件功能
-         * 
+         *
          * @namespace
          */
         var observe = {
 
             /**
              * 添加事件绑定
-             * 
+             *
              * @public
              * @param {string=} type 事件类型
              * @param {Function} listener 要添加绑定的监听器
+             * @return {this}
              */
             on: function (type, listener) {
                 if (typeof type === 'function') {
@@ -51,13 +52,14 @@ define(
 
             /**
              * 添加单次事件绑定
-             * 
+             *
              * @public
              * @param {string=} type 事件类型
              * @param {Function} listener 要添加绑定的监听器
+             * @return {this}
              */
             once: function (type, listener) {
-                var onceFn = function(e) {
+                var onceFn = function (e) {
                     listener.call(this, e);
                     this.un(type, listener);
                 };
@@ -67,10 +69,11 @@ define(
 
             /**
              * 解除事件绑定
-             * 
+             *
              * @public
              * @param {string=} type 事件类型
              * @param {Function=} listener 要解除绑定的监听器
+             * @return {this}
              */
             un: function (type, listener) {
                 if (typeof type === 'function') {
@@ -105,10 +108,11 @@ define(
 
             /**
              * 触发指定事件
-             * 
+             *
              * @public
              * @param {string} type 事件类型
              * @param {Object} args 透传的事件数据对象
+             * @return {this}
              */
             fire: function (type, args) {
                 this._listeners = this._listeners || {};
@@ -138,19 +142,19 @@ define(
 
         /**
          * 观察器对象
-         * 
+         *
          * @type {Object}
          */
         var observable = {
 
             /**
              * 混入一个对象
-             * 
+             *
              * @param {Object} object 对象
              * @return {Object} 混入后的对象
              */
-            mixin: function(object) {
-                if(undefined === object) {
+            mixin: function (object) {
+                if (undefined === object) {
                     return object;
                 }
                 return extend(object, observe);

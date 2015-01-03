@@ -1,16 +1,16 @@
 /**
  * @file ttf2svg.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf转svg
- * 
+ *
  * references:
  * http://www.w3.org/TR/SVG11/fonts.html
  */
 
 define(
-    function(require) {
+    function (require) {
         var string = require('common/string');
         var TTFReader = require('./ttfreader');
         var contours2svg = require('./util/contours2svg');
@@ -19,7 +19,7 @@ define(
         // svg font id
         var SVG_FONT_ID = 'fonteditor';
 
-        //xml 模板
+        // xml 模板
         var XML_TPL = ''
             + '<?xml version="1.0" standalone="no"?>'
             +   '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >'
@@ -40,7 +40,7 @@ define(
 
         /**
          * ttf数据结构转svg
-         * 
+         *
          * @param {ttfObject} ttf ttfObject对象
          * @param {Object} options 选项
          * @param {Object} options.metadata 字体相关的信息
@@ -67,7 +67,7 @@ define(
                 xHeight: OS2.bXHeight,
                 bbox: [ttf.head.xMin, ttf.head.yMin, ttf.head.xMax, ttf.head.yMax].join(' '),
                 underlineThickness: ttf.post.underlineThickness,
-                underlinePosition: ttf.post.underlinePosition, 
+                underlinePosition: ttf.post.underlinePosition,
                 unicodeRange: 'U+' + string.pad(OS2.usFirstCharIndex.toString(16), 4)
                     + '-' + string.pad(OS2.usLastCharIndex.toString(16), 4)
             };
@@ -75,8 +75,9 @@ define(
             // glyf 第一个为missing glyph
             xmlObject.missing = {};
             xmlObject.missing.advanceWidth = ttf.glyf[0].advanceWidth || 0;
-            xmlObject.missing.d = ttf.glyf[0].contours && ttf.glyf[0].contours.length 
-                ? 'd="' + contours2svg(ttf.glyf[0].contours) + '"' : '';
+            xmlObject.missing.d = ttf.glyf[0].contours && ttf.glyf[0].contours.length
+                ? 'd="' + contours2svg(ttf.glyf[0].contours) + '"'
+                : '';
 
             // glyf 信息
             var glyphList = '';
@@ -101,11 +102,11 @@ define(
 
         /**
          * ttf格式转换成svg字体格式
-         * 
+         *
          * @param {ArrayBuffer|ttfObject} ttfBuffer ttf缓冲数组或者ttfObject对象
          * @param {Object} options 选项
          * @param {Object} options.metadata 字体相关的信息
-         * 
+         *
          * @return {string} svg字符串
          */
         function ttf2svg(ttfBuffer, options) {
@@ -115,20 +116,20 @@ define(
             // 读取ttf二进制流
             if (ttfBuffer instanceof ArrayBuffer) {
                 var reader = new TTFReader();
-                var ttfObject = reader.read(ttfBuffer); 
+                var ttfObject = reader.read(ttfBuffer);
                 reader.dispose();
 
                 return ttfobject2svg(ttfObject, options);
             }
             // 读取ttfObject
-            else if(ttfBuffer.version && ttfBuffer.glyf) {
+            else if (ttfBuffer.version && ttfBuffer.glyf) {
 
                 return ttfobject2svg(ttfBuffer, options);
             }
-            else {
-                error.raise(10109);
-            }
+
+            error.raise(10109);
         }
+
         return ttf2svg;
     }
 );

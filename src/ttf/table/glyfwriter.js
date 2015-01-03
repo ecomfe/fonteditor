@@ -1,65 +1,67 @@
 /**
  * @file glyfwriter.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf 相关的写方法
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var glyFlag = require('../enum/glyFlag');
         var componentFlag = require('../enum/componentFlag');
 
+        /* eslint-disable fecs-max-statements */
         /**
          * 获取glyf的大小
-         * 
+         *
          * @param {Object} glyf glyf对象
-         * @return {number} 大小
+         * @param {Object} glyfSupport glyf相关统计
+         * @return {number} size大小
          */
         function sizeof(glyf, glyfSupport) {
-            
+
             if (!glyf.contours || 0 === glyf.contours.length) {
                 return 0;
             }
 
-            //fixed header + instructions + endPtsOfContours
+            // fixed header + instructions + endPtsOfContours
             var result = 10
                 + 2
-                //+ (glyf.instructions ? glyf.instructions.length : 0) 
+                // + (glyf.instructions ? glyf.instructions.length : 0)
                 + glyf.contours.length * 2
                 + glyfSupport.flags.length;
 
-            
-            glyfSupport.xCoord.forEach(function(x) {
+            glyfSupport.xCoord.forEach(function (x) {
                 result += 0 <= x && x <= 0xFF ? 1 : 2;
             });
 
-            glyfSupport.yCoord.forEach(function(y) {
+            glyfSupport.yCoord.forEach(function (y) {
                 result += 0 <= y && y <= 0xFF ? 1 : 2;
             });
 
             return result;
         }
 
-       /**
+        /**
          * 复合图元size
-         * 
+         *
          * @param {Object} glyf glyf对象
-         * @return {number} 大小
+         * @return {number} size大小
          */
         function sizeofCompound(glyf) {
-            var size = 10, t;
-            glyf.glyfs.forEach(function(g) {
-                t = g.transform;
+            var size = 10;
+            var transform;
+            glyf.glyfs.forEach(function (g) {
+                transform = g.transform;
                 // flags + glyfIndex
                 size += 4;
 
                 // a, b, c, d, e
                 // xy values or points
-                if(t.e < 0 || t.e > 0x7F || t.f < 0 || t.f > 0x7F) {
+                if (transform.e < 0 || transform.e > 0x7F || transform.f < 0 || transform.f > 0x7F) {
                     size += 4;
                 }
                 else {
@@ -67,13 +69,13 @@ define(
                 }
 
                 // 01 , 10
-                if (t.b || t.c) {
+                if (transform.b || transform.c) {
                     size += 8;
                 }
                 else {
                     // scale
-                    if (t.a != 1 || t.d != 1) {
-                        size += t.a == t.d ? 2 : 4;
+                    if (transform.a !== 1 || transform.d !== 1) {
+                        size += transform.a === transform.d ? 2 : 4;
                     }
                 }
 
@@ -88,8 +90,9 @@ define(
 
         /**
          * 获取flags
-         * 
+         *
          * @param {Object} glyf glyf对象
+         * @param {Object} glyfSupport glyf相关统计
          * @return {Array}
          */
         function getFlags(glyf, glyfSupport) {
@@ -102,24 +105,28 @@ define(
             var xCoord = [];
             var yCoord = [];
 
-            var contours = glyf.contours, contour, prev, first = true;
-            for(var j = 0, cl = contours.length; j < cl; j++) {
+            var contours = glyf.contours;
+            var contour;
+            var prev;
+            var first = true;
+
+            for (var j = 0, cl = contours.length; j < cl; j++) {
                 contour = contours[j];
-                for(var i = 0, l = contour.length; i < l; i++) {
 
-                    p = contour[i];
+                for (var i = 0, l = contour.length; i < l; i++) {
 
+                    var point = contour[i];
                     if (first) {
-                        xCoord.push(p.x);
-                        yCoord.push(p.y);
+                        xCoord.push(point.x);
+                        yCoord.push(point.y);
                         first = false;
                     }
                     else {
-                        xCoord.push(p.x - prev.x);
-                        yCoord.push(p.y - prev.y);
+                        xCoord.push(point.x - prev.x);
+                        yCoord.push(point.y - prev.y);
                     }
-                    flags.push(p.onCurve ? glyFlag.ONCURVE : 0);
-                    prev = p;
+                    flags.push(point.onCurve ? glyFlag.ONCURVE : 0);
+                    prev = point;
                 }
             }
 
@@ -127,9 +134,12 @@ define(
             var flagsC = [];
             var xCoordC = [];
             var yCoordC = [];
-            var x, y, prevX, prevY, prevFlag, repeatPoint = -1;
+            var x;
+            var y;
+            var prevFlag;
+            var repeatPoint = -1;
 
-            flags.forEach(function(flag, index) {
+            flags.forEach(function (flag, index) {
 
                 x = xCoord[index];
                 y = yCoord[index];
@@ -139,32 +149,28 @@ define(
 
                     if (-0xFF <= x && x <= 0xFF) {
                         flag += glyFlag.XSHORT;
-                        if(x >= 0) {
+                        if (x >= 0) {
                             flag += glyFlag.XSAME;
                         }
 
                         x = Math.abs(x);
                     }
 
-
                     if (-0xFF <= y && y <= 0xFF) {
                         flag += glyFlag.YSHORT;
-                        if(y >= 0) {
+                        if (y >= 0) {
                             flag += glyFlag.YSAME;
                         }
 
                         y = Math.abs(y);
                     }
 
-
                     flagsC.push(prevFlag = flag);
                     xCoordC.push(x);
                     yCoordC.push(y);
                 }
-                //后续
+                // 后续
                 else {
-                    prevX = xCoord[index - 1];
-                    prevY = yCoord[index - 1];
 
                     if (x === 0) {
                         flag += glyFlag.XSAME;
@@ -172,7 +178,7 @@ define(
                     else {
                         if (-0xFF <= x && x <= 0xFF) {
                             flag += glyFlag.XSHORT;
-                            if(x > 0) {
+                            if (x > 0) {
                                 flag += glyFlag.XSAME;
                             }
 
@@ -188,7 +194,7 @@ define(
                     else {
                         if (-0xFF <= y && y <= 0xFF) {
                             flag += glyFlag.YSHORT;
-                            if(y > 0) {
+                            if (y > 0) {
                                 flag += glyFlag.YSAME;
                             }
                             y = Math.abs(y);
@@ -197,9 +203,9 @@ define(
                     }
 
                     // repeat
-                    if (flag == prevFlag) {
+                    if (flag === prevFlag) {
                         // 记录重复个数
-                        if (-1 == repeatPoint) {
+                        if (-1 === repeatPoint) {
                             repeatPoint = flagsC.length - 1;
                             flagsC[repeatPoint] |= glyFlag.REPEAT;
                             flagsC.push(1);
@@ -225,9 +231,10 @@ define(
 
 
         return {
-            write: function(writer, ttf) {
-                    
-                ttf.glyf.forEach(function(glyf, index) {
+
+            write: function (writer, ttf) {
+
+                ttf.glyf.forEach(function (glyf, index) {
 
                     // 非复合图元没有轮廓则不写
                     if (!glyf.compound && (!glyf.contours || 0 === glyf.contours.length)) {
@@ -241,12 +248,16 @@ define(
                     writer.writeInt16(glyf.xMax);
                     writer.writeInt16(glyf.yMax);
 
+                    var i;
+                    var l;
+                    var flags;
+
                     // 复合图元
                     if (glyf.compound) {
-                        
-                        for (var i = 0, l = glyf.glyfs.length; i < l; i++) {
 
-                            var flags = componentFlag.ARGS_ARE_XY_VALUES
+                        for (i = 0, l = glyf.glyfs.length; i < l; i++) {
+
+                            flags = componentFlag.ARGS_ARE_XY_VALUES
                                 + componentFlag.ROUND_XY_TO_GRID; // xy values
 
                             // more components
@@ -257,7 +268,7 @@ define(
                             var g = glyf.glyfs[i];
 
                             // instructions
-                            //flags += glyf.instructions ? componentFlag.WE_HAVE_INSTRUCTIONS : 0;
+                            // flags += glyf.instructions ? componentFlag.WE_HAVE_INSTRUCTIONS : 0;
                             // use my metrics
                             flags += g.useMyMetrics ? componentFlag.USE_MY_METRICS : 0;
                             // overlap compound
@@ -273,7 +284,7 @@ define(
 
                             // xy values or points
                             // int 8 放不下，则用int16放
-                            if(e < 0 || e > 0x7F || f < 0 || f > 0x7F) {
+                            if (e < 0 || e > 0x7F || f < 0 || f > 0x7F) {
                                 flags += componentFlag.ARG_1_AND_2_ARE_WORDS;
                             }
 
@@ -281,10 +292,10 @@ define(
                                 flags += componentFlag.WE_HAVE_A_TWO_BY_TWO;
                             }
                             else {
-                                if (a != 1 || d != 1 && a == d) {
+                                if (a !== 1 || d !== 1 && a === d) {
                                     flags += componentFlag.WE_HAVE_A_SCALE;
                                 }
-                                else if (a != 1 || d != 1) {
+                                else if (a !== 1 || d !== 1) {
                                     flags += componentFlag.WE_HAVE_AN_X_AND_Y_SCALE;
                                 }
                             }
@@ -329,7 +340,7 @@ define(
                     else {
 
                         var endPtsOfContours = -1;
-                        glyf.contours.forEach(function(contour) {
+                        glyf.contours.forEach(function (contour) {
                             endPtsOfContours += contour.length;
                             writer.writeUint16(endPtsOfContours);
                         });
@@ -343,17 +354,17 @@ define(
                         //     }
                         // }
                         // else {
-                            writer.writeUint16(0);
-                        //}
-                        
+                        writer.writeUint16(0);
+                        // }
+
                         // 获取暂存中的flags
-                        var flags = ttf.support.glyf[index].flags;
-                        for (var i = 0, l = flags.length; i < l; i++) {
+                        flags = ttf.support.glyf[index].flags;
+                        for (i = 0, l = flags.length; i < l; i++) {
                             writer.writeUint8(flags[i]);
                         }
 
                         var xCoord = ttf.support.glyf[index].xCoord;
-                        for (var i = 0, l = xCoord.length; i < l; i++) {
+                        for (i = 0, l = xCoord.length; i < l; i++) {
                             if (0 <= xCoord[i] && xCoord[i] <= 0xFF) {
                                 writer.writeUint8(xCoord[i]);
                             }
@@ -363,7 +374,7 @@ define(
                         }
 
                         var yCoord = ttf.support.glyf[index].yCoord;
-                        for (var i = 0, l = yCoord.length; i < l; i++) {
+                        for (i = 0, l = yCoord.length; i < l; i++) {
                             if (0 <= yCoord[i] && yCoord[i] <= 0xFF) {
                                 writer.writeUint8(yCoord[i]);
                             }
@@ -376,7 +387,6 @@ define(
                     // 4字节对齐
                     var glyfSize = ttf.support.glyf[index].glyfSize;
 
-                    // 
                     if (glyfSize % 4) {
                         writer.writeEmpty(4 - glyfSize % 4);
                     }
@@ -384,13 +394,15 @@ define(
 
                 return writer;
             },
-            size: function(ttf) {
+
+            size: function (ttf) {
 
                 ttf.support.glyf = [];
                 var tableSize = 0;
-                ttf.glyf.forEach(function(glyf) {
+                ttf.glyf.forEach(function (glyf) {
                     var glyfSupport = {};
-                    var glyfSupport = glyf.compound ? glyfSupport : getFlags(glyf, glyfSupport);
+                    glyfSupport = glyf.compound ? glyfSupport : getFlags(glyf, glyfSupport);
+
                     var glyfSize = glyf.compound ? sizeofCompound(glyf) : sizeof(glyf, glyfSupport);
                     var size = glyfSize;
 
@@ -409,11 +421,12 @@ define(
 
                 ttf.support.glyf.tableSize = tableSize;
 
-                //写header的indexToLocFormat
+                // 写header的indexToLocFormat
                 ttf.head.indexToLocFormat = tableSize > 65536 ? 1 : 0;
 
                 return ttf.support.glyf.tableSize;
             }
         };
+        /* eslint-enable fecs-max-statements */
     }
 );

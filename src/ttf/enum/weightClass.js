@@ -1,14 +1,14 @@
 /**
  * @file weightClass.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 字体粗细度量
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return {
             100: 'Ultra-light',
             200: 'Extra-light',

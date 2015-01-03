@@ -1,14 +1,13 @@
 /**
  * @file nameId.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 名字编码表
  */
 
-
 define(
-    function(require) {
+    function (require) {
 
         var nameId = {
             0: 'copyright',
@@ -34,7 +33,7 @@ define(
 
         // 反转names
         var nameIdHash = {};
-        Object.keys(nameId).forEach(function(id) {
+        Object.keys(nameId).forEach(function (id) {
             nameIdHash[nameId[id]] = +id;
         });
 
