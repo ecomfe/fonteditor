@@ -26,8 +26,8 @@ define(
          * @param {string} command 命令
          * @param {Object} p0 p0
          * @param {Object} p1 p1
-         * @param {Object?} p2 p2，如果为直线则p2不使用
-         * @param {number?} index 曲线段的索引
+         * @param {Object=} p2 p2，如果为直线则p2不使用
+         * @param {number=} index 曲线段的索引
          *
          * @return {Array} 交点数组
          */

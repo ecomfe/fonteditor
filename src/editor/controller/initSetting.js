@@ -1,31 +1,33 @@
 /**
  * @file initSetting.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 初始化设置
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var menuUtil = require('../menu/util');
         var commandList = require('../menu/commandList');
         var lang = require('common/lang');
 
-        /**
-         * 初始化设置选项
-         */
         function initSetting(options) {
+
+            // 设置菜单选中状态
+
             menuUtil.setSelected(
                 commandList.editor, 'setting.gridsorption',
                 !!options.sorption.enableGrid
             );
+
             menuUtil.setSelected(
                 commandList.editor, 'setting.shapesorption',
                 !!options.sorption.enableShape
             );
+
             menuUtil.setSelected(
                 commandList.editor, 'setting.showgrid',
                 !!options.axis.showGrid
@@ -34,9 +36,11 @@ define(
 
         /**
          * 设置选项
-         * 
+         *
          * @param {Object} options 选项
-         * @return {this}
+         * @param {Object} options.sorption 吸附设置
+         * @param {Object} options.axis 坐标设置
+         * @see editor/options
          */
         function setOptions(options) {
 
@@ -59,7 +63,7 @@ define(
             lang.overwrite(this.options, options);
         }
 
-        return function() {
+        return function () {
             initSetting.call(this, this.options);
             this.setOptions = setOptions;
         };

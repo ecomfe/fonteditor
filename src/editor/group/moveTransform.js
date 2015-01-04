@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var lang = require('common/lang');
         var pathAdjust = require('graphics/pathAdjust');
@@ -19,9 +19,9 @@ define(
          * @param {Object} camera 镜头对象
          * @param {boolean} fixX 固定X
          * @param {boolean} fixY 固定Y
-         * @param {boolean} elableSorption 是否吸附
+         * @param {boolean} enableSorption 是否吸附
          */
-        function moveTransform (camera, fixX, fixY, elableSorption) {
+        function moveTransform (camera, fixX, fixY, enableSorption) {
 
             var x = fixX ? 0 : (camera.x - camera.startX);
             var y = fixY ? 0 : (camera.y - camera.startY);
@@ -34,10 +34,12 @@ define(
             var boundShape = coverLayer.getShape('bound');
 
             // 吸附选项
-            if (elableSorption) {
+            if (enableSorption) {
                 var centerX = bound.x + bound.width / 2;
                 var centerY = bound.y + bound.height / 2;
                 var sorptionColor = this.editor.options.sorption.sorptionColor;
+                var i;
+                var result;
 
                 if (!fixX) {
 
@@ -55,10 +57,9 @@ define(
                         });
                     }
 
-                    var i = 0;
                     var posXList = [this.bound.x, centerX, this.bound.x + this.bound.width];
                     for (i = 0; i < 3; i++) {
-                        var result = this.editor.sorption.detectX(posXList[i] + x);
+                        result = this.editor.sorption.detectX(posXList[i] + x);
                         if (result) {
                             x = result.axis - posXList[i];
                             sorptionShapeX.p0.x = sorptionShapeX.p1.x = result.axis;
@@ -90,10 +91,9 @@ define(
                         });
                     }
 
-                    var i = 0;
                     var posYList = [this.bound.y, centerY, this.bound.y + this.bound.height];
                     for (i = 0; i < 3; i++) {
-                        var result = this.editor.sorption.detectY(posYList[i] + y);
+                        result = this.editor.sorption.detectY(posYList[i] + y);
                         if (result) {
                             y = result.axis - posYList[i];
                             sorptionShapeY.p0.x = centerX + x;
@@ -111,7 +111,7 @@ define(
 
             }
 
-            this.coverShapes.forEach(function(coverShape, index) {
+            this.coverShapes.forEach(function (coverShape, index) {
                 var shape = lang.clone(shapes[index]);
                 pathAdjust(shape.points, 1, 1, x, y);
                 lang.extend(coverShape, shape);
@@ -121,10 +121,10 @@ define(
             // 更新边界
             boundShape.points = pathAdjust(
                 [
-                    {x: bound.x, y:bound.y},
-                    {x: bound.x + bound.width, y:bound.y},
-                    {x: bound.x + bound.width, y:bound.y + bound.height},
-                    {x: bound.x, y:bound.y + bound.height}
+                    {x: bound.x, y: bound.y},
+                    {x: bound.x + bound.width, y: bound.y},
+                    {x: bound.x + bound.width, y: bound.y + bound.height},
+                    {x: bound.x, y: bound.y + bound.height}
                 ],
                 1, 1, x, y
             );

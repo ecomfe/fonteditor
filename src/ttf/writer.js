@@ -39,8 +39,8 @@ define(
          *
          * @param {string} type 数据类型
          * @param {number} value value值
-         * @param {number?} offset 位移
-         * @param {boolean?} littleEndian 是否小尾
+         * @param {number=} offset 位移
+         * @param {boolean=} littleEndian 是否小尾
          *
          * @return {this}
          */
@@ -79,8 +79,8 @@ define(
          * @constructor
          * @param {Array.<byte>} buffer 缓冲数组
          * @param {number} offset 起始偏移
-         * @param {number?} length 数组长度
-         * @param {boolean?} littleEndian 是否小尾
+         * @param {number=} length 数组长度
+         * @param {boolean=} littleEndian 是否小尾
          */
         function Writer(buffer, offset, length, littleEndian) {
 
@@ -103,8 +103,8 @@ define(
              * 写入指定的字节数组
              *
              * @param {ArrayBuffer} value 写入值
-             * @param {number?} length 数组长度
-             * @param {number?} offset 起始偏移
+             * @param {number=} length 数组长度
+             * @param {number=} offset 起始偏移
              * @return {this}
              */
             writeBytes: function (value, length, offset) {
@@ -147,7 +147,7 @@ define(
              * 写空数据
              *
              * @param {number} length 长度
-             * @param {number?} offset 起始偏移
+             * @param {number=} offset 起始偏移
              * @return {this}
              */
             writeEmpty: function (length, offset) {
@@ -174,8 +174,8 @@ define(
              * 写入一个string
              *
              * @param {string} str 字符串
-             * @param {number?} length 长度
-             * @param {number?} offset 偏移
+             * @param {number=} length 长度
+             * @param {number=} offset 偏移
              *
              * @return {this}
              */
@@ -216,7 +216,7 @@ define(
              * 写入一个字符
              *
              * @param {string} value 字符
-             * @param {number?} offset 偏移
+             * @param {number=} offset 偏移
              * @return {this}
              */
             writeChar: function (value, offset) {
@@ -227,7 +227,7 @@ define(
              * 写入fixed类型
              *
              * @param {number} value 写入值
-             * @param {number?} offset 偏移
+             * @param {number=} offset 偏移
              * @return {number} float
              */
             writeFixed: function (value, offset) {
@@ -243,7 +243,7 @@ define(
              * 写入长日期
              *
              * @param {Date} value 日期对象
-             * @param {number?} offset 偏移
+             * @param {number=} offset 偏移
              *
              * @return {Date} Date对象
              */
@@ -279,7 +279,7 @@ define(
             /**
              * 跳转到指定偏移
              *
-             * @param {number?} offset 偏移
+             * @param {number=} offset 偏移
              * @return {this}
              */
             seek: function (offset) {

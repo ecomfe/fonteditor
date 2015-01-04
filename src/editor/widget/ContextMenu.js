@@ -1,22 +1,17 @@
 /**
  * @file ContextMenu.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 右键菜单设置
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
-        var lang = require('common/lang');
 
-        /**
-         * 创建一个浮动层
-         * 
-         * @return {HTMLElement} 浮动层对象
-         */
+
         function createPopup(container, options) {
             var menu = document.createElement('ul');
             menu.className = options.className || 'editor-contextmenu';
@@ -30,7 +25,7 @@ define(
 
         /**
          * 弹出菜单
-         * 
+         *
          * @constructor
          * @param {HTMLElement} container 主元素
          * @param {Object} options 选项参数
@@ -41,12 +36,12 @@ define(
             this.commands = {};
 
             var me = this;
-            me['_command_click'] = function(e) {
+            me._commandClick = function (e) {
 
                 var id = e.target.getAttribute('data-id');
                 var superId = e.target.getAttribute('data-super');
                 if (id) {
-                    var command = (!!superId ? me.commands[superId].items : me.commands)[id];
+                    var command = (superId ? me.commands[superId].items : me.commands)[id];
                     var event = {
                         command: command.name,
                         args: command,
@@ -55,39 +50,37 @@ define(
                     me.onClick && me.onClick(event);
                 }
             };
-            me.main.addEventListener('click', me['_command_click'], false);
+            me.main.addEventListener('click', me._commandClick, false);
 
-            me['_hide_click'] = function(e) {
+            me._hideClick = function () {
                 me.hide();
             };
         }
 
         /**
          * 设置命令集合
-         * 
+         *
          * @param {Object} commands 命令集合
-         * 
-         * @return {this}
          */
-        ContextMenu.prototype.setCommands = function(commands) {
+        ContextMenu.prototype.setCommands = function (commands) {
             var str = '';
-            commands.forEach(function(command, index) {
+            commands.forEach(function (command, index) {
                 if (command.items) {
-                    str += '<li data-sub="'+ index +'">';
+                    str += '<li data-sub="' + index + '">';
                     str += '<ul>';
-                    command.items.forEach(function(subCommand, subIndex) {
-                        str += '<li data-super="'+ index +'" data-id="'+ subIndex +'"'
-                            +   (subCommand.selected ? ' data-tag="selected"' : '') +'>'
-                            + subCommand.title +'</li>';
+                    command.items.forEach(function (subCommand, subIndex) {
+                        str += '<li data-super="' + index + '" data-id="' + subIndex + '"'
+                            +  (subCommand.selected ? ' data-tag="selected"' : '') + '>'
+                            +  subCommand.title + '</li>';
                     });
                     str += '</ul>';
                     str += command.title + '</li>';
 
                 }
                 else {
-                    str += '<li data-id="'+ index +'"'
-                        +   (command.selected ? ' data-tag="selected"' : '') +'>'
-                        + command.title +'</li>';
+                    str += '<li data-id="' + index + '"'
+                        +   (command.selected ? ' data-tag="selected"' : '') + '>'
+                        + command.title + '</li>';
                 }
 
             });
@@ -97,11 +90,12 @@ define(
 
         /**
          * 展示右键菜单
-         * 
-         * @return {this}
+         *
+         * @param {Object} p 当前位置
+         * @param {Array} commands 命令数组
          */
-        ContextMenu.prototype.show = function(p, commands) {
-            if(commands) {
+        ContextMenu.prototype.show = function (p, commands) {
+            if (commands) {
                 this.setCommands(commands);
             }
 
@@ -118,37 +112,35 @@ define(
             this.main.style.top = y + 'px';
             this.pos = p;
 
-            this.container.addEventListener('click', this['_hide_click']);
+            this.container.addEventListener('click', this._hideClick);
         };
 
         /**
          * 隐藏右键菜单
-         * 
-         * @return {this}
          */
-        ContextMenu.prototype.hide = function() {
+        ContextMenu.prototype.hide = function () {
             this.main.style.display = 'none';
             this.onClick = null;
-            this.container.removeEventListener('click', this['_hide_click']);
+            this.container.removeEventListener('click', this._hideClick);
         };
 
         /**
          * 是否打开
-         * 
+         *
          * @return {boolean} 是否
          */
-        ContextMenu.prototype.visible = function() {
+        ContextMenu.prototype.visible = function () {
             return this.main.style.display !== 'none';
         };
 
         /**
          * 注销
          */
-        ContextMenu.prototype.dispose = function() {
+        ContextMenu.prototype.dispose = function () {
             this.hide();
-            this.main.removeEventListener('click', this['_command_click']);
-            this.container.removeEventListener('click', this['_hide_click']);
-            this['_command_click'] = this['_hide_click'] = null;
+            this.main.removeEventListener('click', this._commandClick);
+            this.container.removeEventListener('click', this._hideClick);
+            this._commandClick = this._hideClick = null;
             this.main.remove();
             this.main = this.container = this.pos = null;
             this.onClick = null;

@@ -19,8 +19,8 @@ define(
          *
          * @param {Array} path0 路径0
          * @param {Array} path1 路径1
-         * @param {Object?} bound0 第一个路径边界
-         * @param {Object?} bound1 第二个路径边界
+         * @param {Object=} bound0 第一个路径边界
+         * @param {Object=} bound1 第二个路径边界
          * @return {Array|number} 交点数组或者包含关系
          *
          * 2: path0 包含 path1

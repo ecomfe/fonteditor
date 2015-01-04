@@ -75,8 +75,8 @@ define(
          * table校验
          *
          * @param {ArrayBuffer|Array} buffer 表数据
-         * @param {number?} offset 偏移量
-         * @param {number?} length 长度
+         * @param {number=} offset 偏移量
+         * @param {number=} length 长度
          *
          * @return {number} 校验和
          */

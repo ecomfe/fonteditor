@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var pathAdjust = require('graphics/pathAdjust');
         var lang = require('common/lang');
         var computeBoundingBox = require('graphics/computeBoundingBox');
@@ -16,21 +16,19 @@ define(
         var moveTransform = require('./moveTransform');
         var scaleTransform = require('./scaleTransform');
         var rotateTransform = require('./rotateTransform');
-
         var BoundControl = require('./BoundControl');
 
 
-        /**
-         * 获取多个shape的边界
-         */
         function getBound(shapes) {
-            return computeBoundingBox.computePath.apply(null, shapes.map(function(shape) {
+            return computeBoundingBox.computePath.apply(null, shapes.map(function (shape) {
                 return shape.points;
             }));
         }
 
         /**
          * 选择组控制器
+         * @param {Array} shapes 形状数组
+         * @param {Editor} editor Editor对象
          */
         function ShapesGroup(shapes, editor) {
             this.editor = editor;
@@ -40,8 +38,12 @@ define(
 
         /**
          * 根据控制点做图形变换
+         *
+         * @param {Object} point 控制点
+         * @param {Camera} camera 镜头
          */
-        ShapesGroup.prototype.beginTransform = function(point, camera, key) {
+        ShapesGroup.prototype.beginTransform = function (point, camera) {
+
             this.bound = getBound(this.shapes);
             this.editor.coverLayer.addShape({
                 id: 'bound',
@@ -77,7 +79,7 @@ define(
                     });
 
                     // 过滤需要吸附的对象
-                    this.editor.fontLayer.shapes.forEach(function(shape) {
+                    this.editor.fontLayer.shapes.forEach(function (shape) {
                         if (shapes.indexOf(shape) < 0) {
                             sorptionShapes.push(shape);
                         }
@@ -87,7 +89,7 @@ define(
                     var referenceLines = this.editor.referenceLineLayer.shapes;
                     var xAxisArray = [];
                     var yAxisArray = [];
-                    referenceLines.forEach(function(shape) {
+                    referenceLines.forEach(function (shape) {
                         if (undefined !== shape.p0.x) {
                             xAxisArray.push(shape.p0.x);
                         }
@@ -108,11 +110,15 @@ define(
 
         /**
          * 根据控制点做图形变换
+         *
+         * @param {Object} point 控制点
+         * @param {Camera} camera 镜头
+         * @param {Object} key 控制键位
          */
-        ShapesGroup.prototype.transform = function(point, camera, key) {
+        ShapesGroup.prototype.transform = function (point, camera, key) {
             if (this.mode === 'move') {
                 moveTransform.call(
-                    this, 
+                    this,
                     camera,
                     key.ctrlKey ? false :  key.altKey,
                     key.ctrlKey ? false : key.shiftKey,
@@ -128,9 +134,13 @@ define(
         };
 
         /**
-         * 刷新Shapesgroup信息
+         * 结束变换
+         *
+         * @param {Object} point 控制点
+         * @param {Camera} camera 镜头
+         * @param {Object} key 控制键位
          */
-        ShapesGroup.prototype.finishTransform = function(point, camera, key) {
+        ShapesGroup.prototype.finishTransform = function (point, camera, key) {
 
             // 保存最后一次修改
             var coverShapes = this.coverShapes;
@@ -142,6 +152,7 @@ define(
             this.editor.coverLayer.removeShape('bound');
             this.editor.coverLayer.removeShape('boundcenter');
             this.editor.fontLayer.refresh();
+
             if (this.mode === 'move' && this.editor.sorption.isEnable()) {
                 this.editor.coverLayer.removeShape('sorptionX');
                 this.editor.coverLayer.removeShape('sorptionY');
@@ -153,17 +164,18 @@ define(
 
         /**
          * 设置操作的shapes
+         * @param {Array} shapes 形状数组
          */
-        ShapesGroup.prototype.setShapes = function(shapes) {
+        ShapesGroup.prototype.setShapes = function (shapes) {
 
             var coverLayer = this.editor.coverLayer;
 
-            if(this.shapes) {
+            if (this.shapes) {
                 this.shapes = null;
             }
 
             if (this.coverShapes) {
-                this.coverShapes.forEach(function(shape) {
+                this.coverShapes.forEach(function (shape) {
                     coverLayer.removeShape(shape);
                 });
                 this.coverShapes = null;
@@ -172,7 +184,7 @@ define(
             this.shapes = shapes;
 
             this.coverShapes = lang.clone(this.shapes);
-            this.coverShapes.forEach(function(shape) {
+            this.coverShapes.forEach(function (shape) {
                 shape.id = 'cover-' + shape.id;
                 shape.selectable = false;
                 shape.style = {
@@ -184,28 +196,37 @@ define(
 
         /**
          * 获取边界
+         *
+         * @return {Object|false} bound对象或者 `false`
          */
-        ShapesGroup.prototype.getBound = function() {
-            if(this.shapes.length) {
-               return getBound(this.shapes);
+        ShapesGroup.prototype.getBound = function () {
+            if (this.shapes.length) {
+                return getBound(this.shapes);
             }
+
             return false;
         };
 
         /**
          * 设置操作的shapes
+         * 三种变化模式，scale/rotate/move
+         *
+         * @param {string} mode 变换模式
          */
-        ShapesGroup.prototype.setMode = function(mode) {
-            this.mode = mode; // 三种变化模式，scale/rotate/move
+        ShapesGroup.prototype.setMode = function (mode) {
+            this.mode = mode;
         };
 
 
         /**
          * 移动到指定位置
+         *
+         * @param {number} mx x偏移
+         * @param {number} my y偏移
          */
-        ShapesGroup.prototype.move = function(mx, my) {
+        ShapesGroup.prototype.move = function (mx, my) {
 
-            this.shapes.forEach(function(shape) {
+            this.shapes.forEach(function (shape) {
                 pathAdjust(shape.points, 1, 1, mx, my);
             });
 
@@ -215,16 +236,16 @@ define(
         };
 
         /**
-         * refresh
+         * 刷新bound
          */
-        ShapesGroup.prototype.refresh = function() {
+        ShapesGroup.prototype.refresh = function () {
             this.boundControl.refresh(getBound(this.shapes), this.mode);
         };
 
         /**
          * 注销
          */
-        ShapesGroup.prototype.dispose = function() {
+        ShapesGroup.prototype.dispose = function () {
             this.editor.coverLayer.clearShapes();
             this.boundControl.dispose();
             this.shapes = this.coverShapes = this.boundControl = this.editor = null;

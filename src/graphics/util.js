@@ -56,7 +56,7 @@ define(
          * 判断点是否在bounding box内部
          * @param {Object} bound bounding box对象
          * @param {Object} p 点对象
-         * @param {boolean?} fixed 是否四舍五入
+         * @param {boolean=} fixed 是否四舍五入
          * @return {boolean} 是否
          */
         function isPointInBound(bound, p, fixed) {

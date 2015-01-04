@@ -86,8 +86,8 @@ define(
          *
          * @param {Array} path0 path0
          * @param {Array} path1 path1
-         * @param {Object?} bound0 第一个路径边界
-         * @param {Object?} bound1 第二个路径边界
+         * @param {Object=} bound0 第一个路径边界
+         * @param {Object=} bound1 第二个路径边界
          * @return {number} 0不重叠，1 部分重叠，2 完全重叠
          */
         function isPathOverlap(path0, path1, bound0, bound1) {

@@ -8,8 +8,8 @@
 
 
 define(
-    function(require) {
-        var lang = require('common/lang');
+    function (require) {
+
         var modeSupport = require('./mode/support');
         var ContextMenu = require('./widget/ContextMenu');
         var commandSupport = require('./command/support');
@@ -28,6 +28,8 @@ define(
 
         /**
          * Render控制器
+         *
+         * @param {HTMLElement} main 主元素
          * @param {Object} options 参数
          * @constructor
          */
@@ -40,8 +42,11 @@ define(
 
         /**
          * 设置渲染器
+         *
+         * @param {Render} render 渲染器对象
+         * @return {this}
          */
-        Editor.prototype.setRender = function(render) {
+        Editor.prototype.setRender = function (render) {
 
             this.render = render;
             initSetting.call(this);
@@ -63,9 +68,9 @@ define(
          * 切换编辑模式
          *
          * @param {string} modeName 模式名称
-         * @return {Editor} 本对象
+         * @return {this}
          */
-        Editor.prototype.setMode = function(modeName) {
+        Editor.prototype.setMode = function (modeName) {
 
             if (this.mode) {
                 this.mode.end.call(this);
@@ -74,12 +79,15 @@ define(
             this.mode = modeSupport[modeName] || modeSupport['default'];
             var args = Array.prototype.slice.call(arguments, 1);
             this.mode.begin.apply(this, args);
+            return this;
         };
 
         /**
          * 重置编辑器组件
+         *
+         * @return {this}
          */
-        Editor.prototype.reset = function() {
+        Editor.prototype.reset = function () {
             this.fontLayer.clearShapes();
             this.coverLayer.clearShapes();
             this.font = null;
@@ -89,25 +97,29 @@ define(
 
         /**
          * 刷新编辑器组件
+         *
+         * @return {this}
          */
-        Editor.prototype.refresh = function() {
+        Editor.prototype.refresh = function () {
             this.render.refresh();
             return this;
         };
 
         /**
          * 设置选中的shapes
+         *
          * @param {Array} shapes 选中的shapes
          */
-        Editor.prototype.setSelected = function(shapes) {
+        Editor.prototype.setSelected = function (shapes) {
             this.setMode('shapes', shapes);
         };
 
         /**
          * 刷新选中的shapes
+         *
          * @param {Array} shapes 选中的shapes
          */
-        Editor.prototype.refreshSelected = function(shapes) {
+        Editor.prototype.refreshSelected = function (shapes) {
             if (this.currentGroup) {
                 var lastShapes = this.currentGroup.shapes;
                 this.currentGroup.setShapes(shapes);
@@ -123,19 +135,20 @@ define(
 
         /**
          * 获取选中的shapes
+         *
          * @return {Array} 选中的shapes
          */
-        Editor.prototype.getSelected = function() {
+        Editor.prototype.getSelected = function () {
             return this.currentGroup ? this.currentGroup.shapes : null;
         };
 
         /**
          * 执行指定命令
          *
-         * @param {string...} command 指令名，后续为命令参数集合
+         * @param {...string} command 指令名，后续为命令参数集合
          * @return {boolean} 是否执行成功
          */
-        Editor.prototype.execCommand = function(command) {
+        Editor.prototype.execCommand = function (command) {
 
             var args = Array.prototype.slice.call(arguments, 1);
             var event = {
@@ -144,7 +157,7 @@ define(
             };
             this.fire('beforecommand', event);
 
-            if(event.returnValue === false) {
+            if (event.returnValue === false) {
                 return false;
             }
 
@@ -164,7 +177,7 @@ define(
          * @param {string} command 指令名
          * @return {boolean} 是否
          */
-        Editor.prototype.supportCommand = function(command) {
+        Editor.prototype.supportCommand = function (command) {
             return !!commandSupport[command];
         };
 
@@ -175,8 +188,8 @@ define(
          * @param {Function} worker 执行函数
          * @return {boolean} 是否成功
          */
-        Editor.prototype.addCommand = function(command, worker) {
-            if(commandSupport[command]) {
+        Editor.prototype.addCommand = function (command, worker) {
+            if (commandSupport[command]) {
                 return false;
             }
             commandSupport[command] = worker;
@@ -188,17 +201,17 @@ define(
          *
          * @return {boolean}
          */
-        Editor.prototype.isChanged = function() {
+        Editor.prototype.isChanged = function () {
             var font = this.getFont();
             return this.fontHash !== getFontHash(font);
         };
 
         /**
          * 重置改变状态
+         *
          * @param {boolean} changed 状态
-         * @return {boolean}
          */
-        Editor.prototype.setChanged = function(changed) {
+        Editor.prototype.setChanged = function (changed) {
             if (changed) {
                 this.fontHash = 0;
             }
@@ -211,10 +224,10 @@ define(
         /**
          * 添加到剪切板
          *
-         * @param {Array} 形状集合
+         * @param {Array} shapes 形状集合
          * @return {this}
          */
-        Editor.prototype.setClipBoard = function(shapes) {
+        Editor.prototype.setClipBoard = function (shapes) {
             clipboard.set(shapes, 'editor-shape');
             return this;
         };
@@ -222,10 +235,9 @@ define(
         /**
          * 从剪切板中获取
          *
-         * @param {Array} 形状集合
          * @return {this}
          */
-        Editor.prototype.getClipBoard = function() {
+        Editor.prototype.getClipBoard = function () {
             return clipboard.get('editor-shape');
         };
 
@@ -233,7 +245,7 @@ define(
          * 获取焦点
          *
          */
-        Editor.prototype.focus = function() {
+        Editor.prototype.focus = function () {
             this.render.focus();
         };
 
@@ -241,21 +253,21 @@ define(
          * 离开焦点
          *
          */
-        Editor.prototype.blur = function() {
+        Editor.prototype.blur = function () {
             this.render.blur();
         };
 
         /**
          * 注销
          */
-        Editor.prototype.dispose = function() {
+        Editor.prototype.dispose = function () {
             this.un();
             this.contextMenu.dispose();
             this.render && this.render.dispose();
             this.graduationMarker.dispose();
 
             this.options = this.contextMenu = this.render = null;
-            this.fontLayer = this.coverLayer = this.axisLayer 
+            this.fontLayer = this.coverLayer = this.axisLayer
                 = this.referenceLineLayer = this.graduationLayer = null;
             this.axis = this.rightSideBearing = this.graduation
                 = this.graduationMarker = this.font = null;

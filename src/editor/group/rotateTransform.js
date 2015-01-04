@@ -1,14 +1,14 @@
 /**
  * @file rotateTransform.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 旋转变换
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var getRotateMatrix = require('./getRotateMatrix');
         var pathRotate = require('graphics/pathRotate');
@@ -17,9 +17,9 @@ define(
 
         /**
          * 旋转变换
-         * 
+         *
          * @param {Object} point 参考点
-         * @param {Object} camera 镜头对象
+         * @param {Camera} camera 镜头对象
          */
         function rotateTransform(point, camera) {
 
@@ -30,13 +30,13 @@ define(
             // 更新shape
             var shapes = this.shapes;
 
-            this.coverShapes.forEach(function(coverShape, index) {
+            this.coverShapes.forEach(function (coverShape, index) {
                 var shape = lang.clone(shapes[index]);
                 transformer(shape.points, matrix[2], matrix[0], matrix[1]);
                 lang.extend(coverShape, shape);
 
             });
-            
+
 
             // 更新边界
             var coverLayer = this.editor.coverLayer;
@@ -44,17 +44,17 @@ define(
             var bound = this.bound;
             boundShape.points = transformer(
                 [
-                    {x: bound.x,y:bound.y},
-                    {x: bound.x + bound.width, y:bound.y},
-                    {x: bound.x + bound.width, y:bound.y + bound.height},
-                    {x: bound.x, y:bound.y + bound.height}
-                ], 
+                    {x: bound.x, y: bound.y},
+                    {x: bound.x + bound.width, y: bound.y},
+                    {x: bound.x + bound.width, y: bound.y + bound.height},
+                    {x: bound.x, y: bound.y + bound.height}
+                ],
                 matrix[2], matrix[0], matrix[1]
             );
 
             // 更新中心点
             var boundCenter = coverLayer.getShape('boundcenter');
-            if(!boundCenter) {
+            if (!boundCenter) {
                 boundCenter = {
                     type: 'cpoint',
                     id: 'boundcenter',
