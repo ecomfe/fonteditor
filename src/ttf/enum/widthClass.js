@@ -1,14 +1,14 @@
 /**
  * @file weightClass.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 字体宽度度量
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return {
             1: 'Ultra-condensed',
             2: 'Extra-condensed',

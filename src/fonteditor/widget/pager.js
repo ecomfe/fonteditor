@@ -7,9 +7,8 @@
  */
 
 define(
-    function(require) {
+    function (require) {
 
-        var lang = require('common/lang');
         var observable = require('common/observable');
 
         var PAGER_TPL = ''
@@ -35,7 +34,7 @@ define(
             this.textPage = this.main.find('input[data-pager="text"]');
 
             var me = this;
-            me.main.on('click', 'button[data-pager]', function(e) {
+            me.main.on('click', 'button[data-pager]', function (e) {
 
                 if (this.getAttribute('data-disabled')) {
                     return;
@@ -69,7 +68,7 @@ define(
                 }
             });
 
-            me.textPage.on('keyup', function(e) {
+            me.textPage.on('keyup', function (e) {
                 if (e.keyCode === 13) {
                     var page = +this.value.trim();
                     if (page >= 1 && page <= me.totalPage) {
@@ -92,7 +91,7 @@ define(
          * @param {number} pageSize 分页大小
          * @param {number} total 总个数
          */
-        Pager.prototype.show = function(page, pageSize, total) {
+        Pager.prototype.show = function (page, pageSize, total) {
             if (total <= pageSize) {
                 this.hide();
             }
@@ -101,8 +100,12 @@ define(
                 this.totalPage = Math.ceil(total / pageSize);
                 this.main.find('[data-pager="text"]').val(page);
                 this.main.find('[data-pager="info"]').html('/ ' + this.totalPage);
-                this.main.find('[data-pager="prev"]')[page === 1 ? 'attr' : 'removeAttr']('data-disabled', 1);
-                this.main.find('[data-pager="next"]')[page === this.totalPage ? 'attr' : 'removeAttr']('data-disabled', 1);
+                this.main.find('[data-pager="prev"]')[
+                    page === 1 ? 'attr' : 'removeAttr'
+                ]('data-disabled', 1);
+                this.main.find('[data-pager="next"]')[
+                    page === this.totalPage ? 'attr' : 'removeAttr'
+                ]('data-disabled', 1);
             }
             this.main.show();
         };
@@ -110,16 +113,16 @@ define(
         /**
          * 隐藏
          */
-        Pager.prototype.hide = function() {
+        Pager.prototype.hide = function () {
             this.main.hide();
         };
 
         /**
          * 注销
          */
-        Pager.prototype.dispose = function() {
+        Pager.prototype.dispose = function () {
             this.main.un('click', 'button[data-pager]');
-            me.main.find('input[data-pager="text"]').un('keyup');
+            this.main.find('input[data-pager="text"]').un('keyup');
         };
 
         observable.mixin(Pager.prototype);

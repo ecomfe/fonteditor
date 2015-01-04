@@ -1,20 +1,20 @@
 /**
  * @file isBezierLineCross.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 判断贝塞尔曲线与直线相交
  */
 
 define(
-    function(require) {
-        
+    function (require) {
+
         var bezierQ2Equation = require('../math/bezierQ2Equation');
         var ceilPoint = require('./util').ceilPoint;
 
         /**
          * 判断贝塞尔曲线与直线相交
-         * 
+         *
          * @param {Object} p0 起点
          * @param {Object} p1 控制点
          * @param {Object} p2 终点
@@ -27,11 +27,11 @@ define(
             // y = kx + b
             // x = at^2 + bt + c
             // y = dt^2 + et + f
-            //(ka-d)t^2 + (kb-e)t + (kc+b-f) = 0
+            // (ka-d)t^2 + (kb-e)t + (kc+b-f) = 0
             var result;
-            
+
             // 垂直x
-            if (s0.y == s1.y) {
+            if (s0.y === s1.y) {
                 result = bezierQ2Equation(
                     p0.y  + p2.y - 2 * p1.y,
                     2 * (p1.y - p0.y),
@@ -39,7 +39,7 @@ define(
                 );
             }
             // 垂直y
-            else if (s0.x == s1.x) {
+            else if (s0.x === s1.x) {
                 result = bezierQ2Equation(
                     p0.x  + p2.x - 2 * p1.x,
                     2 * (p1.x - p0.x),
@@ -66,11 +66,11 @@ define(
                 );
             }
 
-            if(result) {
-                return result.map(function(t) {
+            if (result) {
+                return result.map(function (t) {
                     return ceilPoint({
-                        x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1-t) + p2.x * Math.pow(t, 2),
-                        y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1-t) + p2.y * Math.pow(t, 2)
+                        x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1 - t) + p2.x * Math.pow(t, 2),
+                        y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1 - t) + p2.y * Math.pow(t, 2)
                     });
                 });
             }

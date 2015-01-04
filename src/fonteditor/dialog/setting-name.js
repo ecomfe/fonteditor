@@ -1,13 +1,13 @@
 /**
  * @file setting-name.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 设置字体命名信息
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var tpl = ''
             + '<div class="input-group input-group-sm">'
@@ -47,22 +47,21 @@ define(
 
 
         return require('./setting').derive({
-            
+
             title: '字体信息',
 
-            getTpl: function() {
+            getTpl: function () {
                 return tpl;
             },
 
-            set: function(setting) {
+            set: function (setting) {
                 this.setFields(setting);
             },
-            
-            validate: function() {
-                var setting = this.getFields();
-                return setting;          
-            }
 
+            validate: function () {
+                var setting = this.getFields();
+                return setting;
+            }
         });
     }
 );

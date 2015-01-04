@@ -1,14 +1,14 @@
 /**
  * @file error.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf 相关错误号定义
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var string = require('common/string');
 
         var error = {
@@ -30,7 +30,6 @@ define(
             10110: '读取eot文件错误',
             10111: '读取eot字体错误',
 
-
             10200: '重复的unicode代码点，字形序号：${0}',
             10201: '字形轮廓数据为空',
             10202: '不支持标志位：ARGS_ARE_XY_VALUES',
@@ -39,12 +38,12 @@ define(
             10205: '未找到解压函数'
         };
 
-        error.raise = function(number) {
+        error.raise = function (number) {
 
             var message = error[number];
-            
+
             if (arguments.length > 1) {
-                var args = typeof(arguments[1]) === 'object' 
+                var args = typeof arguments[1] === 'object'
                     ? arguments[1] : Array.prototype.slice.call(arguments, 1);
                 message = string.format(message, args);
             }

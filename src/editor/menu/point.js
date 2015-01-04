@@ -1,14 +1,14 @@
 /**
  * @file point.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 点command
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'add',

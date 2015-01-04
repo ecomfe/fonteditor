@@ -1,19 +1,27 @@
 /**
  * @file getFontHash.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 获取font的hashcode
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         /**
          * 获取glyf的hashcode
-         * 
-         * @param {Object} font glyf字体结构
+         *
+         * @param {Object} font font结构
+         * @param {Array} font.contours 轮廓数组
+         * @param {Array} font.unicode unicode编码点
+         * @param {number} font.advanceWidth 推荐宽度
+         * @param {number} font.xMin xMin
+         * @param {number} font.xMax xMax
+         * @param {number} font.yMin yMin
+         * @param {number} font.yMax yMax
+         *
          * @return {number} hashcode
          */
         function getFontHash(font) {
@@ -25,8 +33,8 @@ define(
 
             // contours
             if (font.contours && font.contours.length) {
-                font.contours.forEach(function(contour) {
-                    contour.forEach(function(p) {
+                font.contours.forEach(function (contour) {
+                    contour.forEach(function (p) {
                         sequence.push(p.x);
                         sequence.push(p.y);
                         sequence.push(p.onCurve ? 1 : 0);
@@ -39,9 +47,12 @@ define(
             }
 
             if (font.name && font.name.length) {
-                splice.apply(sequence, [sequence.length, 0].concat(font.name.split('').map(function(c) {
-                    return c.charCodeAt(0);
-                })));
+                splice.apply(
+                    sequence,
+                    [sequence.length, 0].concat(font.name.split('').map(function (c) {
+                        return c.charCodeAt(0);
+                    }))
+                );
             }
 
             // 使用BKDR算法计算哈希

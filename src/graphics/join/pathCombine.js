@@ -1,14 +1,14 @@
 /**
  * @file pathCombine.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 组合分割的路径
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var util = require('../pathUtil');
         var deInterpolate = util.deInterpolate;
         var Relation = require('./relation');
@@ -18,21 +18,14 @@ define(
         // 最多组合50个路径段组成轮廓
         var MAX_COMBINE_PATHS = 50;
 
-        /**
-         * 两个交点的hash
-         * 
-         * @param {Object} p0
-         * @param {Object} p1
-         * @return {number}
-         */
         function hashcode(p0) {
             return p0.x * 31 + p0.y;
         }
 
         /**
          * 获取分割的路径hash
-         * 
-         * @param {Array} splitedPath 分割的路径
+         *
+         * @param {Array} paths 分割的路径
          * @return {Object} 哈希值
          */
         function getPathStartHash(paths) {
@@ -40,7 +33,7 @@ define(
             var code;
 
             // 根据起始点创建hash
-            paths.forEach(function(splitedPath) {
+            paths.forEach(function (splitedPath) {
                 var path = splitedPath.path;
 
                 // 开始点
@@ -52,6 +45,7 @@ define(
 
                 // 结束点
                 code = hashcode(path[path.length - 1]);
+
                 if (!pathHash[code]) {
                     pathHash[code] = [];
                 }
@@ -61,9 +55,10 @@ define(
             return pathHash;
         }
 
+        /* eslint-disable fecs-max-statements, max-depth */
         /**
          * 组合路径
-         * 
+         *
          * @param {Array} splitedPaths0 分割后的路径1
          * @param {Array} splitedPaths1 分割后的路径2
          * @param {number} relation 分割关系
@@ -75,11 +70,12 @@ define(
             var selectedPaths = [];
             // 重叠部分只需要一条路径
             var overlapHash = {};
-            [splitedPaths0, splitedPaths1].forEach(function(splitedPaths) {
-                for (var i = 0, l = splitedPaths.length; i < l ; i ++) {
+
+            [splitedPaths0, splitedPaths1].forEach(function (splitedPaths) {
+                for (var i = 0, l = splitedPaths.length; i < l ; i++) {
 
                     // 重叠部分
-                    if (splitedPaths[i].cross == 2) {
+                    if (splitedPaths[i].cross === 2) {
                         var hash = getPathHash(splitedPaths[i].path);
                         if (!overlapHash[hash]) {
                             selectedPaths.push(splitedPaths[i]);
@@ -88,26 +84,24 @@ define(
                         }
                     }
                     else {
-                        if (relation === Relation.join && splitedPaths[i].cross == 0) {
+                        if (relation === Relation.join && splitedPaths[i].cross === 0) {
                             selectedPaths.push(splitedPaths[i]);
                         }
-                        else if (relation === Relation.intersect && splitedPaths[i].cross == 1) {
+                        else if (relation === Relation.intersect && splitedPaths[i].cross === 1) {
                             selectedPaths.push(splitedPaths[i]);
                         }
                         else if (relation === Relation.tangency) {
                             selectedPaths.push(splitedPaths[i]);
                         }
                     }
-
                 }
             });
 
-            //console.log(selectedPaths);
 
             // 起始点hash
             var pathStartHash = getPathStartHash(selectedPaths);
             // 待选的起始路径集合
-            var startPaths = selectedPaths.filter(function(path) {
+            var startPaths = selectedPaths.filter(function (path) {
                 if (relation === Relation.join || relation === Relation.tangency) {
                     return path.cross === 0;
                 }
@@ -118,6 +112,19 @@ define(
             });
 
             var combinedPaths = [];
+
+            // 移除以指定点开始的路径
+            var removePath = function (p, path) {
+                var startPaths = pathStartHash[hashcode(p)];
+                var index = startPaths.indexOf(path);
+                if (index >= 0) {
+                    startPaths.splice(index, 1);
+                    if (!startPaths.length) {
+                        delete pathStartHash[hashcode(p)];
+                    }
+                }
+            };
+
             for (var pathIndex = 0; pathIndex < startPaths.length; pathIndex++) {
                 var curPath = startPaths[pathIndex];
                 var combinedPath = curPath.path.slice(0, curPath.path.length - 1);
@@ -127,13 +134,16 @@ define(
                 // 防止找不到可组合的轮廓，最多组合MAX_COMBINE_PATHS个路径段
                 var loops = 0;
                 var paths;
-                while (++loops < MAX_COMBINE_PATHS && (Math.abs(start.x - end.x) > 0.001 || Math.abs(start.y - end.y) > 0.001)) {
+
+                while (
+                    ++loops < MAX_COMBINE_PATHS
+                    && (Math.abs(start.x - end.x) > 0.001 || Math.abs(start.y - end.y) > 0.001)
+                ) {
 
                     paths = pathStartHash[hashcode(end)];
 
                     if (!paths.length) {
                         throw 'can\'t find paths to combine.';
-                        return [];
                     }
 
                     // 下一个路径
@@ -153,19 +163,19 @@ define(
                                     overlapPath = paths[i];
                                 }
                                 // 相切的情况需要优先寻找与当前相交性质相反并且不在同一路径上的路径段
-                                else if (relation === Relation.tangency 
+                                else if (relation === Relation.tangency
                                     && curPath.cross !== paths[i].cross && curPath.origin !== paths[i].origin
                                 ) {
-                                   path =  paths[i];
-                                   break;
+                                    path =  paths[i];
+                                    break;
                                 }
-                                else if (relation === Relation.join && paths[i].cross == 0) {
-                                   path =  paths[i];
-                                   break;
+                                else if (relation === Relation.join && paths[i].cross === 0) {
+                                    path =  paths[i];
+                                    break;
                                 }
-                                else if (relation === Relation.intersect && paths[i].cross == 1) {
-                                   path =  paths[i];
-                                   break;
+                                else if (relation === Relation.intersect && paths[i].cross === 1) {
+                                    path =  paths[i];
+                                    break;
                                 }
                             }
                         }
@@ -179,7 +189,7 @@ define(
                                 path = overlapPath;
                             }
                             else {
-                                console.warn('can\'t find paths to combine.');
+                                // console.warn('can\'t find paths to combine.');
                                 break;
                             }
                         }
@@ -191,7 +201,10 @@ define(
                         pathPoints = pathPoints.reverse();
                     }
 
-                    splice.apply(combinedPath, [combinedPath.length, 0].concat(pathPoints.slice(0, pathPoints.length - 1)));
+                    splice.apply(
+                        combinedPath,
+                        [combinedPath.length, 0].concat(pathPoints.slice(0, pathPoints.length - 1))
+                    );
                     end = path.path[path.path.length - 1];
                     curPath = path;
 
@@ -202,16 +215,8 @@ define(
                     }
                     // 使用过的路径在哈希中移除
                     else {
-                        [path.path[0], end].forEach(function(p) {
-                            paths = pathStartHash[hashcode(p)];
-                            var index = paths.indexOf(path);
-                            if (index >= 0) {
-                                paths.splice(index, 1);
-                                if (!paths.length) {
-                                    delete pathStartHash[hashcode(p)];
-                                }
-                            }
-                        });
+                        removePath(path.path[0], path);
+                        removePath(end, path);
                     }
 
 
@@ -225,24 +230,21 @@ define(
 
                 if (loops >= MAX_COMBINE_PATHS) {
                     throw 'can\'t find paths to combine.';
-                    return [];
                 }
 
                 combinedPaths.push(combinedPath);
-                
+
             }
 
             if (combinedPaths.length) {
-                return combinedPaths.map(function(path){
-                    return deInterpolate(path); 
+                return combinedPaths.map(function (path) {
+                    return deInterpolate(path);
                 });
             }
-            else {
-                return [];
-            }
-           
-        }
 
+            return [];
+        }
+        /* eslint-enable fecs-max-statements, max-depth */
 
         return pathCombine;
     }

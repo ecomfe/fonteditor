@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
 
         var directory = table.create(
@@ -16,7 +16,7 @@ define(
             [
             ],
             {
-                read: function(reader, ttf) {
+                read: function (reader, ttf) {
                     var tables = {};
                     var numTables = ttf.numTables;
                     var offset = this.offset;
@@ -25,16 +25,17 @@ define(
                         var name = reader.readString(i, 4);
 
                         tables[name] = {
-                            name : name,
-                            checkSum : reader.readUint32(i + 4),
-                            offset : reader.readUint32(i + 8),
-                            length : reader.readUint32(i + 12)
+                            name: name,
+                            checkSum: reader.readUint32(i + 4),
+                            offset: reader.readUint32(i + 8),
+                            length: reader.readUint32(i + 12)
                         };
                     }
 
                     return tables;
                 },
-                write: function(writer, ttf) {
+
+                write: function (writer, ttf) {
 
                     var tables = ttf.support.tables;
                     for (var i = 0, l = tables.length; i < l; i++) {
@@ -46,7 +47,8 @@ define(
 
                     return writer;
                 },
-                size: function(ttf) {
+
+                size: function (ttf) {
                     return ttf.numTables * 16;
                 }
             }

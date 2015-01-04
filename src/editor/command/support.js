@@ -1,16 +1,17 @@
 /**
  * @file support.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * editor 支持的命令列表
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
         var support = {};
+
         lang.extend(support, require('./shape'));
         lang.extend(support, require('./transform'));
         lang.extend(support, require('./align'));

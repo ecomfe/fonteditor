@@ -1,13 +1,13 @@
 /**
  * @file font-url.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 读取线上字体
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var tpl = ''
             +   '<div class="input-group input-group-sm">'
@@ -16,14 +16,14 @@ define(
             +   '</div>';
 
         return require('./setting').derive({
-            
+
             title: '线上字体',
 
-            getTpl: function() {
+            getTpl: function () {
                 return tpl;
             },
 
-            validate: function() {
+            validate: function () {
                 var setting = this.getFields();
                 if (setting.url) {
                     return setting.url;

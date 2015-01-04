@@ -1,22 +1,22 @@
 /**
  * @file DSIG.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * DSIG表
  * Digital Signature Table
- * 
+ *
  * 暂不支持数字签名解析
  * http://www.microsoft.com/typography/otspec/dsig.htm
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var DSIG = table.create(
-            'DSIG', 
+            'DSIG',
             [
                 ['ulVersion', struct.Uint32],
                 ['usNumSigs', struct.Uint16],

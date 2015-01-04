@@ -1,10 +1,10 @@
 /**
  * @file ttfreader.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf定义
- * 
+ *
  * thanks to：
  * ynakajima/ttf.js
  * https://github.com/ynakajima/ttf.js
@@ -12,7 +12,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var Directory = require('./table/directory');
         var supportTables = require('./table/support');
         var Reader = require('./reader');
@@ -23,6 +23,9 @@ define(
 
         /**
          * 初始化
+         *
+         * @param {ArrayBuffer} buffer buffer对象
+         * @return {Object} ttf对象
          */
         function read(buffer) {
 
@@ -60,7 +63,7 @@ define(
             }
 
             // 读取支持的表数据
-            Object.keys(supportTables).forEach(function(tableName) {
+            Object.keys(supportTables).forEach(function (tableName) {
                 if (ttf.tables[tableName]) {
                     var offset = ttf.tables[tableName].offset;
                     ttf[tableName] = new supportTables[tableName](offset).read(reader, ttf);
@@ -78,6 +81,7 @@ define(
 
         /**
          * 关联glyf相关的信息
+         * @param {Object} ttf ttf对象
          */
         function resolveGlyf(ttf) {
 
@@ -85,7 +89,7 @@ define(
             var glyf = ttf.glyf;
 
             // unicode
-            Object.keys(codes).forEach(function(c) {
+            Object.keys(codes).forEach(function (c) {
                 var i = codes[c];
                 if (!glyf[i].unicode) {
                     glyf[i].unicode = [];
@@ -94,16 +98,16 @@ define(
             });
 
             // advanceWidth
-            ttf.hmtx.forEach(function(item, i) {
+            ttf.hmtx.forEach(function (item, i) {
                 glyf[i].advanceWidth = item.advanceWidth;
                 glyf[i].leftSideBearing = item.leftSideBearing;
             });
 
-            //name 
-            if (ttf.post && 2 == ttf.post.format) {
+            // name
+            if (ttf.post && 2 === ttf.post.format) {
                 var nameIndex = ttf.post.glyphNameIndex;
                 var names = ttf.post.names;
-                nameIndex.forEach(function(nameIndex, i) {
+                nameIndex.forEach(function (nameIndex, i) {
                     if (nameIndex <= 257) {
                         glyf[i].name = postName[nameIndex];
                     }
@@ -116,6 +120,7 @@ define(
 
         /**
          * 清除非必须的表
+         * @param {Object} ttf ttf对象
          */
         function cleanTables(ttf) {
             delete ttf.tables;
@@ -134,7 +139,7 @@ define(
 
         /**
          * TTF的构造函数
-         * 
+         *
          * @constructor
          */
         function TTFReader() {
@@ -142,20 +147,21 @@ define(
 
         /**
          * 获取解析后的ttf文档
-         * 
+         * @param {ArrayBuffer} buffer buffer对象
+         *
          * @return {Object} ttf文档
          */
-        TTFReader.prototype.read = function(buffer) {
+        TTFReader.prototype.read = function (buffer) {
             this.ttf = read.call(this, buffer);
             resolveGlyf.call(this, this.ttf);
             cleanTables.call(this, this.ttf);
             return this.ttf;
         };
-        
+
         /**
          * 注销
          */
-        TTFReader.prototype.dispose = function() {
+        TTFReader.prototype.dispose = function () {
             delete this.ttf;
         };
 

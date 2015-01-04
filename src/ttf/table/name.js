@@ -1,12 +1,13 @@
 /**
  * @file name.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * name表
  */
+
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var nameIdTbl = require('../enum/nameId');
         var string = require('../util/string');
@@ -14,10 +15,11 @@ define(
         var encodingTbl = require('../enum/encoding');
 
         var name = table.create(
-            'name', 
-            [], {
+            'name',
+            [],
+            {
 
-                read: function(reader) {
+                read: function (reader) {
                     var offset = this.offset;
                     reader.seek(offset);
 
@@ -28,8 +30,11 @@ define(
 
                     var nameRecordTbl = [];
                     var count = nameTbl.count;
-                    for (var i = 0; i < count; ++i) {
-                        var nameRecord = {};
+                    var i;
+                    var nameRecord;
+
+                    for (i = 0; i < count; ++i) {
+                        nameRecord = {};
                         nameRecord.platform = reader.readUint16();
                         nameRecord.encoding = reader.readUint16();
                         nameRecord.language = reader.readUint16();
@@ -40,22 +45,23 @@ define(
                     }
 
                     offset = offset + nameTbl.stringOffset;
+
                     // 读取字符名字
-                    for (var i = 0; i < count; ++i) {
-                        var nameRecord = nameRecordTbl[i];
+                    for (i = 0; i < count; ++i) {
+                        nameRecord = nameRecordTbl[i];
                         nameRecord.name = reader.readString(offset + nameRecord.offset, nameRecord.length);
                     }
 
                     var names = {};
-                    
+
                     // 读取windows下的name records
                     var platform = platformTbl.Microsoft;
                     var encoding = encodingTbl.win.UCS2;
 
-                    for (var i = 0; i < count; ++i) {
-                        var nameRecord = nameRecordTbl[i];
-                        if (nameRecord.platform == platform
-                            && nameRecord.encoding == encoding
+                    for (i = 0; i < count; ++i) {
+                        nameRecord = nameRecordTbl[i];
+                        if (nameRecord.platform === platform
+                            && nameRecord.encoding === encoding
                             && nameIdTbl[nameRecord.nameId]) {
                             names[nameIdTbl[nameRecord.nameId]] = string.stringify(nameRecord.name);
                         }
@@ -64,7 +70,7 @@ define(
                     return names;
                 },
 
-                write: function(writer, ttf) {
+                write: function (writer, ttf) {
                     var nameRecordTbl = ttf.support.name;
 
                     writer.writeUint16(0); // format
@@ -73,10 +79,10 @@ define(
 
                     // write name tbl header
                     var offset = 0;
-                    nameRecordTbl.forEach(function(nameRecord) {
+                    nameRecordTbl.forEach(function (nameRecord) {
                         writer.writeUint16(nameRecord.platform);
                         writer.writeUint16(nameRecord.encoding);
-                        writer.writeUint16(nameRecord.language); 
+                        writer.writeUint16(nameRecord.language);
                         writer.writeUint16(nameRecord.nameId);
                         writer.writeUint16(nameRecord.name.length);
                         writer.writeUint16(offset); // offset
@@ -84,14 +90,14 @@ define(
                     });
 
                     // write name tbl strings
-                    nameRecordTbl.forEach(function(nameRecord) {
+                    nameRecordTbl.forEach(function (nameRecord) {
                         writer.writeBytes(nameRecord.name);
                     });
 
                     return writer;
                 },
 
-                size: function(ttf) {
+                size: function (ttf) {
                     var names = ttf.name;
                     var nameRecordTbl = [];
 
@@ -99,7 +105,7 @@ define(
                     // 这里为了简化书写，仅支持英文编码字符，
                     // 中文编码字符将被转化成url encode
                     var size = 6;
-                    Object.keys(names).forEach(function(name) {
+                    Object.keys(names).forEach(function (name) {
                         var id = nameIdTbl.names[name];
 
                         var utf8Bytes = string.toUTF8Bytes(names[name]);
@@ -115,7 +121,7 @@ define(
                                 name: utf8Bytes
                             });
 
-                            // windows  
+                            // windows
                             nameRecordTbl.push({
                                 nameId: id,
                                 platform: 3,
@@ -128,11 +134,11 @@ define(
                             size += 12 * 2 + utf8Bytes.length + usc2Bytes.length;
                         }
                     });
-                    
+
                     var namingOrder = ['platform', 'encoding', 'language', 'nameId'];
-                    nameRecordTbl = nameRecordTbl.sort(function(a, b) {
+                    nameRecordTbl = nameRecordTbl.sort(function (a, b) {
                         var l = 0;
-                        namingOrder.some(function(name) {
+                        namingOrder.some(function (name) {
                             var o = a[name] - b[name];
                             if (o) {
                                 l = o;

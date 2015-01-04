@@ -1,14 +1,14 @@
 /**
  * @file initLayer.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * Editor的layer初始化
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
 
         /**

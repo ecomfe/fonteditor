@@ -1,14 +1,14 @@
 /**
  * @file viewer.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf编辑器相关命令
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'copyshapes',
@@ -26,6 +26,11 @@ define(
                 title: '删除',
                 quickKey: 'D',
                 disabled: true
+            },
+            {
+                name: 'save',
+                title: '保存',
+                quickKey: 'S'
             },
             {
                 type: 'split'
@@ -165,7 +170,7 @@ define(
                 title: '相切轮廓',
                 ico: 'tangencyshapes',
                 disabled: true
-            },
+            }
         ];
     }
 );

@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var TTFWriter = require('ttf/ttfwriter');
         var ttf2woff = require('ttf/ttf2woff');
@@ -27,7 +27,7 @@ define(
          * @param {Object} options 参数
          * @param {Object} options.type 文件类型
          *
-         * @return {String} base64ed font
+         * @return {Binary} base64 font file
          */
         function font2buffer(ttf, options) {
             var buffer = null;
@@ -37,7 +37,7 @@ define(
             else if (options.type === 'eot') {
                 buffer = ttf2eot(new TTFWriter().write(ttf));
             }
-            else if(options.type === 'svg') {
+            else if (options.type === 'svg') {
                 buffer = ttf2svg(ttf);
             }
             else {
@@ -74,7 +74,7 @@ define(
                         var zip = new JSZip();
                         var fontzip = zip.folder('fonteditor');
 
-                        ['woff', 'eot', 'svg', 'ttf'].forEach(function(fileType) {
+                        ['woff', 'eot', 'svg', 'ttf'].forEach(function (fileType) {
 
                             fontzip.file(
                                 fileName + '.' + fileType,
@@ -92,13 +92,17 @@ define(
                     }
                     else {
                         var buffer = font2buffer(ttf, options);
-                        if (options.type == 'svg') {
+                        if (options.type === 'svg') {
                             base64Str = btoa(buffer);
                         }
                         else {
                             base64Str = bytes2base64(buffer);
                         }
-                        base64Str = 'data:font/'+ options.type +';charset=utf-8;base64,' + base64Str;
+
+                        base64Str = 'data:font/'
+                            + options.type
+                            + ';charset=utf-8;base64,'
+                            + base64Str;
                     }
 
                     var target = $(options.target);
@@ -109,7 +113,8 @@ define(
                         options.success(base64Str);
                     }
 
-                } catch (e) {
+                }
+                catch (e) {
                     $(options.target).removeAttr('download');
                     alert(e.message);
                     if (options.error) {
@@ -123,19 +128,6 @@ define(
 
 
         var exporter = {
-
-            /**
-             * 导出SFNT结构字体
-             *
-             * @param {Object} ttf ttf字体结构
-             * @param {Object} options 参数
-             * @param {Object} options.type 文件类型
-             * @param {Object} options.fileName 文件名
-             * @param {Function} options.success 成功回调
-             * @param {Function} options.error 失败回调
-             *
-             * @return {HTMLElement} 导出按钮
-             */
             'export': exportFile
         };
         return exporter;

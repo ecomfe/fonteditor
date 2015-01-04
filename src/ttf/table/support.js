@@ -1,14 +1,14 @@
 /**
  * @file support.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 列举支持的表
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var support = {
             'head': require('./head'),

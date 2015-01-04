@@ -1,24 +1,21 @@
 /**
  * @file post.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- * 
  * post 表
- * 
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6post.html
  */
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var string = require('../util/string');
-        var postName = require('../enum/postName');
         var unicodeName = require('../enum/unicodeName');
 
         var Posthead = table.create(
-            'posthead', 
+            'posthead',
             [
                 ['format', struct.Fixed],
                 ['italicAngle', struct.Fixed],
@@ -34,16 +31,16 @@ define(
         );
 
         var post = table.create(
-            'post', 
-            [
-            ],
+            'post',
+            [],
             {
-                read: function(reader, ttf) {
+
+                read: function (reader, ttf) {
                     var tbl = null;
                     var format = reader.readFixed(this.offset);
 
                     // format2
-                    if(format == 2) {
+                    if (format === 2) {
 
                         // 读取表头
                         tbl = new Posthead(this.offset).read(reader, ttf);
@@ -52,7 +49,7 @@ define(
                         var numberOfGlyphs = ttf.maxp.numGlyphs;
 
                         var glyphNameIndex = [];
-                        for(var i = 0; i < numberOfGlyphs; ++i) {
+                        for (var i = 0; i < numberOfGlyphs; ++i) {
                             glyphNameIndex.push(reader.readUint16());
                         }
 
@@ -71,9 +68,10 @@ define(
 
                     return tbl;
                 },
-                write: function(writer, ttf) {
 
-                    var numberOfGlyphs = ttf.glyf.length; 
+                write: function (writer, ttf) {
+
+                    var numberOfGlyphs = ttf.glyf.length;
                     var post = ttf.post || {};
 
                     // write header
@@ -90,16 +88,17 @@ define(
 
                     // write glyphNameIndex
                     var nameIndexs = ttf.support.post.nameIndexs;
-                    for (var i = 0, l = nameIndexs.length; i < l; i ++) {
+                    for (var i = 0, l = nameIndexs.length; i < l; i++) {
                         writer.writeUint16(nameIndexs[i]);
                     }
 
                     // write names
-                    ttf.support.post.glyphNames.forEach(function(name) {
+                    ttf.support.post.glyphNames.forEach(function (name) {
                         writer.writeBytes(name);
                     });
                 },
-                size: function(ttf) {
+
+                size: function (ttf) {
                     var numberOfGlyphs = ttf.glyf.length;
                     var glyphNames = [];
                     var nameIndexs = [];
@@ -107,7 +106,7 @@ define(
                     var nameIndex = 0;
 
                     // 获取 name的大小
-                    for(var i = 0; i < numberOfGlyphs; i++) {
+                    for (var i = 0; i < numberOfGlyphs; i++) {
                         // .notdef
                         if (i === 0) {
                             nameIndexs.push(0);
@@ -127,7 +126,7 @@ define(
                                 }
 
                                 nameIndexs.push(258 + nameIndex++);
-                                var bytes = string.getPascalStringBytes(name); //pascal string bytes
+                                var bytes = string.getPascalStringBytes(name); // pascal string bytes
                                 glyphNames.push(bytes);
                                 size += bytes.length;
                             }
@@ -135,6 +134,7 @@ define(
                     }
 
                     ttf.post = ttf.post || {};
+                    ttf.post.format = ttf.post.format || 0x2;
                     ttf.post.maxMemType1 = numberOfGlyphs;
 
                     ttf.support.post = {

@@ -1,53 +1,53 @@
 /**
  * @file initRender.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * Editor 的render初始化
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var commandList = require('../menu/commandList');
         var lang = require('common/lang');
         var modeSupport = require('../mode/support');
         var selectShape = require('render/util/selectShape');
-        
-        /**
-         * 右键点击处理
-         */
+
+
         function onContextMenu(e) {
             this.contextMenu.hide();
-
-            if (e.command == 'addreferenceline') {
-                this.execCommand('addreferenceline', e.pos.x, e.pos.y);
-            }
-            else if (e.command == 'split') {
-                this.setMode('split');
-            }
-            else if (e.command == 'paste') {
-                var shapes = this.getClipBoard();
-                if(shapes) {
-                    this.execCommand('pasteshapes', shapes, e.pos);
-                }
-            }
-            else if (e.command == 'addsupportshapes') {
-                var type = e.args.type;
-                this.execCommand('addsupportshapes', type);
-            }
-            else if (e.command == 'gridsorption') {
-                this.execCommand('gridsorption', !e.args.selected);
-            }
-            else if (e.command == 'shapesorption') {
-                this.execCommand('shapesorption', !e.args.selected);
-            }
-            else if (e.command == 'showgrid') {
-                this.execCommand('showgrid', !e.args.selected);
-            }
-            else {
-                this.execCommand(e.command, e);
+            switch (e.command) {
+                case 'addreferenceline':
+                    this.execCommand('addreferenceline', e.pos.x, e.pos.y);
+                    break;
+                case 'split':
+                    this.setMode('split');
+                    break;
+                case 'paste':
+                    var shapes = this.getClipBoard();
+                    if (shapes) {
+                        this.execCommand('pasteshapes', shapes, e.pos);
+                    }
+                    break;
+                case 'addsupportshapes':
+                    this.execCommand('addsupportshapes', e.args.type);
+                    break;
+                case 'gridsorption':
+                    this.execCommand('gridsorption', !e.args.selected);
+                    break;
+                case 'shapesorption':
+                    this.execCommand('shapesorption', !e.args.selected);
+                    break;
+                case 'showgrid':
+                    this.execCommand('showgrid', !e.args.selected);
+                    break;
+                case 'save':
+                    this.fire('save');
+                    break;
+                default:
+                    this.execCommand(e.command, e);
             }
         }
 
@@ -58,13 +58,13 @@ define(
             var me = this;
             var render = this.render;
 
-            function setCamera(e) {
+            var setCamera = function (e) {
                 render.camera.x = e.x;
                 render.camera.y = e.y;
                 render.camera.event = e;
-            }
+            };
 
-            render.capture.on('down', function(e) {
+            render.capture.on('down', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
@@ -77,7 +77,7 @@ define(
                 me.mode.down && me.mode.down.call(me, e);
             });
 
-            render.capture.on('dragstart', function(e) {
+            render.capture.on('dragstart', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
@@ -86,7 +86,7 @@ define(
                 me.mode.dragstart && me.mode.dragstart.call(me, e);
             });
 
-            render.capture.on('drag', function(e) {
+            render.capture.on('drag', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
@@ -99,7 +99,7 @@ define(
                 me.mode.drag && me.mode.drag.call(me, e);
             });
 
-            render.capture.on('dragend', function(e) {
+            render.capture.on('dragend', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
@@ -109,18 +109,18 @@ define(
                 me.mode.dragend && me.mode.dragend.call(me, e);
             });
 
-            render.capture.on('move', function(e) {
+            render.capture.on('move', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
                 }
-                
+
                 // 这里由于canvas绘制导致0.5像素偏差，需要修正一下
                 me.graduationMarker.moveTo(e.x - 1, e.y - 1);
                 me.mode.move && me.mode.move.call(me, e);
             });
 
-            render.capture.on('up', function(e) {
+            render.capture.on('up', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
@@ -129,7 +129,7 @@ define(
                 me.mode.up && me.mode.up.call(me, e);
             });
 
-            render.capture.on('click', function(e) {
+            render.capture.on('click', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
@@ -139,23 +139,23 @@ define(
             });
 
 
-            render.capture.on('dblclick', function(e) {
+            render.capture.on('dblclick', function (e) {
 
                 if (me.contextMenu.visible()) {
                     return;
                 }
 
                 var result = render.getLayer('font').getShapeIn(e);
-                if(result) {
+                if (result) {
                     var shape = selectShape(result, e);
                     me.setMode('point', shape);
                 }
-                else if(me.mode === modeSupport.point){
+                else if (me.mode === modeSupport.point) {
                     me.setMode();
                 }
             });
 
-            render.capture.on('rightdown', function(e) {
+            render.capture.on('rightdown', function (e) {
 
                 if (me.mode.rightdown) {
                     me.mode.rightdown.call(me, e);
@@ -166,13 +166,13 @@ define(
                 }
             });
 
-            render.keyCapture.on('keyup', function(e) {
+            render.keyCapture.on('keyup', function (e) {
                 if (me.contextMenu.visible()) {
                     return;
                 }
 
                 // esc键，重置model
-                if (e.key == 'esc' && !me.mode.keyup) {
+                if (e.key === 'esc' && !me.mode.keyup) {
                     me.setMode();
                 }
                 else {
@@ -180,50 +180,49 @@ define(
                 }
             });
 
-            render.keyCapture.on('keydown', function(e) {
+            render.keyCapture.on('keydown', function (e) {
+
                 if (me.contextMenu.visible()) {
                     return;
                 }
 
                 // 保存
-                if (e.keyCode == 83 && e.ctrlKey) {
-                    me.fire('save', {
-                        font: me.getFont()
-                    });
+                if (e.keyCode === 83 && e.ctrlKey) {
+                    me.fire('save');
                 }
                 // 粘贴
-                else if (e.keyCode == 86 && e.ctrlKey) {
+                else if (e.keyCode === 86 && e.ctrlKey) {
                     var shapes = me.getClipBoard();
-                    if(shapes) {
+                    if (shapes) {
                         me.execCommand('pasteshapes', shapes);
                     }
                 }
                 // 放大
-                else if (e.keyCode == 187 && (e.ctrlKey || e.altKey)) {
+                else if (e.keyCode === 187 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
                     var size = render.getSize();
                     render.scale(1.25, {
-                        x: size.width / 2, 
+                        x: size.width / 2,
                         y: size.height / 2
                     });
                 }
                 // 缩小
-                else if (e.keyCode == 189 && (e.ctrlKey || e.altKey)) {
+                else if (e.keyCode === 189 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
-                    var size = render.getSize();
+                    var sz = render.getSize();
                     render.scale(0.8, {
-                        x: size.width / 2, 
-                        y: size.height / 2
+                        x: sz.width / 2,
+                        y: sz.height / 2
                     });
                 }
                 // 撤销
-                else if (e.keyCode == 90 && e.ctrlKey) {
+                else if (e.keyCode === 90 && e.ctrlKey) {
                     me.execCommand('undo');
                 }
                 // 恢复
-                else if (e.keyCode == 89 && e.ctrlKey) {
+                else if (e.keyCode === 89 && e.ctrlKey) {
                     me.execCommand('redo');
                 }
 
@@ -233,16 +232,16 @@ define(
             });
 
 
-            render.keyCapture.on('keydown', function(e) {
+            render.keyCapture.on('keydown', function (e) {
                 if (me.contextMenu.visible()) {
                     return;
                 }
-                
+
                 me.mode.keydown && me.mode.keydown.call(me, e);
             });
 
 
-            render.on('resize', function(e) {
+            render.on('resize', function (e) {
                 me.render.move(
                     (e.size.width - e.prevSize.width) / 2,
                     (e.size.height - e.prevSize.height) / 2

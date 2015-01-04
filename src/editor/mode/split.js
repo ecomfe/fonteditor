@@ -1,26 +1,23 @@
 /**
  * @file range.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 切割模式
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var mode = {
-            
-            /**
-             * 按下事件
-             */
-            down: function(e) {
-                if (1 == e.which) {
+
+            down: function (e) {
+                if (1 === e.which) {
                     this.coverLayer.clearShapes();
                     this.splitLine = this.coverLayer.addShape({
                         type: 'line',
-                        p0 : {
+                        p0: {
                             x: e.x,
                             y: e.y
                         },
@@ -32,11 +29,9 @@ define(
                 }
             },
 
-            /**
-             * 拖动事件
-             */
-            move: function(e) {
-                if (1 == e.which) {
+
+            move: function (e) {
+                if (1 === e.which) {
                     if (this.splitLine) {
                         this.splitLine.p1.x = e.x;
                         this.splitLine.p1.y = e.y;
@@ -46,11 +41,8 @@ define(
             },
 
 
-            /**
-             * 鼠标弹起
-             */
-            up: function(e) {
-                if (1 == e.which) {
+            up: function (e) {
+                if (1 === e.which) {
                     if (this.splitLine) {
                         var p0 = this.splitLine.p0;
                         var p1 = this.splitLine.p1;
@@ -61,21 +53,15 @@ define(
                             }
                         }
                     }
-                    
+
                     this.setMode();
                 }
             },
 
-            /**
-             * 开始模式
-             */
-            begin: function() {
+            begin: function () {
             },
 
-            /**
-             * 结束模式
-             */
-            end: function() {
+            end: function () {
                 delete this.splitLine;
                 this.coverLayer.clearShapes();
                 this.coverLayer.refresh();

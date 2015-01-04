@@ -1,14 +1,14 @@
 /**
  * @file cursor.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 光标集合
  */
 
 
 define(
-    function(require) {
+    function (require) {
         // 不同位置的光标集合
         return {
             scale: {

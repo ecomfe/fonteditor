@@ -1,14 +1,14 @@
 /**
  * @file glyfAdjust.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf调整
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var pathAdjust = require('graphics/pathAdjust');
         var pathCeil = require('graphics/pathCeil');
@@ -16,7 +16,7 @@ define(
 
         /**
          * 简单字形的缩放和平移调整
-         * 
+         *
          * @param {Object} g glyf对象
          * @param {number} scaleX x缩放比例
          * @param {number} scaleY y缩放比例
@@ -29,18 +29,18 @@ define(
             scaleX = scaleX || 1;
             scaleY = scaleY || 1;
             offsetX = offsetX || 0;
-            offsetY = offsetY || 0
+            offsetY = offsetY || 0;
 
             if (g.contours && g.contours.length) {
                 if (scaleX !== 1 || scaleY !== 1) {
-                    g.contours.forEach(function(contour) {
+                    g.contours.forEach(function (contour) {
                         pathAdjust(contour, scaleX, scaleY);
                         pathCeil(contour);
                     });
                 }
 
                 if (offsetX !== 0 || offsetY !== 0) {
-                    g.contours.forEach(function(contour) {
+                    g.contours.forEach(function (contour) {
                         pathAdjust(contour, 1, 1, offsetX, offsetY);
                     });
                 }

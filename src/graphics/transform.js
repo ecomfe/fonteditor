@@ -1,30 +1,29 @@
 /**
  * @file transform.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 对轮廓进行transform变换
- * 
+ *
  * 参考资料：
  * http://blog.csdn.net/henren555/article/details/9699449
- * 
-    |X|    |a      c       e|    |x|
-    |Y| =  |b      d       f| *  |y|
-    |1|    |0      0       1|    |1|
-
-    X = x * a + y * c + e
-    Y = x * b + y * d + f
- * 
+ *
+ *  |X|    |a      c       e|    |x|
+ *  |Y| =  |b      d       f| *  |y|
+ *  |1|    |0      0       1|    |1|
+ *
+ *  X = x * a + y * c + e
+ *  Y = x * b + y * d + f
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
-
+        /* eslint-disable max-params */
         /**
          * 图形仿射矩阵变换
-         * 
+         *
          * @param {Array.<Object>} contour 轮廓点
          * @param {number} a m11
          * @param {number} b m12
@@ -35,7 +34,9 @@ define(
          * @return {Array.<Object>} contour 轮廓点
          */
         function transform(contour, a, b, c, d, e, f) {
-            var x, y, p;
+            var x;
+            var y;
+            var p;
             for (var i = 0, l = contour.length; i < l; i++) {
                 p = contour[i];
                 x = p.x;
@@ -45,6 +46,7 @@ define(
             }
             return contour;
         }
+        /* eslint-enable max-params */
 
         return transform;
     }

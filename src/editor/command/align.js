@@ -1,15 +1,15 @@
 /**
  * @file align.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 轮廓对齐方式
  */
 
 
 define(
-    function(require) {
-        var lang = require('common/lang');
+    function (require) {
+
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('graphics/pathAdjust');
 
@@ -17,17 +17,18 @@ define(
 
             /**
              * 对齐方式
-             * 
+             *
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
+             * @return {boolean} `false`或者`undefined`
              */
-            alignshapes: function(shapes, align) {
+            alignshapes: function (shapes, align) {
 
                 if (!shapes || !shapes.length) {
                     return false;
                 }
 
-                var contours = shapes.map(function(shape) {
+                var contours = shapes.map(function (shape) {
                     return shape.points;
                 });
 
@@ -40,7 +41,7 @@ define(
 
                 var xOffset;
                 var yOffset;
-                contours.forEach(function(contour) {
+                contours.forEach(function (contour) {
                     var b = computeBoundingBox.computePath(contour);
                     xOffset = 0;
                     yOffset = 0;
@@ -72,17 +73,18 @@ define(
 
             /**
              * 字体垂直对齐
-             * 
+             *
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
+             * @return {boolean} `false`或者`undefined`
              */
-            verticalalignshapes: function(shapes, align) {
+            verticalalignshapes: function (shapes, align) {
 
                 if (!shapes || !shapes.length) {
                     return false;
                 }
-                
-                var contours = shapes.map(function(shape) {
+
+                var contours = shapes.map(function (shape) {
                     return shape.points;
                 });
 
@@ -109,7 +111,7 @@ define(
                     yOffset = ybaseline - bound.y - bound.height;
                 }
 
-                contours.forEach(function(contour) {
+                contours.forEach(function (contour) {
                     pathAdjust(contour, 1, 1, 0, yOffset);
                 });
 
@@ -119,17 +121,18 @@ define(
 
             /**
              * 字体水平对齐
-             * 
+             *
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
+             * @return {boolean} `false`或者`undefined`
              */
-            horizontalalignshapes: function(shapes, align) {
+            horizontalalignshapes: function (shapes, align) {
 
                 if (!shapes || !shapes.length) {
                     return false;
                 }
-                
-                var contours = shapes.map(function(shape) {
+
+                var contours = shapes.map(function (shape) {
                     return shape.points;
                 });
 
@@ -150,7 +153,7 @@ define(
                     xOffset = rightSideBearing - bound.x - bound.width;
                 }
 
-                contours.forEach(function(contour) {
+                contours.forEach(function (contour) {
                     pathAdjust(contour, 1, 1, xOffset, 0);
                 });
 

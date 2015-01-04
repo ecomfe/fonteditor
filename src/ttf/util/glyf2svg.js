@@ -1,10 +1,10 @@
 /**
  * @file glyf2svg.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf转换svg
- * 
+ *
  * thanks to：
  * ynakajima/ttf.js
  * https://github.com/ynakajima/ttf.js
@@ -12,22 +12,23 @@
 
 
 define(
-    function(require) {
-        
+    function (require) {
+
         var contour2svg = require('./contour2svg');
         var contours2svg = require('./contours2svg');
         var matrixTransform = require('graphics/transform');
         var lang = require('common/lang');
 
         /**
-         * glyf转换svg 
-         * 
+         * glyf转换svg
+         *
          * @param {Object} glyf 解析后的glyf结构
+         * @param {Object} ttf ttf对象
          * @return {string} svg文本
          */
         function glyf2svg(glyf, ttf) {
 
-            if(!glyf) {
+            if (!glyf) {
                 return '';
             }
 
@@ -41,17 +42,18 @@ define(
             }
             else {
                 var glyfs = glyf.glyfs;
-                glyfs.forEach(function(g) {
+                glyfs.forEach(function (g) {
                     var glyph = ttf.glyf[g.glyphIndex];
-                    
+
                     if (!glyph) {
                         return;
                     }
 
                     var contours = lang.clone(glyph.contours); // 这里需要进行matrix变换，需要复制一份
                     var transform = g.transform;
-                    for ( var i = 0, l = contours.length; i < l; i++) {
-                        matrixTransform(contours[i], 
+                    for (var i = 0, l = contours.length; i < l; i++) {
+                        matrixTransform(
+                            contours[i],
                             transform.a,
                             transform.b,
                             transform.c,
@@ -66,8 +68,6 @@ define(
 
             return pathArray.join(' ');
         }
-
-
 
         return glyf2svg;
     }

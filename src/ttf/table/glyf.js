@@ -1,27 +1,24 @@
 /**
  * @file glyf.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf表
- * 
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var table = require('./table');
         var GlyfContour = require('./glyfcontour');
         var glyfWriter = require('./glyfwriter');
 
         var glyf = table.create(
-            'glyf', 
-            [], 
+            'glyf',
+            [],
             {
-                /**
-                 * 解析glyfl表
-                 */
-                read: function(reader, ttf) {
+
+                read: function (reader, ttf) {
                     var glyfOffset = this.offset;
                     var loca = ttf.loca;
                     var numGlyphs = ttf.maxp.numGlyphs;
@@ -31,11 +28,11 @@ define(
                     reader.seek(glyfOffset);
 
                     // 解析字体轮廓
-                    for ( var i = 0, l = numGlyphs; i < l; i++) {
+                    for (var i = 0, l = numGlyphs; i < l; i++) {
                         var offset = glyfOffset + loca[i];
 
                         // 空路径
-                        if(i + 1 < l && loca[i] === loca[i + 1]) {
+                        if (i + 1 < l && loca[i] === loca[i + 1]) {
                             glyf[i] = GlyfContour.empty();
                         }
                         else {
@@ -43,8 +40,10 @@ define(
                             glyf[i] = glyfPath.read(reader, ttf);
                         }
                     }
+
                     return glyf;
                 },
+
                 write: glyfWriter.write,
                 size: glyfWriter.size
             }

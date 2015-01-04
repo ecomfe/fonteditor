@@ -1,13 +1,13 @@
 /**
  * @file options.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 编辑器选项
  */
 
 define(
-    function(require) {
+    function (require) {
         var options = {
 
             // 编辑器相关
@@ -42,7 +42,7 @@ define(
                     lineWidth: 1,
                     strokeColor: '#999',
                     fill: true,
-                    fillColor: '#555',
+                    fillColor: '#555'
                 },
 
                 // 轴线
@@ -79,7 +79,7 @@ define(
             render: {
                 defaultRatio: 1.2, // 默认的缩放比例
                 minScale: 0.2, // 最小缩放
-                maxScale: 200, //最大缩放
+                maxScale: 200, // 最大缩放
                 enableScale: true, // 是否允许缩放
                 enableResize: true // 是否允许大小改变
             }

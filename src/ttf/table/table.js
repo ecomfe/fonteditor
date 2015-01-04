@@ -1,34 +1,35 @@
 /**
  * @file table.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf表操作类
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var struct = require('./struct');
         var extend = require('common/lang').extend;
         var error = require('../error');
 
         /**
          * 读取表结构
-         * 
+         *
          * @param {Object} reader reader对象
          * @return {Object} 当前对象
          */
         function read(reader) {
+
             var offset = this.offset;
 
-            if(undefined !== offset) {
+            if (undefined !== offset) {
                 reader.seek(offset);
             }
 
             var me = this;
 
-            this.struct.forEach(function(item){
+            this.struct.forEach(function (item) {
                 var name = item[0];
                 var type = item[1];
 
@@ -73,20 +74,20 @@ define(
 
         /**
          * 写表结构
-         * 
+         *
          * @param {Object} writer writer对象
          * @param {Object} ttf 已解析的ttf对象
-         * 
+         *
          * @return {Writer} 返回writer对象
          */
         function write(writer, ttf) {
             var table = ttf[this.name];
-            
+
             if (!table) {
                 error.raise(10203, this.name);
             }
 
-            this.struct.forEach(function(item){
+            this.struct.forEach(function (item) {
                 var name = item[0];
                 var type = item[1];
 
@@ -131,14 +132,14 @@ define(
 
         /**
          * 获取ttf表的size大小
-         * 
+         *
          * @param {string} name 表名
          * @return {number} 表大小
          */
         function size() {
 
             var sz = 0;
-            this.struct.forEach(function(item) {
+            this.struct.forEach(function (item) {
                 var type = item[1];
                 switch (type) {
                     case struct.Int8:
@@ -183,13 +184,14 @@ define(
 
         /**
          * 获取对象的值
-         * 
+         *
          * @return {*} 当前对象的值
          */
         function valueOf() {
             var val = {};
             var me = this;
-            this.struct.forEach(function(item){
+
+            this.struct.forEach(function (item) {
                 val[item[0]] = me[item[0]];
             });
 
@@ -204,13 +206,13 @@ define(
 
             /**
              * 创建一个表结构
-             * 
+             *
              * @param {string} name 表名
              * @param {Object} struct 表结构
              * @param {Object} prototype 原型
              * @return {Function} 表构造函数
              */
-            create: function(name, struct, prototype) {
+            create: function (name, struct, prototype) {
                 function Table(offset) {
                     this.name = name;
                     this.struct = struct;

@@ -1,29 +1,31 @@
 /**
  * @file range.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 多选区模式
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var isBoundingBoxCross = require('graphics/isBoundingBoxCross');
 
         /**
-         * 多选shape
+         * 根据bound选择shapes
+         * @param {Object} bound 边界对象
+         * @return {Array|boolean} shapes数组或者`false`
          */
         function selectShapes(bound) {
             var shapes = this.fontLayer.shapes;
             var selectedShapes = [];
 
-            shapes.forEach(function(shape) {
+            shapes.forEach(function (shape) {
                 var sb = computeBoundingBox.computePath(shape.points);
                 // 包含
-                if(3 == isBoundingBoxCross(bound, sb)) {
+                if (3 === isBoundingBoxCross(bound, sb)) {
                     selectedShapes.push(shape);
                 }
             });
@@ -33,21 +35,17 @@ define(
 
 
         var mode = {
-            
-            /**
-             * 按下事件
-             */
-            down: function(e) {
-                if (1 == e.which) {
+
+
+            down: function (e) {
+                if (1 === e.which) {
                     mode.begin.call(this, e);
                 }
             },
 
-            /**
-             * 拖动事件
-             */
-            drag: function(e) {
-                if (1 == e.which) {
+
+            drag: function (e) {
+                if (1 === e.which) {
                     if (this.selectionBox) {
                         var camera = this.render.camera;
                         this.selectionBox.width = camera.x - this.selectionBox.x;
@@ -58,11 +56,8 @@ define(
             },
 
 
-            /**
-             * 鼠标弹起
-             */
-            up: function(e) {
-                if (1 == e.which) {
+            up: function (e) {
+                if (1 === e.which) {
                     if (this.selectionBox) {
                         var bound = {
                             x: Math.min(this.selectionBox.x, this.selectionBox.x + this.selectionBox.width),
@@ -70,6 +65,7 @@ define(
                             width: Math.abs(this.selectionBox.width),
                             height: Math.abs(this.selectionBox.height)
                         };
+
                         // 对shape进行多选
                         if (bound.width >= 20 && bound.height >= 20) {
                             var shapes;
@@ -79,15 +75,13 @@ define(
                             }
                         }
                     }
-                    
+
                     this.setMode();
                 }
             },
 
-            /**
-             * 开始模式
-             */
-            begin: function() {
+
+            begin: function () {
                 var camera = this.render.camera;
                 this.selectionBox = {
                     type: 'rect',
@@ -98,10 +92,8 @@ define(
                 this.coverLayer.addShape(this.selectionBox);
             },
 
-            /**
-             * 结束模式
-             */
-            end: function() {
+
+            end: function () {
                 this.selectionBox = null;
                 this.coverLayer.clearShapes();
                 this.coverLayer.refresh();

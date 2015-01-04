@@ -1,14 +1,14 @@
 /**
  * @file woff2ttf.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * woff转换ttf
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var Reader = require('./reader');
         var Writer = require('./writer');
@@ -16,11 +16,11 @@ define(
 
         /**
          * woff格式转换成ttf字体格式
-         * 
+         *
          * @param {ArrayBuffer} woffBuffer woff缓冲数组
          * @param {Object} options 选项
          * @param {Object} options.inflate 解压相关函数
-         * 
+         *
          * @return {ArrayBuffer} ttf格式byte流
          */
         function woff2ttf(woffBuffer, options) {
@@ -38,11 +38,14 @@ define(
             var numTables = reader.readUint16(12);
             var ttfSize =  reader.readUint32(16);
             var tableEntries = [];
+            var tableEntry;
+            var i;
+            var l;
 
             // 读取woff表索引信息
-            for (var i = 0; i < numTables; ++i) {
+            for (i = 0; i < numTables; ++i) {
                 reader.seek(44 + i * 20);
-                var tableEntry = {
+                tableEntry = {
                     tag: reader.readString(reader.offset, 4),
                     offset: reader.readUint32(),
                     compLength: reader.readUint32(),
@@ -65,17 +68,18 @@ define(
                 else {
                     tableEntry.data = deflateData;
                 }
-                tableEntry.length = tableEntry.data.length;
 
+                tableEntry.length = tableEntry.data.length;
                 tableEntries.push(tableEntry);
             }
 
 
             var writer = new Writer(new ArrayBuffer(ttfSize));
             // 写头部
-            var entrySelector = Math.floor(Math.log(numTables)/Math.LN2);
+            var entrySelector = Math.floor(Math.log(numTables) / Math.LN2);
             var searchRange = Math.pow(2, entrySelector) * 16;
             var rangeShift = numTables * 16 - searchRange;
+
             writer.writeFixed(1);
             writer.writeUint16(numTables);
             writer.writeUint16(searchRange);
@@ -84,19 +88,19 @@ define(
 
             // 写ttf表索引
             var tblOffset = 12 + 16 * tableEntries.length;
-            for (var i = 0, l = tableEntries.length; i < l; ++i) {
-                var tableEntry = tableEntries[i];
+            for (i = 0, l = tableEntries.length; i < l; ++i) {
+                tableEntry = tableEntries[i];
                 writer.writeString(tableEntry.tag);
                 writer.writeUint32(tableEntry.checkSum);
                 writer.writeUint32(tblOffset);
                 writer.writeUint32(tableEntry.length);
-                tblOffset += tableEntry.length 
+                tblOffset += tableEntry.length
                     + (tableEntry.length % 4 ? 4 - tableEntry.length % 4 : 0);
             }
 
             // 写ttf表数据
-            for (var i = 0, l = tableEntries.length; i < l; ++i) {
-                var tableEntry = tableEntries[i];
+            for (i = 0, l = tableEntries.length; i < l; ++i) {
+                tableEntry = tableEntries[i];
                 writer.writeBytes(tableEntry.data);
                 if (tableEntry.length % 4) {
                     writer.writeEmpty(4 - tableEntry.length % 4);

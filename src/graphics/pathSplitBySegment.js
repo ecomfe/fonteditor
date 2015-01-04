@@ -1,14 +1,14 @@
 /**
  * @file pathSplitBySegment.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 线段切割路径
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var computeBoundingBox = require('./computeBoundingBox');
         var getSegmentPathJoint = require('./join/getSegmentPathJoint');
@@ -20,7 +20,7 @@ define(
 
         /**
          * 线段切割路径
-         * 
+         *
          * @param {Array} path 路径
          * @param {Object} p0 起始点
          * @param {Object} p1 结束点
@@ -41,7 +41,7 @@ define(
             // 有交点
             if (result && result.length > 1) {
 
-                var splitedPaths = pathSplit(path, result.map(function(p) {
+                var splitedPaths = pathSplit(path, result.map(function (p) {
                     p.index = p.index1;
                     return p;
                 }));
@@ -56,6 +56,7 @@ define(
                         var prevPrev = i === last - 1 ? 0 : i + 2;
                         var newPath = splitedPaths[prevPrev].concat(splitedPaths[i]);
                         newPath.direction = splitedPaths[i + 1].direction;
+
                         if (prevPrev === 0) {
                             splitedPaths[0] = newPath;
                             splitedPaths.splice(i, 1);
@@ -68,7 +69,7 @@ define(
                 }
 
 
-                return splitedPaths.map(function(path) {
+                return splitedPaths.map(function (path) {
                     return deInterpolate(path);
                 });
             }

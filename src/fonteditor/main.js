@@ -7,9 +7,8 @@
  */
 
 define(
-    function(require) {
+    function (require) {
 
-        var lang = require('common/lang');
         var GLYFViewer = require('./widget/glyfviewer');
         var GLYFEditor = require('./widget/glyfeditor');
         var ProjectViewer = require('./widget/projectviewer');
@@ -21,32 +20,32 @@ define(
         var controller = require('./controller/default');
         var actions = require('./controller/actions');
 
-        // 打开文件
+
         function onUpFile(e) {
             var file = e.target.files[0];
-            if (program.data.action == 'open' && program.loader.supportLoad(file.name)) {
+            if (program.data.action === 'open' && program.loader.supportLoad(file.name)) {
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
-                    success: function(imported) {
+                    success: function (imported) {
                         program.viewer.clearSelected();
                         program.ttfManager.set(imported);
                         program.data.projectId = null;
                     }
                 });
             }
-            else if (program.data.action == 'import' && program.loader.supportImport(file.name)) {
+            else if (program.data.action === 'import' && program.loader.supportImport(file.name)) {
                 if (program.ttfManager.get()) {
 
                     var ext = file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase();
-                    var reg = new RegExp('\.'+ ext +'$', 'i');
-                    var files = Array.prototype.slice.call(e.target.files).filter(function(f) {
-                        return reg.test(file.name);
+                    var reg = new RegExp('\.' + ext + '$', 'i');
+                    var files = Array.prototype.slice.call(e.target.files).filter(function (f) {
+                        return reg.test(f.name);
                     });
 
-                    files.forEach(function(f) {
+                    files.forEach(function (f) {
                         program.loader.load(f, {
                             type: ext,
-                            success: function(imported) {
+                            success: function (imported) {
                                 if (imported.glyf.length) {
                                     program.ttfManager.merge(imported, {scale: true});
                                 }
@@ -62,9 +61,9 @@ define(
             e.target.value = '';
         }
 
-        // 绑定组件
+
         function bindEvent() {
-            $('.action-groups').delegate('[data-action]', 'click',  function(e) {
+            $('.action-groups').delegate('[data-action]', 'click',  function (e) {
                 var action = $(this).attr('data-action');
                 if (actions[action]) {
                     program.data.action = action;
@@ -90,7 +89,7 @@ define(
                 bindEvent();
 
                 // font baidu online
-                if(location.hostname.indexOf('baidu.com') > -1) {
+                if (location.hostname.indexOf('baidu.com') > -1) {
                     program.fontUrl = '/getfont?url=${0}';
                 }
 
@@ -98,7 +97,7 @@ define(
 
                 // glyf查看器命令组
                 var viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
-                    commands: require('./widget/menu/viewer')
+                    commands: require('./menu/viewer')
                 });
 
                 program.viewerPager = new Pager($('#glyf-list-pager'));
@@ -110,7 +109,7 @@ define(
 
                 // 字体查看器命令组
                 var editorCommandMenu = new CommandMenu($('#editor-commandmenu'), {
-                    commands: require('./widget/menu/editor')
+                    commands: require('./menu/editor')
                 });
 
                 // 字体查看器

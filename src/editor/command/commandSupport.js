@@ -1,14 +1,14 @@
 /**
  * @file supportHistory.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  *  命令相关配置
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         // 支持历史记录的命令列表
         var supportHistory = {

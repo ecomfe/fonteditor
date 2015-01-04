@@ -1,13 +1,13 @@
 /**
  * @file isBezierSegmentCross.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 判断贝塞尔曲线与线段相交
  */
 
 define(
-    function(require) {
+    function (require) {
         var computeBoundingBox = require('./computeBoundingBox');
         var isBezierLineCross = require('./isBezierLineCross');
         var isBoundingBoxCross = require('./isBoundingBoxCross');
@@ -15,7 +15,7 @@ define(
 
         /**
          * 判断贝塞尔曲线与线段相交
-         * 
+         *
          * @param {Object} p0 起点
          * @param {Object} p1 控制点
          * @param {Object} p2 终点
@@ -35,7 +35,7 @@ define(
             if (isBoundingBoxCross(b1, bound)) {
                 var result = isBezierLineCross(p0, p1, p2, s0, s1);
                 if (result) {
-                    return result.filter(function(p) {
+                    return result.filter(function (p) {
                         return isPointInBound(bound, p, true);
                     });
                 }

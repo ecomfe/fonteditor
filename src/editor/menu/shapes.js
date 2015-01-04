@@ -1,14 +1,14 @@
 /**
  * @file shapes.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- * 路径组
+ * 路径组command
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'reversepoints',

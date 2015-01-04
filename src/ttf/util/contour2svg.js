@@ -1,18 +1,18 @@
 /**
  * @file contour2svg.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 将路径转换为svg路径
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         /**
          * 将路径转换为svg路径
-         * 
+         *
          * @param {Array} contour 轮廓序列
          * @return {string} 路径
          */
@@ -24,7 +24,9 @@ define(
 
             var pathArr = [];
 
-            var curPoint, prevPoint, nextPoint;
+            var curPoint;
+            var prevPoint;
+            var nextPoint;
             for (var i = 0, l = contour.length; i < l; i++) {
                 curPoint = contour[i];
                 prevPoint = i === 0 ? contour[l - 1] : contour[i - 1];
@@ -40,7 +42,7 @@ define(
                             pathArr.push('M' + prevPoint.x + ' ' + prevPoint.y);
                         }
                         else {
-                            pathArr.push('M' + ((prevPoint.x + curPoint.x) / 2) 
+                            pathArr.push('M' + ((prevPoint.x + curPoint.x) / 2)
                                 + ' ' + ((prevPoint.y + curPoint.y) / 2));
                         }
                     }
@@ -52,7 +54,7 @@ define(
                 }
                 else if (!curPoint.onCurve) {
                     if (nextPoint.onCurve) {
-                        pathArr.push('Q' + curPoint.x + ' ' + curPoint.y 
+                        pathArr.push('Q' + curPoint.x + ' ' + curPoint.y
                             + ' ' + nextPoint.x + ' ' + nextPoint.y);
                     }
                     else {

@@ -1,28 +1,22 @@
 /**
  * @file Point.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 绘制控制点
  */
 
 
 define(
-    function(require) {
-        
+    function (require) {
+
         var POINT_SIZE = 6; // 控制点的大小
 
         var proto = {
-            
+
             type: 'point',
 
-            /**
-             * 获取shape的矩形区域
-             * 
-             * @param {Object} shape shape数据
-             * @param {Object} 矩形区域
-             */
-            getRect: function(shape) {
+            getRect: function (shape) {
                 var size = shape.size || POINT_SIZE;
                 return {
                     x: shape.x - size / 2 ,
@@ -32,15 +26,7 @@ define(
                 };
             },
 
-            /**
-             * 判断点是否在shape内部
-             * 
-             * @param {Object} shape shape数据
-             * @param {number} x x偏移
-             * @param {number} y y偏移
-             * @param {boolean} 是否
-             */
-            isIn: function(shape, x, y) {
+            isIn: function (shape, x, y) {
                 var size = shape.size || POINT_SIZE;
                 var w = size;
                 var h = size;
@@ -50,14 +36,8 @@ define(
                     && y >= shape.y - h;
             },
 
-            /**
-             * 绘制一个shape对象
-             * 
-             * @param {CanvasContext} ctx canvas的context
-             * @param {Object} shape shape数据
-             */
-            draw: function(ctx, shape) {
-                
+            draw: function (ctx, shape) {
+
                 var x = Math.round(shape.x);
                 var y = Math.round(shape.y);
                 var size = shape.size || POINT_SIZE;
@@ -70,7 +50,6 @@ define(
                 ctx.lineTo(x - w, y - h);
             }
         };
-
 
 
         return require('./Shape').derive(proto);

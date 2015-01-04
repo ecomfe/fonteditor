@@ -1,7 +1,7 @@
 /**
  * @file GDEF.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * GDEF表
  * The Glyph Definition Table
@@ -11,11 +11,11 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var GDEF = table.create(
-            'GDEF', 
+            'GDEF',
             [
                 ['Version', struct.Uint32],
                 ['GlyphClassDef', struct.Uint16],

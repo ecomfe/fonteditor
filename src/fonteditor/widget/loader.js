@@ -8,14 +8,13 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var TTFReader = require('ttf/ttfreader');
         var woff2ttf = require('ttf/woff2ttf');
         var eot2ttf = require('ttf/eot2ttf');
         var svg2ttfobject = require('ttf/svg2ttfobject');
         var inflate = require('inflate');
-        var JSZip = require('JSZip');
         var loading = require('./loading');
 
         var woffOptions = {
@@ -35,14 +34,15 @@ define(
         function loadSFNTFile(file, options) {
             loading.show();
             var fileReader = new FileReader();
-            fileReader.onload = function(e) {
+
+            fileReader.onload = function (e) {
 
                 try {
                     var buffer = e.target.result;
-                    if (options.type == 'woff') {
+                    if (options.type === 'woff') {
                         buffer = woff2ttf(buffer, woffOptions);
                     }
-                    else if (options.type == 'eot') {
+                    else if (options.type === 'eot') {
                         buffer = eot2ttf(buffer, woffOptions);
                     }
                     var ttfReader = new TTFReader();
@@ -51,7 +51,7 @@ define(
                     fileReader = null;
                     options.success && options.success(ttf);
                 }
-                catch(exp) {
+                catch (exp) {
                     alert(exp.message);
                     throw exp;
                 }
@@ -59,7 +59,7 @@ define(
                 loading.hide();
             };
 
-            fileReader.onerror = function(e) {
+            fileReader.onerror = function (e) {
                 loading.hide();
                 fileReader = null;
                 alert('读取文件出错!');
@@ -82,10 +82,10 @@ define(
             loading.show();
 
             try {
-                if (options.type == 'woff') {
+                if (options.type === 'woff') {
                     buffer = woff2ttf(buffer, woffOptions);
                 }
-                else if (options.type == 'eot') {
+                else if (options.type === 'eot') {
                     buffer = eot2ttf(buffer, woffOptions);
                 }
                 var ttfReader = new TTFReader();
@@ -93,7 +93,7 @@ define(
                 ttfReader.dispose();
                 options.success && options.success(ttf);
             }
-            catch(exp) {
+            catch (exp) {
                 alert(exp.message);
                 throw exp;
             }
@@ -109,19 +109,19 @@ define(
          * @param {Function} options.success 成功回调
          * @param {Function} options.error 失败回调
          */
-         function loadSVGFile(file, options) {
+        function loadSVGFile(file, options) {
 
             loading.show();
             var fileReader = new FileReader();
 
-            fileReader.onload = function(e) {
+            fileReader.onload = function (e) {
                 try {
                     var buffer = e.target.result;
                     var imported = svg2ttfobject(buffer);
                     fileReader = null;
                     options.success && options.success(imported);
                 }
-                catch(exp) {
+                catch (exp) {
                     alert(exp.message);
                     throw exp;
                 }
@@ -129,7 +129,7 @@ define(
                 loading.hide();
             };
 
-            fileReader.onerror = function(e) {
+            fileReader.onerror = function (e) {
                 loading.hide();
                 fileReader = null;
                 alert('读取文件出错!');
@@ -141,19 +141,19 @@ define(
         /**
          * 加载svg结构字体
          *
-         * @param {File} svg svg文本
+         * @param {File} file svg文本
          * @param {Object} options 参数
          * @param {Function} options.success 成功回调
          * @param {Function} options.error 失败回调
          */
-         function loadSVG(file, options) {
+        function loadSVG(file, options) {
             loading.show();
             try {
                 var imported = svg2ttfobject(file);
                 loading.hide();
                 options.success && options.success(imported);
             }
-            catch(exp) {
+            catch (exp) {
                 loading.hide();
                 alert(exp.message);
                 throw exp;
@@ -171,16 +171,16 @@ define(
              * @param {Function} options.success 成功回调
              * @param {Function} options.error 失败回调
              */
-            load: function(file, options) {
-                if (options.type == 'svg') {
-                    if (typeof(file) === 'string' || file instanceof XMLDocument) {
+            load: function (file, options) {
+                if (options.type === 'svg') {
+                    if (typeof file === 'string' || file instanceof window.XMLDocument) {
                         loadSVG(file, options);
                     }
                     else {
                         loadSVGFile(file, options);
                     }
                 }
-                else if (options.type == 'ttf' || options.type == 'woff' || options.type == 'eot') {
+                else if (options.type === 'ttf' || options.type === 'woff' || options.type === 'eot') {
                     if (file instanceof ArrayBuffer) {
                         loadSFNTBinary(file, options);
                     }
@@ -201,7 +201,7 @@ define(
              * @param {string} fileName 文件类型
              * @return {boolean}
              */
-            supportLoad: function(fileName) {
+            supportLoad: function (fileName) {
                 return !!fileName.match(/(\.ttf|\.woff|\.eot)$/i);
             },
 
@@ -211,7 +211,7 @@ define(
              * @param {string} fileName 文件类型
              * @return {boolean}
              */
-            supportImport: function(fileName) {
+            supportImport: function (fileName) {
                 return !!fileName.match(/(\.ttf|\.woff|\.svg|\.eot)$/i);
             }
         };

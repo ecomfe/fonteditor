@@ -1,22 +1,21 @@
 /**
  * @file ttf2woff.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf转换为woff
- * 
- * woff format: 
+ *
+ * woff format:
  * http://www.w3.org/TR/2012/REC-WOFF-20121213/
- * 
+ *
  * references:
  * https://github.com/fontello/ttf2woff
  * https://github.com/nodeca/pako
- * 
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var Reader = require('./reader');
         var Writer = require('./writer');
         var string = require('common/string');
@@ -24,12 +23,12 @@ define(
 
         /**
          * metadata 转换成XML
-         * 
+         *
          * @param {Object} metadata metadata
-         * 
-         * @example 
+         *
+         * @example
          * metadata json:
-         * 
+         *
          *    {
          *        "uniqueid": "",
          *        "vendor": {
@@ -53,7 +52,7 @@ define(
          *        "trademark": "",
          *        "licensee": ""
          *    }
-         * 
+         *
          * @return {string} xml字符串
          */
         function metadata2xml(metadata) {
@@ -62,21 +61,23 @@ define(
                 +   '<metadata version="1.0">';
 
             metadata.uniqueid = metadata.uniqueid || 'fonteditor.' + Date.now();
-            xml += '<uniqueid id="'+ string.encodeHTML(metadata.uniqueid) +'" />';
+            xml += '<uniqueid id="' + string.encodeHTML(metadata.uniqueid) + '" />';
 
             if (metadata.vendor) {
-                xml += '<vendor name="'+ string.encodeHTML(metadata.vendor.name) +'"'
-                    +     ' url="'+ string.encodeHTML(metadata.vendor.url) +'" />';
+                xml += '<vendor name="' + string.encodeHTML(metadata.vendor.name) + '"'
+                    +     ' url="' + string.encodeHTML(metadata.vendor.url) + '" />';
             }
 
             if (metadata.credit) {
                 xml += '<credits>';
                 var credits = metadata.credit instanceof Array ? metadata.credit : [metadata.credit];
-                credits.forEach(function(credit) {
-                    xml += '<credit name="'+ string.encodeHTML(credit.name) +'"'
-                        +     ' url="'+ string.encodeHTML(credit.url) +'"'
-                        +     ' role="'+ string.encodeHTML(credit.role || 'Contributor') +'" />';
+
+                credits.forEach(function (credit) {
+                    xml += '<credit name="' + string.encodeHTML(credit.name) + '"'
+                        +     ' url="' + string.encodeHTML(credit.url) + '"'
+                        +     ' role="' + string.encodeHTML(credit.role || 'Contributor') + '" />';
                 });
+
                 xml += '</credits>';
             }
 
@@ -87,8 +88,8 @@ define(
             }
 
             if (metadata.license) {
-                xml += '<license url="'+ string.encodeHTML(metadata.license.url) +'"'
-                    +      ' id="'+ string.encodeHTML(metadata.license.id) +'"><text xml:lang="en">';
+                xml += '<license url="' + string.encodeHTML(metadata.license.url) + '"'
+                    +      ' id="' + string.encodeHTML(metadata.license.id) + '"><text xml:lang="en">';
                 xml +=     string.encodeHTML(metadata.license.text);
                 xml += '</text></license>';
             }
@@ -114,14 +115,15 @@ define(
             return xml;
         }
 
+        /* eslint-disable fecs-max-statements */
         /**
          * ttf格式转换成woff字体格式
-         * 
+         *
          * @param {ArrayBuffer} ttfBuffer ttf缓冲数组
          * @param {Object} options 选项
          * @param {Object} options.metadata 字体相关的信息
          * @param {Object} options.deflate 压缩相关函数
-         * 
+         *
          * @return {ArrayBuffer} woff格式byte流
          */
         function ttf2woff(ttfBuffer, options) {
@@ -148,6 +150,10 @@ define(
             var ttfReader = new Reader(ttfBuffer);
             var tableEntries = [];
             var numTables = ttfReader.readUint16(4); // 读取ttf表个数
+            var tableEntry;
+            var deflatedData;
+            var i;
+            var l;
 
             if (numTables <= 0 || numTables > 100) {
                 error.raise(10101);
@@ -155,9 +161,10 @@ define(
 
             // 读取ttf表索引信息
             ttfReader.seek(12);
-            for (var i = 0; i < numTables; ++i) {
 
-                var tableEntry = {
+            for (i = 0; i < numTables; ++i) {
+
+                tableEntry = {
                     tag: ttfReader.readString(ttfReader.offset, 4),
                     checkSum: ttfReader.readUint32(),
                     offset: ttfReader.readUint32(),
@@ -166,7 +173,7 @@ define(
 
                 var entryOffset = ttfReader.offset;
 
-                if (tableEntry.tag == 'head') {
+                if (tableEntry.tag === 'head') {
                     // 读取font revision
                     woffHeader.majorVersion = ttfReader.readUint16(tableEntry.offset + 4);
                     woffHeader.minorVersion = ttfReader.readUint16(tableEntry.offset + 6);
@@ -177,7 +184,7 @@ define(
 
                 // 对数据进行压缩
                 if (options.deflate) {
-                    var deflatedData = options.deflate(sfntData);
+                    deflatedData = options.deflate(sfntData);
 
                     // 这里需要判断是否压缩后数据小于原始数据
                     if (deflatedData.length < sfntData.length) {
@@ -202,16 +209,16 @@ define(
             }
 
             // 对table进行排序
-            tableEntries = tableEntries.sort(function(a, b) {
+            tableEntries = tableEntries.sort(function (a, b) {
                 return a.tag === b.tag ? 0 : a.tag < b.tag ? -1 : 1;
             });
 
             // 计算offset和 woff size
-            var woffSize = 44 + 20 * numTables; // header size + table entries 
+            var woffSize = 44 + 20 * numTables; // header size + table entries
             var ttfSize = 12 + 16 * numTables;
 
-            for (var i = 0, l = tableEntries.length; i < l; ++i) {
-                var tableEntry = tableEntries[i];
+            for (i = 0, l = tableEntries.length; i < l; ++i) {
+                tableEntry = tableEntries[i];
                 tableEntry.offset = woffSize;
                  // 4字节对齐
                 woffSize += tableEntry.compLength + (tableEntry.compLength % 4 ? 4 - tableEntry.compLength % 4 : 0);
@@ -222,9 +229,9 @@ define(
             var metadata = null;
             if (options.metadata) {
                 var xml = require('./util/string').toUTF8Bytes(metadata2xml(options.metadata));
-                
+
                 if (options.deflate) {
-                    var deflatedData = options.deflate(xml);
+                    deflatedData = options.deflate(xml);
                     if (deflatedData.length < xml.length) {
                         metadata = deflatedData;
                     }
@@ -239,7 +246,7 @@ define(
                 woffHeader.metaLength = metadata.length;
                 woffHeader.metaOrigLength = xml.length;
                 woffHeader.metaOffset = woffSize;
-                //metadata header + length
+                // metadata header + length
                 woffSize += woffHeader.metaLength + (woffHeader.metaLength % 4 ? 4 - woffHeader.metaLength % 4 : 0);
             }
 
@@ -267,8 +274,8 @@ define(
 
 
             // 写woff表索引
-            for (var i = 0, l = tableEntries.length; i < l; ++i) {
-                var tableEntry = tableEntries[i];
+            for (i = 0, l = tableEntries.length; i < l; ++i) {
+                tableEntry = tableEntries[i];
                 woffWriter.writeString(tableEntry.tag);
                 woffWriter.writeUint32(tableEntry.offset);
                 woffWriter.writeUint32(tableEntry.compLength);
@@ -277,8 +284,8 @@ define(
             }
 
             // 写表数据
-            for (var i = 0, l = tableEntries.length; i < l; ++i) {
-                var tableEntry = tableEntries[i];
+            for (i = 0, l = tableEntries.length; i < l; ++i) {
+                tableEntry = tableEntries[i];
                 woffWriter.writeBytes(tableEntry.data);
 
                 if (tableEntry.compLength % 4) {
@@ -296,7 +303,7 @@ define(
 
             return woffWriter.getBuffer();
         }
-
+        /* eslint-enable fecs-max-statements */
 
         return ttf2woff;
     }

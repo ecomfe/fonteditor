@@ -1,30 +1,30 @@
 /**
  * @file loading.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * loading 对象
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         /**
          * 提示
-         * 
+         *
          * @type {Object}
          */
         var loading = {
 
             /**
              * 显示提示框
-             * 
+             *
              * @param {string} text 显示文字
              * @param {number} duration 显示时间
              * @return {this}
              */
-            show: function(text, duration) {
+            show: function (text, duration) {
 
                 clearTimeout(this.showtimer);
 
@@ -41,7 +41,7 @@ define(
             /**
              * 隐藏
              */
-            hide: function() {
+            hide: function () {
                 $('#loading').hide();
             }
         };

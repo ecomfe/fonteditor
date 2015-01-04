@@ -1,18 +1,18 @@
 /**
  * @file ajaxFile.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ajax获取文本数据
  */
 
 
 define(
-    function(require) {
-            
+    function (require) {
+
         /**
          * ajax获取数据
-         * 
+         *
          * @param {Object} options 参数选项
          * @param {string=} options.type 类型
          * @param {string=} options.method method
@@ -23,9 +23,9 @@ define(
         function ajaxFile(options) {
             var xhr = new XMLHttpRequest();
 
-            xhr.onreadystatechange = function(){
-                if (xhr.readyState=== 4 && xhr.status === 200){
-                    if(options.onSuccess) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (options.onSuccess) {
 
                         if (options.type === 'binary') {
                             var buffer = xhr.responseBlob || xhr.response;
@@ -42,8 +42,8 @@ define(
                         }
                     }
                 }
-                else if(xhr.status > 200){
-                    if(options.onError) {
+                else if (xhr.status > 200) {
+                    if (options.onError) {
                         options.onError(xhr, xhr.status);
                     }
                 }
@@ -51,16 +51,15 @@ define(
 
             var method = (options.method || 'GET').toUpperCase();
             var params = null;
-
             if (options.params) {
-                
+
                 var str = [];
-                Object.keys(options.params).forEach(function(key) {
+                Object.keys(options.params).forEach(function (key) {
                     str.push(key + '=' + encodeURIComponent(options.params[key]));
                 });
                 str = str.join('&');
-                if(method == 'GET') {
-                    options.url += (options.url.indexOf('?') == -1 ? '?' : '&') + str;
+                if (method === 'GET') {
+                    options.url += (options.url.indexOf('?') === -1 ? '?' : '&') + str;
                 }
                 else {
                     params = str;
@@ -68,10 +67,11 @@ define(
             }
 
             xhr.open(method, options.url, true);
+
             if (options.type === 'binary') {
                 xhr.responseType = 'arraybuffer';
             }
-            xhr.send(null);
+            xhr.send(params);
         }
 
         return ajaxFile;

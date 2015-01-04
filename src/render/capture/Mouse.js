@@ -1,7 +1,7 @@
 /**
  * @file Mouse.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 鼠标动作捕获器
  */
@@ -9,15 +9,15 @@
 
 define(
 
-    function(require) {
+    function (require) {
 
         var lang = require('common/lang');
         var observable = require('common/observable');
-        
+
         /**
          * 获取X坐标
+         *
          * @param {MouseEvent} e 事件
-         * 
          * @return {number} 坐标值
          */
         function getX(e) {
@@ -26,8 +26,8 @@ define(
 
         /**
          * 获取Y坐标
+         *
          * @param {MouseEvent} e 事件
-         * 
          * @return {number} 坐标值
          */
         function getY(e) {
@@ -36,8 +36,8 @@ define(
 
         /**
          * 获取事件参数
+         *
          * @param {MouseEvent} e 事件
-         * 
          * @return {Object} 参数列表
          */
         function getEvent(e) {
@@ -55,6 +55,7 @@ define(
 
         /**
          * 阻止事件传递
+         *
          * @param {MouseEvent} e 事件
          */
         function prevent(e) {
@@ -69,13 +70,12 @@ define(
 
         /**
          * 按下处理事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function mousedown(e) {
 
-
-            if(false === this.events.mousedown) {
+            if (false === this.events.mousedown) {
                 return;
             }
 
@@ -89,24 +89,24 @@ define(
             this.isDown = true;
 
             // 左键
-            
+
             this.fire('down', event);
 
-            if (3 == e.which) {
+            if (3 === e.which) {
                 this.fire('rightdown', event);
             }
         }
 
         /**
          * 双击事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function dblclick(e) {
 
             prevent(e);
 
-            if(false === this.events.dblclick) {
+            if (false === this.events.dblclick) {
                 return;
             }
 
@@ -115,12 +115,12 @@ define(
 
         /**
          * 鼠标移动事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function mousemove(e) {
 
-            if(false === this.events.mousemove) {
+            if (false === this.events.mousemove) {
                 return;
             }
 
@@ -137,7 +137,10 @@ define(
                 event.deltaX = event.x - this.startX;
                 event.deltaY = event.y - this.startY;
 
-                if (Math.abs(event.deltaX) >= this.dragDelta || Math.abs(event.deltaY) >= this.dragDelta) {
+                if (
+                    Math.abs(event.deltaX) >= this.dragDelta
+                    || Math.abs(event.deltaY) >= this.dragDelta
+                ) {
                     if (!this.isDragging) {
                         this.isDragging = true;
                         this.fire('dragstart', event);
@@ -153,13 +156,13 @@ define(
 
         /**
          * 鼠标弹起事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function mouseup(e) {
 
 
-            if(false === this.events.mouseup) {
+            if (false === this.events.mouseup) {
                 return;
             }
 
@@ -172,7 +175,7 @@ define(
 
             this.fire('up', event);
 
-            if (3 == e.which) {
+            if (3 === e.which) {
                 this.fire('rightup', event);
             }
 
@@ -182,7 +185,7 @@ define(
                 this.isDragging = false;
                 this.fire('dragend', event);
             }
-            else if(this.isDown && !this.isDragging && false !== this.events.click) {
+            else if (this.isDown && !this.isDragging && false !== this.events.click) {
                 this.isDragging = false;
                 this.fire('click', event);
             }
@@ -192,12 +195,12 @@ define(
 
         /**
          * 滚轮事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function mousewheel(e) {
 
-            if(false === this.events.mousewheel) {
+            if (false === this.events.mousewheel) {
                 return;
             }
 
@@ -220,15 +223,15 @@ define(
 
         /**
          * 进入处理事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function mouseover(e) {
-            
-            if(false === this.events.mouseover) {
+
+            if (false === this.events.mouseover) {
                 return;
             }
-            
+
             prevent(e);
 
             this.fire('over');
@@ -236,15 +239,15 @@ define(
 
         /**
          * 离开处理事件
-         * 
+         *
          * @param {Object} e 事件参数
          */
         function mouseout(e) {
 
-            if(false === this.events.mouseout) {
+            if (false === this.events.mouseout) {
                 return;
             }
-            
+
             prevent(e);
 
             this.fire('out');
@@ -252,14 +255,15 @@ define(
 
         /**
          * 鼠标动作捕获器
-         * 
+         *
          * @param {HTMLElement} main 控制元素
          * @param {Object} options 参数选项
          * @param {HTMLElement} options.main 监控对象
-         * 
+         *
          * @constructor
          */
         function MouseCapture(main, options) {
+
             this.main = main;
             options = options || {};
             this.events = options.events || {};
@@ -285,10 +289,10 @@ define(
 
             /**
              * 开始监听
-             * 
+             *
              * @return {this}
              */
-            start: function() {
+            start: function () {
 
                 if (!this.listening) {
                     this.listening = true;
@@ -309,10 +313,10 @@ define(
 
             /**
              * 停止监听
-             * 
+             *
              * @return {this}
              */
-            stop: function() {
+            stop: function () {
 
                 if (this.listening) {
                     this.listening = false;
@@ -334,17 +338,17 @@ define(
 
             /**
              * 是否监听中
-             * 
+             *
              * @return {boolean} 是否
              */
-            isListening: function() {
+            isListening: function () {
                 return !!this.listening;
             },
 
             /**
              * 注销
              */
-            dispose: function() {
+            dispose: function () {
                 this.stop();
                 this.un();
                 this.main = this.events = null;

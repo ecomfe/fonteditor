@@ -7,9 +7,8 @@
  */
 
 
-
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
         var program = require('../widget/program');
 
@@ -45,13 +44,17 @@ define(
             +   '<div class="form-group">'
             +       '<div class="input-group input-group-sm">'
             +         '<span class="input-group-addon">吸附到网格线</span>'
-            +         '<span class="form-control"><input data-field="editor.sorption.enableGrid" type="checkbox"></span>'
+            +         '<span class="form-control">'
+            +           '<input data-field="editor.sorption.enableGrid" type="checkbox">'
+            +         '</span>'
             +       '</div>'
             +   '</div>'
             +   '<div class="form-group">'
             +       '<div class="input-group input-group-sm">'
             +         '<span class="input-group-addon">吸附到轮廓</span>'
-            +         '<span class="form-control"><input data-field="editor.sorption.enableShape" type="checkbox"></span>'
+            +         '<span class="form-control">'
+            +           '<input data-field="editor.sorption.enableShape" type="checkbox">'
+            +         '</span>'
             +       '</div>'
             +   '</div>'
             + '</div>'
@@ -118,22 +121,22 @@ define(
 
             title: '编辑器设置',
 
-            getTpl: function() {
+            getTpl: function () {
                 return tpl;
             },
 
-            set: function(setting) {
+            set: function (setting) {
                 this.setting = lang.clone(setting);
                 this.setFields(this.setting);
                 var me = this;
-                $('#setting-editor-efault').on('click', function(e) {
+                $('#setting-editor-efault').on('click', function (e) {
                     e.preventDefault();
                     me.setting = program.setting.getDefault('editor');
                     me.setFields(me.setting);
                 });
             },
 
-            validate: function() {
+            validate: function () {
                 var setting = this.getFields(this.setting);
                 return setting;
             }

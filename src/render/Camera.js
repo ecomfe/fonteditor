@@ -1,20 +1,21 @@
 /**
  * @file Camera.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 视角对象，用来控制平移和缩放
  */
 
 
 define(
-    function(require) {
-
-
+    function (require) {
 
         /**
          * 视角对象
-         * 
+         *
+         * @param {Object} center 中心点
+         * @param {number} scale 缩放级别
+         * @param {number} ratio 缩放比例
          * @constructor
          */
         function Camera(center, scale, ratio) {
@@ -23,8 +24,12 @@ define(
 
         /**
          * 重置camera
+         *
+         * @param {Object} center 中心点
+         * @param {number} scale 缩放级别
+         * @param {number} ratio 缩放比例
          */
-        Camera.prototype.reset = function(center, scale, ratio) {
+        Camera.prototype.reset = function (center, scale, ratio) {
             this.center = center || {
                 x: 0,
                 y: 0
@@ -34,12 +39,12 @@ define(
         };
 
         /**
-         * 注销Camera
+         * 注销
          */
-        Camera.prototype.dispose = function() {
+        Camera.prototype.dispose = function () {
             this.center = this.ratio = this.scale = null;
         };
-        
+
         return Camera;
     }
 );

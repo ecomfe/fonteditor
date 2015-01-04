@@ -1,18 +1,18 @@
 /**
  * @file pathIterator.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 遍历路径的路径集合，包括segment和 bezierline
  */
 
 
 define(
-    function(require) {
-        
+    function (require) {
+
         /**
          * 遍历路径的路径集合
-         * 
+         *
          * @param {Array} contour 坐标点集
          * @param {Function} callBack 回调函数，参数集合：command, p0, p1, p2, i
          * p0, p1, p2 直线或者贝塞尔曲线参数
@@ -21,7 +21,9 @@ define(
          */
         function pathIterator(contour, callBack) {
 
-            var curPoint, prevPoint, nextPoint; 
+            var curPoint;
+            var prevPoint;
+            var nextPoint;
             var cursorPoint; // cursorPoint 为当前单个绘制命令的起点
 
             for (var i = 0, l = contour.length; i < l; i++) {
@@ -40,7 +42,7 @@ define(
                         }
                         else {
                             cursorPoint = {
-                                x: (prevPoint.x + curPoint.x) / 2, 
+                                x: (prevPoint.x + curPoint.x) / 2,
                                 y: (prevPoint.y + curPoint.y) / 2
                             };
                         }

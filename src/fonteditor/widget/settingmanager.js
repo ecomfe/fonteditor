@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var lang = require('common/lang');
         var string = require('common/string');
@@ -28,7 +28,7 @@ define(
              * @param {string} name 设置名字
              * @return {Object} 设置对象
              */
-            get: function(name) {
+            get: function (name) {
 
                 if (!name) {
                     throw 'setting name empty';
@@ -60,7 +60,7 @@ define(
              * @param {boolean} store 是否保存对象
              * @return {Object} 设置对象
              */
-            set: function(name, setting, store) {
+            set: function (name, setting, store) {
 
                 if (!name) {
                     throw 'setting name empty';
@@ -90,7 +90,7 @@ define(
              * @param {string} name 名字
              * @return {boolean} 是否已保存
              */
-            isStored: function(name) {
+            isStored: function (name) {
                 return !!storage.getItem('setting.' + name);
             },
 
@@ -100,7 +100,7 @@ define(
              * @param {string} name 设置名字
              * @return {Object} 设置对象
              */
-            getDefault: function(name) {
+            getDefault: function (name) {
                 if (name === 'editor') {
                     return lang.clone(editorSetting);
                 }

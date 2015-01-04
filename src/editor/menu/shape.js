@@ -1,14 +1,14 @@
 /**
  * @file shape.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- * 路径
+ * 路径command
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'removeshapes',

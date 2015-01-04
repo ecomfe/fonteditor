@@ -1,15 +1,15 @@
 /**
  * @file selectShape.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- * 从待选的shape中选择一个，作为选中的shape 
  *
+ * 从待选的shape中选择一个，作为选中的shape
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var computeBoundingBox = require('../../graphics/computeBoundingBox');
         var isPathCross = require('../../graphics/isPathCross');
@@ -22,11 +22,11 @@ define(
          */
         function selectShape(shapes, p) {
 
-            if (shapes.length == 1) {
+            if (shapes.length === 1) {
                 return shapes[0];
             }
 
-            var sorted = shapes.map(function(shape) {
+            var sorted = shapes.map(function (shape) {
                 var bound = computeBoundingBox.computePath(shape.points);
                 shape._bound = bound;
                 shape._size = bound.width * bound.height;
@@ -45,10 +45,10 @@ define(
 
             var selection = start;
 
-            if(2 === result) {
+            if (2 === result) {
                 selection = end;
             }
-            else if(3 === result) {
+            else if (3 === result) {
                 selection = start;
             }
             else {
@@ -59,7 +59,7 @@ define(
                     var ex = end._bound.x + end._bound.width / 2;
                     var ey = end._bound.y + end._bound.height / 2;
                     if (
-                        Math.pow(p.x - ex, 2) + Math.pow(p.y - ey, 2) 
+                        Math.pow(p.x - ex, 2) + Math.pow(p.y - ey, 2)
                         > Math.pow(p.x - sx, 2) + Math.pow(p.y - sy, 2)
                     ) {
                         selection = end;
@@ -67,7 +67,7 @@ define(
                 }
             }
 
-            shapes.forEach(function(shape) {
+            shapes.forEach(function (shape) {
                 delete shape._bound;
                 delete shape._size;
             });

@@ -1,18 +1,18 @@
 /**
  * @file BoundControl.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 控制点管理类
  */
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
 
         /**
          * 控制点管理
-         * 
+         *
          * @constructor
          * @param {Layer} layer layer对象
          */
@@ -26,26 +26,26 @@ define(
                     type: 'polygon',
                     dashed: true,
                     selectable: false
-                }, 
+                },
                 {}, {}, {}, {}, {}, {}, {}, {}
             ];
         }
 
         /**
          * 刷新控制点
-         * 
+         *
          * @param {Object} bound bound对象
          * @param {string} mode 模式
          */
-        BoundControl.prototype.refresh = function(bound, mode) {
+        BoundControl.prototype.refresh = function (bound, mode) {
             var points = [
 
                 {
                     points: [
-                        {x: bound.x,y:bound.y},
-                        {x: bound.x + bound.width, y:bound.y},
-                        {x: bound.x + bound.width, y:bound.y + bound.height},
-                        {x: bound.x, y:bound.y + bound.height}
+                        {x: bound.x, y: bound.y},
+                        {x: bound.x + bound.width, y: bound.y},
+                        {x: bound.x + bound.width, y: bound.y + bound.height},
+                        {x: bound.x, y: bound.y + bound.height}
                     ]
                 },
 
@@ -67,9 +67,9 @@ define(
 
             var controls = this.controls;
 
-            points.forEach(function(p, i) {
+            points.forEach(function (p, i) {
                 if (i > 0) {
-                    if (mode == 'rotate' && i <= 4) {
+                    if (mode === 'rotate' && i <= 4) {
                         p.type = 'cpoint';
                         p.size = 3;
                     }
@@ -87,10 +87,10 @@ define(
         /**
          * 显示控制点
          */
-        BoundControl.prototype.show = function() {
+        BoundControl.prototype.show = function () {
             var layer = this.layer;
             if (!layer.getShape('bound-point')) {
-                this.controls.forEach(function(shape) {
+                this.controls.forEach(function (shape) {
                     layer.addShape(shape);
                 });
             }
@@ -100,10 +100,10 @@ define(
         /**
          * 隐藏控制点
          */
-        BoundControl.prototype.hide = function() {
+        BoundControl.prototype.hide = function () {
             var layer = this.layer;
             if (layer.getShape('bound-point')) {
-                this.controls.forEach(function(shape) {
+                this.controls.forEach(function (shape) {
                     layer.removeShape(shape);
                 });
             }
@@ -113,7 +113,7 @@ define(
         /**
          * 注销
          */
-        BoundControl.prototype.dispose = function() {
+        BoundControl.prototype.dispose = function () {
             this.hide();
             this.layer.refresh();
             this.controls.length = 0;

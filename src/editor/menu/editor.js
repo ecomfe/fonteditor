@@ -1,21 +1,21 @@
 /**
  * @file editor.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 编辑器
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'addpath',
                 title: '添加路径'
             },
             {
-                name:'add_shapes',
+                name: 'add_shapes',
                 title: '添加形状',
                 items: [
                     {
@@ -98,6 +98,10 @@ define(
             {
                 name: 'fontsetting',
                 title: '字形信息'
+            },
+            {
+                name: 'save',
+                title: '保存'
             }
         ];
     }

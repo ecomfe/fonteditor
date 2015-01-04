@@ -1,18 +1,18 @@
 /**
  * @file GraduationMarker.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 刻度指示
  */
 
 
 define(
-    function(require) {
-        
+    function (require) {
+
         /**
          * 刻度指示
-         * 
+         *
          * @constructor
          * @param {HTMLElement} main 主元素
          * @param {Object} options 选项参数
@@ -35,11 +35,11 @@ define(
 
         /**
          * 显示坐标
-         * 
+         *
          * @param {number} x x坐标
          * @param {number} y y坐标
          */
-        GraduationMarker.prototype.moveTo = function(x, y) {
+        GraduationMarker.prototype.moveTo = function (x, y) {
             this.xAxis.style.top = y + 'px';
             this.yAxis.style.left = x + 'px';
         };
@@ -47,7 +47,7 @@ define(
         /**
          * 注销
          */
-        GraduationMarker.prototype.dispose = function() {
+        GraduationMarker.prototype.dispose = function () {
             this.xAxis.parentNode.removeChild(this.xAxis);
             this.yAxis.parentNode.removeChild(this.yAxis);
             this.xAxis = this.yAxis = null;

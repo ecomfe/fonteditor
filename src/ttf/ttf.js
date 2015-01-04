@@ -9,7 +9,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var lang = require('common/lang');
         var string = require('./util/string');
@@ -33,17 +33,18 @@ define(
 
             var scale = 1;
             // 调整glyf对导入的轮廓进行缩放处理
-            if (options.scale && imported.head.unitsPerEm && imported.head.unitsPerEm != ttf.head.unitsPerEm) {
+            if (options.scale && imported.head.unitsPerEm && imported.head.unitsPerEm !== ttf.head.unitsPerEm) {
                 scale = ttf.head.unitsPerEm / imported.head.unitsPerEm;
             }
 
-            var list = imported.glyf.filter(function(g, index) {
-                return g.contours && g.contours.length //简单轮廓
-                    && g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn'; // 非预定义字形
-
+            var list = imported.glyf.filter(function (g, index) {
+                // 简单轮廓
+                return g.contours && g.contours.length
+                    // 非预定义字形
+                    && g.name !== '.notdef' && g.name !== '.null' && g.name !== 'nonmarkingreturn';
             });
 
-            list.forEach(function(g) {
+            list.forEach(function (g) {
                 glyfAdjust(g, scale, scale);
                 ttf.glyf.push(g);
             });
@@ -66,7 +67,7 @@ define(
          *
          * @return {Object} 字符信息
          */
-        TTF.prototype.codes = function() {
+        TTF.prototype.codes = function () {
             return Object.keys(this.ttf.cmap);
         };
 
@@ -76,8 +77,8 @@ define(
          *
          * @return {?number} 返回glyf索引号
          */
-        TTF.prototype.getCodeGlyfIndex = function(c) {
-            var charCode = typeof c == 'number' ? c : c.charCodeAt(0);
+        TTF.prototype.getCodeGlyfIndex = function (c) {
+            var charCode = typeof c === 'number' ? c : c.charCodeAt(0);
             var glyfIndex = this.ttf.cmap[charCode] || 0;
             return glyfIndex;
         };
@@ -88,7 +89,7 @@ define(
          *
          * @return {?Object} 返回glyf对象
          */
-        TTF.prototype.getCodeGlyf = function(c) {
+        TTF.prototype.getCodeGlyf = function (c) {
             var glyfIndex = this.getCodeGlyfIndex(c);
             return this.getIndexGlyf(glyfIndex);
         };
@@ -99,7 +100,7 @@ define(
          *
          * @return {?Object} 返回glyf对象
          */
-        TTF.prototype.getIndexGlyf = function(glyfIndex) {
+        TTF.prototype.getIndexGlyf = function (glyfIndex) {
             var glyfList = this.ttf.glyf;
             var glyf = glyfList[glyfIndex];
             return glyf;
@@ -108,9 +109,10 @@ define(
         /**
          * 设置ttf对象
          *
+         * @param {Object} ttf ttf对象
          * @return {this}
          */
-        TTF.prototype.set = function(ttf) {
+        TTF.prototype.set = function (ttf) {
             delete this.ttf;
             this.ttf = ttf;
             return this;
@@ -121,7 +123,7 @@ define(
          *
          * @return {ttfObject} ttf ttf对象
          */
-        TTF.prototype.get = function() {
+        TTF.prototype.get = function () {
             return this.ttf;
         };
 
@@ -132,7 +134,7 @@ define(
          *
          * @return {number} 添加的glyf
          */
-        TTF.prototype.addGlyf = function(glyf) {
+        TTF.prototype.addGlyf = function (glyf) {
             return this.insertGlyf(glyf);
         };
 
@@ -143,7 +145,7 @@ define(
          * @param {Object} insertIndex 插入的索引
          * @return {number} 添加的glyf
          */
-        TTF.prototype.insertGlyf = function(glyf, insertIndex) {
+        TTF.prototype.insertGlyf = function (glyf, insertIndex) {
             if (insertIndex >= 0 && insertIndex < this.ttf.glyf.length) {
                 this.ttf.glyf.splice(insertIndex, 0, glyf);
             }
@@ -163,7 +165,7 @@ define(
          *
          * @return {Array} 添加的glyf
          */
-        TTF.prototype.mergeGlyf = function(imported, options) {
+        TTF.prototype.mergeGlyf = function (imported, options) {
             var list = merge(this.ttf, imported, options);
             return list;
         };
@@ -175,10 +177,10 @@ define(
          * @param {Array} indexList 索引列表
          * @return {Array} 删除的glyf
          */
-        TTF.prototype.removeGlyf = function(indexList) {
+        TTF.prototype.removeGlyf = function (indexList) {
             var glyf = this.ttf.glyf;
             var removed = [];
-            for(var i = glyf.length - 1; i >= 0; i--) {
+            for (var i = glyf.length - 1; i >= 0; i--) {
                 if (indexList.indexOf(i) >= 0) {
                     removed.push(glyf[i]);
                     glyf.splice(i, 1);
@@ -195,7 +197,7 @@ define(
          * @param {Array} indexList 索引列表
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.setUnicode = function(unicode, indexList) {
+        TTF.prototype.setUnicode = function (unicode, indexList) {
             var glyf = this.ttf.glyf;
             var list = [];
             if (indexList && indexList.length) {
@@ -203,7 +205,7 @@ define(
                 if (first >= 0) {
                     indexList.splice(first, 1);
                 }
-                list = indexList.map(function(item) {
+                list = indexList.map(function (item) {
                     return glyf[item];
                 });
             }
@@ -213,22 +215,22 @@ define(
 
             // 需要选出 unicode >32 的glyf
             if (list.length > 1) {
-                var less32 = function(u) {
+                var less32 = function (u) {
                     return u < 33;
                 };
-                list = list.filter(function(g) {
+                list = list.filter(function (g) {
                     return !g.unicode || !g.unicode.some(less32);
                 });
             }
 
             if (list.length) {
                 unicode = Number('0x' + unicode.slice(1));
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     // 空格有可能会放入 nonmarkingreturn 因此不做编码
                     if (unicode === 0xA0 || unicode === 0x3000) {
                         unicode++;
                     }
-                    
+
                     g.unicode = [unicode];
                     g.name = string.getUnicodeName(unicode);
 
@@ -245,11 +247,11 @@ define(
          * @param {Array} indexList 索引列表
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.genGlyfName = function(indexList) {
+        TTF.prototype.genGlyfName = function (indexList) {
             var glyf = this.ttf.glyf;
             var list = [];
             if (indexList && indexList.length) {
-                list = indexList.map(function(item) {
+                list = indexList.map(function (item) {
                     return glyf[item];
                 });
             }
@@ -259,8 +261,8 @@ define(
 
             if (list.length) {
                 var first = this.ttf.glyf[0];
-                var unicode;
-                list.forEach(function(g) {
+
+                list.forEach(function (g) {
                     if (g === first) {
                         g.name = '.notdef';
                     }
@@ -285,7 +287,7 @@ define(
          * @param {Array} indexList 需要替换的索引列表
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.appendGlyf = function(glyfList, indexList) {
+        TTF.prototype.appendGlyf = function (glyfList, indexList) {
             var glyf = this.ttf.glyf;
             var result = glyfList.slice(0);
 
@@ -312,7 +314,7 @@ define(
          * @param {Array} indexList 索引列表
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.adjustGlyfPos = function(setting, indexList) {
+        TTF.prototype.adjustGlyfPos = function (setting, indexList) {
 
             var glyfList = this.getGlyf(indexList);
             var changed = false;
@@ -322,8 +324,8 @@ define(
 
                 changed = true;
 
-                glyfList.forEach(function(g) {
-                    if (g.leftSideBearing != setting.leftSideBearing) {
+                glyfList.forEach(function (g) {
+                    if (g.leftSideBearing !== setting.leftSideBearing) {
                         glyfAdjust(g, 1, 1, setting.leftSideBearing - g.leftSideBearing);
                     }
                 });
@@ -333,7 +335,7 @@ define(
             if (undefined !== setting.rightSideBearing) {
 
                 changed = true;
-                glyfList.forEach(function(g) {
+                glyfList.forEach(function (g) {
                     g.advanceWidth = g.xMax + setting.rightSideBearing;
                 });
             }
@@ -343,8 +345,8 @@ define(
 
                 changed = true;
 
-                verticalAlign = setting.verticalAlign || 0;
-                glyfList.forEach(function(g) {
+                var verticalAlign = setting.verticalAlign || 0;
+                glyfList.forEach(function (g) {
                     if (g.contours && g.contours.length) {
                         var bound = computeBoundingBox.computePath.apply(this, g.contours);
                         var offset = verticalAlign - bound.y;
@@ -365,7 +367,7 @@ define(
          * @param {Array} indexList 索引列表
          * @return {boolean}
          */
-        TTF.prototype.adjustGlyf = function(setting, indexList) {
+        TTF.prototype.adjustGlyf = function (setting, indexList) {
 
             var glyfList = this.getGlyf(indexList);
             var changed = false;
@@ -374,11 +376,11 @@ define(
 
                 changed = true;
 
-                glyfList.forEach(function(g) {
+                glyfList.forEach(function (g) {
                     if (g.contours && g.contours.length) {
                         var offsetX = g.xMax + g.xMin;
                         var offsetY = g.yMax + g.yMin;
-                        g.contours.forEach(function(contour) {
+                        g.contours.forEach(function (contour) {
                             pathAdjust(contour, setting.mirror ? -1 : 1, setting.reverse ? -1 : 1);
                             pathAdjust(contour, 1, 1, setting.mirror ? offsetX : 0, setting.reverse ? offsetY : 0);
                         });
@@ -387,12 +389,12 @@ define(
             }
 
 
-            if (setting.scale && setting.scale != 1) {
+            if (setting.scale && setting.scale !== 1) {
 
                 changed = true;
 
                 var scale = setting.scale;
-                glyfList.forEach(function(g) {
+                glyfList.forEach(function (g) {
                     if (g.contours && g.contours.length) {
                         glyfAdjust(g, scale, scale);
                     }
@@ -407,16 +409,16 @@ define(
                 var unitsPerEm = this.ttf.head.unitsPerEm;
                 var ajdustToEmPadding = 2 * (setting.ajdustToEmPadding || 0);
 
-                glyfList.forEach(function(g) {
+                glyfList.forEach(function (g) {
                     if (g.contours && g.contours.length) {
 
                         var rightSideBearing = g.advanceWidth - g.xMax;
                         var bound = computeBoundingBox.computePath.apply(null, g.contours);
                         var scale = (unitsPerEm - ajdustToEmPadding) / bound.height;
 
-                        if (scale != 1) {
+                        if (scale !== 1) {
                             var yOffset = (unitsPerEm / 2 + dencent) -  (bound.y + bound.height / 2) * scale;
-                            g.contours.forEach(function(contour) {
+                            g.contours.forEach(function (contour) {
                                 pathAdjust(contour, scale, scale);
                                 pathAdjust(contour, 1, 1, 0, yOffset);
                                 pathCeil(contour);
@@ -446,16 +448,15 @@ define(
          * @param {Array} indexList 索引列表
          * @return {Array} glyflist
          */
-        TTF.prototype.getGlyf = function(indexList) {
+        TTF.prototype.getGlyf = function (indexList) {
             var glyf = this.ttf.glyf;
             if (indexList && indexList.length) {
-                return indexList.map(function(item) {
+                return indexList.map(function (item) {
                     return glyf[item];
                 });
             }
-            else {
-                return glyf;
-            }
+
+            return glyf;
         };
 
         /**
@@ -465,8 +466,8 @@ define(
          * @param {string} index 需要替换的索引列表
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.replaceGlyf = function(glyf, index) {
-            if (index >=0 && index < this.ttf.glyf.length) {
+        TTF.prototype.replaceGlyf = function (glyf, index) {
+            if (index >= 0 && index < this.ttf.glyf.length) {
                 this.ttf.glyf[index] = glyf;
                 return [glyf];
             }
@@ -479,7 +480,7 @@ define(
          * @param {Array} glyfList glyf列表
          * @return {Array} 设置的glyf列表
          */
-        TTF.prototype.setGlyf = function(glyfList) {
+        TTF.prototype.setGlyf = function (glyfList) {
             delete this.glyf;
             this.ttf.glyf = glyfList || [];
             return this.ttf.glyf;
@@ -488,10 +489,10 @@ define(
 
         /**
          * 设置名字
-         *
+         * @param {string} name 名字字段
          * @return {Object} 名字对象
          */
-        TTF.prototype.setName = function(name) {
+        TTF.prototype.setName = function (name) {
             if (name) {
                 name.fontFamily = name.fontFamily || 'fonteditor';
                 name.fontSubFamily = name.fontSubFamily || 'Medium';
@@ -507,7 +508,7 @@ define(
          * @param {Object} head 头部信息
          * @return {Object} 头对象
          */
-        TTF.prototype.setHead = function(head) {
+        TTF.prototype.setHead = function (head) {
             if (head) {
                 // unitsperem
                 if (head.unitsPerEm && head.unitsPerEm >= 64 && head.unitsPerEm <= 16384) {
@@ -532,7 +533,7 @@ define(
          * @param {Object} fields 字段值
          * @return {Object} 头对象
          */
-        TTF.prototype.setHhea = function(fields) {
+        TTF.prototype.setHhea = function (fields) {
             lang.overwrite(this.ttf.hhea, fields, ['ascent', 'descent', 'lineGap']);
             return this.ttf.hhea;
         };
@@ -543,7 +544,7 @@ define(
          * @param {Object} fields 字段值
          * @return {Object} 头对象
          */
-        TTF.prototype.setOS2 = function(fields) {
+        TTF.prototype.setOS2 = function (fields) {
             lang.overwrite(
                 this.ttf['OS/2'], fields,
                 [
@@ -566,7 +567,7 @@ define(
          * @param {Object} fields 字段值
          * @return {Object} 头对象
          */
-        TTF.prototype.setPost = function(fields) {
+        TTF.prototype.setPost = function (fields) {
             lang.overwrite(
                 this.ttf.post, fields,
                 [
@@ -582,10 +583,14 @@ define(
          *
          * @return {Object} 度量信息
          */
-        TTF.prototype.calcMetrics = function() {
-            var usWinAscent = -16384, usWinDescent = 16384;
-            var uX = 0x78, uH = 0x48, sxHeight, sCapHeight;
-            this.ttf.glyf.forEach(function(g) {
+        TTF.prototype.calcMetrics = function () {
+            var usWinAscent = -16384;
+            var usWinDescent = 16384;
+            var uX = 0x78;
+            var uH = 0x48;
+            var sxHeight;
+            var sCapHeight;
+            this.ttf.glyf.forEach(function (g) {
 
                 if (g.yMax > usWinAscent) {
                     usWinAscent = g.yMax;
@@ -596,10 +601,10 @@ define(
                 }
 
                 if (g.unicode) {
-                    if(g.unicode.indexOf(uX) >= 0) {
+                    if (g.unicode.indexOf(uX) >= 0) {
                         sxHeight = g.yMax;
                     }
-                    if(g.unicode.indexOf(uH) >= 0) {
+                    if (g.unicode.indexOf(uH) >= 0) {
                         sCapHeight = g.yMax;
                     }
                 }

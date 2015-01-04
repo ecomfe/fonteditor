@@ -1,14 +1,14 @@
 /**
  * @file svg2ttfObject.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * svg格式转ttfObject格式
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var string = require('common/string');
         var svg2contours = require('./util/svg2contours');
         var computeBoundingBox = require('graphics/computeBoundingBox');
@@ -16,7 +16,7 @@ define(
 
         /**
          * 加载xml字符串
-         * 
+         *
          * @param {string} xml xml字符串
          * @return {XMLDocument}
          */
@@ -24,10 +24,10 @@ define(
             if (document.implementation && document.implementation.createDocument) {
                 try {
                     var domParser = new DOMParser();
-                    xmlDoc = domParser.parseFromString(xml, 'text/xml');
+                    var xmlDoc = domParser.parseFromString(xml, 'text/xml');
                     return xmlDoc;
                 }
-                catch(exp) {
+                catch (exp) {
                     error.raise(10103);
                 }
             }
@@ -36,11 +36,12 @@ define(
 
         /**
          * 获取空的ttfObject
-         * 
+         *
          * @return {Object} ttfObject对象
          */
         function getEmptyObject() {
             return {
+                'from': 'svg',
                 'OS/2': {},
                 'name': {},
                 'hhea': {},
@@ -53,7 +54,7 @@ define(
 
         /**
          * 对ttfObject进行处理，去除小数
-         * 
+         *
          * @param {Object} ttf ttfObject
          * @return {Object} ttfObject
          */
@@ -67,15 +68,18 @@ define(
                 ttf.head.unitsPerEm = 1024;
             }
 
-            ttf.glyf.forEach(function(glyf) {
+            ttf.glyf.forEach(function (glyf) {
                 if (glyf.contours && glyf.contours.length) {
 
-                    glyf.contours.forEach(function(contour) {
-                        contour.forEach(function(p) {
-                            p.x = Math.round(p.x * scale);
-                            p.y = Math.round(p.y * scale);
-                        });
-                    });
+                    var pointIterator = function (p) {
+                        p.x = Math.round(p.x * scale);
+                        p.y = Math.round(p.y * scale);
+                    };
+                    var contourIterator = function (contour) {
+                        contour.forEach(pointIterator);
+                    };
+
+                    glyf.contours.forEach(contourIterator);
 
                     var bound = computeBoundingBox.computePathBox.apply(null, glyf.contours);
                     glyf.xMin = bound.x;
@@ -98,7 +102,7 @@ define(
                     }
                 }
             });
-    
+
             if (undefined !== ttf.head.xMin && undefined !== ttf.head.yMax) {
                 ttf.head.xMin = Math.round(ttf.head.xMin * scale);
                 ttf.head.xMax = Math.round(ttf.head.xMax * scale);
@@ -111,26 +115,18 @@ define(
             return ttf;
         }
 
-
         /**
-         * 解析xml文档
-         * 
+         * 解析字体信息相关节点
+         *
          * @param {XMLDocument} xmlDoc XML文档对象
-         * @return {Object} 解析后对象
+         * @param {Object} ttf ttf对象
+         * @return {Object} ttf对象
          */
-        function parseXML(xmlDoc) {
-
-            var ttf =getEmptyObject();
-            var svgNode = xmlDoc.getElementsByTagName('svg')[0];
-
-            if (!svgNode) {
-                error.raise(10106);
-            }
+        function parseFont(xmlDoc, ttf) {
 
             var metaNode = xmlDoc.getElementsByTagName('metadata')[0];
             var fontNode = xmlDoc.getElementsByTagName('font')[0];
             var fontFaceNode = xmlDoc.getElementsByTagName('font-face')[0];
-            var missingNode = xmlDoc.getElementsByTagName('missing-glyph')[0];
 
             if (metaNode && metaNode.textContent) {
                 ttf.metadata = string.decodeHTML(metaNode.textContent.trim());
@@ -151,7 +147,7 @@ define(
                 // 解析panose, eg: 2 0 6 3 0 0 0 0 0 0
                 var panose = (fontFaceNode.getAttribute('panose-1') || '').split(' ');
                 ['bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
-                'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'].forEach(function(name, i) {
+                'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'].forEach(function (name, i) {
                     OS2[name] = +(panose[i] || 0);
                 });
 
@@ -161,7 +157,7 @@ define(
 
                 // 解析bounding
                 var box = (fontFaceNode.getAttribute('bbox') || '').split(' ');
-                ['xMin', 'yMin', 'xMax', 'yMax'].forEach(function(name, i) {
+                ['xMin', 'yMin', 'xMax', 'yMax'].forEach(function (name, i) {
                     ttf.head[name] = +(box[i] || '');
                 });
 
@@ -172,22 +168,38 @@ define(
                 var unicodeRange = fontFaceNode.getAttribute('unicode-range');
                 if (unicodeRange) {
                     unicodeRange.replace(/u\+([0-9A-Z]+)(\-[0-9A-Z]+)?/i, function ($0, a, b) {
-                        OS2.usFirstCharIndex = Number('0x' + a); 
+                        OS2.usFirstCharIndex = Number('0x' + a);
                         OS2.usLastCharIndex = b ? Number('0x' + b.slice(1)) : 0xFFFFFFFF;
                     });
                 }
             }
 
             // 如果没有定义unitsPerEm，可以用viewBox代替
+            var svgNode = xmlDoc.getElementsByTagName('svg')[0];
             if (!ttf.head.unitsPerEm && svgNode.getAttribute('viewBox')) {
                 var bound = svgNode.getAttribute('viewBox').split(' ');
-                if (bound.length == 4) {
+                if (bound.length === 4) {
                     ttf.head.unitsPerEm = +bound[2];
                 }
             }
 
+            return ttf;
+        }
+
+        /**
+         * 解析字体信息相关节点
+         *
+         * @param {XMLDocument} xmlDoc XML文档对象
+         * @param {Object} ttf ttf对象
+         * @return {Object} ttf对象
+         */
+        function parseGlyf(xmlDoc, ttf) {
+
+            var missingNode = xmlDoc.getElementsByTagName('missing-glyph')[0];
+
             // 解析glyf
-            var d, unicode;
+            var d;
+            var unicode;
             if (missingNode) {
 
                 var missing = {
@@ -215,17 +227,17 @@ define(
             if (glyfNodes.length) {
 
                 // map unicode
-                var unicodeMap = function(u) {
+                var unicodeMap = function (u) {
                     return u.charCodeAt(0);
                 };
 
-                for (var i = 0, l = glyfNodes.length; i < l ; i++) {
+                for (var i = 0, l = glyfNodes.length; i < l; i++) {
 
                     var node = glyfNodes[i];
                     var glyf = {
                         name: node.getAttribute('glyph-name') || node.getAttribute('name') || ''
                     };
-                    
+
                     if (node.getAttribute('horiz-adv-x')) {
                         glyf.advanceWidth = +node.getAttribute('horiz-adv-x');
                     }
@@ -241,6 +253,26 @@ define(
                 }
             }
 
+            return ttf;
+        }
+
+        /**
+         * 解析xml文档
+         *
+         * @param {XMLDocument} xmlDoc XML文档对象
+         * @return {Object} 解析后对象
+         */
+        function parseXML(xmlDoc) {
+
+            var ttf = getEmptyObject();
+
+            if (!xmlDoc.getElementsByTagName('svg').length) {
+                error.raise(10106);
+            }
+
+            parseFont(xmlDoc, ttf);
+            parseGlyf(xmlDoc, ttf);
+
             if (!ttf.glyf.length) {
                 error.raise(10201);
             }
@@ -250,14 +282,14 @@ define(
 
         /**
          * svg格式转ttfObject格式
-         * 
+         *
          * @param {string} svg svg格式
          * @return {Object} ttfObject
          */
         function svg2ttfObject(svg) {
 
             var xmlDoc = svg;
-            if (typeof(svg) === 'string') {
+            if (typeof svg === 'string') {
                 xmlDoc = loadXML(svg);
             }
             var ttf = parseXML(xmlDoc);

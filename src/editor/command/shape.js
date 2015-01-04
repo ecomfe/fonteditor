@@ -1,14 +1,14 @@
 /**
  * @file shape.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 形状相关命令
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathAdjust = require('graphics/pathAdjust');
@@ -16,14 +16,16 @@ define(
 
 
         return {
-            
+
             /**
              * 移除shape
+             *
+             * @param {Array} shapes 形状集合
              */
-            removeshapes: function(shapes) {
-                
+            removeshapes: function (shapes) {
+
                 var fontLayer = this.fontLayer;
-                shapes.forEach(function(shape) {
+                shapes.forEach(function (shape) {
                     fontLayer.removeShape(shape);
                 });
                 fontLayer.refresh();
@@ -33,9 +35,11 @@ define(
 
             /**
              * 反转shape
+             *
+             * @param {Array} shapes 形状集合
              */
-            reversepoints: function(shapes) {
-                shapes.forEach(function(shape) {
+            reversepoints: function (shapes) {
+                shapes.forEach(function (shape) {
                     shape.points = shape.points.reverse();
                 });
 
@@ -44,8 +48,10 @@ define(
 
             /**
              * 设置shape到顶层
+             *
+             * @param {Array} shape 形状
              */
-            topshape: function(shape) {
+            topshape: function (shape) {
                 var index = this.fontLayer.shapes.indexOf(shape);
                 this.fontLayer.shapes.splice(index, 1);
                 this.fontLayer.shapes.push(shape);
@@ -53,8 +59,10 @@ define(
 
             /**
              * 设置shape到底层
+             *
+             * @param {Array} shape 形状
              */
-            bottomshape: function(shape) {
+            bottomshape: function (shape) {
                 var index = this.fontLayer.shapes.indexOf(shape);
                 this.fontLayer.shapes.splice(index, 1);
                 this.fontLayer.shapes.unshift(shape);
@@ -62,8 +70,10 @@ define(
 
             /**
              * 提升shape层级
+             *
+             * @param {Array} shape 形状
              */
-            upshape: function(shape) {
+            upshape: function (shape) {
                 var index = this.fontLayer.shapes.indexOf(shape);
                 this.fontLayer.shapes.splice(index, 1);
                 this.fontLayer.shapes.splice(index + 1, 0, shape);
@@ -71,8 +81,10 @@ define(
 
             /**
              * 降低shape层级
+             *
+             * @param {Array} shape 形状
              */
-            downshape: function(shape) {
+            downshape: function (shape) {
                 var index = this.fontLayer.shapes.indexOf(shape);
                 this.fontLayer.shapes.splice(index, 1);
                 this.fontLayer.shapes.splice(index - 1, 0, shape);
@@ -80,14 +92,14 @@ define(
 
             /**
              * 剪切shapes
-             * 
+             *
              * @param {Array} shapes 形状集合
              */
-            cutshapes: function(shapes) {
+            cutshapes: function (shapes) {
                 var cutedShapes = this.getShapes(shapes);
                 this.setClipBoard(cutedShapes);
                 var fontLayer = this.fontLayer;
-                shapes.forEach(function(shape) {
+                shapes.forEach(function (shape) {
                     fontLayer.removeShape(shape);
                 });
                 fontLayer.refresh();
@@ -96,28 +108,30 @@ define(
 
             /**
              * 复制shapes
-             * 
+             *
              * @param {Array} shapes 形状集合
              */
-            copyshapes: function(shapes) {
+            copyshapes: function (shapes) {
                 shapes = this.getShapes(shapes);
                 this.setClipBoard(shapes);
             },
 
             /**
              * 粘贴shapes
-             * 
+             *
              * @param {Array} shapes 形状集合
+             * @param {Object=} pos 指定的位置
+             * @return {boolean} `false`或者`undefined`
              */
-            pasteshapes: function(shapes, pos) {
+            pasteshapes: function (shapes, pos) {
 
                 if (!shapes || !shapes.length) {
                     return false;
                 }
 
                 if (pos) {
-                    var bound = computeBoundingBox.computePath.apply(null, 
-                        shapes.map(function(shape){
+                    var bound = computeBoundingBox.computePath.apply(null,
+                        shapes.map(function (shape) {
                             return shape.points;
                         })
                     );
@@ -127,9 +141,9 @@ define(
                     var x = (pos.x - origin.x) / scale;
                     var y = (origin.y - pos.y) / scale;
 
-                    shapes.forEach(function(shape) {
+                    shapes.forEach(function (shape) {
                         pathAdjust(shape.points, 1, 1, x - bound.x, y - bound.y - bound.height);
-                    });  
+                    });
                 }
 
 
@@ -139,10 +153,10 @@ define(
 
             /**
              * 增加shapes
-             * 
+             *
              * @param {Array} shapes 形状集合
              */
-            addshapes: function(shapes) {
+            addshapes: function (shapes) {
                 this.setShapes(shapes);
                 this.fontLayer.refresh();
             }

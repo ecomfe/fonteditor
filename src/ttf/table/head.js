@@ -1,18 +1,18 @@
 /**
  * @file head.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * head表
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
         var struct = require('./struct');
         var head = table.create(
-            'head', 
+            'head',
             [
                 ['version', struct.Fixed],
                 ['fontRevision', struct.Fixed],

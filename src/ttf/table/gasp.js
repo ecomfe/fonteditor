@@ -1,24 +1,22 @@
 /**
  * @file gasp.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * gasp表
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6gasp.html
  */
 
 define(
-    function(require) {
+    function (require) {
         var table = require('./table');
 
         var gasp = table.create(
-            'gasp', 
-            [], 
+            'gasp',
+            [],
             {
-                /**
-                 * 解析gasp表
-                 */
-                read: function(reader) {
+
+                read: function (reader) {
                     var offset = this.offset;
                     var gasp = {};
 
@@ -34,8 +32,8 @@ define(
                         GASPRange.rangeGaspBehavior = reader.readUint16();
                         GASPRangeTbl.push(GASPRange);
                     }
+
                     gasp.GASPRangeTbl = GASPRangeTbl;
-                    
                     return gasp;
                 }
             }

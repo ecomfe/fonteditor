@@ -1,22 +1,20 @@
 /**
  * @file initAxis.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * Editor 的坐标系初始化
  */
 
 
 define(
-    function(require) {
-        
+    function (require) {
+
         var lang = require('common/lang');
         var GraduationMarker = require('../widget/GraduationMarker');
 
         /**
          * 初始化坐标系
-         * 
-         * @param {Object} origin 字体原点
          */
         function initAxis() {
             var width = this.render.painter.width;
@@ -61,10 +59,10 @@ define(
 
 
         /**
-         * 设置坐标信息
-         * 
+         * 设置坐标信参数
+         *
          * @param {Object} options 坐标选项
-         * @return {this} 
+         * @see editor/options
          */
         function setAxis(options) {
 
@@ -74,14 +72,16 @@ define(
             lang.overwrite(this.options.axis, options);
 
             // 设置gap
-            this.options.axis.graduation.gap = options.graduation && options.graduation.gap 
-                ? options.graduation.gap : this.options.unitsPerEm / 512 * 100;
+            this.options.axis.graduation.gap = options.graduation && options.graduation.gap
+                ? options.graduation.gap
+                : this.options.unitsPerEm / 512 * 100;
 
             // 设置当前的axis
             var axisOpt = lang.clone(this.options.axis);
             var scale = this.render.camera.scale;
             var metrics = axisOpt.metrics;
-            Object.keys(metrics).forEach(function(m) {
+
+            Object.keys(metrics).forEach(function (m) {
                 axisOpt.metrics[m] = metrics[m] * scale;
             });
 
@@ -92,15 +92,15 @@ define(
             // 缩放到合适位置
             var size = this.render.getSize();
             this.render.scale(oldUnitsPerEm / this.options.unitsPerEm, {
-                x: size.width / 2, 
+                x: size.width / 2,
                 y: size.height / 2
             });
 
         }
 
-        return function() {
+        return function () {
             initAxis.call(this);
             this.setAxis = setAxis;
-        };;
+        };
     }
 );
