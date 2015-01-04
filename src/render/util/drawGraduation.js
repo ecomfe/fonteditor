@@ -33,7 +33,7 @@ define(
             // 刻度线区域
             ctx.fillStyle = config.graduation.markBackgroundColor || '#EEE';
             ctx.fillRect(0, 0, width, thickness);
-            ctx.fillRect(0, 0, thickness, width);
+            ctx.fillRect(0, 0, thickness, height);
             ctx.fill();
 
             ctx.strokeStyle = config.graduation.markColor || '#000';

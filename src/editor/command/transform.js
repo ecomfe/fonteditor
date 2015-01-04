@@ -20,7 +20,7 @@ define(
          *
          * @param {Array} shapes 图形集合
          * @param {number} angle 弧度
-         * @return {boolean=} `false`或者`undefined`
+         * @return {boolean} `false`或者`undefined`
          */
         function rotate(shapes, angle) {
             if (!angle) {
@@ -82,7 +82,7 @@ define(
              *
              * @param {Array} shapes 图形集合
              * @param {number} angle 弧度
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             rotate: function (shapes, angle) {
 
@@ -102,7 +102,7 @@ define(
              * 向左旋转
              *
              * @param {Array} shapes 图形集合
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             rotateleft: function (shapes) {
                 return support.rotate.call(this, shapes, -Math.PI / 2);
@@ -112,7 +112,7 @@ define(
              * 向右旋转
              *
              * @param {Array} shapes 图形集合
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             rotateright: function (shapes) {
                 return support.rotate.call(this, shapes, Math.PI / 2);
@@ -122,7 +122,7 @@ define(
              * 翻转
              *
              * @param {Array} shapes 图形集合
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             flipshapes: function (shapes) {
 
@@ -139,7 +139,7 @@ define(
              * 镜像
              *
              * @param {Array} shapes 图形集合
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             mirrorshapes: function (shapes) {
 

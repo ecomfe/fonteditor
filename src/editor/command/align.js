@@ -20,7 +20,7 @@ define(
              *
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             alignshapes: function (shapes, align) {
 
@@ -76,7 +76,7 @@ define(
              *
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             verticalalignshapes: function (shapes, align) {
 
@@ -124,7 +124,7 @@ define(
              *
              * @param {Array} shapes 形状集合
              * @param {string} align 对齐方式
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             horizontalalignshapes: function (shapes, align) {
 

@@ -156,7 +156,7 @@ define(
              *
              * @param {Layer|string} layer layer对象，或者layer id
              * @param {Object} options 参数
-             * @return {Layer=} layer对象
+             * @return {Layer} layer对象
              */
             addLayer: function (layer, options) {
                 if (layer instanceof Layer) {

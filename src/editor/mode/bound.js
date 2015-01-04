@@ -8,16 +8,14 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var selectShape = require('render/util/selectShape');
         var referenceline = require('./referenceline');
         var mode = {
 
-            /**
-             * 按下事件
-             */
-            down: function(e) {
+
+            down: function (e) {
                 if (1 === e.which) {
 
                     // 是否在边界拉出参考线
@@ -28,15 +26,15 @@ define(
 
                     // 字体模式
                     var result = this.fontLayer.getShapeIn(e);
-                    if(result) {
+                    if (result) {
                         var shape = selectShape(result, e);
                         this.setMode('shapes', [shape], 'bound');
                         return;
                     }
 
                     // 参考线模式
-                    var result = this.referenceLineLayer.getShapeIn(e);
-                    if(result) {
+                    result = this.referenceLineLayer.getShapeIn(e);
+                    if (result) {
                         var line = result[0];
                         this.setMode('referenceline', referenceline.dragLine, line, e);
                         return;
@@ -46,28 +44,14 @@ define(
                 }
             },
 
-            /**
-             * 按键
-             */
-            keydown: function(e) {
-                if(e.keyCode == 32) {
+
+            keydown: function (e) {
+                if (e.keyCode === 32) {
                     this.setMode('pan');
                 }
-                else if(e.keyCode == 65 && e.ctrlKey) {
+                else if (e.keyCode === 65 && e.ctrlKey) {
                     this.setMode('shapes', this.fontLayer.shapes.slice());
                 }
-            },
-
-            /**
-             * 开始模式
-             */
-            begin: function() {
-            },
-
-            /**
-             * 结束模式
-             */
-            end: function() {
             }
         };
 

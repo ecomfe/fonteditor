@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         return {
             'point': require('./point'),
             'range': require('./range'),

@@ -121,7 +121,7 @@ define(
              *
              * @param {Array} shapes 形状集合
              * @param {Object=} pos 指定的位置
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             pasteshapes: function (shapes, pos) {
 

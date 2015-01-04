@@ -173,7 +173,7 @@ define(
              *
              * @param {string|number} shape id或者shape index
              *
-             * @return {Object=} shape对象
+             * @return {Object} shape对象
              */
             getShape: function (shape) {
                 if (typeof shape === 'string') {
@@ -195,7 +195,7 @@ define(
              * @param {string} shape Shape 类型， 或者 Shape 对象
              * @param {Object} options Shape相关参数
              *
-             * @return {Object=} Shape对象
+             * @return {Object} Shape对象
              */
             addShape: function (shape, options) {
                 if (typeof shape === 'string') {

@@ -1,21 +1,21 @@
 /**
  * @file shapes.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 轮廓模式处理事件
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var guid = require('render/util/guid');
         var ShapesGroup = require('../group/ShapesGroup');
         var lang = require('common/lang');
         var selectShape = require('render/util/selectShape');
         var commandList = require('../menu/commandList');
-        var POS_CUSOR = require('./cursor');
+        var POS_CUSOR = require('../util/cursor');
 
         // 移动步频
         var stepMap = {
@@ -25,14 +25,10 @@ define(
             'down': [0, 1]
         };
 
-        /**
-         * 处理右键菜单
-         * 
-         * @param {string} command 命令
-         */
+
         function onContextMenu(e) {
 
-            if(!this.currentGroup.shapes.length) {
+            if (!this.currentGroup.shapes.length) {
                 return;
             }
 
@@ -69,14 +65,14 @@ define(
                     break;
                 case 'addreferenceline':
                     var bound = this.currentGroup.getBound();
-                    if(bound) {
+                    if (bound) {
                         this.execCommand(command, bound.x, bound.y);
                         this.execCommand(command, bound.x + bound.width, bound.y + bound.height);
                     }
                     break;
                 default:
                     // 是否编辑器支持
-                    if(this.supportCommand(command)) {
+                    if (this.supportCommand(command)) {
                         this.execCommand(command, e);
                     }
             }
@@ -85,14 +81,12 @@ define(
 
         var mode = {
 
-            /**
-             * 按下事件
-             */
-            down: function(e) {
+
+            down: function (e) {
                 var render = this.render;
                 var result = render.getLayer('cover').getShapeIn(e);
 
-                if(result) {
+                if (result) {
                     this.currentPoint = lang.clone(result[0]);
                 }
                 else {
@@ -101,14 +95,14 @@ define(
 
                     result = render.getLayer('font').getShapeIn(e);
 
-                    if(result) {
+                    if (result) {
                         var shape = result[0];
                         if (result.length > 1) {
                             shape = selectShape(result, e);
                         }
 
                         var shapeIndex = this.currentGroup.shapes.indexOf(shape);
-                        if(shapeIndex >= 0) {
+                        if (shapeIndex >= 0) {
 
                             // ctl多选，点选2次, !altKey 防止复制冲突
                             if (e.ctrlKey && !e.altKey) {
@@ -119,19 +113,17 @@ define(
 
                             return;
                         }
-                        else {
 
-                            var shapes = [shape];
-                            // 多选
-                            if (e.ctrlKey) {
-                                shapes = shapes.concat(this.currentGroup.shapes);;
-                            }
-
-                            this.currentGroup.setMode('scale');
-                            this.refreshSelected(shapes);
-                            this.clicked = false;
-                            return;
+                        var shapes = [shape];
+                        // 多选
+                        if (e.ctrlKey) {
+                            shapes = shapes.concat(this.currentGroup.shapes);
                         }
+
+                        this.currentGroup.setMode('scale');
+                        this.refreshSelected(shapes);
+                        this.clicked = false;
+                        return;
                     }
 
                     // 框选模式
@@ -139,10 +131,8 @@ define(
                 }
             },
 
-            /**
-             * 开始拖动
-             */
-            dragstart: function(e) {
+
+            dragstart: function (e) {
 
                 // 点拖动模式
                 if (this.currentPoint) {
@@ -153,7 +143,7 @@ define(
                     if (e.ctrlKey && e.altKey) {
                         var shapes = lang.clone(this.currentGroup.shapes);
                         var fontLayer = this.fontLayer;
-                        shapes.forEach(function(shape) {
+                        shapes.forEach(function (shape) {
                             shape.id = guid('shape');
                             fontLayer.addShape(shape);
                         });
@@ -166,26 +156,22 @@ define(
 
             },
 
-            /**
-             * 拖动事件
-             */
-            drag: function(e) {
-                if(this.currentGroup) {
+
+            drag: function (e) {
+                if (this.currentGroup) {
                     this.currentGroup.transform(this.currentPoint, this.render.camera, e);
                 }
             },
 
-            /**
-             * 拖动结束事件
-             */
-            dragend: function(e) {
+
+            dragend: function (e) {
 
                 if (this.currentPoint) {
                     this.currentGroup.finishTransform(this.currentPoint, this.render.camera, e);
                     this.currentPoint = null;
                     this.fire('change');
                 }
-                else if (this.currentGroup.mode == 'move') {
+                else if (this.currentGroup.mode === 'move') {
                     this.currentGroup.finishTransform(this.currentPoint, this.render.camera, e);
                     this.currentGroup.setMode('scale');
                     this.fire('change');
@@ -194,15 +180,13 @@ define(
                 this.render.setCursor('default');
             },
 
-            /**
-             * 移动
-             */
-            move: function(e) {
+
+            move: function (e) {
 
                 var shapes = this.coverLayer.getShapeIn(e);
                 var mode = this.currentGroup.mode;
-                
-                if(shapes && mode != 'move' ) {
+
+                if (shapes && mode !== 'move') {
                     this.render.setCursor(POS_CUSOR[this.currentGroup.mode][shapes[0].pos] || 'default');
                 }
                 else {
@@ -210,84 +194,77 @@ define(
                 }
             },
 
-            /**
-             * 右键
-             */
-            rightdown: function(e) {
+
+            rightdown: function (e) {
                 // 对单个shape进行操作
                 this.contextMenu.onClick = lang.bind(onContextMenu, this);
-                this.contextMenu.show(e, 
+                this.contextMenu.show(e,
                     this.currentGroup.shapes.length > 1
                     ? commandList.shapes
                     : commandList.shape
                 );
             },
 
-            click: function(e) {
+            click: function (e) {
                 if (this.clicked) {
                     // 变换编辑模式
                     var mode = this.currentGroup.mode;
-                    this.currentGroup.setMode(mode == 'scale' ? 'rotate' : 'scale');
+                    this.currentGroup.setMode(mode === 'scale' ? 'rotate' : 'scale');
                     this.currentGroup.refresh();
                 }
                 this.clicked = true;
             },
 
-            /**
-             * 按键
-             */
-            keyup: function(e) {
+
+            keyup: function (e) {
                 // esc键，重置model
-                if (e.key == 'delete') {
+                if (e.key === 'delete') {
                     this.execCommand('removeshapes', this.currentGroup.shapes);
                     this.setMode();
                 }
                 // 全选
-                else if(e.keyCode == 65 && e.ctrlKey) {
+                else if (e.keyCode === 65 && e.ctrlKey) {
                     this.currentGroup.setShapes(this.fontLayer.shapes.slice());
                     this.currentGroup.refresh();
                 }
                 // 移动
-                else if(stepMap[e.key]) {
+                else if (stepMap[e.key]) {
                     this.fire('change');
                 }
-                else if (e.key == 'esc') {
+                else if (e.key === 'esc') {
                     this.setMode();
                 }
             },
 
-            /**
-             * 按住
-             */
-            keydown: function(e) {
+
+            keydown: function (e) {
                 // 剪切
-                if (e.keyCode == 88 && e.ctrlKey) {
+                if (e.keyCode === 88 && e.ctrlKey) {
                     if (this.currentGroup.shapes.length) {
                         this.execCommand('cutshapes', this.currentGroup.shapes);
                     }
                 }
                 // 复制
-                else if (e.keyCode == 67 && e.ctrlKey) {
+                else if (e.keyCode === 67 && e.ctrlKey) {
                     if (this.currentGroup.shapes.length) {
                         this.execCommand('copyshapes', this.currentGroup.shapes);
                     }
                 }
+
                 // 移动
-                if(stepMap[e.key]) {
+                if (stepMap[e.key]) {
                     this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);
                 }
             },
 
-            /**
-             * 开始模式
-             */
-            begin: function(shapes, prevMode) {
+
+            begin: function (shapes, prevMode) {
 
                 this.currentGroup = new ShapesGroup(shapes, this);
                 this.currentGroup.refresh();
                 this.currentGroup.setMode('scale');
 
-                if (prevMode == 'bound') {
+                if (prevMode === 'bound') {
                     this.clicked = false;
                 }
                 else {
@@ -300,11 +277,7 @@ define(
             },
 
 
-            /**
-             * 结束模式
-             */
-            end: function() {
-
+            end: function () {
                 this.currentPoint = null;
                 this.currentGroup.dispose();
                 this.currentGroup = null;

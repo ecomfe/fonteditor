@@ -114,7 +114,7 @@ define(
              *
              * @param {Object} p0 p0
              * @param {Object} p1 p1
-             * @return {boolean=} `false`或者`undefined`
+             * @return {boolean} `false`或者`undefined`
              */
             splitshapes: function (p0, p1) {
                 var shapes = this.fontLayer.shapes;
