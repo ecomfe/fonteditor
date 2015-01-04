@@ -13,11 +13,11 @@ define(
         var isPathCross = require('../isPathCross');
         var isInsidePath = require('../isInsidePath');
         var isPathOverlap = require('../isPathOverlap');
+        var reducePath = require('../reducePath');
         var getBezierQ2Point = require('math/getBezierQ2Point');
         var Relation = require('./relation');
         var util = require('../pathUtil');
         var interpolate = util.interpolate;
-        var removeLinePoint = util.removeLinePoint;
         var pathSplit = require('./pathSplit');
         var pathCombine = require('./pathCombine');
         var getVirtualJoint = require('./getVirtualJoint');
@@ -72,8 +72,8 @@ define(
 
 
             // 这里对路径进行插值，以便于求交运算
-            var newPath0 = interpolate(removeLinePoint(path0));
-            var newPath1 = interpolate(removeLinePoint(path1));
+            var newPath0 = interpolate(reducePath(path0));
+            var newPath1 = interpolate(reducePath(path1));
             var joint = isPathCross(newPath0, newPath1);
 
 

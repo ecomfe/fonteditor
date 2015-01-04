@@ -62,7 +62,7 @@ define(
          * @param {string} indexProp 索引号
          * @return {Array} 分割后的路径集合
          */
-        function pathSplit (path, joint) {
+        function pathSplit(path, joint) {
             joint = sortJoint(path, joint);
 
             var jointOffset = 0; // 用来标记插入点产生的偏移

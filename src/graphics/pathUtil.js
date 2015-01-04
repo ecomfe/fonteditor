@@ -65,38 +65,6 @@ define(
 
 
         /**
-         * 移除路径中三点共线中的多余点
-         *
-         * @param {Array} path 路径
-         * @return {Array} 路径
-         */
-        function removeLinePoint(path) {
-            var newPath = [];
-            var count = 0;
-
-            for (var i = 0, l = path.length; i < l; i++) {
-                var next = i === l - 1 ? 0 : i + 1;
-                var prev = (i - count) === 0 ? l - 1 : i - count - 1;
-
-                // 三点共线的情况
-                if (
-                    path[prev].onCurve && path[i].onCurve && path[next].onCurve
-                    && Math.abs(
-                        (path[i].y - path[prev].y) * (path[i].x - path[next].x)
-                        - (path[i].y - path[next].y) * (path[i].x - path[prev].x)
-                    ) <= 0.001
-                ) {
-                    count++;
-                    continue;
-                }
-
-                newPath.push(path[i]);
-            }
-            return newPath;
-        }
-
-
-        /**
          * 判断路径的方向是否顺时针
          * see:
          * http://debian.fmi.uni-sofia.bg/~sergei/cgsr/docs/clockwise.htm
@@ -180,7 +148,6 @@ define(
         return {
             interpolate: interpolate,
             deInterpolate: deInterpolate,
-            removeLinePoint: removeLinePoint,
             isClockWise: isClockWise,
             removeOverlapPoints: removeOverlapPoints,
             getPointHash: getPointHash,
