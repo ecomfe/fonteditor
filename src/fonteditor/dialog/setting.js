@@ -221,8 +221,9 @@ define(
                     if (item.value) {
                         fieldValue = +item.value;
                         if (item.getAttribute('data-ceil')) {
-                            val = Math.floor(fieldValue);
+                            fieldValue = Math.floor(fieldValue);
                         }
+                        val = fieldValue;
                     }
                 }
 

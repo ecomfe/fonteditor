@@ -9,7 +9,7 @@
 
 define(
     function (require) {
-        var setting = require('../dialog/setting');
+        var settingSupport = require('../dialog/support');
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
@@ -152,8 +152,8 @@ define(
             },
 
             'add-online': function () {
-                var SettingOnline = setting.online;
-                var dlg = new SettingOnline({
+                var SettingOnline = settingSupport.online;
+                !new SettingOnline({
                     onChange: function (url) {
 
                         program.loading.show('正在加载..', 1000);
@@ -170,14 +170,12 @@ define(
 
                         }, 20);
                     }
-                });
-
-                dlg.show();
+                }).show();
             },
 
             'add-url': function () {
-                var SettingUrl = setting.url;
-                var dlg = new SettingUrl({
+                var SettingUrl = settingSupport.url;
+                !new SettingUrl({
                     onChange: function (url) {
                         program.loading.show('正在加载..', 1000);
                         // 此处延迟处理
@@ -186,9 +184,7 @@ define(
                             readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
                         }, 20);
                     }
-                });
-
-                dlg.show();
+                }).show();
             },
 
             'preview': function (e) {
@@ -202,27 +198,24 @@ define(
             'setting-name': function () {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
-                    var SettingName = setting.name;
-                    var dlg = new SettingName({
+                    var SettingName = settingSupport.name;
+                    !new SettingName({
                         onChange: function (setting) {
                             program.ttfManager.setInfo(setting);
                         }
-                    });
-                    dlg.show($.extend({}, ttf.head, ttf.name));
+                    }).show($.extend({}, ttf.head, ttf.name));
                 }
             },
 
             'setting-metrics': function () {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
-                    var SettingMetrics = setting.metrics;
-                    var dlg = new SettingMetrics({
+                    var SettingMetrics = settingSupport.metrics;
+                    !new SettingMetrics({
                         onChange: function (setting) {
                             program.ttfManager.setMetrics(setting);
                         }
-                    });
-
-                    dlg.show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
+                    }).show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
                 }
             },
 
@@ -236,8 +229,8 @@ define(
             },
 
             'setting-editor': function () {
-                var SettingEditor = setting.editor;
-                var dlg = new SettingEditor({
+                var SettingEditor = settingSupport.editor;
+                !new SettingEditor({
                     onChange: function (setting) {
                         program.setting.set('editor', setting, setting.saveSetting);
                         setTimeout(function () {
@@ -245,9 +238,7 @@ define(
                             program.editor.setSetting(setting.editor);
                         }, 20);
                     }
-                });
-
-                dlg.show(program.setting.get('editor'));
+                }).show(program.setting.get('editor'));
             }
         };
 

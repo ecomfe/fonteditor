@@ -10,7 +10,7 @@
 define(
     function (require) {
         var lang = require('common/lang');
-        var setting = require('../dialog/setting');
+        var settingSupport = require('../dialog/support');
         var clipboard = require('editor/widget/clipboard');
         var actions = require('./actions');
         var glyfAdjust = require('ttf/util/glyfAdjust');
@@ -195,7 +195,7 @@ define(
                     };
                 }
 
-                var SettingAdjustPos = setting['adjust-pos'];
+                var SettingAdjustPos = settingSupport['adjust-pos'];
                 !new SettingAdjustPos({
                     onChange: function (setting) {
                         setTimeout(function () {
@@ -207,17 +207,14 @@ define(
             })
             .on('adjust-glyf', function (e) {
 
-                var SettingAdjustGlyf = setting['adjust-glyf'];
-
-                var dlg = new SettingAdjustGlyf({
+                var SettingAdjustGlyf = settingSupport['adjust-glyf'];
+                !new SettingAdjustGlyf({
                     onChange: function (setting) {
                         setTimeout(function () {
                             program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
                         }, 20);
                     }
-                });
-
-                dlg.show();
+                }).show();
 
             })
             .on('setting-font', function (e) {
@@ -226,7 +223,7 @@ define(
                 var selected = program.viewer.getSelected();
                 if (selected.length) {
                     var glyf = program.ttfManager.getGlyf(selected)[0];
-                    var SettingGlyf = setting.glyf;
+                    var SettingGlyf = settingSupport.glyf;
                     !new SettingGlyf({
                         onChange: function (setting) {
                             program.ttfManager.updateGlyf(setting, selected[0]);
@@ -241,8 +238,8 @@ define(
 
             })
             .on('find-glyf', function (e) {
-                var SettingFindGlyf = setting['find-glyf'];
-                var dlg = new SettingFindGlyf({
+                var SettingFindGlyf = settingSupport['find-glyf'];
+                !new SettingFindGlyf({
                     onChange: function (setting) {
                         var index = program.ttfManager.findGlyf(setting.unicode[0]);
                         if (-1 !== index) {
@@ -254,13 +251,12 @@ define(
                             alert('未找到相关字形!');
                         }
                     }
-                });
-                dlg.show();
+                }).show();
 
             })
             .on('setting-unicode', function (e) {
-                var SettingUnicode = setting.unicode;
-                var dlg = new SettingUnicode({
+                var SettingUnicode = settingSupport.unicode;
+                !new SettingUnicode({
                     onChange: function (unicode) {
                         // 此处延迟处理
                         setTimeout(function () {
@@ -270,9 +266,7 @@ define(
                             }
                         }, 20);
                     }
-                });
-
-                dlg.show();
+                }).show();
             })
             .on('refresh', function (e) {
                 showTTF(program.ttfManager.get(), 1);
