@@ -1,23 +1,23 @@
 /**
  * @file setting.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 设置框
  */
 
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
         var pad = require('common/string').pad;
         var program = require('../widget/program');
 
         /**
          * 获取对象的值
-         * 
-         * @param {object} object 对象
-         * @param {string} path path
+         *
+         * @param {Object} object 对象
+         * @param {string} path 对象路径
          * @return {*} 对象的值
          */
         function getValue(object, path) {
@@ -30,7 +30,7 @@ define(
             var refObject = object;
             var property;
 
-            while (refObject != undefined && (property = ref.shift())) {
+            while (refObject != null && (property = ref.shift())) {
                 refObject = refObject[property];
             }
 
@@ -39,8 +39,8 @@ define(
 
         /**
          * 设置对象的值
-         * 
-         * @param {object} object 对象
+         *
+         * @param {Object} object 对象
          * @param {string} path path
          * @param {*} value 值
          * @return {Object} 对象
@@ -56,11 +56,11 @@ define(
                 var refObject = object;
                 var property;
 
-                while (refObject != undefined && (property = ref.shift())) {
+                while (refObject != null && (property = ref.shift())) {
                     refObject = refObject[property];
                 }
 
-                if (refObject != undefined) {
+                if (refObject != null) {
                     refObject[lastProperty] = value;
                 }
             }
@@ -71,7 +71,8 @@ define(
 
         /**
          * 设置框函数
-         * 
+         *
+         * @param {Object} options 参数选项
          * @constructor
          */
         function Setting(options) {
@@ -100,7 +101,7 @@ define(
                 }
             }, this));
 
-            dlg.find('.btn-confirm').on('click', lang.bind(function() {
+            dlg.find('.btn-confirm').on('click', lang.bind(function () {
                 var setting = this.validate();
                 if (false !== setting) {
                     this.options.onChange && this.options.onChange.call(this, setting);
@@ -112,40 +113,40 @@ define(
 
         /**
          * 获取模板
-         * 
+         *
          * @return {string} 模板字符串
          */
-        Setting.prototype.getTpl = function() {
+        Setting.prototype.getTpl = function () {
             return '';
         };
 
         /**
          * 获取dialog对象
-         * 
+         *
          * @return {Object} dialog对象
          */
-        Setting.prototype.getDialog = function() {
+        Setting.prototype.getDialog = function () {
             return $('#model-dialog');
         };
 
         /**
          * 验证设置
-         * 
+         *
          * @return {boolean}
          */
-        Setting.prototype.validate = function() {
+        Setting.prototype.validate = function () {
             return true;
         };
 
 
         /**
          * 设置field字段值
-         * 
+         *
          * @param {Object} setting 原始对象
          * @return {boolean}
          */
-        Setting.prototype.setFields = function(setting) {
-            this.getDialog().find('[data-field]').each(function(i, item) {
+        Setting.prototype.setFields = function (setting) {
+            this.getDialog().find('[data-field]').each(function (i, item) {
 
                 var field = item.getAttribute('data-field');
                 var type = item.getAttribute('data-type') || item.type;
@@ -154,28 +155,30 @@ define(
                     return;
                 }
 
-                if (type == 'checkbox') {
+                if (type === 'checkbox') {
                     item.checked = val ? 'checked' : '';
                 }
-                else if (type == 'unicode') {
-                    item.value = (val || []).map(function(u) {
+                else if (type === 'unicode') {
+                    item.value = (val || []).map(function (u) {
                         return '$' + u.toString(16).toUpperCase();
                     }).join(',');
                 }
-                else if (type == 'datetime-local') {
-                    var val = val;
+                else if (type === 'datetime-local') {
                     var date;
-                    if (typeof(val) === 'string') {
+                    if (typeof val === 'string') {
                         date = new Date(Date.parse(val));
                     }
-                    else if(/^\d+$/.test(val)) {
+                    else if (/^\d+$/.test(val)) {
                         date = new Date(+val);
                     }
                     else {
                         date = val;
                     }
-                    item.value = date.getFullYear() + '-' + pad(date.getMonth() + 1, 2) + '-' + pad(date.getDate(), 2)
-                        + 'T' + pad(date.getHours(), 2) + ':' + pad(date.getMinutes(), 2);
+                    item.value = date.getFullYear()
+                        + '-' + pad(date.getMonth() + 1, 2)
+                        + '-' + pad(date.getDate(), 2)
+                        + 'T' + pad(date.getHours(), 2)
+                        + ':' + pad(date.getMinutes(), 2);
                 }
                 else {
                     item = $(item);
@@ -183,65 +186,69 @@ define(
                 }
 
             });
+
             return this;
         };
 
         /**
          * 获取field字段值
-         * 
+         *
          * @param {Object} setting 原始对象
          * @return {Object}
          */
-        Setting.prototype.getFields = function(setting) {
+        Setting.prototype.getFields = function (setting) {
             setting = setting || {};
-            this.getDialog().find('[data-field]').each(function(i, item) {
+            this.getDialog().find('[data-field]').each(function (i, item) {
 
                 var field = item.getAttribute('data-field');
                 var type = item.getAttribute('data-type') || item.type;
                 var val;
-                if (type == 'checkbox') {
+                var fieldValue;
+                if (type === 'checkbox') {
                     val = !!item.checked;
                 }
-                else if (type == 'unicode') {
-                    val = item.value.trim() == '' ? [] : item.value.split(',').map(function(u) {
+                else if (type === 'unicode') {
+                    val = item.value.trim() === '' ? [] : item.value.split(',').map(function (u) {
                         return Number('0x' + u.slice(1));
                     });
                 }
-                else if (type == 'datetime-local') {
+                else if (type === 'datetime-local') {
                     if (item.value) {
                         val = Date.parse(item.value.replace('T', ' '));
                     }
                 }
-                else if (type == 'number') {
+                else if (type === 'number') {
                     if (item.value) {
-                        var value = +item.value;
+                        fieldValue = +item.value;
                         if (item.getAttribute('data-ceil')) {
-                            value = Math.floor(value);
+                            val = Math.floor(fieldValue);
                         }
-                        val = value;
                     }
                 }
 
                 else {
                     item = $(item);
-                    var value = item.val().trim();
-                    if (value) {
-                        val =  value;
+                    fieldValue = item.val().trim();
+                    if (fieldValue) {
+                        val =  fieldValue;
                     }
                 }
 
-                if (undefined != val) {
+                if (undefined !== val) {
                     setValue(setting, field, val);
                 }
             });
+
             return setting;
         };
 
         /**
          * 显示
+         *
          * @param {Object} setting 设置选项
+         * @return {this}
          */
-        Setting.prototype.show = function(setting) {
+        Setting.prototype.show = function (setting) {
             program.listening = false;
             $('#model-dialog').modal('show');
             this.set(setting);
@@ -251,19 +258,20 @@ define(
 
         /**
          * 设置设置选项
-         * 
+         * @param {Object} setting 设置选项
          * @return {this}
          */
-        Setting.prototype.set = function(setting) {
+        Setting.prototype.set = function (setting) {
             this.setting = setting;
+            return this;
         };
 
         /**
          * 获取设置选项
-         * 
+         *
          * @return {Object} 设置选项
          */
-        Setting.prototype.get = function() {
+        Setting.prototype.get = function () {
             return this.setting;
         };
 
@@ -271,21 +279,20 @@ define(
         /**
          * 注销
          */
-        Setting.prototype.dispose = function() {
+        Setting.prototype.dispose = function () {
             $('#model-dialog').modal('hide');
         };
 
         /**
          * 派生一个setting
-         * 
+         *
          * @param {Object} proto 原型函数
          * @return {Function} 派生类
          */
-        Setting.derive = function(proto) {
+        Setting.derive = function (proto) {
 
             function Class() {
                 Setting.apply(this, arguments);
-                this.initialize && this.initialize();
             }
 
             lang.extend(Class.prototype, Setting.prototype, proto);

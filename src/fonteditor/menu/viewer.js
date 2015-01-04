@@ -1,14 +1,14 @@
 /**
  * @file viewer.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf列表相关命令
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         return [
             {

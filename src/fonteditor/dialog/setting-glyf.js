@@ -1,13 +1,13 @@
 /**
  * @file setting-adjust-pos.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 设置自动调整字形位置
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var string = require('ttf/util/string');
         var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
@@ -16,7 +16,8 @@ define(
             + '<div class="form-inline">'
             +   '<div class="input-group input-group-sm">'
             +     '<span class="input-group-addon">unicode</span>'
-            +     '<input data-field="unicode" data-type="unicode" id="setting-glyf-unicode" class="form-control">'
+            +     '<input data-field="unicode" data-type="unicode"'
+            +       ' id="setting-glyf-unicode" class="form-control">'
             +   '</div>'
             +   '&nbsp;&nbsp;<span>可以设置多个unicode，例如："$21,$22,$23"</span>'
             + '</div>'
@@ -43,15 +44,15 @@ define(
 
 
         return require('./setting').derive({
-            
+
             title: '调整字形',
 
-            getTpl: function() {
+            getTpl: function () {
                 return tpl;
             },
 
-            set: function(setting) {
-                $('#setting-glyf-unicode').on('blur', function(e) {
+            set: function (setting) {
+                $('#setting-glyf-unicode').on('blur', function (e) {
                     var val = $(this).val();
                     var ctlGlyfName = $('#setting-glyf-name');
                     if (val.match(unicodeREG)) {
@@ -61,8 +62,8 @@ define(
                 });
                 this.setFields(setting || {});
             },
-            
-            validate: function() {
+
+            validate: function () {
 
                 var unicode = $('#setting-glyf-unicode').val();
                 if (unicode && !unicode.match(unicodeREG)) {
@@ -72,17 +73,16 @@ define(
 
                 var setting = this.getFields();
 
-                if(setting.leftSideBearing === undefined
-                    && setting.rightSideBearing === undefined 
+                if (setting.leftSideBearing === undefined
+                    && setting.rightSideBearing === undefined
                     && setting.unicode === undefined
                     && setting.name === undefined
                 ) {
                     alert('没有设置项目!');
                     return false;
                 }
-                else {
-                    return setting;
-                }
+
+                return setting;
             }
 
         });

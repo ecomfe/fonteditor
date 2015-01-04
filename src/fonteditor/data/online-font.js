@@ -6,9 +6,9 @@
  * 在线字体列表
  */
 
-
+/* eslint-disable max-len */
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'fonteditor.ttf',

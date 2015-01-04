@@ -1,13 +1,13 @@
 /**
  * @file setting-adjust.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 设置调整字形
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var tpl = ''
             + '<div class="form-inline">'
@@ -54,35 +54,33 @@ define(
             + '</div>';
 
 
-            return require('./setting').derive({
-                
-                title: '调整字形',
+        return require('./setting').derive({
 
-                getTpl: function() {
-                    return tpl;
-                },
+            title: '调整字形',
 
-                set: function(setting) {
-                    this.setFields(setting || {});
-                },
-                
-                validate: function() {
-                    var setting = this.getFields();
-                    
+            getTpl: function () {
+                return tpl;
+            },
 
-                    if(setting.reverse === undefined
-                        && setting.mirror === undefined 
-                        && setting.scale === undefined 
-                        && setting.ajdustToEmBox === undefined
-                    ) {
-                        alert('没有设置项目!');
-                        return false;
-                    }
-                    else {
-                        return setting;
-                    }
+            set: function (setting) {
+                this.setFields(setting || {});
+            },
+
+            validate: function () {
+                var setting = this.getFields();
+
+                if (setting.reverse === undefined
+                    && setting.mirror === undefined
+                    && setting.scale === undefined
+                    && setting.ajdustToEmBox === undefined
+                ) {
+                    alert('没有设置项目!');
+                    return false;
                 }
 
-            });
+                return setting;
+            }
+
+        });
     }
 );

@@ -1,14 +1,14 @@
 /**
  * @file viewer.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf编辑器相关命令
  */
 
 
 define(
-    function(require) {
+    function (require) {
         return [
             {
                 name: 'copyshapes',
@@ -170,7 +170,7 @@ define(
                 title: '相切轮廓',
                 ico: 'tangencyshapes',
                 disabled: true
-            },
+            }
         ];
     }
 );

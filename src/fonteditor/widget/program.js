@@ -1,22 +1,21 @@
 /**
  * @file program.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 程序运行时组件
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var observable = require('common/observable');
 
 
-        // 绑定click事件
         function bindClick(components) {
             var me = this;
-            document.body.addEventListener('click', function(e) {
+            document.body.addEventListener('click', function (e) {
 
                 // 监听查看器
                 if (components.viewer === e.target || components.viewer.contains(e.target)) {
@@ -45,12 +44,12 @@ define(
         function bindKey() {
             var me = this;
 
-            document.body.addEventListener('keydown', function(e) {
+            document.body.addEventListener('keydown', function (e) {
 
-                if (!program.listening) {
+                if (!me.listening) {
                     return;
                 }
-                
+
                 e.ctrlKey = e.ctrlKey || e.metaKey;
 
                 // 全选
@@ -82,21 +81,23 @@ define(
         }
 
         var program = {
-            
+
             // 在线地址读取接口
             fontUrl: './php/readFont.php?file=${0}',
 
             /**
              * 初始化
+             *
+             * @param {HTMLElement} components 主面板元素
              */
-            init: function(components) {
+            init: function (components) {
                 bindClick.call(this, components);
                 bindKey.call(this, components);
             },
 
             /**
              * 暂存对象
-             * 
+             *
              * @type {Object}
              */
             data: {},
@@ -105,7 +106,7 @@ define(
 
             listening: true, // 正在监听事件
 
-            loading: require('./loading')
+            loading: require('./loading') // loading 对象
         };
 
         observable.mixin(program);

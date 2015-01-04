@@ -8,16 +8,16 @@
  */
 
 define(
-    function(require) {
+    function (require) {
 
-        var string = require('ttf/util/string');
         var unicodeREG = /^(?:\$[A-F0-9]+)$/gi;
 
         var tpl = ''
             + '<div class="form-inline">'
             +   '<div class="input-group input-group-sm">'
             +     '<span class="input-group-addon">unicode</span>'
-            +     '<input value="$" data-field="unicode" data-type="unicode" id="setting-glyf-unicode" class="form-control">'
+            +     '<input value="$" data-field="unicode" data-type="unicode"'
+            +       ' id="setting-glyf-unicode" class="form-control">'
             +   '</div>'
             +   '&nbsp;&nbsp;<span>例如："$21"</span>'
             + '</div>';
@@ -27,11 +27,11 @@ define(
 
             title: '查找字形',
 
-            getTpl: function() {
+            getTpl: function () {
                 return tpl;
             },
 
-            validate: function() {
+            validate: function () {
 
                 var unicode = $('#setting-glyf-unicode').val();
                 if (unicode && !unicode.match(unicodeREG)) {

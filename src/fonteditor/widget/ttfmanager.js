@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
         var History = require('editor/widget/History');
         var TTF = require('ttf/ttf');
@@ -21,7 +21,7 @@ define(
          * @return {Array} glyf列表
          */
         function clearGlyfTag(glyfList) {
-            glyfList.forEach(function(g) {
+            glyfList.forEach(function (g) {
                 delete g.modify;
             });
             return glyfList;
@@ -47,7 +47,7 @@ define(
          *
          * @return {this}
          */
-        Manager.prototype.fireChange = function(pushHistory, changeType) {
+        Manager.prototype.fireChange = function (pushHistory, changeType) {
             pushHistory && this.history.add(lang.clone(this.ttf.getGlyf()));
             this.changed = true;
             this.fire('change', {
@@ -63,7 +63,7 @@ define(
          * @param {ttfObject} ttf ttf对象
          * @return {this}
          */
-        Manager.prototype.set = function(ttf) {
+        Manager.prototype.set = function (ttf) {
 
             if (this.ttf.get() !== ttf) {
                 this.ttf.set(ttf);
@@ -87,7 +87,7 @@ define(
          *
          * @return {ttfObject} ttf ttf对象
          */
-        Manager.prototype.get = function() {
+        Manager.prototype.get = function () {
             return this.ttf.get();
         };
 
@@ -98,7 +98,7 @@ define(
          *
          * @return {number} 没有找到返回 -1, 找到返回glyf索引
          */
-        Manager.prototype.findGlyf = function(unicode) {
+        Manager.prototype.findGlyf = function (unicode) {
 
             var glyfList = this.ttf.getGlyf();
 
@@ -115,13 +115,13 @@ define(
 
         /**
          * 在指定索引前面添加新的glyf
-         * 
+         *
          * @param {Object} glyf 对象
          * @param {number} beforeIndex 索引号
          *
          * @return {this}
          */
-        Manager.prototype.insertGlyf = function(glyf, beforeIndex) {
+        Manager.prototype.insertGlyf = function (glyf, beforeIndex) {
             var glyfList = this.ttf.getGlyf();
             var unicode = 0x20;
 
@@ -165,11 +165,11 @@ define(
          *
          * @return {this}
          */
-        Manager.prototype.merge = function(imported, options) {
+        Manager.prototype.merge = function (imported, options) {
 
             var list = this.ttf.mergeGlyf(imported, options);
             if (list.length) {
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     g.modify = 'new';
                 });
                 this.fireChange(true);
@@ -185,7 +185,7 @@ define(
          * @param {Array} indexList 索引列表
          * @return {this}
          */
-        Manager.prototype.removeGlyf = function(indexList) {
+        Manager.prototype.removeGlyf = function (indexList) {
 
             var list = this.ttf.removeGlyf(indexList);
             if (list.length) {
@@ -203,11 +203,11 @@ define(
          * @param {Array} indexList 索引列表
          * @return {this}
          */
-        Manager.prototype.setUnicode = function(unicode, indexList) {
+        Manager.prototype.setUnicode = function (unicode, indexList) {
 
             var list = this.ttf.setUnicode(unicode, indexList);
             if (list.length) {
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     g.modify = 'edit';
                 });
                 this.fireChange(true);
@@ -222,11 +222,11 @@ define(
          * @param {Array} indexList 索引列表
          * @return {this}
          */
-        Manager.prototype.genGlyfName = function(indexList) {
+        Manager.prototype.genGlyfName = function (indexList) {
 
             var list = this.ttf.genGlyfName(indexList);
             if (list.length) {
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     g.modify = 'edit';
                 });
                 this.fireChange(true);
@@ -242,11 +242,11 @@ define(
          * @param {Array} indexList 需要替换的索引列表
          * @return {this}
          */
-        Manager.prototype.appendGlyf = function(glyfList, indexList) {
+        Manager.prototype.appendGlyf = function (glyfList, indexList) {
 
             var list = this.ttf.appendGlyf(glyfList, indexList);
             if (list.length) {
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     g.modify = 'new';
                 });
                 this.fireChange(true);
@@ -262,7 +262,7 @@ define(
          * @param {string} index 需要替换的索引列表
          * @return {this}
          */
-        Manager.prototype.replaceGlyf = function(glyf, index) {
+        Manager.prototype.replaceGlyf = function (glyf, index) {
             var list = this.ttf.replaceGlyf(glyf, index);
             if (list.length) {
                 list[0].modify = 'edit';
@@ -278,11 +278,11 @@ define(
          * @param {Array} indexList 索引列表
          * @return {boolean}
          */
-        Manager.prototype.adjustGlyfPos = function(setting, indexList) {
+        Manager.prototype.adjustGlyfPos = function (setting, indexList) {
 
             var list = this.ttf.adjustGlyfPos(setting, indexList);
             if (list.length) {
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     g.modify = 'edit';
                 });
                 this.fireChange(true);
@@ -299,11 +299,11 @@ define(
          * @param {Array} indexList 索引列表
          * @return {boolean}
          */
-        Manager.prototype.adjustGlyf = function(setting, indexList) {
+        Manager.prototype.adjustGlyf = function (setting, indexList) {
 
             var list = this.ttf.adjustGlyf(setting, indexList);
             if (list.length) {
-                list.forEach(function(g) {
+                list.forEach(function (g) {
                     g.modify = 'edit';
                 });
                 this.fireChange(true);
@@ -319,7 +319,7 @@ define(
          * @param {Array} index 索引
          * @return {boolean}
          */
-        Manager.prototype.updateGlyf = function(setting, index) {
+        Manager.prototype.updateGlyf = function (setting, index) {
 
             var glyf = this.getGlyf([index])[0];
             var changed = false;
@@ -330,19 +330,21 @@ define(
                 changed = true;
             }
 
-            if (setting.name != glyf.name) {
+            if (setting.name !== glyf.name) {
                 glyf.name = setting.name;
                 glyf.modify = 'edit';
                 changed = true;
             }
 
             if (
-                (undefined !== setting.leftSideBearing && setting.leftSideBearing != glyf.leftSideBearing)
-                || (undefined !== setting.rightSideBearing && setting.rightSideBearing + (glyf.xMax || 0) != glyf.advanceWidth)
+                (undefined !== setting.leftSideBearing
+                    && setting.leftSideBearing !== glyf.leftSideBearing)
+                || (undefined !== setting.rightSideBearing
+                    && setting.rightSideBearing + (glyf.xMax || 0) !== glyf.advanceWidth)
             ) {
                 var list = this.ttf.adjustGlyfPos(setting, [index]);
                 if (list.length) {
-                    list.forEach(function(g) {
+                    list.forEach(function (g) {
                         g.modify = 'edit';
                     });
                     changed = true;
@@ -361,17 +363,19 @@ define(
          * @param {Array} indexList 索引列表
          * @return {Array} glyflist
          */
-        Manager.prototype.getGlyf = function(indexList) {
+        Manager.prototype.getGlyf = function (indexList) {
             return this.ttf.getGlyf(indexList);
         };
 
         /**
          * 设置名字和头部信息
+         *
+         * @param {Object} info 设置
          * @return {this}
          */
-        Manager.prototype.setInfo = function(info) {
+        Manager.prototype.setInfo = function (info) {
             var changed = false;
-            if (this.ttf.get().head.unitsPerEm != info.unitsPerEm) {
+            if (this.ttf.get().head.unitsPerEm !== info.unitsPerEm) {
                 changed = true;
             }
             this.ttf.setName(info);
@@ -386,11 +390,13 @@ define(
 
         /**
          * 设置度量信息
+         *
+         * @param {Object} info 设置
          * @return {this}
          */
-        Manager.prototype.setMetrics = function(info) {
+        Manager.prototype.setMetrics = function (info) {
             var changed = false;
-            if (this.ttf.get().hhea.descent != info.descent) {
+            if (this.ttf.get().hhea.descent !== info.descent) {
                 changed = true;
             }
             this.ttf.setHhea(info);
@@ -408,11 +414,13 @@ define(
          * 撤销
          * @return {this}
          */
-        Manager.prototype.undo = function() {
+        Manager.prototype.undo = function () {
             if (!this.history.atFirst()) {
                 this.ttf.setGlyf(this.history.back());
                 this.fireChange(false);
             }
+
+            return this;
         };
 
 
@@ -420,31 +428,36 @@ define(
          * 重做
          * @return {this}
          */
-        Manager.prototype.redo = function() {
+        Manager.prototype.redo = function () {
             if (!this.history.atLast()) {
                 this.ttf.setGlyf(this.history.forward());
                 this.fireChange(false);
             }
+
+            return this;
         };
 
         /**
          * ttf是否被改变
+         *
          * @return {boolean}
          */
-        Manager.prototype.isChanged = function() {
+        Manager.prototype.isChanged = function () {
             return !!this.changed;
         };
 
         /**
          * 设置状态
+         *
+         * @param {string} state 状态值 new/saved
          * @return {this}
          */
-        Manager.prototype.setState = function(state) {
+        Manager.prototype.setState = function (state) {
             if (state === 'new') {
                 this.changed = false;
             }
             else if (state === 'saved') {
-                this.ttf.get().glyf.forEach(function(g) {
+                this.ttf.get().glyf.forEach(function (g) {
                     delete g.modify;
                 });
 
@@ -455,6 +468,8 @@ define(
 
                 this.changed = false;
             }
+
+            return this;
         };
 
         Manager.prototype.clearGlyfTag = clearGlyfTag;
@@ -463,7 +478,7 @@ define(
          * 设置状态
          * @return {this}
          */
-        Manager.prototype.calcMetrics = function() {
+        Manager.prototype.calcMetrics = function () {
             if (this.ttf) {
                 return this.ttf.calcMetrics();
             }
@@ -474,7 +489,7 @@ define(
         /**
          * 注销
          */
-        Manager.prototype.dispose = function() {
+        Manager.prototype.dispose = function () {
             this.un();
             delete this.ttf;
         };

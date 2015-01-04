@@ -8,7 +8,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var TTFWriter = require('ttf/ttfwriter');
         var ttf2woff = require('ttf/ttf2woff');
@@ -18,17 +18,15 @@ define(
         var woff2base64 = require('ttf/woff2base64');
         var eot2base64 = require('ttf/eot2base64');
         var svg2base64 = require('ttf/svg2base64');
-        var unicode2xml = require('ttf/util/unicode2xml');
         var utpl = require('utpl');
 
         var previewTplRender = null; // 模板渲染函数
 
 
-        var isIE = !!window.ActiveXObject || "ActiveXObject" in window;
+        var isIE = !!window.ActiveXObject || 'ActiveXObject' in window;
 
-        // 列出unicode
         function listUnicode(unicode) {
-            return unicode.map(function(u) {
+            return unicode.map(function (u) {
                 return '\\' + u.toString(16);
             }).join(',');
         }
@@ -41,35 +39,38 @@ define(
          * @return {string} html字符串
          */
         function generatePreviewHTML(ttf, fontFormat) {
-            fontFormat = !fontFormat || fontFormat == 'ttf' ? 'truetype' : fontFormat;
+            fontFormat = !fontFormat || fontFormat === 'ttf' ? 'truetype' : fontFormat;
 
             var fontData = '';
             var fontFamily = ttf.name.fontFamily || 'fonteditor';
             var glyfList = [];
+            var buffer;
 
-            if (fontFormat == 'woff') {
-                var buffer = new TTFWriter().write(ttf);
+            if (fontFormat === 'woff') {
+                buffer = new TTFWriter().write(ttf);
                 fontData = woff2base64(ttf2woff(buffer));
             }
-            else if (fontFormat == 'eot') {
-                var buffer = new TTFWriter().write(ttf);
+            else if (fontFormat === 'eot') {
+                buffer = new TTFWriter().write(ttf);
                 fontData = eot2base64(ttf2eot(buffer));
             }
-            else  if (fontFormat == 'svg') {
+            else  if (fontFormat === 'svg') {
                 fontData = svg2base64(ttf2svg(ttf));
             }
             else {
-                var buffer = new TTFWriter().write(ttf);
+                buffer = new TTFWriter().write(ttf);
                 fontData = ttf2base64(buffer);
             }
 
             // 过滤不显示的字形
-            var filtered = ttf.glyf.filter(function(g) {
-                return g.name != '.notdef' && g.name != '.null' && g.name != 'nonmarkingreturn'
+            var filtered = ttf.glyf.filter(function (g) {
+                return g.name !== '.notdef'
+                    && g.name !== '.null'
+                    && g.name !== 'nonmarkingreturn'
                     && g.unicode && g.unicode.length;
             });
 
-            filtered.forEach(function(g) {
+            filtered.forEach(function (g) {
                 glyfList.push({
                     code: '&#x' + g.unicode[0].toString(16) + ';',
                     codeName: listUnicode(g.unicode),
@@ -91,9 +92,9 @@ define(
             /**
              * 初始化
              */
-            init: function() {
+            init: function () {
                 if (!previewTplRender) {
-                    $.get('./template/preview-ttf.html', function(text) {
+                    $.get('./template/preview-ttf.html', function (text) {
                         previewTplRender = utpl.template(text);
                     });
                 }
@@ -105,7 +106,7 @@ define(
              * @param {Object} ttf ttfObject
              * @param {string} fontFormat 字体类型
              */
-            load: function(ttf, fontFormat) {
+            load: function (ttf, fontFormat) {
                 try {
                     var html = generatePreviewHTML(ttf, fontFormat);
                     var win = window.open('./empty.html');
@@ -114,7 +115,7 @@ define(
                         win.focus();
                     }
                     else {
-                        win.onload = function() {
+                        win.onload = function () {
                             win.document.body.innerHTML = html;
                             win.focus();
                             win = null;

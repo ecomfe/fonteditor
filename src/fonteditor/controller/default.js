@@ -8,16 +8,20 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
+        var setting = require('../dialog/setting');
         var clipboard = require('editor/widget/clipboard');
-        var string = require('common/string');
-        var setting = require('../widget/setting');
         var actions = require('./actions');
         var glyfAdjust = require('ttf/util/glyfAdjust');
         var currentProgram;
 
-        // 获取ttf的编辑选项
+        /**
+         * 获取ttf的编辑选项
+         *
+         * @param {Object} ttf ttf对象
+         * @return {Object} 编辑项目
+         */
         function getEditingOpt(ttf) {
 
             var opt = {
@@ -32,7 +36,11 @@ define(
             return opt;
         }
 
-        // 显示editor
+        /**
+         * 显示指定索引的字形
+         *
+         * @param {number} glyfIndex 字形索引
+         */
         function showEditor(glyfIndex) {
 
             // 重置editor缩放
@@ -58,11 +66,14 @@ define(
                         currentProgram.editor.setFont(lang.clone(font));
                     }
                 }
+
                 currentProgram.editor.focus();
             }
         }
 
-        // 隐藏editor
+        /**
+         * 隐藏editor
+         */
         function hideEditor() {
             $('.main').removeClass('editing');
             $('.editor').removeClass('editing');
@@ -74,7 +85,13 @@ define(
             currentProgram.viewer.focus();
         }
 
-        // 显示ttf列表
+        /**
+         * 显示ttf列表
+         *
+         * @param {Object} ttf ttf对象
+         * @param {number} page 页码
+         * @param {Array} selected 选中的字形
+         */
         function showTTF(ttf, page, selected) {
 
             var glyfTotal = ttf.glyf.length;
@@ -103,16 +120,17 @@ define(
 
         /**
          * 绑定glyf列表
-         * 
+         *
          * @param {Object} program 全局对象
          */
         function bindViewer(program) {
 
-            program.viewer.on('del', function(e) {
+            program.viewer.on('del', function (e) {
                 if (e.list) {
                     program.ttfManager.removeGlyf(e.list);
                 }
-            }).on('edit', function(e) {
+            })
+            .on('edit', function (e) {
 
                 if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
                     return;
@@ -122,7 +140,8 @@ define(
                 $('.editor').addClass('editing');
                 showEditor(e.list[0]);
 
-            }).on('copy', function(e) {
+            })
+            .on('copy', function (e) {
 
                 var list = program.ttfManager.getGlyf(e.list);
                 var clip = {
@@ -131,7 +150,8 @@ define(
                 };
                 clipboard.set(clip, 'glyf');
 
-            }).on('cut', function(e) {
+            })
+            .on('cut', function (e) {
                 var list = program.ttfManager.getGlyf(e.list);
                 var clip = {
                     unitsPerEm: program.ttfManager.get().head.unitsPerEm,
@@ -140,26 +160,28 @@ define(
                 clipboard.set(clip, 'glyf');
                 program.ttfManager.removeGlyf(e.list);
 
-            }).on('paste', function(e) {
+            })
+            .on('paste', function (e) {
                 var clip = clipboard.get('glyf');
                 if (clip && clip.glyf.length) {
                     // 根据 unitsPerEm 调整形状
                     if (program.ttfManager.get().head.unitsPerEm !== clip.unitsPerEm) {
                         var scale = program.ttfManager.get().head.unitsPerEm / (clip.unitsPerEm || 1024);
-                        clip.glyf.forEach(function(g) {
+                        clip.glyf.forEach(function (g) {
                             glyfAdjust(g, scale, scale);
                         });
                     }
                     program.ttfManager.appendGlyf(clip.glyf, program.viewer.getSelected());
                 }
             })
-            .on('undo', function(e) {
+            .on('undo', function (e) {
                 program.ttfManager.undo();
-            }).on('redo', function(e) {
+            })
+            .on('redo', function (e) {
                 program.ttfManager.redo();
-            }).on('adjust-pos', function(e) {
+            })
+            .on('adjust-pos', function (e) {
 
-                var ttf = program.ttfManager.get();
                 // 如果仅选择一个字形，则填充现有值
                 var selected = program.viewer.getSelected();
                 var opt = {};
@@ -173,20 +195,23 @@ define(
                     };
                 }
 
-                !new setting['adjust-pos']({
-                    onChange: function(setting) {
-                        setTimeout(function() {
+                var SettingAdjustPos = setting['adjust-pos'];
+                !new SettingAdjustPos({
+                    onChange: function (setting) {
+                        setTimeout(function () {
                             program.ttfManager.adjustGlyfPos(setting, selected);
                         }, 20);
                     }
                 }).show(opt);
 
-            }).on('adjust-glyf', function(e) {
+            })
+            .on('adjust-glyf', function (e) {
 
-                var ttf = program.ttfManager.get();
-                var dlg = new setting['adjust-glyf']({
-                    onChange: function(setting) {
-                        setTimeout(function() {
+                var SettingAdjustGlyf = setting['adjust-glyf'];
+
+                var dlg = new SettingAdjustGlyf({
+                    onChange: function (setting) {
+                        setTimeout(function () {
                             program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
                         }, 20);
                     }
@@ -194,16 +219,16 @@ define(
 
                 dlg.show();
 
-            }).on('setting-font', function(e) {
+            })
+            .on('setting-font', function (e) {
 
-                var ttf = program.ttfManager.get();
                 // 如果仅选择一个字形，则填充现有值
                 var selected = program.viewer.getSelected();
                 if (selected.length) {
                     var glyf = program.ttfManager.getGlyf(selected)[0];
-
-                    !new setting['glyf']({
-                        onChange: function(setting) {
+                    var SettingGlyf = setting.glyf;
+                    !new SettingGlyf({
+                        onChange: function (setting) {
                             program.ttfManager.updateGlyf(setting, selected[0]);
                         }
                     }).show({
@@ -214,10 +239,11 @@ define(
                     });
                 }
 
-            }).on('find-glyf', function(e) {
-
-                var dlg = new setting['find-glyf']({
-                    onChange: function(setting) {
+            })
+            .on('find-glyf', function (e) {
+                var SettingFindGlyf = setting['find-glyf'];
+                var dlg = new SettingFindGlyf({
+                    onChange: function (setting) {
                         var index = program.ttfManager.findGlyf(setting.unicode[0]);
                         if (-1 !== index) {
                             var pageSize = program.setting.get('editor').viewer.pageSize;
@@ -231,11 +257,13 @@ define(
                 });
                 dlg.show();
 
-            }).on('setting-unicode', function() {
-                var dlg = new setting.unicode({
-                    onChange: function(unicode) {
+            })
+            .on('setting-unicode', function (e) {
+                var SettingUnicode = setting.unicode;
+                var dlg = new SettingUnicode({
+                    onChange: function (unicode) {
                         // 此处延迟处理
-                        setTimeout(function(){
+                        setTimeout(function () {
                             if (program.ttfManager.get()) {
                                 var glyfList = program.viewer.getSelected();
                                 program.ttfManager.setUnicode(unicode, glyfList);
@@ -245,34 +273,39 @@ define(
                 });
 
                 dlg.show();
-            }).on('refresh', function() {
+            })
+            .on('refresh', function (e) {
                 showTTF(program.ttfManager.get(), 1);
-            }).on('moveleft', function() {
+            })
+            .on('moveleft', function (e) {
                 var editingIndex = program.viewer.getEditing();
                 if (program.editor.isVisible() && editingIndex > 0) {
                     program.viewer.setEditing(--editingIndex);
                     showEditor(editingIndex);
                 }
-            }).on('moveright', function() {
+            })
+            .on('moveright', function (e) {
                 var editingIndex = program.viewer.getEditing();
-                if (program.editor.isVisible() && editingIndex < program.ttfManager.get().glyf.length - 1) {
+                if (program.editor.isVisible()
+                    && editingIndex < program.ttfManager.get().glyf.length - 1
+                ) {
                     program.viewer.setEditing(++editingIndex);
                     showEditor(editingIndex);
                 }
             });
 
-            program.viewerPager.on('change', function(e) {
+            program.viewerPager.on('change', function (e) {
                 showTTF(program.ttfManager.get(), e.page);
             });
         }
 
         /**
          * 绑定项目列表
-         * 
+         *
          * @param {Object} program 全局对象
          */
         function bindProject(program) {
-            program.projectViewer.on('open', function(e) {
+            program.projectViewer.on('open', function (e) {
                 var imported = program.project.get(e.projectId);
                 if (imported) {
 
@@ -285,11 +318,13 @@ define(
                     program.projectViewer.select(e.projectId);
                     program.viewer.focus();
                 }
-            }).on('saveas', function(e) {
+            })
+            .on('saveas', function () {
                 program.data.projectId = null;
                 actions.save();
                 program.viewer.focus();
-            }).on('del', function(e) {
+            })
+            .on('del', function (e) {
                 program.project.remove(e.projectId);
                 if (e.projectId === program.data.projectId) {
                     program.data.projectId = null;
@@ -300,11 +335,11 @@ define(
 
         /**
          * 绑定ttf管理器
-         * 
+         *
          * @param {Object} program 项目对象
          */
         function bindttfManager(program) {
-            program.ttfManager.on('change', function(e) {
+            program.ttfManager.on('change', function (e) {
                 // 保存正在编辑的字形
                 var editingIndex = program.viewer.getEditing();
                 if (e.changeType === 'update' && program.editor.isEditing() && editingIndex !== -1) {
@@ -314,7 +349,8 @@ define(
                     showTTF(e.ttf, program.viewer.getPage() + 1);
                 }
 
-            }).on('set', function(e) {
+            })
+            .on('set', function (e) {
 
                 // 未初始化状态，命令栏是不显示的，需要设置下编辑模式
                 if (!program.viewer.inited) {
@@ -328,12 +364,12 @@ define(
 
         /**
          * 绑定项目对象
-         * 
+         *
          * @param {Object} program 项目对象
          */
         function bindProgram(program) {
 
-            program.on('save', function(e) {
+            program.on('save', function (e) {
                 // 保存项目
                 if (program.ttfManager.get()) {
                     var type = e.type;
@@ -342,7 +378,7 @@ define(
                         // 如果是正在编辑的
                         var editingIndex = program.viewer.getEditing();
                         if (editingIndex !== -1) {
-                             program.ttfManager.replaceGlyf(program.editor.getFont(), editingIndex);
+                            program.ttfManager.replaceGlyf(program.editor.getFont(), editingIndex);
                         }
                         // 否则新建font
                         else {
@@ -354,7 +390,8 @@ define(
                         actions.save();
                     }
                 }
-            }).on('paste', function(e) {
+            })
+            .on('paste', function (e) {
                 var clip = clipboard.get('glyf');
                 if (clip && clip.glyf.length) {
                     if (!program.editor.isEditing()) {
@@ -364,7 +401,8 @@ define(
                         program.editor.addContours(clip.glyf[0].contours);
                     }
                 }
-            }).on('function', function(e) {
+            })
+            .on('function', function (e) {
                 // F2
                 if (e.keyCode === 113) {
                     if (!program.editor.isVisible()) {
@@ -385,7 +423,7 @@ define(
              *
              * @param {Object} program 项目组件
              */
-            init: function(program) {
+            init: function (program) {
 
                 // 设置当前的项目对象为指定的项目对象
                 currentProgram = program;
@@ -396,7 +434,7 @@ define(
                 bindProgram(program);
 
 
-                $('.close-editor').click(function(e) {
+                $('.close-editor').click(function () {
                     hideEditor();
                 });
 
@@ -405,7 +443,7 @@ define(
                     editor: program.editor.main.get(0)
                 });
 
-                window.onbeforeunload = function() {
+                window.onbeforeunload = function () {
                     if (program.ttfManager.isChanged()) {
                         return '是否放弃保存当前编辑的项目?';
                     }

@@ -1,14 +1,14 @@
 /**
  * @file project.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 项目管理方法，使用localStorage存储
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var storage = window.localStorage || window.sessionStorate;
 
@@ -16,25 +16,28 @@ define(
 
             /**
              * 获取现有项目列表
-             * 
+             *
              * @return {Array} 现有项目列表
              */
-            items: function() {
+            items: function () {
                 var list = storage.getItem('project-list');
-                return list ? JSON.parse(list) : [];
+                return list ? JSON.parse(list).map(function (item) {
+                    item.id = '' + item.id;
+                    return item;
+                }) : [];
             },
 
             /**
              * 添加一个项目
-             * 
+             *
              * @param {string} name 项目名称
              * @param {Object} ttf ttfObject
              * @return {Array} 现有项目列表
              */
-            add: function(name, ttf) {
+            add: function (name, ttf) {
                 var list = this.items();
 
-                var id = Date.now();
+                var id = '' + Date.now();
                 list.push({
                     name: name,
                     id: id
@@ -48,26 +51,26 @@ define(
 
             /**
              * 更新一个项目
-             * 
+             *
              * @param {string} id 编号
              * @param {Object} ttf ttf对象
              * @return {string} 项目编号
              */
-            update: function(id, ttf) {
+            update: function (id, ttf) {
                 storage.setItem(id, JSON.stringify(ttf));
                 return id;
             },
 
             /**
              * 删除一个项目
-             * 
+             *
              * @param {string} id 项目名称
              * @return {Array} 现有项目列表
              */
-            remove: function(id) {
+            remove: function (id) {
                 var list = this.items();
-                for(var i = list.length - 1; i >= 0; i--) {
-                    if (list[i].id == id) {
+                for (var i = list.length - 1; i >= 0; i--) {
+                    if (list[i].id === id) {
                         storage.removeItem(list[i].id);
                         list.splice(i, 1);
                     }
@@ -79,14 +82,14 @@ define(
 
             /**
              * 获取一个项目
-             * 
+             *
              * @param {string} id 项目编号
-             * @return {Object=} 项目对象
+             * @return {Object} 项目对象
              */
-            get: function(id) {
+            get: function (id) {
                 var list = this.items();
-                for(var i = 0, l = list.length; i < l ; i++) {
-                    if (list[i].id == id) {
+                for (var i = 0, l = list.length; i < l; i++) {
+                    if (list[i].id === id) {
                         var item = storage.getItem(list[i].id);
                         if (item) {
                             return JSON.parse(item);
@@ -99,9 +102,9 @@ define(
             /**
              * 清空项目组
              */
-            clear: function() {
+            clear: function () {
                 var list = this.items();
-                list.forEach(function(item) {
+                list.forEach(function (item) {
                     storage.removeItem(item.id);
                 });
                 storage.removeItem('project-list');

@@ -1,18 +1,18 @@
 /**
  * @file projectViewer.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 项目浏览器
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         /**
          * 项目查看器
-         * 
+         *
          * @constructor
          * @param {HTMLElement} main 主元素
          * @param {Object} options 参数
@@ -23,7 +23,7 @@ define(
 
             var me = this;
 
-            me.main.on('click', '[data-action]', function(e) {
+            me.main.on('click', '[data-action]', function (e) {
                 e.stopPropagation();
                 var target = $(e.target);
                 var action = target.attr('data-action');
@@ -43,23 +43,33 @@ define(
                 });
             });
 
-            me.main.on('click', '[data-id]', function(e) {
+            me.main.on('click', '[data-id]', function (e) {
                 me.fire('open', {
                     projectId: $(this).attr('data-id')
                 });
             });
         }
 
-        ProjectViewer.prototype.select = function(id) {
+        /**
+         * 选中一个项目
+         *
+         * @param {string} id 项目编号
+         */
+        ProjectViewer.prototype.select = function (id) {
             this.current && this.current.removeClass('selected');
-            this.current = $('[data-id="'+ id +'"]').addClass('selected');
+            this.current = $('[data-id="' + id + '"]').addClass('selected');
         };
 
-        ProjectViewer.prototype.show = function(projects) {
+        /**
+         * 显示项目组
+         *
+         * @param {Array} projects 项目组
+         */
+        ProjectViewer.prototype.show = function (projects) {
             var str = '';
-            (projects || []).forEach(function(proj) {
-                str += '<dl data-id="'+ proj.id +'">'
-                    +       '<dt>'+ proj.name +'</dt>'
+            (projects || []).forEach(function (proj) {
+                str += '<dl data-id="' + proj.id + '">'
+                    +       '<dt>' + proj.name + '</dt>'
                     +       '<dd>'
                     +           '<span data-action="saveas">另存为</span>'
                     +           '<span data-action="del">删除</span>'

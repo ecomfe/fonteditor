@@ -8,11 +8,11 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var editorFactory = require('editor/main');
         var editorOptions = require('editor/options');
-        var setting = require('./setting');
+        var settingSupport = require('../dialog/support');
         var program = require('./program');
         var lang = require('common/lang');
 
@@ -41,13 +41,14 @@ define(
             // 设置字形信息
             var me = this;
             var editor  = this.editor;
-            var delayFocus = lang.debounce(function() {
+            var delayFocus = lang.debounce(function () {
                 me.focus();
             }, 20);
 
-            editor.on('setting:font', function(e) {
-                !new setting['glyf']({
-                    onChange: function(setting) {
+            editor.on('setting:font', function (e) {
+                var SettingGlyf = settingSupport.glyf;
+                !new SettingGlyf({
+                    onChange: function (setting) {
                         editor.adjustFont(setting);
                         // 此处需要等待点击完成后设置focus状态
                         delayFocus();
@@ -55,10 +56,11 @@ define(
                 }).show(e.setting);
             });
 
-            editor.on('setting:editor', function(e) {
-                var dlg = new setting.editor({
-                    onChange: function(setting) {
-                        setTimeout(function() {
+            editor.on('setting:editor', function (e) {
+                var SettingEditor = settingSupport.editor;
+                var dlg = new SettingEditor({
+                    onChange: function (setting) {
+                        setTimeout(function () {
                             program.viewer.setSetting(setting.viewer);
                             me.setSetting(setting.editor);
                         }, 20);
@@ -70,7 +72,7 @@ define(
                 });
             });
 
-            editor.on('save', function() {
+            editor.on('save', function () {
                 program.fire('save', {
                     type: 'editor'
                 });
@@ -79,7 +81,7 @@ define(
             var commandMenu = this.commandMenu;
             if (commandMenu) {
 
-                editor.on('selection:change', lang.debounce(function(e) {
+                editor.on('selection:change', lang.debounce(function (e) {
                     var length = e.shapes ? e.shapes.length : 0;
                     if (!length) {
                         commandMenu.disableCommands(COMMAND_SUPPORT.shapes);
@@ -93,7 +95,7 @@ define(
                     }
                 }), 100);
 
-                commandMenu.on('command', function(e) {
+                commandMenu.on('command', function (e) {
 
                     // 这里延时进行focus
                     delayFocus();
@@ -186,6 +188,7 @@ define(
          * @constructor
          * @param {HTMLElement} main 主元素
          * @param {Object} options 参数
+         * @param {CommandMenu} options.commandMenu 命令菜单对象
          */
         function GLYFEditor(main, options) {
 
@@ -200,8 +203,9 @@ define(
 
         /**
          * 显示
+         * @param {Object} font font对象
          */
-        GLYFEditor.prototype.show = function(font) {
+        GLYFEditor.prototype.show = function (font) {
             // 这里注意显示顺序，否则editor创建的时候计算宽度会错误
             this.main.show();
 
@@ -221,7 +225,7 @@ define(
         /**
          * 隐藏
          */
-        GLYFEditor.prototype.hide = function() {
+        GLYFEditor.prototype.hide = function () {
             this.editor && this.editor.blur();
             this.main.hide();
             this.editing = false;
@@ -229,22 +233,24 @@ define(
 
         /**
          * 是否编辑中
+         * @return {boolean} 是否
          */
-        GLYFEditor.prototype.isEditing = function() {
+        GLYFEditor.prototype.isEditing = function () {
             return this.editing;
         };
 
         /**
          * 是否可见
+         * @return {boolean} 是否
          */
-        GLYFEditor.prototype.isVisible = function() {
+        GLYFEditor.prototype.isVisible = function () {
             return this.main.get(0).style.display !== 'none';
         };
 
         /**
          * 获取焦点
          */
-        GLYFEditor.prototype.focus = function() {
+        GLYFEditor.prototype.focus = function () {
             this.editing = true;
             this.editor && this.editor.focus();
         };
@@ -252,7 +258,7 @@ define(
         /**
          * 失去焦点
          */
-        GLYFEditor.prototype.blur = function() {
+        GLYFEditor.prototype.blur = function () {
             this.editing = false;
             this.editor && this.editor.blur();
         };
@@ -260,14 +266,14 @@ define(
         /**
          * 撤销
          */
-        GLYFEditor.prototype.undo = function() {
+        GLYFEditor.prototype.undo = function () {
             execCommand.call(this, 'undo');
         };
 
         /**
          * 重做
          */
-        GLYFEditor.prototype.redo = function() {
+        GLYFEditor.prototype.redo = function () {
             execCommand.call(this, 'redo');
         };
 
@@ -275,33 +281,37 @@ define(
          * 设置项目
          * @param {Object} options 参数集合
          */
-        GLYFEditor.prototype.setSetting = function(options) {
+        GLYFEditor.prototype.setSetting = function (options) {
             if (this.editor) {
                 this.editor.setOptions(options);
             }
             else {
-               lang.overwrite(editorOptions.editor, options);
+                lang.overwrite(editorOptions.editor, options);
             }
         };
 
         /**
          * 获取设置项目
+         * @return {Object} 设置项目
          */
-        GLYFEditor.prototype.getSetting = function() {
+        GLYFEditor.prototype.getSetting = function () {
             return this.editor ? this.editor.options : editorOptions.editor;
         };
 
         /**
          * 注销
          */
-        GLYFEditor.prototype.dispose = function() {
+        GLYFEditor.prototype.dispose = function () {
             this.editor.dispose();
             this.main = this.options = this.editor = null;
         };
 
         // 导出editor的函数
-        ['reset','setFont', 'getFont', 'addContours', 'isChanged', 'setChanged', 'setAxis', 'adjustFont'].forEach(function(fn) {
-            GLYFEditor.prototype[fn] = function() {
+        [
+            'reset', 'setFont', 'getFont', 'addContours',
+            'isChanged', 'setChanged', 'setAxis', 'adjustFont'
+        ].forEach(function (fn) {
+            GLYFEditor.prototype[fn] = function () {
                 return this.editor ? this.editor[fn].apply(this.editor, arguments) : undefined;
             };
         });

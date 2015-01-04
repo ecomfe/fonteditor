@@ -1,13 +1,13 @@
 /**
  * @file setting-unicode.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 设置代码点
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var tpl = ''
             +   '<div class="input-group">'
@@ -24,22 +24,21 @@ define(
             +   '</div>';
 
         return require('./setting').derive({
-            
+
             title: '设置代码点',
 
-            getTpl: function() {
+            getTpl: function () {
                 return tpl;
             },
 
-            validate: function() {
+            validate: function () {
                 var unicode = $('#setting-text-unicode').val();
                 if (unicode.match(/^\$[A-F0-9]+$/i)) {
                     return (this.setting = unicode);
                 }
-                else {
-                    alert('代码点设置不正确');
-                    return false;
-                }
+
+                alert('代码点设置不正确');
+                return false;
             }
         });
     }

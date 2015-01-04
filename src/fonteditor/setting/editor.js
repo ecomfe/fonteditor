@@ -1,13 +1,13 @@
 /**
  * @file editor.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 默认的编辑器设置
  */
 
 define(
-    function(require) {
+    function (require) {
 
         var setting = {
 
@@ -15,9 +15,9 @@ define(
 
             // 查看器选项
             viewer: {
-                color: "", // 查看器颜色
-                shapeSize: "normal", // 字形大小
-                pageSize: 100, // 翻页大小
+                color: '', // 查看器颜色
+                shapeSize: 'normal', // 字形大小
+                pageSize: 100 // 翻页大小
             },
 
             // 编辑器选项

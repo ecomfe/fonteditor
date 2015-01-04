@@ -1,13 +1,13 @@
 /**
  * @file setting.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 设置项目
  */
 
 define(
-    function(require) {
+    function (require) {
         return {
             'unicode': require('../dialog/setting-unicode'),
             'name': require('../dialog/setting-name'),

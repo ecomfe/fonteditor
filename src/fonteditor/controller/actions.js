@@ -8,22 +8,27 @@
 
 
 define(
-    function(require) {
-        var setting = require('../widget/setting');
+    function (require) {
+        var setting = require('../dialog/setting');
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
-        var lang = require('common/lang');
 
-        // 读取在线字体
+
+        /**
+         * 读取在线字体
+         *
+         * @param {string} type 类型 svg or binary
+         * @param {string} url 文件地址
+         */
         function readOnlineFont(type, url) {
             ajaxFile({
                 type: type === 'svg' ? 'xml' : 'binary',
                 url: url,
-                onSuccess: function(buffer) {
+                onSuccess: function (buffer) {
                     program.loader.load(buffer, {
                         type: type || 'ttf',
-                        success: function(imported) {
+                        success: function (imported) {
                             program.loading.hide();
                             if (program.ttfManager.get()) {
                                 program.ttfManager.merge(imported, {
@@ -38,19 +43,20 @@ define(
                         }
                     });
                 },
-                onError: function() {
+                onError: function () {
                     alert('加载文件错误!');
                 }
             });
         }
 
-        var editorDelayFocus = setTimeout(function(){
+        // 延迟focus editor
+        var editorDelayFocus = setTimeout(function () {
             program.editor.focus();
         }, 20);
 
         var actions = {
 
-            'undo': function() {
+            'undo': function () {
                 if (program.editor.isEditing()) {
                     program.editor.undo();
                     editorDelayFocus();
@@ -60,7 +66,7 @@ define(
                 }
             },
 
-            'redo': function() {
+            'redo': function () {
                 if (program.editor.isEditing()) {
                     program.editor.redo();
                     editorDelayFocus();
@@ -70,52 +76,46 @@ define(
                 }
             },
 
-            // 新建
-            'new': function() {
+            'new': function () {
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
                     return;
                 }
 
-                $.getJSON('./font/empty.json', function(imported) {
+                $.getJSON('./font/empty.json', function (imported) {
                     program.ttfManager.set(imported);
                     program.data.projectId = null;
                 });
             },
 
-            // 打开
-            'open': function() {
+            'open': function () {
                 $('#font-import').click();
             },
 
-            // 导入
-            'import': function() {
+            'import': function () {
                 $('#font-import').click();
             },
 
-            // 导出
-            'export': function(e) {
+            'export': function (e) {
                 if (!e.target.getAttribute('download')) {
                     e.preventDefault();
                 }
             },
 
-            // 导出文件
-            'export-file': function(e) {
+            'export-file': function (e) {
                 if (program.ttfManager.get()) {
                     var target = $(e.target);
                     program.exporter['export'](program.ttfManager.get(), {
                         type: target.attr('data-type'),
                         target: target,
                         originEvent: e,
-                        error: function() {
+                        error: function () {
                             e.preventDefault();
                         }
                     });
                 }
             },
 
-            // 保存项目
-            'save': function() {
+            'save': function () {
                 if (program.ttfManager.get()) {
                     if (program.data.projectId) {
 
@@ -144,22 +144,21 @@ define(
                 }
             },
 
-            // 添加新字形
-            'add-new': function() {
+            'add-new': function () {
                 if (program.ttfManager.get()) {
                     var selected = program.viewer.getSelected();
                     program.ttfManager.insertGlyf({}, selected[0]);
                 }
             },
 
-            // 添加在线字形
-            'add-online': function() {
-                var dlg = new setting.online({
-                    onChange: function(url) {
+            'add-online': function () {
+                var SettingOnline = setting.online;
+                var dlg = new SettingOnline({
+                    onChange: function (url) {
 
+                        program.loading.show('正在加载..', 1000);
                         // 此处延迟处理
-                        setTimeout(function(){
-                            program.loading.show('正在加载..', 1000);
+                        setTimeout(function () {
                             var type = url.slice(url.lastIndexOf('.') + 1);
                             var fontUrl = url;
 
@@ -176,25 +175,23 @@ define(
                 dlg.show();
             },
 
-            // 线上地址
-            'add-url': function() {
-                    var dlg = new setting.url({
-                        onChange: function(url) {
+            'add-url': function () {
+                var SettingUrl = setting.url;
+                var dlg = new SettingUrl({
+                    onChange: function (url) {
+                        program.loading.show('正在加载..', 1000);
+                        // 此处延迟处理
+                        setTimeout(function () {
+                            var fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                            readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
+                        }, 20);
+                    }
+                });
 
-                            // 此处延迟处理
-                            setTimeout(function(){
-                                program.loading.show('正在加载..', 1000);
-                                var fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
-                                readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
-                            }, 20);
-                        }
-                    });
-
-                    dlg.show();
+                dlg.show();
             },
 
-            // 预览
-            'preview': function(e) {
+            'preview': function (e) {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
                     var format = e.target.getAttribute('data-format');
@@ -202,12 +199,12 @@ define(
                 }
             },
 
-            // 设置字体名称
-            'setting-name': function() {
+            'setting-name': function () {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
-                    var dlg = new setting.name({
-                        onChange: function(setting) {
+                    var SettingName = setting.name;
+                    var dlg = new SettingName({
+                        onChange: function (setting) {
                             program.ttfManager.setInfo(setting);
                         }
                     });
@@ -215,12 +212,12 @@ define(
                 }
             },
 
-            // 调整规格
-            'setting-metrics': function() {
+            'setting-metrics': function () {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
-                    var dlg = new setting['metrics']({
-                        onChange: function(setting) {
+                    var SettingMetrics = setting.metrics;
+                    var dlg = new SettingMetrics({
+                        onChange: function (setting) {
                             program.ttfManager.setMetrics(setting);
                         }
                     });
@@ -229,8 +226,7 @@ define(
                 }
             },
 
-            // 设置字型名称
-            'setting-glyf-name': function() {
+            'setting-glyf-name': function () {
                 var ttf = program.ttfManager.get();
                 if (ttf) {
                     if (window.confirm('生成的字形名称会覆盖原来的名称，确定生成？')) {
@@ -239,17 +235,18 @@ define(
                 }
             },
 
-            // 设置
-            'setting-editor': function(e) {
-                var dlg = new setting.editor({
-                    onChange: function(setting) {
+            'setting-editor': function () {
+                var SettingEditor = setting.editor;
+                var dlg = new SettingEditor({
+                    onChange: function (setting) {
                         program.setting.set('editor', setting, setting.saveSetting);
-                        setTimeout(function() {
+                        setTimeout(function () {
                             program.viewer.setSetting(setting.viewer);
                             program.editor.setSetting(setting.editor);
                         }, 20);
                     }
                 });
+
                 dlg.show(program.setting.get('editor'));
             }
         };
