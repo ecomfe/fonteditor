@@ -1,14 +1,14 @@
 /**
  * @file Mouse.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 键盘动作捕获器
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var lang = require('common/lang');
         var observable = require('common/observable');
@@ -36,8 +36,8 @@ define(
 
         /**
          * 键盘按键
+         *
          * @param {MouseEvent} e 事件
-         * 
          * @return {Object} 按键列表
          */
         function getEvent(e) {
@@ -54,27 +54,27 @@ define(
 
         /**
          * 按下弹起事件
-         * 
+         * @param {Object} keyEventName 事件名称
          * @param {Object} e 事件参数
          */
-        function keydetect(keyEvent, e) {
-            
-            if(false === this.events['key' + Event]) {
+        function keydetect(keyEventName, e) {
+
+            if (false === this.events['key' + Event]) {
                 return;
             }
 
             var event = getEvent(e);
-            this.fire('key' + keyEvent, event);
+            this.fire('key' + keyEventName, event);
 
             var keyName = keyCodeMap[event.keyCode];
             if (keyName) {
-                this.fire(keyName + ':' + keyEvent, event);
+                this.fire(keyName + ':' + keyEventName, event);
             }
         }
 
         /**
          * 鼠标动作捕获器
-         * 
+         *
          * @constructor
          * @param {HTMLElement} main 控制元素
          * @param {Object} options 参数选项
@@ -90,7 +90,7 @@ define(
                 keyup: lang.bind(keydetect, this, 'up'),
                 keypress: lang.bind(keydetect, this, 'press')
             };
-            
+
             this.start();
         }
 
@@ -101,10 +101,10 @@ define(
 
             /**
              * 开始监听
-             * 
+             *
              * @return {this}
              */
-            start: function() {
+            start: function () {
 
                 if (!this.listening) {
                     this.listening = true;
@@ -120,11 +120,11 @@ define(
 
             /**
              * 停止监听
-             * 
+             *
              * @return {this}
              */
-            stop: function() {
-                
+            stop: function () {
+
                 if (this.listening) {
                     this.listening = false;
 
@@ -139,17 +139,17 @@ define(
 
             /**
              * 是否监听中
-             * 
+             *
              * @return {boolean} 是否
              */
-            isListening: function() {
+            isListening: function () {
                 return !!this.listening;
             },
 
             /**
              * 注销
              */
-            dispose: function() {
+            dispose: function () {
                 this.stop();
                 this.main = this.events = null;
                 this.un();

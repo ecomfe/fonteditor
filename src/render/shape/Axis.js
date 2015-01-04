@@ -1,36 +1,31 @@
 /**
  * @file Circle.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 圆绘制
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var drawAxis = require('../util/drawAxis');
 
         var proto = {
-            
+
             type: 'axis',
 
-            /**
-             * 对形状进行缩放平移调整
-             * 
-             * @return {Object} shape对象
-             */
-            adjust: function(shape, camera) {
+            adjust: function (shape, camera) {
                 var center = camera.center;
                 var ratio = camera.ratio;
 
                 shape.unitsPerEm *= ratio;
 
                 var metrics = shape.metrics;
-                for (var line in metrics) {
+                Object.keys(metrics).forEach(function (line) {
                     metrics[line] *= ratio;
-                }
+                });
 
                 shape.x = ratio * (shape.x - center.x) + center.x;
                 shape.y = ratio * (shape.y - center.y) + center.y;
@@ -38,25 +33,11 @@ define(
                 return shape;
             },
 
-            /**
-             * 判断点是否在shape内部
-             * 
-             * @param {Object} shape shape数据
-             * @param {number} x x偏移
-             * @param {number} y y偏移
-             * @param {boolean} 是否
-             */
-            isIn: function(shape, x, y) {
+            isIn: function (shape, x, y) {
                 return false;
             },
 
-            /**
-             * 获取边界
-             * 
-             * @param {Object} shape shape数据
-             * @return {Object} bound对象
-             */
-            getBound: function(shape) {
+            getBound: function (shape) {
                 return {
                     x: shape.x,
                     y: shape.y,
@@ -65,14 +46,8 @@ define(
                 };
             },
 
-            /**
-             * 绘制一个shape对象
-             * 
-             * @param {CanvasContext} ctx canvas的context
-             * @param {Object} shape shape数据
-             */
-            draw: function(ctx, shape, camera) {
-                
+            draw: function (ctx, shape, camera) {
+
                 shape.gap = (shape.graduation.gap || 100) * camera.scale;
 
                 ctx.save();

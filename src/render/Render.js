@@ -1,14 +1,14 @@
 /**
  * @file Render.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 渲染器对象
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var lang = require('common/lang');
         var guid = require('./util/guid');
@@ -20,7 +20,6 @@ define(
 
         /**
          * Render初始化
-         * 
          */
         function init() {
 
@@ -47,8 +46,8 @@ define(
             var me = this;
 
             // 是否允许缩放
-            if(this.options.enableScale) {
-                this.capture.on('wheel', function(e) {
+            if (this.options.enableScale) {
+                this.capture.on('wheel', function (e) {
                     if (e.altKey || e.ctrlKey) {
 
                         e.originEvent.preventDefault();
@@ -58,12 +57,12 @@ define(
                         var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
                         var toScale = me.camera.scale * ratio;
                         if (
-                            toScale < me.options.minScale 
+                            toScale < me.options.minScale
                             || toScale > me.options.maxScale
                         ) {
                             return;
                         }
-                        
+
                         me.scale(ratio, e);
                     }
                     else {
@@ -75,9 +74,9 @@ define(
             }
 
             // 窗口改变
-            if(this.options.enableResize) {
+            if (this.options.enableResize) {
                 this.resizeCapture = new ResizeCapture(this.main);
-                this.resizeCapture.on('resize', function(e) {
+                this.resizeCapture.on('resize', function (e) {
                     // 对象被隐藏，不做处理，仅作标记，refresh之后再处理
                     if (me.main.style.display === 'none') {
                         me.hasResized = true;
@@ -87,7 +86,8 @@ define(
                     var prevSize = me.painter.getSize();
                     me.painter.resetSize();
                     var size = me.painter.getSize();
-                    if(size.width != prevSize.width || size.height != prevSize.height) {
+
+                    if (size.width !== prevSize.width || size.height !== prevSize.height) {
                         me.fire('resize', {
                             size: size,
                             prevSize: prevSize
@@ -99,7 +99,7 @@ define(
 
         /**
          * Render 构造函数
-         * 
+         *
          * @param {HTMLElement} main 主元素
          * @param {Object} options 参数选项
          * @param {number} options.defaultRatio 默认的缩放比例
@@ -117,16 +117,16 @@ define(
                 {
                     defaultRatio: 1.2, // 默认的缩放比例
                     minScale: 0.2, // 最小缩放
-                    maxScale: 200, //最大缩放
+                    maxScale: 200, // 最大缩放
                     enableScale: true, // 是否允许缩放
                     enableResize: true // 是否允许大小改变
-                }, 
+                },
                 options
             );
 
             this.id = guid();
 
-            if(!this.main) {
+            if (!this.main) {
                 throw 'require a main dom element';
             }
 
@@ -135,21 +135,21 @@ define(
 
         /**
          * 设置鼠标样式
-         * 
+         *
          * @param {string} name 名字
          * @return {this}
          */
-        Render.prototype.setCursor = function(name) {
+        Render.prototype.setCursor = function (name) {
             this.main.style.cursor = name || 'default';
             return this;
         };
 
         /**
          * 刷新render
-         * 
+         *
          * @return {this}
          */
-        Render.prototype.refresh = function() {
+        Render.prototype.refresh = function () {
             if (this.hasResized) {
                 this.painter.resetSize();
                 this.hasResized = false;
@@ -161,25 +161,22 @@ define(
         /**
          * 重置渲染器
          */
-        Render.prototype.reset = function() {
+        Render.prototype.reset = function () {
             this.painter.reset();
-
         };
 
         /**
          * 缩放指定的比例
-         * 
+         *
          * @param {number} ratio 比例
          * @param {Object} p 参考点坐标
          * @param {boolean} noRefresh 无刷新缩放
-         * 
-         * @return {this}
          */
-        Render.prototype.scale = function(ratio, p, noRefresh) {
+        Render.prototype.scale = function (ratio, p, noRefresh) {
 
             var toScale = this.camera.scale * ratio;
             if (
-                toScale < this.options.minScale 
+                toScale < this.options.minScale
                 || toScale > this.options.maxScale
             ) {
                 return;
@@ -190,7 +187,7 @@ define(
             this.camera.center.y = p.y;
             this.camera.scale = toScale;
 
-            if(true !== noRefresh) {
+            if (true !== noRefresh) {
                 this.painter.refresh();
             }
             else {
@@ -202,14 +199,12 @@ define(
 
         /**
          * 缩放到指定的比例
-         * 
+         *
          * @param {number} scale 比例
          * @param {Object} p 中心点坐标
          * @param {boolean} noRefresh 无刷新缩放
-         * 
-         * @return {this}
          */
-        Render.prototype.scaleTo = function(scale, p, noRefresh) {
+        Render.prototype.scaleTo = function (scale, p, noRefresh) {
 
             // 缩放
             this.scale(scale / this.camera.scale, this.camera.center, true);
@@ -218,34 +213,31 @@ define(
             this.painter.moveTo(p.x, p.y);
             this.camera.reset(p, scale);
 
-            if(true !== noRefresh) {
+            if (true !== noRefresh) {
                 this.painter.refresh();
             }
         };
 
         /**
          * 获取焦点
-         * 
          */
-        Render.prototype.focus = function() {
-            //this.capture.start();
+        Render.prototype.focus = function () {
+            // this.capture.start();
             this.keyCapture.start();
         };
 
         /**
          * 离开焦点
-         * 
          */
-        Render.prototype.blur = function() {
-            //this.capture.stop();
+        Render.prototype.blur = function () {
+            // this.capture.stop();
             this.keyCapture.stop();
         };
 
         /**
          * 注销对象
-         * 
          */
-        Render.prototype.dispose = function() {
+        Render.prototype.dispose = function () {
 
             this.un();
 
@@ -259,12 +251,12 @@ define(
         };
 
         // 注册painter中的函数
-        [   
+        [
             'addSupport', 'move', 'getSize',
             'getLayer', 'addLayer', 'removeLayer',
             'getShapeIn', 'clearShapes'
-        ].forEach(function(fnName) {
-            Render.prototype[fnName] = function() {
+        ].forEach(function (fnName) {
+            Render.prototype[fnName] = function () {
                 return this.painter[fnName].apply(this.painter, arguments);
             };
         });

@@ -1,29 +1,29 @@
 /**
  * @file Controller.js
  * @author mengke01
- * @date 
+ * @date
  * @description
- * 默认的渲染控制器
+ * 默认的渲染控制器，仅实现基本的缩放平移控制
  */
 
 
 define(
-    function(require) {
+    function (require) {
 
         var selectShape = require('./util/selectShape');
-        
+
         /**
          * 初始化
          */
         function initRender() {
-            
+
             var render = this.render;
 
 
-            render.capture.on('down', function(e) {
+            render.capture.on('down', function (e) {
                 var result = render.getLayer('cover').getShapeIn(e);
 
-                if(result) {
+                if (result) {
                     render.selectedShape = result[0];
                 }
                 else {
@@ -41,9 +41,9 @@ define(
                 render.camera.y = e.y;
             });
 
-            render.capture.on('drag', function(e) {
+            render.capture.on('drag', function (e) {
                 var shape = render.selectedShape;
-                if(shape) {
+                if (shape) {
                     render.getLayer(shape.layerId)
                         .move(e.x - render.camera.x, e.y - render.camera.y, shape)
                         .refresh();
@@ -56,9 +56,9 @@ define(
                 render.camera.y = e.y;
             });
 
-            render.capture.on('dragend', function(e) {
+            render.capture.on('dragend', function (e) {
                 var shape = render.selectedShape;
-                if(shape) {
+                if (shape) {
                     render.getLayer(shape.layerId)
                         .move(e.x - render.camera.x, e.y - render.camera.y, shape)
                         .refresh();
@@ -81,9 +81,13 @@ define(
         }
 
         /**
-         * 注销
+         * 设置render对象
+         *
+         * 所有的controller都需要实现此接口
+         * @param {Render} render render对象
+         * @return {this}
          */
-        Controller.prototype.setRender = function(render) {
+        Controller.prototype.setRender = function (render) {
             this.render = render;
             initRender.call(this);
             return this;
@@ -92,7 +96,7 @@ define(
         /**
          * 注销
          */
-        Controller.prototype.dispose = function() {
+        Controller.prototype.dispose = function () {
             this.render && this.render.dispose();
             this.options = this.render = null;
         };
