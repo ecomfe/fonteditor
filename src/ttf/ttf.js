@@ -18,6 +18,54 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var glyfAdjust = require('./util/glyfAdjust');
 
+
+        /**
+         * 缩放到EM框
+         *
+         * @param {Array} glyfList glyf列表
+         * @param {number} ascent 上升
+         * @param {number} descent 下降
+         * @param {number} ajdustToEmPadding  顶部和底部留白
+         * @return {Array} glyfList
+         */
+        function adjustToEmBox(glyfList, ascent, descent, ajdustToEmPadding) {
+
+            glyfList.forEach(function (g) {
+
+                if (g.contours && g.contours.length) {
+                    var rightSideBearing = g.advanceWidth - g.xMax;
+                    var bound = computeBoundingBox.computePath.apply(null, g.contours);
+                    var scale = (ascent - descent - ajdustToEmPadding) / bound.height;
+                    var center = (ascent + descent) / 2;
+                    var yOffset = center - (bound.y + bound.height / 2) * scale;
+
+                    g.contours.forEach(function (contour) {
+                        if (scale !== 1) {
+                            pathAdjust(contour, scale, scale);
+                        }
+
+                        pathAdjust(contour, 1, 1, 0, yOffset);
+                        pathCeil(contour);
+                    });
+
+                    var box = computeBoundingBox.computePathBox.apply(null, g.contours);
+
+                    g.xMin = box.x;
+                    g.xMax = box.x + box.width;
+                    g.yMin = box.y;
+                    g.yMax = box.y + box.height;
+
+                    g.leftSideBearing = g.xMin;
+                    g.advanceWidth = g.xMax + rightSideBearing;
+
+                }
+
+            });
+
+            return glyfList;
+        }
+
+
         /**
          * 合并两个ttfObject，此处仅合并简单字形
          *
@@ -25,17 +73,12 @@ define(
          * @param {Object} imported ttfObject
          * @param {Object} options 参数选项
          * @param {boolean} options.scale 是否自动缩放
+         * @param {boolean} options.adjustGlyf 是否调整字形以适应边界
          *
          * @return {Object} 合并后的ttfObject
          */
         function merge(ttf, imported, options) {
             options = options || {};
-
-            var scale = 1;
-            // 调整glyf对导入的轮廓进行缩放处理
-            if (options.scale && imported.head.unitsPerEm && imported.head.unitsPerEm !== ttf.head.unitsPerEm) {
-                scale = ttf.head.unitsPerEm / imported.head.unitsPerEm;
-            }
 
             var list = imported.glyf.filter(function (g, index) {
                 // 简单轮廓
@@ -44,13 +87,36 @@ define(
                     && g.name !== '.notdef' && g.name !== '.null' && g.name !== 'nonmarkingreturn';
             });
 
-            list.forEach(function (g) {
-                glyfAdjust(g, scale, scale);
-                ttf.glyf.push(g);
-            });
+            // 调整字形以适应边界
+            if (options.adjustGlyf) {
+                var ascent = ttf.hhea.ascent;
+                var descent = ttf.hhea.descent;
+                var ajdustToEmPadding = 0;
+                adjustToEmBox(list, ascent, descent, ajdustToEmPadding);
+
+                list.forEach(function (g) {
+                    ttf.glyf.push(g);
+                });
+            }
+            // 根据unitsPerEm 进行缩放
+            else if (options.scale) {
+
+                var scale = 1;
+
+                // 调整glyf对导入的轮廓进行缩放处理
+                if (imported.head.unitsPerEm && imported.head.unitsPerEm !== ttf.head.unitsPerEm) {
+                    scale = ttf.head.unitsPerEm / imported.head.unitsPerEm;
+                }
+
+                list.forEach(function (g) {
+                    glyfAdjust(g, scale, scale);
+                    ttf.glyf.push(g);
+                });
+            }
 
             return list;
         }
+
 
         /**
          * ttf读取函数
@@ -342,7 +408,6 @@ define(
 
             // 基线高度
             if (undefined !== setting.verticalAlign) {
-
                 changed = true;
 
                 var verticalAlign = setting.verticalAlign || 0;
@@ -404,39 +469,11 @@ define(
             else if (setting.ajdustToEmBox) {
 
                 changed = true;
-
-                var dencent = this.ttf.hhea.descent;
-                var unitsPerEm = this.ttf.head.unitsPerEm;
+                var ascent = this.ttf.hhea.ascent;
+                var descent = this.ttf.hhea.descent;
                 var ajdustToEmPadding = 2 * (setting.ajdustToEmPadding || 0);
 
-                glyfList.forEach(function (g) {
-                    if (g.contours && g.contours.length) {
-
-                        var rightSideBearing = g.advanceWidth - g.xMax;
-                        var bound = computeBoundingBox.computePath.apply(null, g.contours);
-                        var scale = (unitsPerEm - ajdustToEmPadding) / bound.height;
-
-                        if (scale !== 1) {
-                            var yOffset = (unitsPerEm / 2 + dencent) -  (bound.y + bound.height / 2) * scale;
-                            g.contours.forEach(function (contour) {
-                                pathAdjust(contour, scale, scale);
-                                pathAdjust(contour, 1, 1, 0, yOffset);
-                                pathCeil(contour);
-                            });
-
-                            var box = computeBoundingBox.computePathBox.apply(null, g.contours);
-
-                            g.xMin = box.x;
-                            g.xMax = box.x + box.width;
-                            g.yMin = box.y;
-                            g.yMax = box.y + box.height;
-
-                            g.leftSideBearing = g.xMin;
-                            g.advanceWidth = g.xMax + rightSideBearing;
-                        }
-                    }
-
-                });
+                adjustToEmBox(glyfList, ascent, descent, ajdustToEmPadding);
             }
 
             return changed ? glyfList : [];

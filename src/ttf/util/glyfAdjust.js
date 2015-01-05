@@ -14,6 +14,7 @@ define(
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
 
+        /* eslint-disable max-params */
         /**
          * 简单字形的缩放和平移调整
          *
@@ -22,9 +23,11 @@ define(
          * @param {number} scaleY y缩放比例
          * @param {number} offsetX x偏移
          * @param {number} offsetY y偏移
+         * @param {boolan} ceil 是否对字形设置取整，默认取整
+         *
          * @return {Object} 调整后的glyf对象
          */
-        function glyfAdjust(g, scaleX, scaleY, offsetX, offsetY) {
+        function glyfAdjust(g, scaleX, scaleY, offsetX, offsetY, ceil) {
 
             scaleX = scaleX || 1;
             scaleY = scaleY || 1;
@@ -35,13 +38,18 @@ define(
                 if (scaleX !== 1 || scaleY !== 1) {
                     g.contours.forEach(function (contour) {
                         pathAdjust(contour, scaleX, scaleY);
-                        pathCeil(contour);
                     });
                 }
 
                 if (offsetX !== 0 || offsetY !== 0) {
                     g.contours.forEach(function (contour) {
                         pathAdjust(contour, 1, 1, offsetX, offsetY);
+                    });
+                }
+
+                if (false !== ceil) {
+                    g.contours.forEach(function (contour) {
+                        pathCeil(contour);
                     });
                 }
             }
@@ -94,6 +102,7 @@ define(
 
             return g;
         }
+        /* eslint-enable max-params */
 
         return glyfAdjust;
     }

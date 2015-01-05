@@ -32,7 +32,8 @@ define(
                             program.loading.hide();
                             if (program.ttfManager.get()) {
                                 program.ttfManager.merge(imported, {
-                                    scale: true
+                                    scale: true,
+                                    adjustGlyf: imported.from === 'svg' ? true : false
                                 });
                             }
                             else {

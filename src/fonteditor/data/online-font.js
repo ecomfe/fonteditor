@@ -41,6 +41,11 @@ define(
                 from: '百度健康图标'
             },
             {
+                name: 'fonteditor.woff',
+                url: 'http://vs-static.baidu.com/m-health/med-detail/201412301413/asset/common/css/fonts/fonteditor.woff',
+                from: '百度健康医药馆图标'
+            },
+            {
                 name: 'i-edu.woff',
                 url: 'http://vs-static.baidu.com/edu/m/asset/common/css/font/i-edu.woff',
                 from: '百度教育图标'

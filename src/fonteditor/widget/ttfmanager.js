@@ -162,6 +162,7 @@ define(
          * @param {Object} imported ttfObject
          * @param {Object} options 参数选项
          * @param {boolean} options.scale 是否自动缩放
+         * @param {boolean} options.adjustGlyf 是否调整字形以适应边界
          *
          * @return {this}
          */

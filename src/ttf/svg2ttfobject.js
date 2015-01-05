@@ -13,6 +13,7 @@ define(
         var svg2contours = require('./util/svg2contours');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var error = require('./error');
+        var glyfAdjust = require('./util/glyfAdjust');
 
         /**
          * 加载xml字符串
@@ -51,6 +52,39 @@ define(
             };
         }
 
+        /**
+         * 根据边界获取unitsPerEm
+         *
+         * @param {number} xMin x最小值
+         * @param {number} xMax x最大值
+         * @param {number} yMin y最小值
+         * @param {number} yMax y最大值
+         * @return {number}
+         */
+        function getUnitsPerEm(xMin, xMax, yMin, yMax) {
+            var seed = Math.ceil(Math.min(yMax - yMin, xMax - xMin));
+
+            if (!seed) {
+                return 1024;
+            }
+
+            if (seed <= 128) {
+                return seed;
+            }
+
+            // 获取合适的unitsPerEm
+            var unitsPerEm = 128;
+            while (unitsPerEm < 16384) {
+
+                if (seed <= 1.2 * unitsPerEm) {
+                    return unitsPerEm;
+                }
+
+                unitsPerEm = unitsPerEm << 1;
+            }
+
+            return 1024;
+        }
 
         /**
          * 对ttfObject进行处理，去除小数
@@ -60,57 +94,40 @@ define(
          */
         function resolve(ttf) {
 
-            var scale = 1;
 
-            // 对于小尺寸svg进行合理的缩放
-            if (ttf.head.unitsPerEm && ttf.head.unitsPerEm < 256) {
-                scale = 1024 / ttf.head.unitsPerEm;
+            // 如果是svg格式字体，则去小数
+            if (ttf.from === 'svgfont' && ttf.head.unitsPerEm > 128) {
+                ttf.glyf.forEach(function (g) {
+                    glyfAdjust(g);
+                });
+            }
+            // 否则重新计算字形大小，缩放到1024的em
+            else {
+                var xMin = 16384;
+                var xMax = -16384;
+                var yMin = 16384;
+                var yMax = -16384;
+
+                ttf.glyf.forEach(function (g) {
+                    if (g.contours) {
+                        var bound = computeBoundingBox.computePathBox.apply(null, g.contours);
+                        if (bound) {
+                            xMin = Math.min(xMin, bound.x);
+                            xMax = Math.max(xMax, bound.x + bound.width);
+                            yMin = Math.min(yMin, bound.y);
+                            yMax = Math.max(yMax, bound.y + bound.height);
+                        }
+                    }
+                });
+
+                var unitsPerEm = getUnitsPerEm(xMin, xMax, yMin, yMax);
+                var scale = 1024 / unitsPerEm;
+
+                ttf.glyf.forEach(function (g) {
+                    glyfAdjust(g, scale, scale);
+                });
                 ttf.head.unitsPerEm = 1024;
             }
-
-            ttf.glyf.forEach(function (glyf) {
-                if (glyf.contours && glyf.contours.length) {
-
-                    var pointIterator = function (p) {
-                        p.x = Math.round(p.x * scale);
-                        p.y = Math.round(p.y * scale);
-                    };
-                    var contourIterator = function (contour) {
-                        contour.forEach(pointIterator);
-                    };
-
-                    glyf.contours.forEach(contourIterator);
-
-                    var bound = computeBoundingBox.computePathBox.apply(null, glyf.contours);
-                    glyf.xMin = bound.x;
-                    glyf.xMax = bound.x + bound.width;
-                    glyf.yMin = bound.y;
-                    glyf.yMax = bound.y + bound.height;
-
-                    if (glyf.leftSideBearing) {
-                        glyf.leftSideBearing = Math.round(glyf.leftSideBearing * scale);
-                    }
-                    else {
-                        glyf.leftSideBearing = glyf.xMin;
-                    }
-
-                    if (glyf.advanceWidth) {
-                        glyf.advanceWidth = Math.round(glyf.advanceWidth * scale);
-                    }
-                    else {
-                        glyf.advanceWidth = glyf.xMax + Math.abs(glyf.xMin);
-                    }
-                }
-            });
-
-            if (undefined !== ttf.head.xMin && undefined !== ttf.head.yMax) {
-                ttf.head.xMin = Math.round(ttf.head.xMin * scale);
-                ttf.head.xMax = Math.round(ttf.head.xMax * scale);
-                ttf.head.yMin = Math.round(ttf.head.yMin * scale);
-                ttf.head.yMax = Math.round(ttf.head.yMax * scale);
-            }
-
-            ttf.head.unitsPerEm = ttf.head.unitsPerEm ? Math.round(ttf.head.unitsPerEm) : 1024;
 
             return ttf;
         }
@@ -132,10 +149,11 @@ define(
                 ttf.metadata = string.decodeHTML(metaNode.textContent.trim());
             }
 
-            // 解析font
+            // 解析font，如果有font节点说明是svg格式字体文件
             if (fontNode) {
                 ttf.id = fontNode.getAttribute('id') || '';
                 ttf.hhea.advanceWidthMax = +(fontNode.getAttribute('horiz-adv-x') || 0);
+                ttf.from = 'svgfont';
             }
 
             if (fontFaceNode) {
@@ -171,15 +189,6 @@ define(
                         OS2.usFirstCharIndex = Number('0x' + a);
                         OS2.usLastCharIndex = b ? Number('0x' + b.slice(1)) : 0xFFFFFFFF;
                     });
-                }
-            }
-
-            // 如果没有定义unitsPerEm，可以用viewBox代替
-            var svgNode = xmlDoc.getElementsByTagName('svg')[0];
-            if (!ttf.head.unitsPerEm && svgNode.getAttribute('viewBox')) {
-                var bound = svgNode.getAttribute('viewBox').split(' ');
-                if (bound.length === 4) {
-                    ttf.head.unitsPerEm = +bound[2];
                 }
             }
 
