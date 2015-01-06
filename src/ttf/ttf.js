@@ -67,7 +67,7 @@ define(
 
         /**
          * 调整字形位置
-         * 
+         *
          * @param {Array} glyfList 字形列表
          * @param {number=} leftSideBearing 左边距
          * @param {number=} rightSideBearing 右边距
@@ -102,7 +102,6 @@ define(
             // 基线高度
             if (null != verticalAlign) {
                 changed = true;
-                var verticalAlign = verticalAlign || 0;
 
                 glyfList.forEach(function (g) {
                     if (g.contours && g.contours.length) {
