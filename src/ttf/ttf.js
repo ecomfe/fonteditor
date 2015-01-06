@@ -65,6 +65,58 @@ define(
             return glyfList;
         }
 
+        /**
+         * 调整字形位置
+         * 
+         * @param {Array} glyfList 字形列表
+         * @param {number=} leftSideBearing 左边距
+         * @param {number=} rightSideBearing 右边距
+         * @param {number=} verticalAlign 垂直对齐
+         *
+         * @return {Array} 改变的列表
+         */
+        function adjustPos(glyfList, leftSideBearing, rightSideBearing, verticalAlign) {
+
+            var changed = false;
+
+            // 左边轴
+            if (null != leftSideBearing) {
+                changed = true;
+
+                glyfList.forEach(function (g) {
+                    if (g.leftSideBearing !== leftSideBearing) {
+                        glyfAdjust(g, 1, 1, leftSideBearing - g.leftSideBearing);
+                    }
+                });
+            }
+
+            // 右边轴
+            if (null != rightSideBearing) {
+                changed = true;
+
+                glyfList.forEach(function (g) {
+                    g.advanceWidth = g.xMax + rightSideBearing;
+                });
+            }
+
+            // 基线高度
+            if (null != verticalAlign) {
+                changed = true;
+                var verticalAlign = verticalAlign || 0;
+
+                glyfList.forEach(function (g) {
+                    if (g.contours && g.contours.length) {
+                        var bound = computeBoundingBox.computePath.apply(this, g.contours);
+                        var offset = verticalAlign - bound.y;
+                        glyfAdjust(g, 1, 1, 0, offset);
+                    }
+                });
+            }
+
+            return changed ? glyfList : [];
+        }
+
+
 
         /**
          * 合并两个ttfObject，此处仅合并简单字形
@@ -91,7 +143,8 @@ define(
             if (options.adjustGlyf) {
                 var ascent = ttf.hhea.ascent;
                 var descent = ttf.hhea.descent;
-                var ajdustToEmPadding = 0;
+                var ajdustToEmPadding = 16;
+                adjustPos(list, 16, 16);
                 adjustToEmBox(list, ascent, descent, ajdustToEmPadding);
 
                 list.forEach(function (g) {
@@ -376,63 +429,31 @@ define(
         /**
          * 调整glyf位置
          *
-         * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
+         * @param {Object} setting 选项
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.adjustGlyfPos = function (setting, indexList) {
+        TTF.prototype.adjustGlyfPos = function (indexList, setting) {
 
             var glyfList = this.getGlyf(indexList);
-            var changed = false;
 
-            // 左边轴
-            if (undefined !== setting.leftSideBearing) {
-
-                changed = true;
-
-                glyfList.forEach(function (g) {
-                    if (g.leftSideBearing !== setting.leftSideBearing) {
-                        glyfAdjust(g, 1, 1, setting.leftSideBearing - g.leftSideBearing);
-                    }
-                });
-            }
-
-            // 右边轴
-            if (undefined !== setting.rightSideBearing) {
-
-                changed = true;
-                glyfList.forEach(function (g) {
-                    g.advanceWidth = g.xMax + setting.rightSideBearing;
-                });
-            }
-
-            // 基线高度
-            if (undefined !== setting.verticalAlign) {
-                changed = true;
-
-                var verticalAlign = setting.verticalAlign || 0;
-                glyfList.forEach(function (g) {
-                    if (g.contours && g.contours.length) {
-                        var bound = computeBoundingBox.computePath.apply(this, g.contours);
-                        var offset = verticalAlign - bound.y;
-                        glyfAdjust(g, 1, 1, 0, offset);
-                    }
-                });
-
-            }
-
-            return changed ? glyfList : [];
+            return adjustPos(
+                glyfList,
+                setting.leftSideBearing,
+                setting.rightSideBearing,
+                setting.verticalAlign
+            );
         };
 
 
         /**
          * 调整glyf
          *
-         * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
+         * @param {Object} setting 选项
          * @return {boolean}
          */
-        TTF.prototype.adjustGlyf = function (setting, indexList) {
+        TTF.prototype.adjustGlyf = function (indexList, setting) {
 
             var glyfList = this.getGlyf(indexList);
             var changed = false;
