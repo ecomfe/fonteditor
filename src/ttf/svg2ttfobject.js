@@ -10,10 +10,12 @@
 define(
     function (require) {
         var string = require('common/string');
-        var svg2contours = require('./util/svg2contours');
+        var path2contours = require('./svg/path2contours');
+        var svgnode2contours = require('./svg/svgnode2contours');
+        var contoursTransform = require('./svg/contoursTransform');
         var computeBoundingBox = require('graphics/computeBoundingBox');
-        var error = require('./error');
         var glyfAdjust = require('./util/glyfAdjust');
+        var error = require('./error');
 
         /**
          * 加载xml字符串
@@ -220,18 +222,13 @@ define(
                 }
 
                 if ((d = missingNode.getAttribute('d'))) {
-                    missing.contours = svg2contours(d);
+                    missing.contours = path2contours(d);
                 }
 
                 ttf.glyf.push(missing);
             }
 
             var glyfNodes = xmlDoc.getElementsByTagName('glyph');
-
-            // path 对象也支持
-            if (!glyfNodes.length) {
-                glyfNodes = xmlDoc.getElementsByTagName('path');
-            }
 
             if (glyfNodes.length) {
 
@@ -256,7 +253,7 @@ define(
                     }
 
                     if ((d = node.getAttribute('d'))) {
-                        glyf.contours = svg2contours(d);
+                        glyf.contours = path2contours(d);
                     }
                     ttf.glyf.push(glyf);
                 }
@@ -264,6 +261,62 @@ define(
 
             return ttf;
         }
+
+        function mirrorContours(contours) {
+            // 这里为了使ai等工具里面的字形方便导入，对svg做了反向处理
+            var bound = computeBoundingBox.computePathBox.apply(null, contours);
+            contours = contoursTransform(contours, [
+                {
+                    name: 'scale',
+                    params: [1, -1]
+                },
+                {
+                    name: 'translate',
+                    params: [1, bound.height]
+                }
+            ]);
+            return contours;
+        }
+
+        /**
+         * 解析字体信息相关节点
+         *
+         * @param {XMLDocument} xmlDoc XML文档对象
+         * @param {Object} ttf ttf对象
+         * @return {Object} ttf对象
+         */
+        function parsePath(xmlDoc, ttf) {
+
+            // 单个path组成一个glfy字形
+            var pathNodes = xmlDoc.getElementsByTagName('path');
+            if (pathNodes.length) {
+                for (var i = 0, length = pathNodes.length; i < length; i++) {
+                    var node = pathNodes[i];
+                    var glyf = {
+                        name: node.getAttribute('name') || ''
+                    };
+                    var contours = svgnode2contours([node]);
+                    glyf.contours = mirrorContours(contours);
+                    ttf.glyf.push(glyf);
+                }
+            }
+
+            // 其他svg指令组成一个glyf字形
+            var contours = svgnode2contours(
+                Array.prototype.slice.call(xmlDoc.getElementsByTagName('*')).filter(function (node) {
+                    return node.tagName !== 'path';
+                })
+            );
+            if (contours) {
+                var glyf = {
+                    name: ''
+                };
+
+                glyf.contours = mirrorContours(contours);
+                ttf.glyf.push(glyf);
+            }
+        }
+
 
         /**
          * 解析xml文档
@@ -280,7 +333,14 @@ define(
             }
 
             parseFont(xmlDoc, ttf);
-            parseGlyf(xmlDoc, ttf);
+
+            // 如果是svg字体格式，则解析glyf，否则解析path
+            if (ttf.from === 'svgfont') {
+                parseGlyf(xmlDoc, ttf);
+            }
+            else {
+                parsePath(xmlDoc, ttf);
+            }
 
             if (!ttf.glyf.length) {
                 error.raise(10201);
