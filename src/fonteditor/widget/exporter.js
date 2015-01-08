@@ -14,9 +14,25 @@ define(
         var ttf2woff = require('ttf/ttf2woff');
         var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
+        var ttf2icon = require('ttf/ttf2icon');
         var bytes2base64 = require('ttf/util/bytes2base64');
         var deflate = require('deflate');
         var JSZip = require('JSZip');
+        var utpl = require('utpl');
+
+        // icon tpl
+        var tplExample = require('text!template/icon-example.tpl');
+        var renderExample = utpl.template(tplExample);
+
+        // icon css
+        var tplCss = require('text!template/icon-css.tpl');
+
+        // example css
+        var tplPreviewCss = require('text!/css/preview.css');
+
+        // css render
+        var renderCss = utpl.template(tplCss);
+
 
         /**
          * 导出SFNT结构字体 base64
@@ -71,9 +87,11 @@ define(
                     // 导出
                     if (options.type === 'zip') {
 
+                        // zip
                         var zip = new JSZip();
                         var fontzip = zip.folder('fonteditor');
 
+                        // ttf
                         ['woff', 'eot', 'svg', 'ttf'].forEach(function (fileType) {
 
                             fontzip.file(
@@ -85,6 +103,28 @@ define(
 
                         });
 
+                        // icon
+                        var iconData = ttf2icon(ttf);
+
+                        // css
+                        fontzip.file(
+                            'icon.css',
+                            renderCss(iconData)
+                        );
+
+                        // page
+                        fontzip.file(
+                            'page.css',
+                            tplPreviewCss
+                        );
+
+                        // html
+                        fontzip.file(
+                            'example.html',
+                            renderExample(iconData)
+                        );
+
+                        // zip
                         base64Str = 'data:application/zip;base64,' + zip.generate({
                             type: 'base64'
                         });
