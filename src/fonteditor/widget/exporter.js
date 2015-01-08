@@ -28,11 +28,11 @@ define(
         var tplCss = require('text!template/icon-css.tpl');
 
         // example css
-        var tplPreviewCss = require('text!/css/preview.css');
+        // @坑
+        var tplPreviewCss = '';
 
         // css render
         var renderCss = utpl.template(tplCss);
-
 
         /**
          * 导出SFNT结构字体 base64
@@ -168,8 +168,19 @@ define(
 
 
         var exporter = {
+            /**
+             * 初始化
+             */
+            init: function () {
+                if (!tplPreviewCss) {
+                    $.get('./css/prevew.css', function (text) {
+                        tplPreviewCss = text;
+                    });
+                }
+            },
             'export': exportFile
         };
+
         return exporter;
     }
 );

@@ -13,7 +13,7 @@ define(
         /**
          * listUnicode
          *
-         * @param  {array} unicode unicode
+         * @param  {Array} unicode unicode
          * @return {string}         unicode string
          */
         function listUnicode(unicode) {
