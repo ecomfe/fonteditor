@@ -16,7 +16,7 @@ define(
          * 解析transform参数
          * 
          * @param {string} str 参数字符串
-         * @return {[type]} [return description]
+         * @return {Array} transform数组 [{name: 'scale', params: []}]
          */
         function parseTransform(str) {
 
