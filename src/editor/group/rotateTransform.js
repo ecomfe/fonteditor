@@ -12,7 +12,7 @@ define(
 
         var getRotateMatrix = require('./getRotateMatrix');
         var pathRotate = require('graphics/pathRotate');
-        var pathLean = require('graphics/pathLean');
+        var pathSkew = require('graphics/pathSkew');
         var lang = require('common/lang');
 
         /**
@@ -25,7 +25,7 @@ define(
 
             var matrix = getRotateMatrix(point.pos, this.bound, camera);
 
-            var transformer = point.pos <= 4 ? pathRotate : pathLean;
+            var transformer = point.pos <= 4 ? pathRotate : pathSkew;
 
             // 更新shape
             var shapes = this.shapes;

@@ -162,6 +162,7 @@ define(
          * @param {Object} imported ttfObject
          * @param {Object} options 参数选项
          * @param {boolean} options.scale 是否自动缩放
+         * @param {boolean} options.adjustGlyf 是否调整字形以适应边界
          *
          * @return {this}
          */
@@ -274,13 +275,13 @@ define(
         /**
          * 调整glyf位置
          *
-         * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
+         * @param {Object} setting 选项
          * @return {boolean}
          */
-        Manager.prototype.adjustGlyfPos = function (setting, indexList) {
+        Manager.prototype.adjustGlyfPos = function (indexList, setting) {
 
-            var list = this.ttf.adjustGlyfPos(setting, indexList);
+            var list = this.ttf.adjustGlyfPos(indexList, setting);
             if (list.length) {
                 list.forEach(function (g) {
                     g.modify = 'edit';
@@ -295,13 +296,13 @@ define(
         /**
          * 调整glyf
          *
-         * @param {Object} setting 选项
          * @param {Array} indexList 索引列表
+         * @param {Object} setting 选项
          * @return {boolean}
          */
-        Manager.prototype.adjustGlyf = function (setting, indexList) {
+        Manager.prototype.adjustGlyf = function (indexList, setting) {
 
-            var list = this.ttf.adjustGlyf(setting, indexList);
+            var list = this.ttf.adjustGlyf(indexList, setting);
             if (list.length) {
                 list.forEach(function (g) {
                     g.modify = 'edit';
@@ -342,7 +343,7 @@ define(
                 || (undefined !== setting.rightSideBearing
                     && setting.rightSideBearing + (glyf.xMax || 0) !== glyf.advanceWidth)
             ) {
-                var list = this.ttf.adjustGlyfPos(setting, [index]);
+                var list = this.ttf.adjustGlyfPos([index], setting);
                 if (list.length) {
                     list.forEach(function (g) {
                         g.modify = 'edit';

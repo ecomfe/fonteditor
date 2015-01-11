@@ -40,6 +40,7 @@ define(
                                 },
                                 style: this.options.referenceline.style
                             });
+                            this._dragMode = mode.dragLine;
                             this.render.setCursor('col-resize');
                         }
                         else if (e.startY <= 20 && e.y > 20) {
@@ -49,10 +50,9 @@ define(
                                 },
                                 style: this.options.referenceline.style
                             });
+                            this._dragMode = mode.dragLine;
                             this.render.setCursor('row-resize');
                         }
-
-                        this._dragMode = mode.dragLine;
                     }
                 }
             },

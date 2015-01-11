@@ -19,17 +19,12 @@ define(
         var eot2base64 = require('ttf/eot2base64');
         var svg2base64 = require('ttf/svg2base64');
         var utpl = require('utpl');
+        var extend = require('common/lang').extend;
+        var ttf2icon = require('ttf/ttf2icon');
 
         var previewTplRender = null; // 模板渲染函数
 
-
         var isIE = !!window.ActiveXObject || 'ActiveXObject' in window;
-
-        function listUnicode(unicode) {
-            return unicode.map(function (u) {
-                return '\\' + u.toString(16);
-            }).join(',');
-        }
 
         /**
          * 生成预览模板
@@ -42,8 +37,6 @@ define(
             fontFormat = !fontFormat || fontFormat === 'ttf' ? 'truetype' : fontFormat;
 
             var fontData = '';
-            var fontFamily = ttf.name.fontFamily || 'fonteditor';
-            var glyfList = [];
             var buffer;
 
             if (fontFormat === 'woff') {
@@ -62,28 +55,15 @@ define(
                 fontData = ttf2base64(buffer);
             }
 
-            // 过滤不显示的字形
-            var filtered = ttf.glyf.filter(function (g) {
-                return g.name !== '.notdef'
-                    && g.name !== '.null'
-                    && g.name !== 'nonmarkingreturn'
-                    && g.unicode && g.unicode.length;
-            });
+            var data = extend(
+                {
+                    fontData: fontData,
+                    fontFormat: fontFormat
+                },
+                ttf2icon(ttf)
+            );
 
-            filtered.forEach(function (g) {
-                glyfList.push({
-                    code: '&#x' + g.unicode[0].toString(16) + ';',
-                    codeName: listUnicode(g.unicode),
-                    name: g.name
-                });
-            });
-
-            return previewTplRender({
-                fontData: fontData,
-                fontFormat: fontFormat,
-                fontFamily: fontFamily,
-                glyfList: glyfList
-            });
+            return previewTplRender(data);
         }
 
 
@@ -94,9 +74,9 @@ define(
              */
             init: function () {
                 if (!previewTplRender) {
-                    $.get('./template/preview-ttf.html', function (text) {
-                        previewTplRender = utpl.template(text);
-                    });
+                    previewTplRender = utpl.template(
+                        require('text!template/preview-ttf.tpl')
+                    );
                 }
             },
 

@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="./css/main.css">
     <script>
     var _hmt = _hmt || [];
-    (function() {
+    /baidu.com$/.test(location.hostname) && (function() {
       var hm = document.createElement("script");
       hm.src = "//hm.baidu.com/hm.js?65ce30cdeda584c416e39648915689f7";
       var s = document.getElementsByTagName("script")[0];
@@ -47,7 +47,7 @@
 
             <a id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-flat btn-ico" title="导出ttf"><i class="ico i-ttf"></i></a>
             <a id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-flat btn-ico" title="导出woff"><i class="ico i-woff"></i></a>
-            <a id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico" title="导出zip,包含ttf,woff,eot,svg等格式"><i class="ico i-zip"></i></a>
+            <a id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico" title="导出zip,包含ttf,woff,eot,svg等格式字体和icon示例"><i class="ico i-zip"></i></a>
 
             <i class="split"></i>
 
@@ -139,6 +139,7 @@
         require.config({
             baseUrl: './src',
             paths: {
+                text: '../dep/requirejs-text',
                 utpl: '../dep/utpl.min',
                 JSZip: '../dep/jszip/jszip.min',
                 inflate: '../dep/pako_inflate.min',

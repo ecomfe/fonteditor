@@ -16,7 +16,7 @@ define(
 
         var contour2svg = require('./contour2svg');
         var contours2svg = require('./contours2svg');
-        var matrixTransform = require('graphics/transform');
+        var pathTransform = require('graphics/pathTransform');
         var lang = require('common/lang');
 
         /**
@@ -52,7 +52,7 @@ define(
                     var contours = lang.clone(glyph.contours); // 这里需要进行matrix变换，需要复制一份
                     var transform = g.transform;
                     for (var i = 0, l = contours.length; i < l; i++) {
-                        matrixTransform(
+                        pathTransform(
                             contours[i],
                             transform.a,
                             transform.b,
