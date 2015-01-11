@@ -12,8 +12,6 @@ define(
         var oval2contour = require('./oval2contour');
         var polygon2contour = require('./polygon2contour');
         var rect2contour = require('./rect2contour');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('graphics/pathAdjust');
         var parseTransform = require('./parseTransform');
         var contoursTransform = require('./contoursTransform');
 
@@ -57,6 +55,9 @@ define(
 
             var i;
             var length;
+            var j;
+            var jlength;
+            var segment;
 
             // 解析支持的指令集合
             var parsedSegments = [];
@@ -67,11 +68,11 @@ define(
                     if (support[name]) {
                         var supportParams = support[name].params;
                         var params = [];
-                        for (var j = 0, attr; attr = supportParams[j++];) {
-                            params.push(node.getAttribute(attr));
+                        for (j = 0, jlength = supportParams.length; j < jlength; j++) {
+                            params.push(node.getAttribute(supportParams[j]));
                         }
 
-                        var segment = {
+                        segment = {
                             name: name,
                             params: params,
                             transform: parseTransform(node.getAttribute('transform'))
@@ -84,7 +85,7 @@ define(
             if (parsedSegments.length) {
                 var result = [];
                 for (i = 0, length = parsedSegments.length; i < length; i++) {
-                    var segment = parsedSegments[i];
+                    segment = parsedSegments[i];
                     var parser = support[segment.name];
                     var contour = parser.parse.apply(null, segment.params);
                     if (contour && contour.length) {
@@ -95,9 +96,9 @@ define(
                             contours = contoursTransform(contours, segment.transform);
                         }
 
-                        contours.forEach(function(p) {
-                            result.push(p);
-                        });
+                        for (j = 0, jlength = contours.length; j < jlength; j++) {
+                            result.push(contours[j]);
+                        }
                     }
                 }
                 return result;

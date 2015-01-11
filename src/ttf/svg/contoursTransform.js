@@ -9,7 +9,6 @@
 define(
     function (require) {
         var pathAdjust = require('graphics/pathAdjust');
-        var pathRotate = require('graphics/pathRotate');
         var pathTransform = require('graphics/pathTransform');
 
         /**
@@ -21,6 +20,7 @@ define(
          *     name: 'scale'
          *     params: [3,4]
          * }]
+         * @return {Array} 轮廓数组
          */
         function contoursTransform(contours, transforms) {
             if (!contours || !contours.length || !transforms || !transforms.length) {
@@ -44,12 +44,6 @@ define(
                     }
                 }
             });
-
-            // var bound = computeBoundingBox.computePath.apply(null, contours);
-            // var x = bound.x;
-            // var y = bound.y;
-            // var w = bound.width;
-            // var h = bound.height;
 
             return contours;
         }

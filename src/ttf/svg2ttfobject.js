@@ -283,32 +283,35 @@ define(
          *
          * @param {XMLDocument} xmlDoc XML文档对象
          * @param {Object} ttf ttf对象
-         * @return {Object} ttf对象
          */
         function parsePath(xmlDoc, ttf) {
 
             // 单个path组成一个glfy字形
+            var contours;
+            var glyf;
+            var node;
             var pathNodes = xmlDoc.getElementsByTagName('path');
+
             if (pathNodes.length) {
                 for (var i = 0, length = pathNodes.length; i < length; i++) {
-                    var node = pathNodes[i];
-                    var glyf = {
+                    node = pathNodes[i];
+                    glyf = {
                         name: node.getAttribute('name') || ''
                     };
-                    var contours = svgnode2contours([node]);
+                    contours = svgnode2contours([node]);
                     glyf.contours = mirrorContours(contours);
                     ttf.glyf.push(glyf);
                 }
             }
 
             // 其他svg指令组成一个glyf字形
-            var contours = svgnode2contours(
+            contours = svgnode2contours(
                 Array.prototype.slice.call(xmlDoc.getElementsByTagName('*')).filter(function (node) {
                     return node.tagName !== 'path';
                 })
             );
             if (contours) {
-                var glyf = {
+                glyf = {
                     name: ''
                 };
 

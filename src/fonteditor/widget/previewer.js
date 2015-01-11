@@ -72,7 +72,7 @@ define(
             /**
              * 初始化
              */
-            init: function() {
+            init: function () {
                 if (!previewTplRender) {
                     previewTplRender = utpl.template(
                         require('text!template/preview-ttf.tpl')

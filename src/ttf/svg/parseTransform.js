@@ -14,7 +14,7 @@ define(
 
         /**
          * 解析transform参数
-         * 
+         *
          * @param {string} str 参数字符串
          * @return {Array} transform数组 [{name: 'scale', params: []}]
          */
