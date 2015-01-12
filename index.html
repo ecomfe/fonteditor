@@ -146,7 +146,7 @@
                 deflate: '../dep/pako_deflate.min'
             }
         });
-        define('jquery', $);
+        define('jquery', window.jQuery);
         require(['fonteditor/main'])
     </script>
     <form id="font-form" style="width:0px;height:0px;overflow:hidden;"><input id="font-import" type="file" multiple="multiple"></form>

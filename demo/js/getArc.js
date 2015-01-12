@@ -9,7 +9,7 @@
 define(
     function(require) {
 
-        var svg2contours = require('ttf/util/svg2contours');
+        var svg2contours = require('ttf/svg/path2contours');
         var contour2svg = require('ttf/util/contour2svg');
         var getArc = require('graphics/getArc');
         var entry = {
