@@ -5,15 +5,6 @@
     <title>FontEditor字体编辑器</title>
     <link rel="stylesheet" type="text/css" href="./dep/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./css/main.css">
-    <script>
-    var _hmt = _hmt || [];
-    /baidu.com$/.test(location.hostname) && (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?65ce30cdeda584c416e39648915689f7";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-    </script>
 </head>
 <body>
 
@@ -130,6 +121,7 @@
         </div>
       </div>
     </div>
+    <form id="font-form" style="width:0px;height:0px;overflow:hidden;"><input id="font-import" type="file" multiple="multiple"></form>
 
 
     <script src="./dep/esl.js"></script>
@@ -149,6 +141,15 @@
         define('jquery', window.jQuery);
         require(['fonteditor/main'])
     </script>
-    <form id="font-form" style="width:0px;height:0px;overflow:hidden;"><input id="font-import" type="file" multiple="multiple"></form>
+
+    <script>
+    var _hmt = _hmt || [];
+    /baidu.com$/.test(location.hostname) && (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?65ce30cdeda584c416e39648915689f7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
 </body>
 </html>
