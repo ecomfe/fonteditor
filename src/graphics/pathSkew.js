@@ -1,5 +1,5 @@
 /**
- * @file pathLean.js
+ * @file pathSkew.js
  * @author mengke01
  * @date
  * @description
@@ -20,7 +20,7 @@ define(
          *
          * @return {Object} contour 坐标点
          */
-        function pathLean(contour, angle, offsetX, offsetY) {
+        function pathSkew(contour, angle, offsetX, offsetY) {
             angle = angle === undefined ? 0 : angle;
             var x = offsetX || 0;
             var tan = Math.tan(angle);
@@ -46,6 +46,6 @@ define(
             return contour;
         }
 
-        return pathLean;
+        return pathSkew;
     }
 );

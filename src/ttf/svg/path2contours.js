@@ -1,5 +1,5 @@
 /**
- * @file svg2contours.js
+ * @file path2contours.js
  * @author mengke01
  * @date
  * @description
@@ -12,6 +12,7 @@ define(
 
         var bezierCubic2Q2 = require('math/bezierCubic2Q2');
         var getArc =  require('graphics/getArc');
+        var parseParams = require('./parseParams');
 
         /**
          * 三次贝塞尔曲线列表，转二次贝塞尔曲线列表
@@ -445,15 +446,16 @@ define(
 
             return contours;
         }
-        /* eslint-enable fecs-max-statements, max-depth */
 
+
+        /* eslint-enable fecs-max-statements, max-depth */
         /**
          * svg path 转 contours
          *
          * @param {string} path path对象
          * @return {Array} contours
          */
-        function svg2contours(path) {
+        function path2contours(path) {
 
             if (!path || !path.length) {
                 return null;
@@ -470,17 +472,12 @@ define(
                 path += 'Z';
             }
 
-            var argsMap = function (d) {
-                return +d.trim();
-            };
-
             // 获取segments
             var segments = [];
             var cmd;
             var relative = false;
             var lastIndex;
             var args;
-            var segReg = /\-?\d+(?:\.\d+)?\b/g;
 
             for (var i = 0, l = path.length; i < l; i++) {
                 var c = path[i].toUpperCase();
@@ -511,7 +508,7 @@ define(
                             segments.push({
                                 cmd: cmd,
                                 relative: relative,
-                                args: args.match(segReg).map(argsMap)
+                                args: parseParams(args)
                             });
                         }
 
@@ -530,6 +527,6 @@ define(
 
 
 
-        return svg2contours;
+        return path2contours;
     }
 );

@@ -17,7 +17,7 @@
         <ul class="icon-list">
             {%glyfList.forEach(function(glyf) {%}
             <li>
-            <i class="icon">{%=glyf.code%}</i>
+                <i class="icon">{%=glyf.code%}</i>
                 <div class="code">{%=glyf.codeName%}</div>
                 <div class="name">{%=glyf.name%}</div>
             </li>

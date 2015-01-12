@@ -199,7 +199,7 @@ define(
                 !new SettingAdjustPos({
                     onChange: function (setting) {
                         setTimeout(function () {
-                            program.ttfManager.adjustGlyfPos(setting, selected);
+                            program.ttfManager.adjustGlyfPos(selected, setting);
                         }, 20);
                     }
                 }).show(opt);
@@ -211,7 +211,7 @@ define(
                 !new SettingAdjustGlyf({
                     onChange: function (setting) {
                         setTimeout(function () {
-                            program.ttfManager.adjustGlyf(setting, program.viewer.getSelected());
+                            program.ttfManager.adjustGlyf(program.viewer.getSelected(), setting);
                         }, 20);
                     }
                 }).show();

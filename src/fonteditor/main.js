@@ -47,7 +47,10 @@ define(
                             type: ext,
                             success: function (imported) {
                                 if (imported.glyf.length) {
-                                    program.ttfManager.merge(imported, {scale: true});
+                                    program.ttfManager.merge(imported, {
+                                        scale: true,
+                                        adjustGlyf: imported.from === 'svg' ? true : false
+                                    });
                                 }
                             }
                         });
