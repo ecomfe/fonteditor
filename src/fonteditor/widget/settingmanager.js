@@ -12,8 +12,7 @@ define(
 
         var lang = require('common/lang');
         var string = require('common/string');
-        var editorSetting = require('../setting/editor');
-        var ieSetting = require('../setting/ie');
+        var settingDefault = require('../setting/support');
 
         var storage = window.localStorage;
         var cachedSetting = {};
@@ -102,12 +101,10 @@ define(
              * @return {Object} 设置对象
              */
             getDefault: function (name) {
-                if (name === 'editor') {
-                    return lang.clone(editorSetting);
+                if (settingDefault[name]) {
+                    return lang.clone(settingDefault[name]);
                 }
-                else if (name === 'ie') {
-                    return lang.clone(ieSetting);
-                }
+
                 return null;
             }
         };
