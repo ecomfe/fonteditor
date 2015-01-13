@@ -114,7 +114,7 @@ define(
             +   '<div class="input-group input-group-sm">'
             +       '<span class="input-group-addon">保存设置</span>'
             +       '<span class="form-control"><input data-field="saveSetting" type="checkbox"></span>'
-            +   '</div> <a href="#" id="setting-editor-efault">重置为默认设置</a>'
+            +   '</div> <a href="#" id="setting-editor-default">重置为默认设置</a>'
             + '</div>';
 
         return require('./setting').derive({
@@ -129,7 +129,7 @@ define(
                 this.setting = lang.clone(setting);
                 this.setFields(this.setting);
                 var me = this;
-                $('#setting-editor-efault').on('click', function (e) {
+                $('#setting-editor-default').on('click', function (e) {
                     e.preventDefault();
                     me.setting = program.setting.getDefault('editor');
                     me.setFields(me.setting);

@@ -13,6 +13,7 @@ define(
         var lang = require('common/lang');
         var string = require('common/string');
         var editorSetting = require('../setting/editor');
+        var ieSetting = require('../setting/ie');
 
         var storage = window.localStorage;
         var cachedSetting = {};
@@ -104,7 +105,9 @@ define(
                 if (name === 'editor') {
                     return lang.clone(editorSetting);
                 }
-
+                else if (name === 'ie') {
+                    return lang.clone(ieSetting);
+                }
                 return null;
             }
         };

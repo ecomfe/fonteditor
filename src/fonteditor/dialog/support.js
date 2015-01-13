@@ -18,7 +18,8 @@ define(
             'url': require('../dialog/font-url'),
             'glyf': require('../dialog/setting-glyf'),
             'editor': require('../dialog/setting-editor'),
-            'find-glyf': require('../dialog/setting-find-glyf')
+            'find-glyf': require('../dialog/setting-find-glyf'),
+            'ie': require('../dialog/setting-ie')
         };
     }
 );

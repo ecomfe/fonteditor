@@ -240,6 +240,15 @@ define(
                         }, 20);
                     }
                 }).show(program.setting.get('editor'));
+            },
+
+            'setting-import-and-export': function () {
+                var SettingEditor = settingSupport.ie;
+                !new SettingEditor({
+                    onChange: function (setting) {
+                        program.setting.set('ie', setting, setting.saveSetting);
+                    }
+                }).show(program.setting.get('ie'));
             }
         };
 
