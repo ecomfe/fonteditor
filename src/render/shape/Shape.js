@@ -131,14 +131,13 @@ define(
          */
         Shape.derive = function (prototype) {
 
-            function Constructor() {
+            function SubShape() {
                 Shape.apply(this, arguments);
             }
 
-            Constructor.constructor = Shape;
-            lang.extend(Constructor.prototype, Shape.prototype, prototype);
-
-            return Constructor;
+            SubShape.prototype = prototype;
+            lang.inherits(SubShape, Shape);
+            return SubShape;
         };
 
         /**
