@@ -72,12 +72,6 @@ define(
                 });
             });
 
-            editor.on('save', function () {
-                program.fire('save', {
-                    type: 'editor'
-                });
-            });
-
             var commandMenu = this.commandMenu;
             if (commandMenu) {
 
@@ -106,7 +100,7 @@ define(
 
                     if (command === 'save') {
                         program.fire('save', {
-                            type: 'editor'
+                            saveType: 'editor'
                         });
                         return;
                     }
