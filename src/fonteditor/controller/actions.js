@@ -85,6 +85,8 @@ define(
                 $.getJSON('./font/empty.json', function (imported) {
                     program.ttfManager.set(imported);
                     program.data.projectId = null;
+                    // 建立项目 提示保存
+                    actions.save();
                 });
             },
 
@@ -149,6 +151,10 @@ define(
                 if (program.ttfManager.get()) {
                     var selected = program.viewer.getSelected();
                     program.ttfManager.insertGlyf({}, selected[0]);
+                }
+                else {
+                    // 没有项目 先建立一个项目
+                    actions.new();
                 }
             },
 
