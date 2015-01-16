@@ -13,7 +13,7 @@ define(
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
-
+        var lang = require('common/lang');
 
         /**
          * 读取在线字体
@@ -51,7 +51,7 @@ define(
         }
 
         // 延迟focus editor
-        var editorDelayFocus = setTimeout(function () {
+        var editorDelayFocus = lang.debounce(function () {
             program.editor.focus();
         }, 20);
 
