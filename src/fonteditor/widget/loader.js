@@ -16,11 +16,16 @@ define(
         var svg2ttfobject = require('ttf/svg2ttfobject');
         var inflate = require('inflate');
         var loading = require('./loading');
+        var program = require('./program');
 
         var woffOptions = {
             inflate: inflate.inflate
         };
 
+        function svg2ttf(buffer) {
+            var ieOpt = program.setting.get('ie');
+            return svg2ttfobject(buffer, ieOpt['import']);
+        }
 
         /**
          * 加载sfnt结构字体
@@ -117,7 +122,7 @@ define(
             fileReader.onload = function (e) {
                 try {
                     var buffer = e.target.result;
-                    var imported = svg2ttfobject(buffer);
+                    var imported = svg2ttf(buffer);
                     fileReader = null;
                     options.success && options.success(imported);
                 }
@@ -149,7 +154,7 @@ define(
         function loadSVG(file, options) {
             loading.show();
             try {
-                var imported = svg2ttfobject(file);
+                var imported = svg2ttf(file);
                 loading.hide();
                 options.success && options.success(imported);
             }

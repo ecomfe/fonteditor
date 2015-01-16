@@ -641,20 +641,20 @@ define(
          * @return {Object} 度量信息
          */
         TTF.prototype.calcMetrics = function () {
-            var usWinAscent = -16384;
-            var usWinDescent = 16384;
+            var ascent = -16384;
+            var descent = 16384;
             var uX = 0x78;
             var uH = 0x48;
             var sxHeight;
             var sCapHeight;
             this.ttf.glyf.forEach(function (g) {
 
-                if (g.yMax > usWinAscent) {
-                    usWinAscent = g.yMax;
+                if (g.yMax > ascent) {
+                    ascent = g.yMax;
                 }
 
-                if (g.yMin < usWinDescent) {
-                    usWinDescent = g.yMin;
+                if (g.yMin < descent) {
+                    descent = g.yMin;
                 }
 
                 if (g.unicode) {
@@ -667,20 +667,20 @@ define(
                 }
             });
 
-            usWinAscent = Math.round(usWinAscent);
-            usWinDescent = Math.round(usWinDescent);
+            ascent = Math.round(ascent);
+            descent = Math.round(descent);
 
             return {
 
                 // 此处非必须自动设置
-                ascent: usWinAscent,
-                descent: usWinDescent,
-                sTypoAscender: usWinAscent,
-                sTypoDescender: usWinDescent,
+                ascent: ascent,
+                descent: descent,
+                sTypoAscender: ascent,
+                sTypoDescender: descent,
 
                 // 自动设置项目
-                usWinAscent: usWinAscent,
-                usWinDescent: -usWinDescent,
+                usWinAscent: ascent,
+                usWinDescent: -descent,
                 sxHeight: sxHeight || 0,
                 sCapHeight: sCapHeight || 0
             };

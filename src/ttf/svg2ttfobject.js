@@ -293,13 +293,13 @@ define(
             var pathNodes = xmlDoc.getElementsByTagName('path');
 
             if (pathNodes.length) {
-                for (var i = 0, length = pathNodes.length; i < length; i++) {
+                for (var i = 0, l = pathNodes.length; i < l; i++) {
                     node = pathNodes[i];
                     glyf = {
                         name: node.getAttribute('name') || ''
                     };
                     contours = svgnode2contours([node]);
-                    glyf.contours = mirrorContours(contours);
+                    glyf.contours = contours;
                     ttf.glyf.push(glyf);
                 }
             }
@@ -315,19 +315,20 @@ define(
                     name: ''
                 };
 
-                glyf.contours = mirrorContours(contours);
+                glyf.contours = contours;
                 ttf.glyf.push(glyf);
             }
         }
-
 
         /**
          * 解析xml文档
          *
          * @param {XMLDocument} xmlDoc XML文档对象
+         * @param {Object} options 导入选项
+         *
          * @return {Object} 解析后对象
          */
-        function parseXML(xmlDoc) {
+        function parseXML(xmlDoc, options) {
 
             var ttf = getEmptyObject();
 
@@ -349,6 +350,30 @@ define(
                 error.raise(10201);
             }
 
+            if (ttf.from === 'svg') {
+                var glyf = ttf.glyf;
+                var i;
+                var l;
+                // 合并导入的字形为单个字形
+                if (options.combinePath) {
+                    var combined = [];
+                    for (i = 0, l = glyf.length; i < l; i++) {
+                        var contours = glyf[i].contours;
+                        for (var index = 0, length = contours.length; index < length; index++) {
+                            combined.push(contours[index]);
+                        }
+                    }
+
+                    glyf[0].contours  = combined;
+                    glyf.splice(1);
+                }
+
+                // 对字形进行反转
+                for (i = 0, l = glyf.length; i < l; i++) {
+                    glyf[i].contours  =  mirrorContours(glyf[i].contours);
+                }
+            }
+
             return ttf;
         }
 
@@ -356,15 +381,21 @@ define(
          * svg格式转ttfObject格式
          *
          * @param {string} svg svg格式
+         * @param {Object=} options 导入选项
+         * @param {boolean} options.combinePath 是否合并成单个字形，仅限于普通svg导入
          * @return {Object} ttfObject
          */
-        function svg2ttfObject(svg) {
+        function svg2ttfObject(svg, options) {
+            options = options || {
+                combinePath: false
+            };
 
             var xmlDoc = svg;
             if (typeof svg === 'string') {
                 xmlDoc = loadXML(svg);
             }
-            var ttf = parseXML(xmlDoc);
+
+            var ttf = parseXML(xmlDoc, options);
             return resolve(ttf);
         }
 
