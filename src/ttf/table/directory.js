@@ -4,6 +4,8 @@
  * @date
  * @description
  * directory 表, 读取ttf表索引
+ *
+ * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6.html
  */
 
 
@@ -13,8 +15,7 @@ define(
 
         var directory = table.create(
             'directory',
-            [
-            ],
+            [],
             {
                 read: function (reader, ttf) {
                     var tables = {};
