@@ -14,7 +14,7 @@ define(
         var ttf2base64 = require('ttf/ttf2base64');
         var ajaxFile = require('common/ajaxFile');
         var setFontface = require('./setFontface');
-        var glyf2canvas = require('ttf/util/glyf2canvas');
+        var glyf2canvas = require('./glyf2canvas');
         var lang = require('common/lang');
 
         var ttf = null;

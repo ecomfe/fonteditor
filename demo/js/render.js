@@ -10,8 +10,8 @@ define(
     function(require) {
 
         var render = require('render/main');
-        var shape_baidu = require('./shape-baidu');
-        var shape_bdjk = require('./shape-bdjk');
+        var shape_baidu = require('demo/../data/shape-baidu');
+        var shape_bdjk = require('demo/../data/shape-bdjk');
         var lang = require('common/lang');
 
         var currentRender;

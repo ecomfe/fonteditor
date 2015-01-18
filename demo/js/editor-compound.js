@@ -10,7 +10,7 @@ define(
     function(require) {
 
         var editor = require('editor/main');
-        var compound = require('./compound-glyf');
+        var compound = require('demo/../data/compound-glyf');
 
         var currentEditor;
 

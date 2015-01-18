@@ -10,7 +10,7 @@
 define(
     function (require) {
 
-        var drawContour = require('./drawContour');
+        var drawPath = require('render/util/drawPath');
 
         /**
          * glyf canvas绘制
@@ -55,7 +55,7 @@ define(
 
                 contours = glyf.contours;
                 for (i = 0, l = contours.length; i < l; i++) {
-                    drawContour(ctx, contours[i]);
+                    drawPath(ctx, contours[i]);
                 }
             }
             // 复合图元绘制
@@ -76,7 +76,7 @@ define(
 
                     contours = g.glyf.contours;
                     for (i = 0, l = contours.length; i < l; i++) {
-                        drawContour(ctx, contours[i]);
+                        drawPath(ctx, contours[i]);
                     }
 
                     ctx.restore();
