@@ -42,6 +42,11 @@ define(
             polygon: {
                 parse: polygon2contour,
                 params: ['points']
+            },
+
+            polyline: {
+                parse: polygon2contour,
+                params: ['points']
             }
         };
 

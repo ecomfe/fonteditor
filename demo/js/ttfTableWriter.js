@@ -181,7 +181,7 @@ define(
 
             init: function () {
 
-                $.getJSON('./js/baiduHealth.json', function(ttf) {
+                $.getJSON('./data/baiduHealth.json', function(ttf) {
                     resolve(ttf);
                     write(ttf);
                 });

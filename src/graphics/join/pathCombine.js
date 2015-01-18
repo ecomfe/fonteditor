@@ -68,31 +68,19 @@ define(
 
             // 待选集合
             var selectedPaths = [];
-            // 重叠部分只需要一条路径
-            var overlapHash = {};
 
             [splitedPaths0, splitedPaths1].forEach(function (splitedPaths) {
                 for (var i = 0, l = splitedPaths.length; i < l ; i++) {
+                    var splitedPath = splitedPaths[i];
 
-                    // 重叠部分
-                    if (splitedPaths[i].cross === 2) {
-                        var hash = getPathHash(splitedPaths[i].path);
-                        if (!overlapHash[hash]) {
-                            selectedPaths.push(splitedPaths[i]);
-                            overlapHash[hash] = 1;
-                            overlapHash[getPathHash(splitedPaths[i].path.reverse())] = 1;
-                        }
+                    if (relation === Relation.join && splitedPaths[i].cross !== 1) {
+                        selectedPaths.push(splitedPath);
                     }
-                    else {
-                        if (relation === Relation.join && splitedPaths[i].cross === 0) {
-                            selectedPaths.push(splitedPaths[i]);
-                        }
-                        else if (relation === Relation.intersect && splitedPaths[i].cross === 1) {
-                            selectedPaths.push(splitedPaths[i]);
-                        }
-                        else if (relation === Relation.tangency) {
-                            selectedPaths.push(splitedPaths[i]);
-                        }
+                    else if (relation === Relation.intersect && splitedPath.cross !== 0) {
+                        selectedPaths.push(splitedPath);
+                    }
+                    else if (relation === Relation.tangency) {
+                        selectedPaths.push(splitedPath);
                     }
                 }
             });
@@ -125,16 +113,18 @@ define(
                 }
             };
 
-            for (var pathIndex = 0; pathIndex < startPaths.length; pathIndex++) {
-                var curPath = startPaths[pathIndex];
-                var combinedPath = curPath.path.slice(0, curPath.path.length - 1);
+            var curPath;
+            // 从起始待选路径中取一个开始路径，查找闭合轮廓
+            while ((curPath = startPaths.shift())) {
                 var start = curPath.path[0];
                 var end = curPath.path[curPath.path.length - 1];
+                var combinedPath = curPath.path.slice(0, curPath.path.length - 1);
 
                 // 防止找不到可组合的轮廓，最多组合MAX_COMBINE_PATHS个路径段
                 var loops = 0;
                 var paths;
 
+                // 查找闭合轮廓
                 while (
                     ++loops < MAX_COMBINE_PATHS
                     && (Math.abs(start.x - end.x) > 0.001 || Math.abs(start.y - end.y) > 0.001)
@@ -142,7 +132,7 @@ define(
 
                     paths = pathStartHash[hashcode(end)];
 
-                    if (!paths.length) {
+                    if (!paths || !paths.length) {
                         throw 'can\'t find paths to combine.';
                     }
 
@@ -159,7 +149,7 @@ define(
                         var overlapPath;
                         for (var i = 0, l = paths.length; i < l ; i++) {
                             if (paths[i] !== curPath) {
-                                if (paths[i].cross === 2) {
+                                if (paths[i].cross === 2 && curPath.origin !== paths[i].origin) {
                                     overlapPath = paths[i];
                                 }
                                 // 相切的情况需要优先寻找与当前相交性质相反并且不在同一路径上的路径段
@@ -183,9 +173,6 @@ define(
                         // 如果找不到，则使用重叠的路径
                         if (!path) {
                             if (overlapPath) {
-                                // 这里由于相切需要取另一路径上的路径段，
-                                // 因此这里需要重新设置origin
-                                overlapPath.origin = curPath.origin;
                                 path = overlapPath;
                             }
                             else {
@@ -201,12 +188,9 @@ define(
                         pathPoints = pathPoints.reverse();
                     }
 
-                    splice.apply(
-                        combinedPath,
-                        [combinedPath.length, 0].concat(pathPoints.slice(0, pathPoints.length - 1))
-                    );
-                    end = path.path[path.path.length - 1];
-                    curPath = path;
+                    for (var ppIndex = 0, ppLength = pathPoints.length; ppIndex < ppLength; ppIndex++) {
+                        combinedPath.push(pathPoints[ppIndex]);
+                    }
 
                     // 有一种边缘重叠的情况，没有相交区域，不应该移除相切路径段
                     // 否则会导致组合错误
@@ -225,6 +209,10 @@ define(
                     if (index >= 0) {
                         startPaths.splice(index, 1);
                     }
+
+                    // 寻找下一个待选路径
+                    end = pathPoints[path.path.length - 1];
+                    curPath = path;
 
                 }
 

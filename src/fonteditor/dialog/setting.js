@@ -292,14 +292,13 @@ define(
          */
         Setting.derive = function (proto) {
 
-            function Class() {
+            function SubSetting() {
                 Setting.apply(this, arguments);
             }
 
-            lang.extend(Class.prototype, Setting.prototype, proto);
-            Class.prototype.constructor = Setting;
-
-            return Class;
+            SubSetting.prototype = proto;
+            lang.inherits(SubSetting, Setting);
+            return SubSetting;
         };
 
         return Setting;

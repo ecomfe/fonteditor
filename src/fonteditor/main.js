@@ -93,7 +93,7 @@ define(
 
                 // font baidu online
                 if (location.hostname.indexOf('baidu.com') > -1) {
-                    program.fontUrl = '/getfont?url=${0}';
+                    program.fontUrl = '/font/proxy?url=${0}';
                 }
 
                 program.setting = require('./widget/settingmanager');

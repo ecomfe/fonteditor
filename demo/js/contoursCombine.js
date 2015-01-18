@@ -11,7 +11,7 @@ define(
 
         var lang = require('common/lang');
         var editor = require('editor/main');
-        var shape_baidu = require('./contours-2');
+        var shape_baidu = require('demo/../data/contours-2');
         var isPathCross = require('graphics/isPathCross');
         var pathJoin = require('graphics/pathJoin');
         var util = require('graphics/util');

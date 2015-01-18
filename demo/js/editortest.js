@@ -20,7 +20,7 @@ define(
              * 初始化
              */
             init: function () {
-                $.getJSON('./js/baiduHealth.json', function(ttf) {
+                $.getJSON('./data/baiduHealth.json', function(ttf) {
                     ttfObject = ttf;
                     var str = '';
 

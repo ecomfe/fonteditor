@@ -12,7 +12,12 @@ define(
             rect: require('./rect'),
             roundrect: require('./roundrect'),
             arrow: require('./arrow'),
-            star: require('./star')
+            star: require('./star'),
+            triangle: require('./triangle'),
+            heart: require('./heart'),
+            tel: require('./tel'),
+            du: require('./du'),
+            drop: require('./drop')
         };
     }
 );

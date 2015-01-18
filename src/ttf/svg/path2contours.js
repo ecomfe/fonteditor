@@ -23,14 +23,20 @@ define(
          */
         function cubic2Points(cubicList, contour) {
 
+            var i;
+            var l;
             var q2List = [];
+
             cubicList.forEach(function (c) {
-                q2List = q2List.concat(bezierCubic2Q2(c[0], c[1], c[2], c[3]));
+                var list = bezierCubic2Q2(c[0], c[1], c[2], c[3]);
+                for (i = 0, l = list.length; i < l; i++) {
+                    q2List.push(list[i]);
+                }
             });
 
             var q2;
             var prevq2;
-            for (var i = 0, l = q2List.length; i < l; i++) {
+            for (i = 0, l = q2List.length; i < l; i++) {
                 q2 = q2List[i];
                 if (i === 0) {
                     contour.push({

@@ -97,7 +97,7 @@ define(
         }
 
         function readAndWrite() {
-            $.getJSON('./js/iconfont.json', function(ttf) {
+            $.getJSON('./data/iconfont.json', function(ttf) {
 
                 var reader = new TTFReader();
                 var writer = new TTFWriter();

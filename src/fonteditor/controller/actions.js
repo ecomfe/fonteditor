@@ -13,7 +13,7 @@ define(
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
-
+        var lang = require('common/lang');
 
         /**
          * 读取在线字体
@@ -51,7 +51,7 @@ define(
         }
 
         // 延迟focus editor
-        var editorDelayFocus = setTimeout(function () {
+        var editorDelayFocus = lang.debounce(function () {
             program.editor.focus();
         }, 20);
 
@@ -85,6 +85,8 @@ define(
                 $.getJSON('./font/empty.json', function (imported) {
                     program.ttfManager.set(imported);
                     program.data.projectId = null;
+                    // 建立项目 提示保存
+                    actions.save();
                 });
             },
 
@@ -149,6 +151,10 @@ define(
                 if (program.ttfManager.get()) {
                     var selected = program.viewer.getSelected();
                     program.ttfManager.insertGlyf({}, selected[0]);
+                }
+                else {
+                    // 没有项目 先建立一个项目
+                    actions.new();
                 }
             },
 
@@ -240,6 +246,15 @@ define(
                         }, 20);
                     }
                 }).show(program.setting.get('editor'));
+            },
+
+            'setting-import-and-export': function () {
+                var SettingEditor = settingSupport.ie;
+                !new SettingEditor({
+                    onChange: function (setting) {
+                        program.setting.set('ie', setting, setting.saveSetting);
+                    }
+                }).show(program.setting.get('ie'));
             }
         };
 
