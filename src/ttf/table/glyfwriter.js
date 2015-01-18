@@ -27,10 +27,8 @@ define(
                 return 0;
             }
 
-            // fixed header + instructions + endPtsOfContours
-            var result = 10
-                + 2
-                // + (glyf.instructions ? glyf.instructions.length : 0)
+            // fixed header + endPtsOfContours
+            var result = 12
                 + glyf.contours.length * 2
                 + glyfSupport.flags.length;
 
@@ -81,9 +79,6 @@ define(
 
             });
 
-            // if (glyf.instructions) {
-            //     size += 2 + glyf.instructions.length;
-            // }
 
             return size;
         }
@@ -267,8 +262,6 @@ define(
 
                             var g = glyf.glyfs[i];
 
-                            // instructions
-                            // flags += glyf.instructions ? componentFlag.WE_HAVE_INSTRUCTIONS : 0;
                             // use my metrics
                             flags += g.useMyMetrics ? componentFlag.USE_MY_METRICS : 0;
                             // overlap compound
@@ -328,14 +321,6 @@ define(
                             }
                         }
 
-                        // if (glyf.instructions) {
-                        //     var instructions = glyf.instructions;
-                        //     writer.writeUint16(instructions.length);
-                        //     for (var i = 0, l = instructions.length; i < l; i++) {
-                        //         writer.writeUint8(instructions[i] & 0xFF);
-                        //     }
-                        // }
-
                     }
                     else {
 
@@ -346,16 +331,7 @@ define(
                         });
 
                         // not support instruction
-                        // if (glyf.instructions) {
-                        //     var instructions = glyf.instructions;
-                        //     writer.writeUint16(instructions.length);
-                        //     for (var i = 0, l = instructions.length; i < l; i++) {
-                        //         writer.writeUint8(instructions[i] & 0xFF);
-                        //     }
-                        // }
-                        // else {
                         writer.writeUint16(0);
-                        // }
 
                         // 获取暂存中的flags
                         flags = ttf.support.glyf[index].flags;

@@ -10,7 +10,7 @@ define(
     function(require) {
 
         var editor = require('editor/main');
-        var shape_baidu = require('./shape-baidu');
+        var shape_baidu = require('demo/../data/shape-baidu');
 
         var currentEditor;
 

@@ -21,27 +21,52 @@ define(
                     {
                         name: 'addsupportshapes',
                         type: 'circle',
-                        title: '添加圆'
+                        title: '圆'
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'rect',
-                        title: '添加矩形'
+                        title: '矩形'
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'roundrect',
-                        title: '添加圆角矩形'
+                        title: '圆角矩形'
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'star',
-                        title: '添加五角星'
+                        title: '五角星'
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'arrow',
-                        title: '添加箭头'
+                        title: '箭头'
+                    },
+                    {
+                        name: 'addsupportshapes',
+                        type: 'triangle',
+                        title: '三角形'
+                    },
+                    {
+                        name: 'addsupportshapes',
+                        type: 'heart',
+                        title: '心形'
+                    },
+                    {
+                        name: 'addsupportshapes',
+                        type: 'tel',
+                        title: '电话'
+                    },
+                    {
+                        name: 'addsupportshapes',
+                        type: 'drop',
+                        title: '水滴'
+                    },
+                    {
+                        name: 'addsupportshapes',
+                        type: 'du',
+                        title: '度图标'
                     }
                 ]
             },

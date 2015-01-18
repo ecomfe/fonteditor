@@ -366,8 +366,8 @@ define(
             program.on('save', function (e) {
                 // 保存项目
                 if (program.ttfManager.get()) {
-                    var type = e.type;
-                    if (type === 'editor' || program.editor.isEditing()) {
+                    var saveType = e.saveType;
+                    if (saveType === 'editor' || program.editor.isEditing()) {
 
                         // 如果是正在编辑的
                         var editingIndex = program.viewer.getEditing();
