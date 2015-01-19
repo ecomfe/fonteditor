@@ -1,7 +1,7 @@
 fonteditor 在线ttf字体编辑器
 ==========
 
-[试玩版地址](http://mkwiser.sinaapp.com/fonteditor/index.html)
+[线上地址](http://font.baidu.com)
 
 
 ## release log:
