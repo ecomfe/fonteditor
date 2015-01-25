@@ -12,8 +12,7 @@ define(
         var util = require('../pathUtil');
         var deInterpolate = util.deInterpolate;
         var Relation = require('./relation');
-        var getPathHash = util.getPathHash;
-        var splice = Array.prototype.splice;
+
 
         // 最多组合50个路径段组成轮廓
         var MAX_COMBINE_PATHS = 50;
