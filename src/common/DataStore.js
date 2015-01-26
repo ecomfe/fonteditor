@@ -52,7 +52,7 @@ define(
                 me.db = e.target.result;
 
                 if (!me.db.objectStoreNames.contains(me.storeName)) {
-                    me.switchStore(me.storeName);
+                    me.switchStore(me.storeName, onSuccess, onError);
                 }
                 else {
                     onSuccess && onSuccess(e);
