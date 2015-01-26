@@ -26,3 +26,5 @@ fonteditor 在线ttf字体编辑器
 9. 2014-12-25 圣诞新装发布.
 
 10. 2015-1-8 增加svg circle, ellipse, polygon, path 导入, 自动变换导入轮廓.
+
+11. 2015-1-26 改变项目存储方式为IndexedDB.

@@ -122,9 +122,13 @@ define(
                 if (program.ttfManager.get()) {
                     if (program.data.projectId) {
 
-                        program.project.update(program.data.projectId, program.ttfManager.get());
-                        program.ttfManager.setState('saved');
-                        program.loading.show('保存成功..', 400);
+                        program.project.update(program.data.projectId, program.ttfManager.get())
+                        .then(function () {
+                            program.ttfManager.setState('saved');
+                            program.loading.show('保存成功...', 400);
+                        }, function () {
+                            program.loading.show('保存失败...', 1000);
+                        });
 
                     }
                     else {
@@ -133,14 +137,17 @@ define(
 
                             name = string.encodeHTML(name);
 
-                            var id = program.project.add(name, program.ttfManager.get());
-                            program.data.projectId = id;
+                            program.project.add(name, program.ttfManager.get())
+                            .then(function (id) {
+                                program.data.projectId = id;
+                                program.ttfManager.setState('new');
+                                program.projectViewer.show(program.project.items());
+                                program.projectViewer.select(id);
+                                program.loading.show('保存成功...', 400);
+                            }, function () {
+                                program.loading.show('保存失败...', 400);
+                            });
 
-                            program.ttfManager.setState('new');
-
-                            program.projectViewer.show(program.project.items());
-                            program.projectViewer.select(id);
-                            program.loading.show('保存成功..', 400);
 
                         }
                     }

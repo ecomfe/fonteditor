@@ -300,18 +300,20 @@ define(
          */
         function bindProject(program) {
             program.projectViewer.on('open', function (e) {
-                var imported = program.project.get(e.projectId);
-                if (imported) {
-
-                    if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
-                        return;
+                program.project.get(e.projectId).then(function (imported) {
+                    if (imported) {
+                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
+                            return;
+                        }
+                        program.ttfManager.set(imported);
+                        program.data.projectId = e.projectId;
+                        program.projectViewer.select(e.projectId);
+                        program.viewer.focus();
                     }
+                }, function () {
+                    console.warn('open project failed:' + e.projectId);
+                });
 
-                    program.ttfManager.set(imported);
-                    program.data.projectId = e.projectId;
-                    program.projectViewer.select(e.projectId);
-                    program.viewer.focus();
-                }
             })
             .on('saveas', function () {
                 program.data.projectId = null;
@@ -319,10 +321,14 @@ define(
                 program.viewer.focus();
             })
             .on('del', function (e) {
-                program.project.remove(e.projectId);
-                if (e.projectId === program.data.projectId) {
-                    program.data.projectId = null;
-                }
+                program.project.remove(e.projectId).then(function () {
+                    if (e.projectId === program.data.projectId) {
+                        program.data.projectId = null;
+                    }
+                }, function () {
+                    console.warn('remove project failed:' + e.projectId);
+                });
+
                 program.viewer.focus();
             });
         }
