@@ -10,6 +10,7 @@
 define(
     function (require) {
         var string = require('common/string');
+        var DOMParser = require('common/DOMParser');
         var path2contours = require('./svg/path2contours');
         var svgnode2contours = require('./svg/svgnode2contours');
         var contoursTransform = require('./svg/contoursTransform');
@@ -24,7 +25,7 @@ define(
          * @return {XMLDocument}
          */
         function loadXML(xml) {
-            if (document.implementation && document.implementation.createDocument) {
+            if (DOMParser) {
                 try {
                     var domParser = new DOMParser();
                     var xmlDoc = domParser.parseFromString(xml, 'text/xml');

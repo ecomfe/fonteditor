@@ -20,5 +20,7 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
+        "esprima": "~1.1.1",
+        "estraverse": "~1.5.0",
     }
 }
