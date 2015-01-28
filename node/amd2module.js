@@ -11,36 +11,7 @@ var SYNTAX = estraverse.Syntax;
 // 顶级模块，用来生成相对位置
 var REG_TOP_MODULE = /^(:?common|math|graphics|ttf)/;
 
-var EXPORT_SEGMENT = {
-    "expression": {
-        "left": {
-            "computed": false,
-            "object": {
-                "name": "module",
-                "type": "Identifier"
-            },
-            "property": {
-                "name": "exports",
-                "type": "Identifier"
-            },
-            "type": "MemberExpression"
-        },
-        "operator": "=",
-        "right": null,
-        "type": "AssignmentExpression"
-    },
-    "type": "ExpressionStatement"
-};
-
-/**
- * 获取导出声明
- *
- * @return {Object}
- */
-function getExportStatement() {
-    return JSON.parse(JSON.stringify(EXPORT_SEGMENT));
-}
-
+var REG_REQUIRE = /require\(\s*(['"])([^'"]+)\1\s*\)/g;
 
 /**
  * 获取ast树
@@ -52,10 +23,7 @@ function getAst(code) {
 
     try {
         ast = esprima.parse(code, {
-            // raw: true,
-            // tokens: true,
-            // range: true,
-            // comment: true
+            range: true
         });
     } catch (ex) {
         throw 'can\'t parse amd code';
@@ -87,107 +55,111 @@ function getDefineFactory(defineExpr) {
 }
 
 /**
- * 替换define的return为 module.exports
+ * 解析define块，提取factory和return
  *
- * @param  {Object} ast ast
- * @return {Object} ast
+ * @param  {Object} code code
+ * @return {Array}
  */
-function replaceDefine(ast) {
-
-    estraverse.replace(ast, {
+function getDefineBlock(code) {
+    var ast = getAst(code);
+    var defineList = [];
+    // require('fs').writeFileSync('ast.json', JSON.stringify(ast));
+    estraverse.traverse(ast, {
         enter: function (node, parent) {
-
-            if ( node.type === SYNTAX.ExpressionStatement
-                && node.expression.type === SYNTAX.CallExpression
-                && node.expression.callee.name === 'define'
+            if ( node.type == SYNTAX.ExpressionStatement
+                && node.expression.type == SYNTAX.CallExpression
+                && node.expression.callee.name == 'define'
             ) {
-                var factory = getDefineFactory(node.expression);
 
+                var defineBlock = {};
+                defineBlock.defineRange = node.range;
+
+                var factory = getDefineFactory(node.expression);
                 // define('xxx', {})
                 if (factory.type === SYNTAX.ObjectExpression) {
-                    var exportStatment = getExportStatement();
-                    exportStatment.expression.right = factory;
-
-                    return exportStatment;
+                    defineBlock.type = 'object';
+                    defineBlock.factoryRange = factory.range;
                 }
 
                 // define(function() {})
                 else if (factory.type === SYNTAX.FunctionExpression){
-
+                    defineBlock.type = 'function';
                     var body = factory.body.body;
+                    defineBlock.factoryRange = factory.body.range;
+                    var returnList = defineBlock.returnRange = [];
                     // 替换return
                     for (var i = body.length - 1; i >=0; i--) {
-                        if (body[i].type === SYNTAX.ReturnStatement) {
-                            var exportStatment = getExportStatement();
-                            exportStatment.expression.right = body[i].argument;
-                            body.splice(i, 1, exportStatment);
-                            break;
+                        if (body[i].type == SYNTAX.ReturnStatement) {
+                            returnList.push(body[i].range);
                         }
                     }
-
-                    var index = parent.body.indexOf(node);
-                    Array.prototype.splice.apply(parent.body, [index, 1].concat(body));
-
-                    return body[0];
                 }
 
+                defineList.push(defineBlock);
+                this.skip();
             }
-
-            return node;
         }
     });
 
-    return ast;
+    return defineList;
 }
+
 
 
 /**
- * 去除生成的代码缩进
+ * 替换define的return为 module.exports
  *
- * @param  {Object} ast ast
- * @return {Object} ast
+ * @param  {Object} code code
+ * @return {Object}
  */
-function replaceComments(ast) {
-    if (ast.comments && ast.comments.length) {
-        ast.comments.forEach(function (comment) {
-            if (comment.type === 'Block') {
-                // 去除缩进
-                comment.value = comment.value.replace(/        /g, '');
-            }
-        });
-    }
+function replaceDefine(code) {
+    var defineList = getDefineBlock(code);
+    var segments = [];
+    var index = 0;
+    defineList.forEach(function (block) {
 
-    return ast;
+        if (block.type === 'function') {
+            segments.push(code.slice(index, block.defineRange[0]));
+            index = block.factoryRange[0] + 1;
+
+            block.returnRange.forEach(function (range) {
+                segments.push(code.slice(index, range[0]));
+                segments.push('module.exports = ');
+                segments.push(code.slice(range[0] + 6, range[1]));
+                index = range[1];
+            });
+            index = block.defineRange[1];
+        }
+        else if (block.type === 'object'){
+            segments.push(code.slice(index, block.defineRange[0]));
+            segments.push('module.exports = ');
+            segments.push(code.slice(block.factoryRange[0], block.factoryRange[1]) + ';');
+            index = block.defineRange[1];
+        }
+    });
+
+    segments.push(code.slice(index));
+
+    code = segments.join('');
+
+    return code;
 }
+
 
 /**
  * 替换require的绝对路径为相对路径
  *
- * @param  {Object} ast ast
+ * @param  {Object} code code
  * @param {Object} codeDepth 当前模块位置
- * @return {Object} ast
+ * @return {Object} code
  */
-function replaceRequire(ast, codeDepth) {
-
-    estraverse.replace(ast, {
-        enter: function (node, parent) {
-
-            if ( node.type === SYNTAX.CallExpression
-                && node.callee.name === 'require'
-                && node.arguments.length
-                && node.arguments[0].type === 'Literal'
-            ) {
-                var argument = node.arguments[0];
-                if (REG_TOP_MODULE.test(argument.value)) {
-                    argument.value = codeDepth + argument.value;
-                }
-            }
-
-            return node;
+function replaceRequire(code, codeDepth) {
+    return code.replace(REG_REQUIRE, function ($0, $1, moduleId) {
+        if (REG_TOP_MODULE.test(moduleId)) {
+            moduleId = codeDepth + moduleId;
         }
-    } );
-
-    return ast;
+        return 'require(\'' + moduleId + '\')';
+    });
 }
 
 
@@ -197,11 +169,7 @@ function replaceRequire(ast, codeDepth) {
  * @return {string}     生成后的代码
  */
 function genCommonJS(ast) {
-
-    // ast = escodegen.attachComments(ast, ast.comments, ast.tokens);
-    return escodegen.generate(ast, {
-        // comment: true
-    });
+    return escodegen.generate(ast);
 }
 
 module.exports = function (code, codeDepth) {
@@ -210,9 +178,10 @@ module.exports = function (code, codeDepth) {
         codeDepth += '/';
     }
 
-    var ast = getAst(code);
-    ast = replaceRequire(ast, codeDepth);
-    ast = replaceDefine(ast);
-    // ast = replaceComments(ast);
-    return genCommonJS(ast);
+    code = String(code);
+
+    code = replaceDefine(code);
+    code = replaceRequire(code, codeDepth);
+
+    return code;
 };

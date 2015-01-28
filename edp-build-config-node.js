@@ -13,7 +13,7 @@ exports.getProcessors = function () {
             'common/lang.js',
             'common/string.js',
             'common/observable.js',
-            'common/DomParser.js',
+            'common/DOMParser.js',
             'math/**/*.js',
             'graphics/**/*.js',
             'ttf/**/*.js'
