@@ -241,14 +241,16 @@ define(
                 var SettingFindGlyf = settingSupport['find-glyf'];
                 !new SettingFindGlyf({
                     onChange: function (setting) {
-                        var index = program.ttfManager.findGlyf(setting.unicode[0]);
-                        if (-1 !== index) {
+                        var glyfList = program.ttfManager.findGlyf(setting);
+
+                        if (glyfList.length) {
                             var pageSize = program.setting.get('editor').viewer.pageSize;
-                            var page = Math.ceil(index / pageSize);
-                            showTTF(program.ttfManager.get(), page, [index]);
+                            var page = Math.ceil(glyfList[0] / pageSize);
+
+                            showTTF(program.ttfManager.get(), page, glyfList);
                         }
                         else {
-                            alert('未找到相关字形!');
+                            program.loading.warn('未找到相关字形!', 1000);
                         }
                     }
                 }).show();
@@ -311,7 +313,7 @@ define(
                         program.viewer.focus();
                     }
                 }, function () {
-                    console.warn('open project failed:' + e.projectId);
+                    program.loading.error('打开项目失败!', 1000);
                 });
 
             })
@@ -326,7 +328,7 @@ define(
                         program.data.projectId = null;
                     }
                 }, function () {
-                    console.warn('remove project failed:' + e.projectId);
+                    program.loading.warn('删除项目失败!', 1000);
                 });
 
                 program.viewer.focus();

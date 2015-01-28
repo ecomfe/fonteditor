@@ -15,7 +15,7 @@ define(
 
             // 导入
             'import': {
-                combinePath: false // 导入svg文件时合并`path`标签
+                combinePath: true // 导入svg文件时合并`path`标签
             },
 
             // 导出

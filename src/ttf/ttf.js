@@ -516,6 +516,75 @@ define(
             return glyf;
         };
 
+
+        /**
+         * 查找相关字形
+         *
+         * @param  {Object} condition 查询条件
+         * @param  {Array|number} condition.unicode unicode列表或者单个unicode编码
+         * @param  {Array} condition.name 名字列表
+         *
+         * @return {Array}  glyf字形列表
+         */
+        TTF.prototype.findGlyf = function (condition) {
+            if (!condition) {
+                return [];
+            }
+
+
+            var filters = [];
+
+            // 按unicode数组查找
+            if (condition.unicode) {
+                var unicodeList = lang.isArray(condition.unicode) ? condition.unicode : [condition.unicode];
+                var unicodeHash = {};
+                unicodeList.forEach(function (unicode) {
+                    if (typeof unicode === 'string') {
+                        unicode = Number('0x' + unicode.slice(1));
+                    }
+                    unicodeHash[unicode] = true;
+                });
+
+                filters.push(function (glyf) {
+                    if (!glyf.unicode || !glyf.unicode.length) {
+                        return false;
+                    }
+
+                    for (var i = 0, l = glyf.unicode.length; i < l; i++) {
+                        if (unicodeHash[glyf.unicode[i]]) {
+                            return true;
+                        }
+                    }
+                });
+            }
+
+            // 按名字查找
+            if (condition.name) {
+                var name = condition.name;
+                filters.push(function (glyf) {
+                    return glyf.name && glyf.name.indexOf(name) === 0;
+                });
+            }
+
+            // 按筛选函数查找
+            if (typeof condition.filter === 'function') {
+                filters.push(condition.filter);
+            }
+
+            var indexList = [];
+            this.ttf.glyf.forEach(function (glyf, index) {
+                for (var filterIndex = 0, filter; (filter = filters[filterIndex++]);) {
+                    if (true === filter(glyf)) {
+                        indexList.push(index);
+                        break;
+                    }
+                }
+            });
+
+            return indexList;
+        };
+
+
         /**
          * 更新指定的glyf
          *

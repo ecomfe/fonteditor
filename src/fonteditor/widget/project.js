@@ -89,7 +89,7 @@ define(
                 if (projectDataStore) {
                     var resolver = new Resolver();
 
-                    projectDataStore.update(id, ttf, function() {
+                    projectDataStore.update(id, ttf, function () {
                         resolver.resolve(id);
                     }, function () {
                         resolver.reject(id);
@@ -120,7 +120,7 @@ define(
                 if (projectDataStore) {
                     var resolver = new Resolver();
 
-                    projectDataStore.remove(id, function() {
+                    projectDataStore.remove(id, function () {
                         storage.setItem('project-list', JSON.stringify(list));
                         resolver.resolve(list);
                     }, function () {
@@ -147,8 +147,8 @@ define(
 
                         if (projectDataStore) {
                             var resolver = new Resolver();
-
-                            projectDataStore.get(id, function(data) {
+                            /* eslint-disable no-loop-func */
+                            projectDataStore.get(id, function (data) {
                                 resolver.resolve(data);
                             }, function () {
                                 resolver.reject(id);
@@ -164,7 +164,7 @@ define(
                     }
                 }
 
-                return Resolver.rejected(id);;
+                return Resolver.rejected(id);
             },
 
             /**

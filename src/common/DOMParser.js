@@ -3,8 +3,10 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+/* eslint-disable no-undef */
+
 if (typeof exports !== 'undefined') {
-    module.exports = exports = require('xmldom').DOMParser;
+    module.exports = require('xmldom').DOMParser;
 }
 else {
     define(
