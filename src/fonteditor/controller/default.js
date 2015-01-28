@@ -241,14 +241,16 @@ define(
                 var SettingFindGlyf = settingSupport['find-glyf'];
                 !new SettingFindGlyf({
                     onChange: function (setting) {
-                        var index = program.ttfManager.findGlyf(setting.unicode[0]);
-                        if (-1 !== index) {
+                        var glyfList = program.ttfManager.findGlyf(setting);
+
+                        if (glyfList.length) {
                             var pageSize = program.setting.get('editor').viewer.pageSize;
-                            var page = Math.ceil(index / pageSize);
-                            showTTF(program.ttfManager.get(), page, [index]);
+                            var page = Math.ceil(glyfList[0] / pageSize);
+
+                            showTTF(program.ttfManager.get(), page, glyfList);
                         }
                         else {
-                            alert('未找到相关字形!');
+                            program.loading.warn('未找到相关字形!', 1000);
                         }
                     }
                 }).show();
@@ -300,18 +302,20 @@ define(
          */
         function bindProject(program) {
             program.projectViewer.on('open', function (e) {
-                var imported = program.project.get(e.projectId);
-                if (imported) {
-
-                    if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
-                        return;
+                program.project.get(e.projectId).then(function (imported) {
+                    if (imported) {
+                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
+                            return;
+                        }
+                        program.ttfManager.set(imported);
+                        program.data.projectId = e.projectId;
+                        program.projectViewer.select(e.projectId);
+                        program.viewer.focus();
                     }
+                }, function () {
+                    program.loading.error('打开项目失败!', 1000);
+                });
 
-                    program.ttfManager.set(imported);
-                    program.data.projectId = e.projectId;
-                    program.projectViewer.select(e.projectId);
-                    program.viewer.focus();
-                }
             })
             .on('saveas', function () {
                 program.data.projectId = null;
@@ -319,10 +323,14 @@ define(
                 program.viewer.focus();
             })
             .on('del', function (e) {
-                program.project.remove(e.projectId);
-                if (e.projectId === program.data.projectId) {
-                    program.data.projectId = null;
-                }
+                program.project.remove(e.projectId).then(function () {
+                    if (e.projectId === program.data.projectId) {
+                        program.data.projectId = null;
+                    }
+                }, function () {
+                    program.loading.warn('删除项目失败!', 1000);
+                });
+
                 program.viewer.focus();
             });
         }

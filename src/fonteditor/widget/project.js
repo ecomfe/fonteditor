@@ -10,7 +10,23 @@
 define(
     function (require) {
 
+        var DataStore = require('common/DataStore');
+        var Resolver = require('common/promise');
+
         var storage = window.localStorage || window.sessionStorate;
+        var projectDataStore;
+
+        if (DataStore.enabled) {
+            projectDataStore = new DataStore({
+                name: 'fonteditor-datastore',
+                storeName: 'project'
+            });
+
+            // 由于indexDB在隐私模式下会被禁用，这里需要检查下
+            projectDataStore.open(null, function () {
+                projectDataStore = null;
+            });
+        }
 
         var project = {
 
@@ -44,9 +60,21 @@ define(
                 });
 
                 storage.setItem('project-list', JSON.stringify(list));
-                storage.setItem(id, JSON.stringify(ttf));
 
-                return id;
+                if (projectDataStore) {
+                    var resolver = new Resolver();
+
+                    projectDataStore.add(id, ttf, function () {
+                        resolver.resolve(id);
+                    }, function () {
+                        resolver.reject(ttf);
+                    });
+
+                    return resolver.promise();
+                }
+
+                storage.setItem(id, JSON.stringify(ttf));
+                return Resolver.resolved(id);
             },
 
             /**
@@ -57,8 +85,21 @@ define(
              * @return {string} 项目编号
              */
             update: function (id, ttf) {
+
+                if (projectDataStore) {
+                    var resolver = new Resolver();
+
+                    projectDataStore.update(id, ttf, function () {
+                        resolver.resolve(id);
+                    }, function () {
+                        resolver.reject(id);
+                    });
+
+                    return resolver.promise();
+                }
+
                 storage.setItem(id, JSON.stringify(ttf));
-                return id;
+                return Resolver.resolved(id);
             },
 
             /**
@@ -76,8 +117,21 @@ define(
                     }
                 }
 
+                if (projectDataStore) {
+                    var resolver = new Resolver();
+
+                    projectDataStore.remove(id, function () {
+                        storage.setItem('project-list', JSON.stringify(list));
+                        resolver.resolve(list);
+                    }, function () {
+                        resolver.reject(id);
+                    });
+
+                    return resolver.promise();
+                }
+
                 storage.setItem('project-list', JSON.stringify(list));
-                return list;
+                return Resolver.resolved(list);
             },
 
             /**
@@ -90,13 +144,27 @@ define(
                 var list = this.items();
                 for (var i = 0, l = list.length; i < l; i++) {
                     if (list[i].id === id) {
+
+                        if (projectDataStore) {
+                            var resolver = new Resolver();
+                            /* eslint-disable no-loop-func */
+                            projectDataStore.get(id, function (data) {
+                                resolver.resolve(data);
+                            }, function () {
+                                resolver.reject(id);
+                            });
+
+                            return resolver.promise();
+                        }
+
                         var item = storage.getItem(list[i].id);
                         if (item) {
-                            return JSON.parse(item);
+                            return Resolver.resolved(JSON.parse(item));
                         }
                     }
                 }
-                return null;
+
+                return Resolver.rejected(id);
             },
 
             /**
@@ -104,9 +172,17 @@ define(
              */
             clear: function () {
                 var list = this.items();
-                list.forEach(function (item) {
-                    storage.removeItem(item.id);
-                });
+                if (projectDataStore) {
+                    list.forEach(function (item) {
+                        projectDataStore.remove(item.id);
+                    });
+                }
+                else {
+                    list.forEach(function (item) {
+                        storage.removeItem(item.id);
+                    });
+                }
+
                 storage.removeItem('project-list');
             }
 
