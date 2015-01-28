@@ -63,6 +63,7 @@ function getDefineFactory(defineExpr) {
 function getDefineBlock(code) {
     var ast = getAst(code);
     var defineList = [];
+    var defineBlock;
     // require('fs').writeFileSync('ast.json', JSON.stringify(ast));
     estraverse.traverse(ast, {
         enter: function (node, parent) {
@@ -71,31 +72,57 @@ function getDefineBlock(code) {
                 && node.expression.callee.name == 'define'
             ) {
 
-                var defineBlock = {};
-                defineBlock.defineRange = node.range;
-
                 var factory = getDefineFactory(node.expression);
+
                 // define('xxx', {})
                 if (factory.type === SYNTAX.ObjectExpression) {
-                    defineBlock.type = 'object';
-                    defineBlock.factoryRange = factory.range;
+                    defineList.push({
+                        type: 'object',
+                        defineRange: node.range,
+                        factoryRange: factory.range
+                    });
                 }
 
                 // define(function() {})
                 else if (factory.type === SYNTAX.FunctionExpression){
-                    defineBlock.type = 'function';
+                    defineBlock = {
+                        type: 'function',
+                        defineRange: node.range,
+                        factoryRange: factory.body.range
+                    };
+
                     var body = factory.body.body;
-                    defineBlock.factoryRange = factory.body.range;
-                    var returnList = defineBlock.returnRange = [];
+                    var returnRange = defineBlock.returnRange = [];
+
                     // 替换return
-                    for (var i = body.length - 1; i >=0; i--) {
-                        if (body[i].type == SYNTAX.ReturnStatement) {
-                            returnList.push(body[i].range);
+                    for (var i = 0, l = body.length; i < l; i++) {
+                        // 直接在函数体里的return
+                        if (body[i].type === SYNTAX.ReturnStatement) {
+                            returnRange.push(body[i].range);
+                        }
+                        // 在函数内部块里的return
+                        else if (body[i].type !== SYNTAX.FunctionExpression) {
+                            var functionEnter = 0;
+                            estraverse.traverse(body[i], {
+                                enter: function (returnNode) {
+                                    if (
+                                        returnNode.type === SYNTAX.FunctionExpression
+                                        || returnNode.type === SYNTAX.FunctionDeclaration
+                                    ) {
+                                        this.skip();
+                                    }
+                                    else if (returnNode.type === SYNTAX.ReturnStatement){
+                                        returnRange.push(returnNode.range);
+                                    }
+                                }
+                            });
                         }
                     }
+
+                    defineList.push(defineBlock);
                 }
 
-                defineList.push(defineBlock);
+
                 this.skip();
             }
         }
@@ -124,15 +151,17 @@ function replaceDefine(code) {
 
             block.returnRange.forEach(function (range) {
                 segments.push(code.slice(index, range[0]));
-                segments.push('module.exports = ');
+                segments.push('module.exports =');
                 segments.push(code.slice(range[0] + 6, range[1]));
                 index = range[1];
             });
+            segments.push(code.slice(index, block.factoryRange[1] - 1));
+
             index = block.defineRange[1];
         }
         else if (block.type === 'object'){
             segments.push(code.slice(index, block.defineRange[0]));
-            segments.push('module.exports = ');
+            segments.push('module.exports =');
             segments.push(code.slice(block.factoryRange[0], block.factoryRange[1]) + ';');
             index = block.defineRange[1];
         }

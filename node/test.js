@@ -6,7 +6,7 @@ var fs = require('fs');
 var amd2module = require('./amd2module');
 
 function main() {
-    var code = fs.readFileSync('../src/fonteditor/data/online-font.js');
+    var code = fs.readFileSync('./testcase-define.js');
     fs.writeFileSync('./generated.js', amd2module(code, '../'));
 }
 
