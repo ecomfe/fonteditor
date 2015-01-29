@@ -6,7 +6,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
         var lang = require('common/lang');
         var DragSelector = require('../DragSelector');
 

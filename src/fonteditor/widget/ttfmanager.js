@@ -40,6 +40,16 @@ define(
         }
 
         /**
+         * 保存一个glyf副本
+         *
+         * @return {this}
+         */
+        Manager.prototype.pushHistory = function () {
+            this.history.add(lang.clone(this.ttf.getGlyf()));
+            return this;
+        };
+
+        /**
          * 触发change
          *
          * @param {boolean} pushHistory 是否存入history列表
@@ -48,7 +58,7 @@ define(
          * @return {this}
          */
         Manager.prototype.fireChange = function (pushHistory, changeType) {
-            pushHistory && this.history.add(lang.clone(this.ttf.getGlyf()));
+            pushHistory && this.pushHistory();
             this.changed = true;
             this.fire('change', {
                 ttf: this.ttf.get(),

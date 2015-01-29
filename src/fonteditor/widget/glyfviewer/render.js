@@ -5,7 +5,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var glyf2svg = require('ttf/util/glyf2svg');
         var string = require('common/string');

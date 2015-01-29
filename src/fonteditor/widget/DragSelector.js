@@ -5,7 +5,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var MouseCapture = require('render/capture/Mouse');
 

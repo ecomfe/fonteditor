@@ -124,15 +124,15 @@ define(
         function moveSelectedGlyf(selected, isLeft) {
             var ttf = program.ttfManager.get();
             var glyf = ttf.glyf;
-            var length = glyf.length;
+            var glyfCount = glyf.length;
+            var selectedCount = selected.length;
             var step = isLeft ? -1 : 1;
             var index;
-            var targetIndex;
 
-            if (selected.length === 1) {
+            if (selectedCount === 1) {
                 index = selected[0];
-                targetIndex = index + step;
-                if (targetIndex >= 0 && targetIndex < length) {
+                var targetIndex = index + step;
+                if (targetIndex >= 0 && targetIndex < glyfCount) {
                     var tmp = glyf[index];
                     glyf[index] = glyf[targetIndex];
                     glyf[targetIndex] = tmp;
@@ -141,27 +141,44 @@ define(
                 }
             }
             // 移动多个项目
-            else {
+            else if (selectedCount) {
 
-                var leftSelected = selected.sort(function (a, b) {
-                    return isLeft ? a - b : b - a;
-                }).slice(0);
+                selected = selected.sort(function (a, b) {
+                    return a - b;
+                });
 
                 // 判读头部和尾部是否能移动，不能移动则整体不变
-                if (isLeft && leftSelected[0] > 0 || !isLeft && leftSelected[0] < length - 1) {
-                    index = leftSelected[0] + step;
-                    for (var i = 1, l = leftSelected.length; i < l; i++) {
+                if (isLeft && selected[0] > 0 || !isLeft && selected[selectedCount - 1] < glyfCount - 1) {
 
-                        if (leftSelected[i - 1] - step !== leftSelected[i]) {
-                            glyf.splice(leftSelected[i - 1], 0, glyf[index]);
-                            glyf.splice(index, 1);
+                    var i;
+                    // 左移
+                    if (isLeft) {
+                        index = selected[0] - 1;
+                        for (i = 1; i < selectedCount; i++) {
+                            if (selected[i - 1] + 1 !== selected[i]) {
+                                glyf.splice(selected[i - 1] + 1, 0, glyf[index]);
+                                glyf.splice(index, 1);
 
-                            index = leftSelected[i] + step;
+                                index = selected[i] - 1;
+                            }
                         }
-                        else if (i === l - 1) {
-                            glyf.splice(leftSelected[i] - step, 0, glyf[index]);
-                            glyf.splice(index, 1);
+                        glyf.splice(selected[selectedCount - 1] + 1, 0, glyf[index]);
+                        glyf.splice(index, 1);
+                    }
+                    // 右移
+                    else {
+                        index = selected[selectedCount - 1] + 1;
+                        for (i = selectedCount - 2; i >= 0; i--) {
+                            if (selected[i + 1] - 1 !== selected[i]) {
+                                glyf.splice(selected[i + 1], 0, glyf[index]);
+                                glyf.splice(index + 1, 1);
+
+                                index = selected[i] + 1;
+                            }
                         }
+
+                        glyf.splice(selected[0], 0, glyf[index]);
+                        glyf.splice(index + 1, 1);
                     }
 
                     program.viewer.setSelected(selected.map(function (u) {
@@ -331,26 +348,43 @@ define(
             .on('moveleft', function (e) {
                 var editingIndex = program.viewer.getEditing();
                 if (program.editor.isVisible() && editingIndex > 0) {
+                    if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
+                        return;
+                    }
                     program.viewer.setEditing(--editingIndex);
                     showEditor(editingIndex);
                 }
                 else {
                     var selected = program.viewer.getSelected();
-                    selected.length && moveSelectedGlyf(selected, true);
+                    if (selected.length) {
+                        moveSelectedGlyf(selected, true);
+                        setTimeout(function () {
+                            program.ttfManager.pushHistory();
+                        });
+                    }
                 }
 
             })
             .on('moveright', function (e) {
                 var editingIndex = program.viewer.getEditing();
                 if (program.editor.isVisible()
+                    && editingIndex >= 0
                     && editingIndex < program.ttfManager.get().glyf.length - 1
                 ) {
+                    if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
+                        return;
+                    }
                     program.viewer.setEditing(++editingIndex);
                     showEditor(editingIndex);
                 }
                 else {
                     var selected = program.viewer.getSelected();
-                    selected.length && moveSelectedGlyf(selected, false);
+                    if (selected.length) {
+                        moveSelectedGlyf(selected, false);
+                        setTimeout(function () {
+                            program.ttfManager.pushHistory();
+                        });
+                    }
                 }
             });
 
