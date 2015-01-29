@@ -147,8 +147,6 @@ define(
                             }, function () {
                                 program.loading.show('保存失败...', 400);
                             });
-
-
                         }
                     }
                 }

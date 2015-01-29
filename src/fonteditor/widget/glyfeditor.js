@@ -159,10 +159,8 @@ define(
                     else if (command === 'rangemode') {
                         editor.setMode('bound');
                     }
-
                 });
             }
-
         }
 
         /**

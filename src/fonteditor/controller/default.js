@@ -51,7 +51,6 @@ define(
 
                 currentProgram.viewer.setMode('editor');
 
-                currentProgram.viewer.blur();
                 currentProgram.editor.show();
 
                 // 调整显示级别
@@ -66,8 +65,6 @@ define(
                         currentProgram.editor.setFont(lang.clone(font));
                     }
                 }
-
-                currentProgram.editor.focus();
             }
         }
 
@@ -372,6 +369,7 @@ define(
         function bindProgram(program) {
 
             program.on('save', function (e) {
+
                 // 保存项目
                 if (program.ttfManager.get()) {
                     var saveType = e.saveType;
@@ -386,10 +384,15 @@ define(
                         else {
                             program.ttfManager.insertGlyf(program.editor.getFont());
                         }
+
                         program.editor.setChanged(false);
+                        program.viewer.blur();
+                        program.editor.focus();
                     }
                     else {
                         actions.save();
+                        program.editor.blur();
+                        program.viewer.focus();
                     }
                 }
             })

@@ -9,13 +9,13 @@
 define(
     function (require) {
 
-        var GLYFViewer = require('./widget/glyfviewer');
+        var GLYFViewer = require('./widget/glyfviewer/viewer');
         var GLYFEditor = require('./widget/glyfeditor');
         var ProjectViewer = require('./widget/projectviewer');
         var TTFManager = require('./widget/ttfmanager');
         var program = require('./widget/program');
-        var CommandMenu = require('./widget/commandmenu');
-        var Pager = require('./widget/pager');
+        var CommandMenu = require('./widget/CommandMenu');
+        var Pager = require('./widget/Pager');
 
         var controller = require('./controller/default');
         var actions = require('./controller/actions');
@@ -67,6 +67,7 @@ define(
 
         function bindEvent() {
             $('.action-groups').delegate('[data-action]', 'click',  function (e) {
+                e.stopPropagation();
                 var action = $(this).attr('data-action');
                 if (actions[action]) {
                     program.data.action = action;
