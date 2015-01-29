@@ -191,37 +191,40 @@ define(
 
         /**
          * 根据编码获取字形索引
+         *
          * @param {string} c 字符或者字符编码
          *
          * @return {?number} 返回glyf索引号
          */
-        TTF.prototype.getCodeGlyfIndex = function (c) {
+        TTF.prototype.getGlyfIndexByCode = function (c) {
             var charCode = typeof c === 'number' ? c : c.charCodeAt(0);
-            var glyfIndex = this.ttf.cmap[charCode] || 0;
+            var glyfIndex = this.ttf.cmap[charCode] || -1;
             return glyfIndex;
         };
 
         /**
-         * 根据编码获取字形
-         * @param {string} c 字符或者字符编码
-         *
-         * @return {?Object} 返回glyf对象
-         */
-        TTF.prototype.getCodeGlyf = function (c) {
-            var glyfIndex = this.getCodeGlyfIndex(c);
-            return this.getIndexGlyf(glyfIndex);
-        };
-
-        /**
          * 根据索引获取字形
+         *
          * @param {number} glyfIndex glyf的索引
          *
          * @return {?Object} 返回glyf对象
          */
-        TTF.prototype.getIndexGlyf = function (glyfIndex) {
+        TTF.prototype.getGlyfByIndex = function (glyfIndex) {
             var glyfList = this.ttf.glyf;
             var glyf = glyfList[glyfIndex];
             return glyf;
+        };
+
+        /**
+         * 根据编码获取字形
+         *
+         * @param {string} c 字符或者字符编码
+         *
+         * @return {?Object} 返回glyf对象
+         */
+        TTF.prototype.getGlyfByCode = function (c) {
+            var glyfIndex = this.getGlyfIndexByCode(c);
+            return this.getGlyfByIndex(glyfIndex);
         };
 
         /**
@@ -521,8 +524,8 @@ define(
          * 查找相关字形
          *
          * @param  {Object} condition 查询条件
-         * @param  {Array|number} condition.unicode unicode列表或者单个unicode编码
-         * @param  {Array} condition.name 名字列表
+         * @param  {Array|number} condition.unicode unicode编码列表或者单个unicode编码
+         * @param  {string} condition.name glyf名字，例如`uniE001`, `uniE`
          *
          * @return {Array}  glyf字形列表
          */
