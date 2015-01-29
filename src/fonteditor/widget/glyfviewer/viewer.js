@@ -275,7 +275,8 @@ define(
 
         /**
          * 设置编辑模式
-         * @param {string} mode 编辑模式
+         *
+         * @param {string} mode 编辑模式 list, edit
          */
         GLYFViewer.prototype.setMode = function (mode) {
             this.mode = mode || 'list';

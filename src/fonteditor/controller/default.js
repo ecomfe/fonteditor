@@ -14,7 +14,7 @@ define(
         var clipboard = require('editor/widget/clipboard');
         var actions = require('./actions');
         var glyfAdjust = require('ttf/util/glyfAdjust');
-        var currentProgram;
+        var program;
 
         /**
          * 获取ttf的编辑选项
@@ -44,17 +44,17 @@ define(
         function showEditor(glyfIndex) {
 
             // 重置editor缩放
-            var ttf = currentProgram.ttfManager.get();
+            var ttf = program.ttfManager.get();
             if (ttf) {
                 $('.main').addClass('editing');
                 $('.editor').addClass('editing');
 
-                currentProgram.viewer.setMode('editor');
+                program.viewer.setMode('editor');
 
-                currentProgram.editor.show();
+                program.editor.show();
 
                 // 调整显示级别
-                currentProgram.editor.setAxis(getEditingOpt(ttf));
+                program.editor.setAxis(getEditingOpt(ttf));
 
                 var font = ttf.glyf[glyfIndex];
                 if (font) {
@@ -62,7 +62,7 @@ define(
                         alert('暂不支持复合字形!');
                     }
                     else {
-                        currentProgram.editor.setFont(lang.clone(font));
+                        program.editor.setFont(lang.clone(font));
                     }
                 }
             }
@@ -75,11 +75,11 @@ define(
             $('.main').removeClass('editing');
             $('.editor').removeClass('editing');
 
-            currentProgram.editor && currentProgram.editor.hide();
+            program.editor && program.editor.hide();
 
-            currentProgram.viewer.clearEditing();
-            currentProgram.viewer.setMode('list');
-            currentProgram.viewer.focus();
+            program.viewer.clearEditing();
+            program.viewer.setMode('list');
+            program.viewer.focus();
         }
 
         /**
@@ -92,7 +92,7 @@ define(
         function showTTF(ttf, page, selected) {
 
             var glyfTotal = ttf.glyf.length;
-            var pageSize = currentProgram.setting.get('editor').viewer.pageSize;
+            var pageSize = program.setting.get('editor').viewer.pageSize;
             var totalPage = Math.ceil(glyfTotal / pageSize);
             if (page > totalPage) {
                 page = totalPage;
@@ -101,17 +101,75 @@ define(
                 page = 1;
             }
 
-            currentProgram.viewer.setPage(page - 1);
+            program.viewer.setPage(page - 1);
 
-            currentProgram.viewer.show(ttf, selected || currentProgram.viewer.getSelected());
-            currentProgram.viewer.focus();
+            program.viewer.show(ttf, selected || program.viewer.getSelected());
+            program.viewer.focus();
 
             // 设置翻页
             if (glyfTotal > pageSize) {
-                currentProgram.viewerPager.show(page, pageSize, glyfTotal);
+                program.viewerPager.show(page, pageSize, glyfTotal);
             }
             else {
-                currentProgram.viewerPager.hide();
+                program.viewerPager.hide();
+            }
+        }
+
+        /**
+         * 移动选中的glyf到指定位置
+         *
+         * @param {Array} selected 选中的列表
+         * @param {number} isLeft 是否左移
+         */
+        function moveSelectedGlyf(selected, isLeft) {
+            var ttf = program.ttfManager.get();
+            var glyf = ttf.glyf;
+            var length = glyf.length;
+            var step = isLeft ? -1 : 1;
+            var index;
+            var targetIndex;
+
+            if (selected.length === 1) {
+                index = selected[0];
+                targetIndex = index + step;
+                if (targetIndex >= 0 && targetIndex < length) {
+                    var tmp = glyf[index];
+                    glyf[index] = glyf[targetIndex];
+                    glyf[targetIndex] = tmp;
+                    program.viewer.setSelected([targetIndex]);
+                    program.viewer.refresh(ttf, [index, targetIndex]);
+                }
+            }
+            // 移动多个项目
+            else {
+
+                var leftSelected = selected.sort(function (a, b) {
+                    return isLeft ? a - b : b - a;
+                }).slice(0);
+
+                // 判读头部和尾部是否能移动，不能移动则整体不变
+                if (isLeft && leftSelected[0] > 0 || !isLeft && leftSelected[0] < length - 1) {
+                    index = leftSelected[0] + step;
+                    for (var i = 1, l = leftSelected.length; i < l; i++) {
+
+                        if (leftSelected[i - 1] - step !== leftSelected[i]) {
+                            glyf.splice(leftSelected[i - 1], 0, glyf[index]);
+                            glyf.splice(index, 1);
+
+                            index = leftSelected[i] + step;
+                        }
+                        else if (i === l - 1) {
+                            glyf.splice(leftSelected[i] - step, 0, glyf[index]);
+                            glyf.splice(index, 1);
+                        }
+                    }
+
+                    program.viewer.setSelected(selected.map(function (u) {
+                        return u + step;
+                    }));
+
+                    program.viewer.refresh(ttf);
+                }
             }
         }
 
@@ -276,6 +334,11 @@ define(
                     program.viewer.setEditing(--editingIndex);
                     showEditor(editingIndex);
                 }
+                else {
+                    var selected = program.viewer.getSelected();
+                    selected.length && moveSelectedGlyf(selected, true);
+                }
+
             })
             .on('moveright', function (e) {
                 var editingIndex = program.viewer.getEditing();
@@ -284,6 +347,10 @@ define(
                 ) {
                     program.viewer.setEditing(++editingIndex);
                     showEditor(editingIndex);
+                }
+                else {
+                    var selected = program.viewer.getSelected();
+                    selected.length && moveSelectedGlyf(selected, false);
                 }
             });
 
@@ -426,12 +493,12 @@ define(
             /**
              * 初始化控制器
              *
-             * @param {Object} program 项目组件
+             * @param {Object} curProgram 项目组件
              */
-            init: function (program) {
+            init: function (curProgram) {
 
                 // 设置当前的项目对象为指定的项目对象
-                currentProgram = program;
+                program = curProgram;
 
                 bindViewer(program);
                 bindttfManager(program);

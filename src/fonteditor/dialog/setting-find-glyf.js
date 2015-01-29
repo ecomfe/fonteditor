@@ -19,7 +19,7 @@ define(
             +       '<option value="name">按名字查找字形</option>'
             +   '</select> '
             +   '<input value="" id="setting-find-value" class="form-control">'
-            +   '<p>例如：代码点："$21"，名字： "uniE001"</p>'
+            +   '<p class="form-line">例如：代码点："$21"，名字： "uniE001"</p>'
             + '</div>';
 
 
