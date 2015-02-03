@@ -67,7 +67,6 @@ define(
 
         function bindEvent() {
             $('.action-groups').delegate('[data-action]', 'click',  function (e) {
-                e.stopPropagation();
                 var action = $(this).attr('data-action');
                 if (actions[action]) {
                     program.data.action = action;
