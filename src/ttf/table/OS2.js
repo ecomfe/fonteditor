@@ -213,7 +213,7 @@ define(
                             unicodes = [glyf.unicode];
                         }
 
-                        if (lang.isArray(unicodes)) {
+                        if (Array.isArray(unicodes)) {
                             unicodes.forEach(function (unicode) {
                                 if (unicode !== 0xFFFF) {
                                     usFirstCharIndex = Math.min(usFirstCharIndex, unicode);

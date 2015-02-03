@@ -539,7 +539,7 @@ define(
 
             // 按unicode数组查找
             if (condition.unicode) {
-                var unicodeList = lang.isArray(condition.unicode) ? condition.unicode : [condition.unicode];
+                var unicodeList = Array.isArray(condition.unicode) ? condition.unicode : [condition.unicode];
                 var unicodeHash = {};
                 unicodeList.forEach(function (unicode) {
                     if (typeof unicode === 'string') {

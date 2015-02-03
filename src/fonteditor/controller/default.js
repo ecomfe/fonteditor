@@ -197,6 +197,11 @@ define(
          */
         function bindViewer(program) {
 
+            // 由于可能存在连续保存的情况，这里debounce一下
+            var pushHistory = lang.debounce(function () {
+                program.ttfManager.pushHistory();
+            }, 200);
+
             program.viewer.on('del', function (e) {
                 if (e.list) {
                     program.ttfManager.removeGlyf(e.list);
@@ -358,9 +363,7 @@ define(
                     var selected = program.viewer.getSelected();
                     if (selected.length) {
                         moveSelectedGlyf(selected, true);
-                        setTimeout(function () {
-                            program.ttfManager.pushHistory();
-                        });
+                        pushHistory();
                     }
                 }
 
@@ -381,9 +384,7 @@ define(
                     var selected = program.viewer.getSelected();
                     if (selected.length) {
                         moveSelectedGlyf(selected, false);
-                        setTimeout(function () {
-                            program.ttfManager.pushHistory();
-                        });
+                        pushHistory();
                     }
                 }
             });
