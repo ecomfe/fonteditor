@@ -107,7 +107,7 @@ define(
             'export-file': function (e) {
                 if (program.ttfManager.get()) {
                     var target = $(e.target);
-                    program.exporter['export'](program.ttfManager.get(), {
+                    program.exporter.export(program.ttfManager.get(), {
                         type: target.attr('data-type'),
                         target: target,
                         originEvent: e,

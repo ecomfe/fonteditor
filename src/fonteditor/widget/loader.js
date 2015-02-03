@@ -24,7 +24,7 @@ define(
 
         function svg2ttf(buffer) {
             var ieOpt = program.setting.get('ie');
-            return svg2ttfobject(buffer, ieOpt['import']);
+            return svg2ttfobject(buffer, ieOpt.import);
         }
 
         /**
