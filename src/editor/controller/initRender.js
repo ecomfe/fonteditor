@@ -51,6 +51,8 @@ define(
             }
         }
 
+
+        /* eslint-disable max-depth */
         /**
          * 初始化渲染器
          */
@@ -219,11 +221,21 @@ define(
                 }
                 // 撤销
                 else if (e.keyCode === 90 && e.ctrlKey) {
-                    me.execCommand('undo');
+                    if (me.mode.undo) {
+                        me.mode.undo.call(me, e);
+                    }
+                    else {
+                        me.execCommand('undo');
+                    }
                 }
                 // 恢复
                 else if (e.keyCode === 89 && e.ctrlKey) {
-                    me.execCommand('redo');
+                    if (me.mode.redo) {
+                        me.mode.redo.call(me, e);
+                    }
+                    else {
+                        me.execCommand('redo');
+                    }
                 }
 
                 else {
@@ -249,6 +261,7 @@ define(
                 me.render.refresh();
             });
         }
+        /* eslint-enable max-depth */
 
         return initRender;
     }
