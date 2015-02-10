@@ -147,7 +147,7 @@ define(
                 }
 
                 // 如果鼠标被按住，则可以拖出bezier曲线
-                if (this.downMouse && points.length > 2) {
+                if (this.downMouse && points.length >= 2) {
                     // 设置倒数第二个点
                     var last2 = points[points.length - 2];
                     // 如果已经创建了曲线，则需要改变曲线形状

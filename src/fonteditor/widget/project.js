@@ -23,6 +23,7 @@ define(
             });
 
             // 由于indexDB在隐私模式下会被禁用，这里需要检查下
+            // 出错则不使用indexedDB
             projectDataStore.open(null, function () {
                 projectDataStore = null;
             });
