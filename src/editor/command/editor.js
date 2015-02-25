@@ -94,7 +94,11 @@ define(
              * 添加path
              */
             addpath: function () {
-                this.setMode('addpath');
+                var me = this;
+                // 此处由于监听down事件，需要延迟处理
+                setTimeout(function () {
+                    me.setMode('addpath');
+                }, 20);
             },
 
             /**

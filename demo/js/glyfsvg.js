@@ -1,7 +1,7 @@
 /**
  * @file glyfsvg.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf 查看
  */
@@ -39,7 +39,7 @@ define(
             codes.forEach(function(item) {
                 str += '<li data-code="'+ item +'">'
                     + '<span class="i-font">'+ String.fromCharCode(item) +'</span>'
-                    +   (item > 255 ? '\\u' + Number(item).toString(16) : item) 
+                    +   (item > 255 ? '\\u' + Number(item).toString(16) : item)
                     +'</li>';
             });
 
@@ -57,12 +57,12 @@ define(
                 +   '</g>'
                 +  '</svg>';
             var svg = $(tpl);
-            var glyf = lang.clone(ttf.getCodeGlyf(charcode));
-            
+            var glyf = lang.clone(ttf.getGlyfByCode(charcode));
+
             if (glyf.compound) {
                 return;
             }
-            
+
             // 调整大小
             var width =  glyf.xMax;
             var height =  glyf.yMax - glyf.yMin;

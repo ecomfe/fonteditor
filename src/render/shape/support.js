@@ -19,7 +19,8 @@ define(
             path: require('./Path'),
             axis: require('./Axis'),
             graduation: require('./Graduation'),
-            line: require('./Line')
+            line: require('./Line'),
+            beziercurve: require('./BezierCurve')
         };
 
         return support;

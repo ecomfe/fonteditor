@@ -76,7 +76,7 @@ define(
                 this.mode.end && this.mode.end.call(this);
             }
 
-            this.mode = modeSupport[modeName] || modeSupport['default'];
+            this.mode = modeSupport[modeName] || modeSupport.default;
             var args = Array.prototype.slice.call(arguments, 1);
             this.mode.begin && this.mode.begin.apply(this, args);
             return this;

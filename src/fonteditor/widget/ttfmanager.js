@@ -40,6 +40,16 @@ define(
         }
 
         /**
+         * 保存一个glyf副本
+         *
+         * @return {this}
+         */
+        Manager.prototype.pushHistory = function () {
+            this.history.add(lang.clone(this.ttf.getGlyf()));
+            return this;
+        };
+
+        /**
          * 触发change
          *
          * @param {boolean} pushHistory 是否存入history列表
@@ -48,7 +58,7 @@ define(
          * @return {this}
          */
         Manager.prototype.fireChange = function (pushHistory, changeType) {
-            pushHistory && this.history.add(lang.clone(this.ttf.getGlyf()));
+            pushHistory && this.pushHistory();
             this.changed = true;
             this.fire('change', {
                 ttf: this.ttf.get(),
@@ -94,23 +104,12 @@ define(
         /**
          * 查找glyf
          *
-         * @param {number} unicode 编码
+         * @param {Object} condition 查询条件
          *
-         * @return {number} 没有找到返回 -1, 找到返回glyf索引
+         * @return {Array} 找到返回glyf列表
          */
-        Manager.prototype.findGlyf = function (unicode) {
-
-            var glyfList = this.ttf.getGlyf();
-
-            // 查找单个unicode
-            for (var i = 0, l = glyfList.length; i < l ; i++) {
-                var g = glyfList[i];
-                if (g.unicode && g.unicode.length && g.unicode.indexOf(unicode) >= 0) {
-                    return i;
-                }
-            }
-
-            return -1;
+        Manager.prototype.findGlyf = function (condition) {
+            return this.ttf.findGlyf(condition);
         };
 
         /**

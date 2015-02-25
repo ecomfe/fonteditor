@@ -191,37 +191,40 @@ define(
 
         /**
          * 根据编码获取字形索引
+         *
          * @param {string} c 字符或者字符编码
          *
          * @return {?number} 返回glyf索引号
          */
-        TTF.prototype.getCodeGlyfIndex = function (c) {
+        TTF.prototype.getGlyfIndexByCode = function (c) {
             var charCode = typeof c === 'number' ? c : c.charCodeAt(0);
-            var glyfIndex = this.ttf.cmap[charCode] || 0;
+            var glyfIndex = this.ttf.cmap[charCode] || -1;
             return glyfIndex;
         };
 
         /**
-         * 根据编码获取字形
-         * @param {string} c 字符或者字符编码
-         *
-         * @return {?Object} 返回glyf对象
-         */
-        TTF.prototype.getCodeGlyf = function (c) {
-            var glyfIndex = this.getCodeGlyfIndex(c);
-            return this.getIndexGlyf(glyfIndex);
-        };
-
-        /**
          * 根据索引获取字形
+         *
          * @param {number} glyfIndex glyf的索引
          *
          * @return {?Object} 返回glyf对象
          */
-        TTF.prototype.getIndexGlyf = function (glyfIndex) {
+        TTF.prototype.getGlyfByIndex = function (glyfIndex) {
             var glyfList = this.ttf.glyf;
             var glyf = glyfList[glyfIndex];
             return glyf;
+        };
+
+        /**
+         * 根据编码获取字形
+         *
+         * @param {string} c 字符或者字符编码
+         *
+         * @return {?Object} 返回glyf对象
+         */
+        TTF.prototype.getGlyfByCode = function (c) {
+            var glyfIndex = this.getGlyfIndexByCode(c);
+            return this.getGlyfByIndex(glyfIndex);
         };
 
         /**
@@ -515,6 +518,75 @@ define(
 
             return glyf;
         };
+
+
+        /**
+         * 查找相关字形
+         *
+         * @param  {Object} condition 查询条件
+         * @param  {Array|number} condition.unicode unicode编码列表或者单个unicode编码
+         * @param  {string} condition.name glyf名字，例如`uniE001`, `uniE`
+         *
+         * @return {Array}  glyf字形列表
+         */
+        TTF.prototype.findGlyf = function (condition) {
+            if (!condition) {
+                return [];
+            }
+
+
+            var filters = [];
+
+            // 按unicode数组查找
+            if (condition.unicode) {
+                var unicodeList = Array.isArray(condition.unicode) ? condition.unicode : [condition.unicode];
+                var unicodeHash = {};
+                unicodeList.forEach(function (unicode) {
+                    if (typeof unicode === 'string') {
+                        unicode = Number('0x' + unicode.slice(1));
+                    }
+                    unicodeHash[unicode] = true;
+                });
+
+                filters.push(function (glyf) {
+                    if (!glyf.unicode || !glyf.unicode.length) {
+                        return false;
+                    }
+
+                    for (var i = 0, l = glyf.unicode.length; i < l; i++) {
+                        if (unicodeHash[glyf.unicode[i]]) {
+                            return true;
+                        }
+                    }
+                });
+            }
+
+            // 按名字查找
+            if (condition.name) {
+                var name = condition.name;
+                filters.push(function (glyf) {
+                    return glyf.name && glyf.name.indexOf(name) === 0;
+                });
+            }
+
+            // 按筛选函数查找
+            if (typeof condition.filter === 'function') {
+                filters.push(condition.filter);
+            }
+
+            var indexList = [];
+            this.ttf.glyf.forEach(function (glyf, index) {
+                for (var filterIndex = 0, filter; (filter = filters[filterIndex++]);) {
+                    if (true === filter(glyf)) {
+                        indexList.push(index);
+                        break;
+                    }
+                }
+            });
+
+            return indexList;
+        };
+
 
         /**
          * 更新指定的glyf

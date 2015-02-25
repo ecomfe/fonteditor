@@ -1,7 +1,7 @@
 /**
  * @file glyf.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * glyf canvas 绘制
  */
@@ -37,7 +37,7 @@ define(
             codes.forEach(function(item) {
                 str += '<li data-code="'+ item +'">'
                     + '<span class="i-font">'+ String.fromCharCode(item) +'</span>'
-                    +   (item > 255 ? '\\u' + Number(item).toString(16) : item) 
+                    +   (item > 255 ? '\\u' + Number(item).toString(16) : item)
                     +'</li>';
             });
             $('#font-list').html(str);
@@ -45,11 +45,11 @@ define(
         }
 
         function showGlyf(charcode) {
-            
-            var glyf = lang.clone(ttf.getCodeGlyf(charcode));
+
+            var glyf = lang.clone(ttf.getGlyfByCode(charcode));
             if (glyf.compound) {
                 glyf.glyfs.forEach(function(g){
-                    g.glyf = ttf.getIndexGlyf(g.glyphIndex);
+                    g.glyf = ttf.getGlyfByIndex(g.glyphIndex);
                 });
             }
 

@@ -10,16 +10,16 @@
 define(
     function (require) {
 
-        var unicodeREG = /^(?:\$[A-F0-9]+)$/gi;
+        var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
 
         var tpl = ''
             + '<div class="form-inline">'
-            +   '<div class="input-group input-group-sm">'
-            +     '<span class="input-group-addon">unicode</span>'
-            +     '<input value="$" data-field="unicode" data-type="unicode"'
-            +       ' id="setting-glyf-unicode" class="form-control">'
-            +   '</div>'
-            +   '&nbsp;&nbsp;<span>例如："$21"</span>'
+            +   '<select id="setting-find-condition" class="form-control">'
+            +       '<option value="unicode" selected>按代码点查找字形</option>'
+            +       '<option value="name">按名字查找字形</option>'
+            +   '</select> '
+            +   '<input value="" id="setting-find-value" class="form-control">'
+            +   '<p class="form-line">例如：代码点："$21"，名字： "uniE001"</p>'
             + '</div>';
 
 
@@ -32,14 +32,22 @@ define(
             },
 
             validate: function () {
+                var condition = $('#setting-find-condition').val();
+                var value = $('#setting-find-value').val();
 
-                var unicode = $('#setting-glyf-unicode').val();
-                if (unicode && !unicode.match(unicodeREG)) {
-                    alert('unicode不正确!');
-                    return false;
+                if (condition === 'unicode') {
+                    if (!value.match(unicodeREG)) {
+                        alert('unicode不正确!');
+                        return false;
+                    }
+
+                    value = value.split(',');
                 }
 
-                return this.getFields();
+                var setting = {};
+                setting[condition] = value;
+
+                return setting;
             }
 
         });

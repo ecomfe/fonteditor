@@ -264,7 +264,7 @@ define(
                 this.currentGroup.refresh();
                 this.currentGroup.setMode('scale');
 
-                if (prevMode === 'bound') {
+                if (prevMode === 'bound' || prevMode === 'addpath') {
                     this.clicked = false;
                 }
                 else {
