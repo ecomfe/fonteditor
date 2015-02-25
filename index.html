@@ -130,6 +130,7 @@
     <script src="./dep/esl.js"></script>
     <script src="./dep/jquery.min.js"></script>
     <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./dep/clipper.js"></script>
     <script>
         require.config({
             baseUrl: './src',
@@ -142,6 +143,7 @@
             }
         });
         define('jquery', window.jQuery);
+        define('ClipperLib', window.ClipperLib);
         require(['fonteditor/main'])
     </script>
 

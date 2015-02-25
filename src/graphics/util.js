@@ -74,10 +74,22 @@ define(
                 && p.y >= bound.y;
         }
 
+        /**
+         * 判断点是否重合
+         *
+         * @param {Object} p0 p0
+         * @param {Object} p1 p1
+         * @return {boolean} 是否
+         */
+        function isPointOverlap(p0, p1) {
+            return ceil(p0.x) === ceil(p1.x) && ceil(p0.y) === ceil(p1.y);
+        }
+
         return {
             ceil: ceil,
             ceilPoint: ceilPoint,
-            isPointInBound: isPointInBound
+            isPointInBound: isPointInBound,
+            isPointOverlap: isPointOverlap
         };
     }
 );

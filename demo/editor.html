@@ -5,6 +5,7 @@
     <title>测试editor</title>
     <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
+    <script src="../dep/clipper.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/editor.css">
     <style id="font-face"></style>
 </head>
@@ -17,6 +18,7 @@
             }
         });
         define('jquery', $);
+        define('ClipperLib', window.ClipperLib);
     </script>
 
     <div id="render-view" class="render-view glyf-editor" oncontextMenu="return false"></div>

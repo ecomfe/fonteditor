@@ -10,9 +10,10 @@
 define(
     function (require) {
         return {
+            intersect: 0, // 相交
             join: 1, // 合并
-            intersect: 2, // 相交
-            tangency: 4 // 相切
+            differ: 2, // 不同
+            tangency: 3 // 相切
         };
     }
 );

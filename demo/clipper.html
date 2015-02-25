@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>贝塞尔分割</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <script src="../dep/clipper.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+        }
+    });
+    define('jquery', $);
+    define('ClipperLib', window.ClipperLib);
+</script>
+
+<script>require(['demo/clipper'])</script>
+</body>
+</html>
