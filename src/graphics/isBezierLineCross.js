@@ -67,7 +67,9 @@ define(
             }
 
             if (result) {
-                return result.map(function (t) {
+                return result.sort(function (t1, t2) {
+                    return t1 - t2;
+                }).map(function (t) {
                     return ceilPoint({
                         x: p0.x * Math.pow(1 - t, 2) + 2 * p1.x * t * (1 - t) + p2.x * Math.pow(t, 2),
                         y: p0.y * Math.pow(1 - t, 2) + 2 * p1.y * t * (1 - t) + p2.y * Math.pow(t, 2)

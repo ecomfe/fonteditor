@@ -1,7 +1,7 @@
 /**
  * @file render.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * editor 组件测试
  */
@@ -10,7 +10,7 @@ define(
     function(require) {
 
         var editor = require('editor/main');
-        var shape_baidu = require('demo/../data/shape-baidu');
+        var shape_baidu = require('demo/../data/contours-11');
 
         var currentEditor;
 
@@ -23,12 +23,12 @@ define(
                 currentEditor = editor.create($('#render-view').get(0));
                 window.editor = currentEditor.setFont(shape_baidu);
                 //currentEditor.blur();
-                
+
             }
         };
 
         entry.init();
-        
+
         return entry;
     }
 );

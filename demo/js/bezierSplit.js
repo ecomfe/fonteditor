@@ -1,7 +1,7 @@
 /**
  * @file bezierSplit.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * bezier分割
  */
@@ -66,34 +66,34 @@ define(
                 }
 
                 function draw() {
-                    
+
 
                     ctx.clearRect(0, 0, width, height);
-                    //绘制2次贝塞尔曲线  
+                    //绘制2次贝塞尔曲线
                     ctx.beginPath();
                     ctx.lineWidth=2;
                     ctx.strokeStyle='gray';
 
-                    ctx.moveTo(points[0].x, points[0].y);  
+                    ctx.moveTo(points[0].x, points[0].y);
                     ctx.quadraticCurveTo(points[1].x,points[1].y,points[2].x,points[2].y);
                     ctx.stroke();
 
-                    
-                    
-                    //var result = splitBezier(points[0], points[1], points[2], getPoint(points[0], points[1], points[2], 0.5));
-                    // 
-                    var result = splitBezier(points[0], points[1], points[2], points[3]);
+
+
+                    var result = splitBezier(points[0], points[1], points[2], getPoint(points[0], points[1], points[2], 0.5));
+                    //
+                    //var result = splitBezier(points[0], points[1], points[2], points[3]);
 
                     result.forEach(function(bezier, i) {
                         ctx.beginPath();
                         ctx.lineWidth=1;
                         ctx.strokeStyle = i ? 'blue' : 'red';
-                        ctx.moveTo(bezier[0].x, bezier[0].y);  
+                        ctx.moveTo(bezier[0].x, bezier[0].y);
                         ctx.quadraticCurveTo(bezier[1].x, bezier[1].y, bezier[2].x, bezier[2].y);
                         ctx.stroke();
                     });
 
-                    
+
 
                 }
 
@@ -102,7 +102,7 @@ define(
         };
 
         entry.init();
-        
+
         return entry;
     }
 );

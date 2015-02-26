@@ -11,22 +11,20 @@
 define(
     function (require) {
 
-        var Relation = require('./join/relation');
-        var Clipper = require('graphics/clipping/Clipper');
-        var interpolate = require('./pathUtil').interpolate;
-        var deInterpolate = require('./pathUtil').deInterpolate;
-        var getBezierQ2Point = require('math/getBezierQ2Point');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var isBezierSegmentCross = require('graphics/isBezierSegmentCross');
-        var isBezierCross = require('graphics/isBezierCross');
-        var bezierQ2Split = require('math/bezierQ2Split');
-        var isPointOverlap = require('graphics/util').isPointOverlap;
-        var ceilPoint = require('graphics/util').ceilPoint;
         var lang = require('common/lang');
+        var Clipper = require('./join/Clipper');
+        var Relation = require('./join/relation');
+        var pathUtil = require('./pathUtil');
+        var interpolate = pathUtil.interpolate;
+        var deInterpolate = pathUtil.deInterpolate;
 
-        function getPointHash(p) {
-            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100));
-        }
+        var util = require('graphics/util');
+        var ceilPoint = util.ceilPoint;
+
+        var interpolatePathJoint = require('./join/interpolatePathJoint');
+
+
+        var getBezierQ2Point = require('math/getBezierQ2Point');
 
         /**
          * 将bezier曲线转换成clipper可处理的直线
@@ -43,7 +41,7 @@ define(
 
             for (var i = 0, l = contour.length; i < l; i++) {
                 if (!contour[i].onCurve) {
-                    curPoint = ceilPoint(contour[i]);
+                    curPoint = contour[i];
                     prevPoint = i === 0 ? contour[l - 1] : contour[i - 1];
                     nextPoint =  i === l - 1 ? contour[0] : contour[i + 1];
                     var firstPoint = ceilPoint(getBezierQ2Point(prevPoint, curPoint, nextPoint, 0.1));
@@ -53,124 +51,22 @@ define(
 
                     result.push(firstPoint);
                     for (var j = 2; j < 9; j++) {
-                        result.push(getBezierQ2Point(prevPoint, curPoint, nextPoint, j * 0.1));
+                        result.push(ceilPoint(getBezierQ2Point(prevPoint, curPoint, nextPoint, j * 0.1)));
                     }
                     result.push(lastPoint);
                 }
                 else {
-                    result.push(ceilPoint(contour[i]));
+                    result.push(contour[i]);
                 }
             }
             return result;
         }
 
-        function bezierSegmentSplit(p0, p1, p2, s0, s1) {
-            var result;
-            if (result = isBezierSegmentCross(
-                p0, p1, p2,
-                s0, s1)) {
-                result = result.filter(function (p) {
-                    return !isPointOverlap(p, p0) && !isPointOverlap(p, p2);
-                });
-                // 1个交点
-                if (result.length === 1) {
-                    var bezierArray = bezierQ2Split(p0, p1, p2, result[0]);
-                    bezierArray[0][2].onCurve = true;
-                    return [bezierArray[0][1], bezierArray[0][2], bezierArray[1][1]];
-                }
-                // 2个交点
-                else if (result.length === 2) {
-                    console.warn('error splitting path');
-                }
-            }
+
+        function getPointHash(p) {
+            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100));
         }
 
-        function bezierSplit(p0, p1, p2, t0, t1, t2) {
-            var result;
-            if (result = isBezierCross(
-                p0, p1, p2,
-                t0, t1, t2)) {
-                result = result.filter(function (p) {
-                    return !isPointOverlap(p, p0) && !isPointOverlap(p, p2)
-                        && !isPointOverlap(p, t0) && !isPointOverlap(p, t2);
-                });
-
-                // 1个交点
-                if (result.length === 1) {
-                    var bezierArrayp = bezierQ2Split(p0, p1, p2, result[0]);
-                    bezierArrayp[0][2].onCurve = true;
-                    var bezierArrayt = bezierQ2Split(t0, t1, t2, result[0]);
-                    bezierArrayt[0][2].onCurve = true;
-                    return [
-                        [bezierArrayp[0][1], bezierArrayp[0][2], bezierArrayp[1][1]],
-                        [bezierArrayt[0][1], bezierArrayt[0][2], bezierArrayt[1][1]]
-                    ];
-                }
-                // 2个交点
-                else if (result.length === 2) {
-                    console.warn('error splitting path');
-                }
-            }
-        }
-
-        /**
-         * 将bezier曲线和直线相交的部分做标记替换
-         * @param  {Array} subjectPath 主路径
-         * @param  {Array} clipPath 剪切路径
-         */
-        function markIntersection(subjectPath, clipPath) {
-            var curPointSubject;
-            var prevPointSubject;
-            var nextPointSubject;
-            var curPointClip;
-            var prevPointClip;
-            var nextPointClip;
-            var result;
-            var subjectSize;
-            var clipSize;
-            for (var i = 0; i < subjectPath.length; i++) {
-                subjectSize = subjectPath.length;
-                curPointSubject = subjectPath[i];
-                prevPointSubject = i === 0 ? subjectPath[subjectSize - 1] : subjectPath[i - 1];
-                nextPointSubject =  i === subjectSize - 1 ? subjectPath[0] : subjectPath[i + 1];
-                for (var j = 0; j < clipPath.length; j++) {
-                    clipSize = clipPath.length;
-                    curPointClip = clipPath[j];
-                    prevPointClip = j === 0 ? clipPath[clipSize - 1] : clipPath[j - 1];
-                    nextPointClip =  j === clipSize - 1 ? clipPath[0] : clipPath[j + 1];
-
-                    // 直线与bezier曲线相交
-                    if (curPointSubject.onCurve && nextPointSubject.onCurve && !curPointClip.onCurve) {
-                        if (result = bezierSegmentSplit(
-                            prevPointClip, curPointClip, nextPointClip,
-                            curPointSubject, nextPointSubject)) {
-                            Array.prototype.splice.apply(clipPath, [j, 1].concat(result));
-                            j += result.length - 1;
-                        }
-                    }
-                    // bezier 曲线与直线
-                    else if (!curPointSubject.onCurve && curPointClip.onCurve && nextPointClip.onCurve) {
-                        if (result = bezierSegmentSplit(
-                            prevPointSubject, curPointSubject, nextPointSubject,
-                            curPointClip, nextPointClip)) {
-                            Array.prototype.splice.apply(subjectPath, [i, 1].concat(result));
-                            i += result.length - 1;
-                        }
-                    }
-                    // bezier 曲线之间相交
-                    else if (!curPointSubject.onCurve && !curPointClip.onCurve) {
-                        if (result = bezierSplit(
-                            prevPointSubject, curPointSubject, nextPointSubject,
-                            prevPointClip, curPointClip, nextPointClip)) {
-                            Array.prototype.splice.apply(subjectPath, [i, 1].concat(result[0]));
-                            Array.prototype.splice.apply(clipPath, [j, 1].concat(result[1]));
-                            i += result[0].length - 1;
-                            j += result[1].length - 1;
-                        }
-                    }
-                }
-            }
-        }
 
         /**
          * 求路径交集、并集、差集
@@ -187,20 +83,28 @@ define(
                 return paths;
             }
 
-            // 计算bezier、直线的交点，分割bezier曲线
             var i;
             var l;
+            // 对路径进行插值，求舍入
             for (i = 0, l = paths.length; i < l; i++) {
+                paths[i].forEach(function (p) {
+                    ceilPoint(p);
+                });
+
                 paths[i] = interpolate(paths[i]);
             }
 
+            // 计算bezier、直线的交点，分割bezier曲线
             for (i = 0, l = paths.length; i < l; i++) {
                 for (var j = i + 1; j < l; j++) {
-                    markIntersection(paths[i], paths[j]);
+                    interpolatePathJoint(paths[i], paths[j]);
                 }
             }
 
+            // return lang.clone(paths);
+
             var bezierHash = {};
+            // 对曲线使用线段拟合，clipper求路径关系
             for (i = 0, l = paths.length; i < l; i++) {
                 paths[i] = bezier2Segment(paths[i], bezierHash);
             }
@@ -213,7 +117,7 @@ define(
 
             paths = clipper.execute(relation);
 
-
+            // 重新转换成曲线路径
             for (i = 0, l = paths.length; i < l; i++) {
                 var path = paths[i];
                 // 寻找第一个插值点
@@ -230,10 +134,8 @@ define(
                             }
                         }
                         else {
-                            if (start === bezierHash[getPointHash(path[j - 8])]) {
-                                startIndex = j - 8;
-                            }
-                            else {
+                            startIndex = j - 8 > 0 ? j - 8 : jl + j - 8;
+                            if (start !== bezierHash[getPointHash(path[startIndex])]) {
                                 startIndex = j;
                             }
                         }

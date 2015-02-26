@@ -105,7 +105,7 @@ define(
          * @return {number} 哈希值
          */
         function getPointHash(p) {
-            return (p.x * 31 + p.y) * 31 + (p.onCurve ? 1 : 0);
+            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100)) + (p.onCurve ? 1 : 0);
         }
 
         /**
