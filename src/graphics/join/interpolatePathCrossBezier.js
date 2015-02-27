@@ -9,52 +9,9 @@ define(
 
         var isBezierSegmentCross = require('graphics/isBezierSegmentCross');
         var isBezierCross = require('graphics/isBezierCross');
-        var bezierQ2Split = require('math/bezierQ2Split');
-        var getBezierQ2Point = require('math/getBezierQ2Point');
-        var getBezierQ2T = require('math/getBezierQ2T');
+        var interpolatePathByJoint = require('graphics/join/interpolatePathByJoint');
         var util = require('graphics/util');
         var isPointOverlap = util.isPointOverlap;
-        var ceilPoint = util.ceilPoint;
-
-        /**
-         * 点分割贝塞尔曲线
-         * @param  {Object} p0 p0
-         * @param  {Object} p1 p1
-         * @param  {Object} p2 p2
-         * @param  {Array} points 点数组
-         * @return {Array}    分割后的结果
-         */
-        function bezierSplitByPoints(p0, p1, p2, points) {
-            var p;
-            var result = [p0];
-            var bezierArray;
-            var pp0 = p0;
-            var pp1 = p1;
-
-            // 对交点按照t值从小到大排序的点
-            points = points.map(function (p) {
-                p.t = getBezierQ2T(p0, p1, p2, p);
-                return p;
-            }).sort(function (a, b) {
-                return a.t - b.t;
-            });
-
-            while(p = points.shift()) {
-                bezierArray = bezierQ2Split(pp0, pp1, p2, p);
-                if (bezierArray[1]) {
-                    bezierArray[0][2].onCurve = true;
-                    result.push(bezierArray[0][1]);
-                    result.push(bezierArray[0][2]);
-                    pp0 = bezierArray[1][0];
-                    pp1 = bezierArray[1][1];
-                }
-            }
-            result.push(pp1);
-            result.push(p2);
-            return result.map(function (p) {
-                return ceilPoint(p);
-            });
-        }
 
         /**
          * 线段分割贝塞尔曲线
@@ -123,29 +80,13 @@ define(
             });
         }
 
-        function splitBezier(path, joints) {
-            var splice = Array.prototype.splice;
-            joints.sort(function (a, b) {
-                return b.index - a.index;
-            }).forEach(function (joint) {
-                var i = joint.index;
-                var cur = path[i];
-                var prev = i === 0 ? path[path.length - 1] : path[i - 1];
-                var next =  i === path.length - 1 ? path[0] : path[i + 1];
-                var result = bezierSplitByPoints(prev, cur, next, joint.points);
-                splice.apply(path, [i, 1].concat(result.slice(1, result.length - 1)));
-            });
-            return path;
-        }
-
-
         /**
          * 将bezier曲线和直线，bezier曲线之间相交部分进行插值分段
          * @param  {Array} subjectPath 主路径
          * @param  {Array} clipPath 剪切路径
          * @return  {Array} 相交的点集
          */
-        function interpolatePathJoint (subjectPath, clipPath) {
+        function interpolatePathCrossBezier (subjectPath, clipPath) {
 
             var isSelfInterpolate = subjectPath === clipPath;
             var curPointSubject;
@@ -202,15 +143,15 @@ define(
                 }
             }
 
-            splitBezier(subjectPath, popJoints(subjectJoints));
+            interpolatePathByJoint(subjectPath, popJoints(subjectJoints));
             // 如果不是自相交则对 clip path 进行插值
             if (subjectJoints !== clipJoints) {
-                splitBezier(clipPath, popJoints(clipJoints));
+                interpolatePathByJoint(clipPath, popJoints(clipJoints));
             }
         }
 
 
 
-        return interpolatePathJoint;
+        return interpolatePathCrossBezier;
     }
 );

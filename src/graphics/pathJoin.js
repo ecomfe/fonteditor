@@ -20,8 +20,9 @@ define(
 
         var util = require('graphics/util');
         var ceilPoint = util.ceilPoint;
+        var getPointHash = util.getPointHash;
 
-        var interpolatePathJoint = require('./join/interpolatePathJoint');
+        var interpolatePathCrossBezier = require('./join/interpolatePathCrossBezier');
 
 
         var getBezierQ2Point = require('math/getBezierQ2Point');
@@ -63,11 +64,6 @@ define(
         }
 
 
-        function getPointHash(p) {
-            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100));
-        }
-
-
         /**
          * 求路径交集、并集、差集
          *
@@ -97,7 +93,7 @@ define(
             // 计算bezier、直线的交点，分割bezier曲线
             for (i = 0, l = paths.length; i < l; i++) {
                 for (var j = i; j < l; j++) {
-                    interpolatePathJoint(paths[i], paths[j]);
+                    interpolatePathCrossBezier(paths[i], paths[j]);
                 }
             }
 

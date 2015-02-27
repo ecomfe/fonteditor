@@ -10,6 +10,7 @@
 define(
     function (require) {
 
+        var getPointHash = require('./util').getPointHash;
 
         /**
          * 对路径进行插值，补全省略的点
@@ -99,16 +100,6 @@ define(
         }
 
         /**
-         * 获取点的hash
-         * @param {Object} p 点对象
-         *
-         * @return {number} 哈希值
-         */
-        function getPointHash(p) {
-            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100)) + (p.onCurve ? 1 : 0);
-        }
-
-        /**
          * 获取路径哈希
          * @param {Array} path 路径数组
          *
@@ -119,7 +110,7 @@ define(
             var seed = 131;
 
             path.forEach(function (p) {
-                hash = 0x7FFFFFFF & (hash * seed + getPointHash(p));
+                hash = 0x7FFFFFFF & (hash * seed + getPointHash(p) + (p.onCurve ? 1 : 0));
             });
 
             return hash;
@@ -150,7 +141,6 @@ define(
             deInterpolate: deInterpolate,
             isClockWise: isClockWise,
             removeOverlapPoints: removeOverlapPoints,
-            getPointHash: getPointHash,
             getPathHash: getPathHash
         };
     }

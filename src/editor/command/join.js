@@ -126,7 +126,7 @@ define(
                     var bound = computeBoundingBox.computePath(shapes[i].points);
                     // 判断是否相交
                     if (isBoundingBoxSegmentCross(bound, p0, p1)) {
-                        shapesCross.push(shapes);
+                        shapesCross.push(shapes[i]);
                     }
                 }
 

@@ -85,11 +85,24 @@ define(
             return ceil(p0.x) === ceil(p1.x) && ceil(p0.y) === ceil(p1.y);
         }
 
+
+        /**
+         * 获取点的hash值
+         *
+         * @param {Object} p p
+         * @param {Object} p1 p1
+         * @return {number}
+         */
+        function getPointHash(p) {
+            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100));
+        }
+
         return {
             ceil: ceil,
             ceilPoint: ceilPoint,
             isPointInBound: isPointInBound,
-            isPointOverlap: isPointOverlap
+            isPointOverlap: isPointOverlap,
+            getPointHash: getPointHash
         };
     }
 );
