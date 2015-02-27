@@ -13,7 +13,8 @@ define(
         var pathJoin = require('graphics/pathJoin');
         var lang = require('common/lang');
         var pathSplitBySegment = require('graphics/pathSplitBySegment');
-
+        var computeBoundingBox = require('graphics/computeBoundingBox');
+        var isBoundingBoxSegmentCross = require('graphics/isBoundingBoxSegmentCross');
 
         function combineShape(shapes, relation) {
 
@@ -118,36 +119,44 @@ define(
              */
             splitshapes: function (p0, p1) {
                 var shapes = this.fontLayer.shapes;
-                var outShapes = [];
-
-
-
-                for (var i = shapes.length - 1; i >= 0; i--) {
-                    var result = pathSplitBySegment(shapes[i].points, p0, p1);
-                    if (result) {
-                        var id = shapes[i].id;
-                        shapes.splice(i, 1);
-
-                        for (var j = 0, jl = result.length; j < jl; j++) {
-                            var contour = result[j];
-                            var shape = {
-                                type: 'path',
-                                id: id + '-' + j,
-                                points: lang.clone(contour)
-                            };
-                            shapes.push(shape);
-                            outShapes.push(shape);
-                        }
+                var shapesCross = [];
+                var i;
+                var l;
+                for (i = 0, l = shapes.length; i < l; i++) {
+                    var bound = computeBoundingBox.computePath(shapes[i].points);
+                    // 判断是否相交
+                    if (isBoundingBoxSegmentCross(bound, p0, p1)) {
+                        shapesCross.push(shapes);
                     }
                 }
 
-                if (outShapes.length) {
-                    this.fontLayer.refresh();
-                    this.setMode('shapes', outShapes);
+                if (shapesCross.length) {
+                    var outShapes = pathSplitBySegment(shapesCross.map(function (shape) {
+                        return shape.points;
+                    }), p0, p1);
+
+                    if (outShapes.length) {
+                        // 替换原来位置的
+                        for (i = 0, l = shapesCross.length; i < l; i++) {
+                            shapesCross[i].points = lang.clone(outShapes[i]);
+                        }
+
+                        // 添加新的shape
+                        if (outShapes.length > shapesCross.length) {
+                            for (i = shapesCross.length, l = outShapes.length; i < l; i++) {
+                                var shape = fontLayer.addShape('path', {
+                                    points: outShapes[i]
+                                });
+                                shapesCross.push(shape);
+                            }
+                        }
+
+                        this.fontLayer.refresh();
+                        this.setMode('shapes', shapesCross);
+                    }
                 }
-                else {
-                    return false;
-                }
+
+                return false;
             }
         };
 

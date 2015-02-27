@@ -96,7 +96,7 @@ define(
 
             // 计算bezier、直线的交点，分割bezier曲线
             for (i = 0, l = paths.length; i < l; i++) {
-                for (var j = i + 1; j < l; j++) {
+                for (var j = i; j < l; j++) {
                     interpolatePathJoint(paths[i], paths[j]);
                 }
             }

@@ -146,6 +146,8 @@ define(
          * @return  {Array} 相交的点集
          */
         function interpolatePathJoint (subjectPath, clipPath) {
+
+            var isSelfInterpolate = subjectPath === clipPath;
             var curPointSubject;
             var prevPointSubject;
             var nextPointSubject;
@@ -172,7 +174,8 @@ define(
                     nextPointClip =  j === clipSize - 1 ? clipPath[0] : clipPath[j + 1];
 
                     // 直线与bezier曲线相交
-                    if (curPointSubject.onCurve && nextPointSubject.onCurve && !curPointClip.onCurve) {
+                    if (curPointSubject.onCurve && nextPointSubject.onCurve && !curPointClip.onCurve
+                        && !isSelfInterpolate) {
                         if (result = getBezierSegmentJoint(
                             prevPointClip, curPointClip, nextPointClip,
                             curPointSubject, nextPointSubject)) {
@@ -188,7 +191,7 @@ define(
                         }
                     }
                     // bezier 曲线之间相交
-                    else if (!curPointSubject.onCurve && !curPointClip.onCurve) {
+                    else if (!curPointSubject.onCurve && !curPointClip.onCurve && curPointSubject !== curPointClip) {
                         if (result = getbezierCrossJoint(
                             prevPointSubject, curPointSubject, nextPointSubject,
                             prevPointClip, curPointClip, nextPointClip)) {
@@ -200,7 +203,10 @@ define(
             }
 
             splitBezier(subjectPath, popJoints(subjectJoints));
-            splitBezier(clipPath, popJoints(clipJoints));
+            // 如果不是自相交则对 clip path 进行插值
+            if (subjectJoints !== clipJoints) {
+                splitBezier(clipPath, popJoints(clipJoints));
+            }
         }
 
 
