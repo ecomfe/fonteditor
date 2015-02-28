@@ -136,6 +136,9 @@ define(
                     }), p0, p1);
 
                     if (outShapes.length) {
+
+                        var fontLayer = this.fontLayer;
+
                         // 替换原来位置的
                         for (i = 0, l = shapesCross.length; i < l; i++) {
                             shapesCross[i].points = lang.clone(outShapes[i]);
@@ -151,7 +154,7 @@ define(
                             }
                         }
 
-                        this.fontLayer.refresh();
+                        fontLayer.refresh();
                         this.setMode('shapes', shapesCross);
                     }
                 }

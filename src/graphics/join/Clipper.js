@@ -51,8 +51,9 @@ define(
          *
          * @param {Array} contour 轮廓集合
          * @param {number} 填充规则
+         * @param {boolean} isClosed 是否闭合
          */
-        function addPath(contour, polyType) {
+        function addPath(contour, polyType, isClosed) {
             contour = transformData(contour);
             ClipperLib.JS.ScaleUpPath(contour, this.scale);
             this.clipper.AddPath(contour, polyType, true);
@@ -72,12 +73,12 @@ define(
             this.clipper = new ClipperLib.Clipper();
         }
 
-        Clipper.prototype.addSubject = function (contour) {
-            addPath.call(this, contour, ClipperLib.PolyType.ptSubject);
+        Clipper.prototype.addSubject = function (contour, isClosed) {
+            addPath.call(this, contour, ClipperLib.PolyType.ptSubject, isClosed);
         };
 
-        Clipper.prototype.addClip = function (contour) {
-            addPath.call(this, contour, ClipperLib.PolyType.ptClip);
+        Clipper.prototype.addClip = function (contour, isClosed) {
+            addPath.call(this, contour, ClipperLib.PolyType.ptClip, isClosed);
         };
 
         /**

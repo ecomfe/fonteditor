@@ -20,48 +20,10 @@ define(
 
         var util = require('graphics/util');
         var ceilPoint = util.ceilPoint;
-        var getPointHash = util.getPointHash;
 
         var interpolatePathCrossBezier = require('./join/interpolatePathCrossBezier');
-
-
-        var getBezierQ2Point = require('math/getBezierQ2Point');
-
-        /**
-         * 将bezier曲线转换成clipper可处理的直线
-         *
-         * @param  {Array} contour 轮廓
-         * @param  {Array} bezierHash 记录bezier的哈希
-         * @return {Array}
-         */
-        function bezier2Segment(contour, bezierHash) {
-            var curPoint;
-            var prevPoint;
-            var nextPoint;
-            var result = [];
-
-            for (var i = 0, l = contour.length; i < l; i++) {
-                if (!contour[i].onCurve) {
-                    curPoint = contour[i];
-                    prevPoint = i === 0 ? contour[l - 1] : contour[i - 1];
-                    nextPoint =  i === l - 1 ? contour[0] : contour[i + 1];
-                    var firstPoint = ceilPoint(getBezierQ2Point(prevPoint, curPoint, nextPoint, 0.1));
-                    var lastPoint = ceilPoint(getBezierQ2Point(prevPoint, curPoint, nextPoint, 0.9));
-                    bezierHash[getPointHash(firstPoint)] = curPoint;
-                    bezierHash[getPointHash(lastPoint)] = curPoint;
-
-                    result.push(firstPoint);
-                    for (var j = 2; j < 9; j++) {
-                        result.push(ceilPoint(getBezierQ2Point(prevPoint, curPoint, nextPoint, j * 0.1)));
-                    }
-                    result.push(lastPoint);
-                }
-                else {
-                    result.push(contour[i]);
-                }
-            }
-            return result;
-        }
+        var bezier2Segment = require('./join/bezier2Segment');
+        var segment2Bezier = require('./join/segment2Bezier');
 
 
         /**
@@ -97,61 +59,31 @@ define(
                 }
             }
 
-            // return lang.clone(paths);
-
             var bezierHash = {};
+
             // 对曲线使用线段拟合，clipper求路径关系
             for (i = 0, l = paths.length; i < l; i++) {
                 paths[i] = bezier2Segment(paths[i], bezierHash);
             }
 
             var clipper = new Clipper();
-            for (var i = 0, l = paths.length - 1; i < l; i++) {
+            for (i = 0, l = paths.length - 1; i < l; i++) {
                 clipper.addSubject(paths[i]);
             }
-            clipper.addClip(paths[i]);
-
-            paths = clipper.execute(relation);
-
-            // 重新转换成曲线路径
-            for (i = 0, l = paths.length; i < l; i++) {
-                var path = paths[i];
-                // 寻找第一个插值点
-                var startIndex;
-                for (var j = 0, jl = path.length; j < jl; j++) {
-                    var start = bezierHash[getPointHash(path[j])];
-                    if (start) {
-                        if (j + 8 < jl) {
-                            if (start === bezierHash[getPointHash(path[j + 8])]) {
-                                startIndex = j;
-                            }
-                            else {
-                                startIndex = j - 8 > 0 ? j - 8 : jl + j - 8;
-                            }
-                        }
-                        else {
-                            startIndex = j - 8 > 0 ? j - 8 : jl + j - 8;
-                            if (start !== bezierHash[getPointHash(path[startIndex])]) {
-                                startIndex = j;
-                            }
-                        }
-                        break;
-                    }
-                }
-                path = [].concat(path.slice(startIndex)).concat(path.slice(0, startIndex));
-
-                // 移除插值点
-                for (var j = 0; j < path.length; j++) {
-                    var point = bezierHash[getPointHash(path[j])];
-                    if (point) {
-                        path.splice(j, 9, point);
-                        j++;
-                    }
-                }
-                paths[i] = deInterpolate(path);
+            // 非相交可以不需要clip路径，相交则把最后一个路径作为相交路径
+            if (relation === Relation.intersect) {
+                clipper.addClip(paths[i]);
+            }
+            else {
+                clipper.addSubject(paths[i]);
             }
 
-            return paths;
+            paths = clipper.execute(relation);
+            paths = segment2Bezier(paths, bezierHash);
+
+            return paths.map(function (path) {
+                return deInterpolate(path);
+            });
         }
 
 
