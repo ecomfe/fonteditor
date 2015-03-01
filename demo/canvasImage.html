@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas读取图片</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>require(['demo/canvasImage'])</script>
+</body>
+</html>
