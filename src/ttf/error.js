@@ -1,59 +1,60 @@
 /**
- * @file error.js
- * @author mengke01
- * @date
- * @description
- * ttf 相关错误号定义
+ * @file ttf 相关错误号定义
+ * @author mengke01(kekee000@gmail.com)
  */
 
+define(function (require) {
 
-define(
-    function (require) {
-        var string = require('common/string');
+    var string = require('common/string');
 
-        var error = {
-            10001: '超出读取范围：${0}, ${1}',
-            10002: '超出写入范围：${0}, ${1}',
-            10003: '未知数据类型：${0}, ${1}',
-            10004: '不支持svg解析',
+    var error = {
+        10001: '超出读取范围：${0}, ${1}',
+        10002: '超出写入范围：${0}, ${1}',
+        10003: '未知数据类型：${0}, ${1}',
+        10004: '不支持svg解析',
 
-            10101: '错误的ttf文件',
-            10102: '错误的woff文件',
-            10103: '错误的svg文件',
-            10104: '读取ttf文件错误',
-            10105: '读取woff文件错误',
-            10106: '读取svg文件错误',
-            10107: '写入ttf文件错误',
-            10108: '写入woff文件错误',
-            10109: '写入svg文件错误',
+        10101: '错误的ttf文件',
+        10102: '错误的woff文件',
+        10103: '错误的svg文件',
+        10104: '读取ttf文件错误',
+        10105: '读取woff文件错误',
+        10106: '读取svg文件错误',
+        10107: '写入ttf文件错误',
+        10108: '写入woff文件错误',
+        10109: '写入svg文件错误',
 
-            10110: '读取eot文件错误',
-            10111: '读取eot字体错误',
+        10110: '读取eot文件错误',
+        10111: '读取eot字体错误',
 
-            10200: '重复的unicode代码点，字形序号：${0}',
-            10201: '字形轮廓数据为空',
-            10202: '不支持标志位：ARGS_ARE_XY_VALUES',
-            10203: '未找到表：${0}',
-            10204: '读取表错误',
-            10205: '未找到解压函数'
-        };
+        10200: '重复的unicode代码点，字形序号：${0}',
+        10201: '字形轮廓数据为空',
+        10202: '不支持标志位：ARGS_ARE_XY_VALUES',
+        10203: '未找到表：${0}',
+        10204: '读取表错误',
+        10205: '未找到解压函数'
+    };
 
-        error.raise = function (number) {
+    /**
+     * 抛出一个异常
+     *
+     * @param  {number} number 异常号
+     */
+    error.raise = function (number) {
 
-            var message = error[number];
+        var message = error[number];
 
-            if (arguments.length > 1) {
-                var args = typeof arguments[1] === 'object'
-                    ? arguments[1] : Array.prototype.slice.call(arguments, 1);
-                message = string.format(message, args);
-            }
+        if (arguments.length > 1) {
+            var args = typeof arguments[1] === 'object'
+                ? arguments[1]
+                : Array.prototype.slice.call(arguments, 1);
+            message = string.format(message, args);
+        }
 
-            var e = new Error(message);
-            e.number = number;
+        var e = new Error(message);
+        e.number = number;
 
-            throw e;
-        };
+        throw e;
+    };
 
-        return error;
-    }
-);
+    return error;
+});
