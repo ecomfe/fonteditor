@@ -30,22 +30,21 @@ define(
                     context.drawImage(img, 0, 0);
                     var imgData = context.getImageData(0, 0, width, height);
                     var result = image2Values(imgData);
-                    //var pointArray = findContours(result);
+                    var contours = findContours(result);
 
                     context.clearRect(0, 0, width, height);
                     var putData = imgData.data;
-                    var data = result.data;
-                    for (var y = 0; y < height; y ++) {
-                        for (var x = 0; x < width; x++) {
-                            var offset = y * height + x;
-                            if (data[offset]) {
-                                putData[offset * 4] = 255;
-                                putData[offset * 4 + 1] = 255;
-                                putData[offset * 4 + 2] = 0;
-                                putData[offset * 4 + 3] = 255;
-                            }
-                        }
-                    }
+
+                    contours.forEach(function (contour) {
+                        contour.forEach(function (p) {
+                            var offset = p.y * width + p.x;
+                            putData[offset * 4] = 255;
+                            putData[offset * 4 + 1] = 0;
+                            putData[offset * 4 + 2] = 0;
+                            putData[offset * 4 + 3] = 255;
+                        });
+                    });
+
                     context.putImageData(imgData, 0, 0);
 
                     console.log(result.length);
