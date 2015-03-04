@@ -183,11 +183,14 @@ define(
                         // instructions
                         length = reader.readUint16();
                         if (length) {
-                            instructions = [];
-                            for (i = 0; i < length; ++i) {
-                                instructions.push(reader.readUint8());
+                            // range错误
+                            if (length < 1000) {
+                                instructions = [];
+                                for (i = 0; i < length; ++i) {
+                                    instructions.push(reader.readUint8());
+                                }
+                                glyf.instructions = instructions;
                             }
-                            glyf.instructions = instructions;
                         }
 
                         readSimpleGlyf.call(
