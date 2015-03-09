@@ -21,7 +21,7 @@ define(
                 var cvsW = context.width;
 
                 var img = new Image();
-                img.src = "../test/add.gif";
+                img.src = "../test/contour.png";
                 var width;
                 var height;
                 img.onload = function (){
