@@ -15,6 +15,7 @@ define(
         var Clipper = require('./join/Clipper');
         var Relation = require('./join/relation');
         var pathUtil = require('./pathUtil');
+        var reducePath = require('./reducePath');
         var interpolate = pathUtil.interpolate;
         var deInterpolate = pathUtil.deInterpolate;
 
@@ -82,6 +83,8 @@ define(
             paths = segment2Bezier(paths, bezierHash);
 
             return paths.map(function (path) {
+                // 有些情况下分割节点处会出现线段重叠的情况，这里需要去除重叠线段
+                path = reducePath(path);
                 return deInterpolate(path);
             });
         }

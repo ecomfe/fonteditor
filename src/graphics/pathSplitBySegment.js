@@ -34,7 +34,7 @@ define(
             var l = paths.length;
             var leftSide = [];
             var rightSide = [];
-
+            var leftPaths = [];
             for (; i < l; i++) {
                 var path = interpolate(paths[i]);
                 var result = getSegmentPathJoint(path, p0, p1);
@@ -59,11 +59,14 @@ define(
                         }
                     });
                 }
+                else {
+                    leftPaths.push(paths[i]);
+                }
             }
 
             // TODO 组合左右两侧的曲线段
             var result = pathJoin(leftSide, relation.join).concat(pathJoin(rightSide, relation.join));
-
+            result = leftPaths.concat(result);
             return result.map(function (path) {
                 return deInterpolate(path);
             });

@@ -136,12 +136,30 @@ define(
             return ret;
         }
 
+        /**
+         * 对path进行双向链表连接
+         * @param  {Array} path 轮廓数组
+         * @return {Array}         path
+         */
+        function makeLink(path) {
+            for (var i = 0, l = path.length; i < l; i++) {
+                var cur = path[i];
+                var prev = i === 0 ? path[l - 1] : path[i - 1];
+                var next = i === l - 1 ? path[0] : path[i + 1];
+                cur.next = next;
+                cur.prev = prev;
+            }
+
+            return path;
+        }
+
         return {
             interpolate: interpolate,
             deInterpolate: deInterpolate,
             isClockWise: isClockWise,
             removeOverlapPoints: removeOverlapPoints,
-            getPathHash: getPathHash
+            getPathHash: getPathHash,
+            makeLink: makeLink
         };
     }
 );
