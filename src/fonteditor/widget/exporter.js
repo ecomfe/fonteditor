@@ -16,7 +16,6 @@ define(
         var ttf2svg = require('ttf/ttf2svg');
         var ttf2icon = require('ttf/ttf2icon');
         var bytes2base64 = require('ttf/util/bytes2base64');
-        var deflate = require('deflate');
         var JSZip = require('JSZip');
         var utpl = require('utpl');
 
@@ -48,7 +47,10 @@ define(
         function font2buffer(ttf, options) {
             var buffer = null;
             if (options.type === 'woff') {
-                buffer = ttf2woff(new TTFWriter().write(ttf), deflate);
+
+                // 这里没有用deflate压缩函数，是因为在一些安卓手机上, MI 4.4
+                // 不能识别压缩字体
+                buffer = ttf2woff(new TTFWriter().write(ttf));
             }
             else if (options.type === 'eot') {
                 buffer = ttf2eot(new TTFWriter().write(ttf));
