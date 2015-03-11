@@ -173,13 +173,15 @@ define(
              */
             init: function () {
                 if (!tplPreviewCss) {
-                    $.get('./css/prevew.css', function (text) {
+                    $.get('./css/preview.css', function (text) {
                         tplPreviewCss = text;
                     });
                 }
             },
             'export': exportFile
         };
+
+        exporter.init();
 
         return exporter;
     }
