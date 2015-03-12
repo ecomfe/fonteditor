@@ -29,11 +29,9 @@ define(
                 var action = target.attr('data-action');
                 var id = target.parents('[data-id]').attr('data-id');
                 if ('del' === action) {
-
                     if (!window.confirm('是否删除项目?')) {
                         return;
                     }
-
                     me.current && me.current.remove();
                     me.current = null;
                 }
@@ -64,8 +62,9 @@ define(
          * 显示项目组
          *
          * @param {Array} projects 项目组
+         * @param {string} selectedId 选中的项目名称
          */
-        ProjectViewer.prototype.show = function (projects) {
+        ProjectViewer.prototype.show = function (projects, selectedId) {
             var str = '';
             (projects || []).forEach(function (proj) {
                 str += '<dl data-id="' + proj.id + '">'
@@ -78,6 +77,9 @@ define(
             });
 
             this.main.html(str);
+            if (undefined !== selectedId) {
+                this.select(selectedId);
+            }
         };
 
         require('common/observable').mixin(ProjectViewer.prototype);

@@ -401,6 +401,7 @@ define(
          */
         function bindProject(program) {
             program.projectViewer.on('open', function (e) {
+                var oldProjectId = program.data.projectId;
                 program.project.get(e.projectId).then(function (imported) {
                     if (imported) {
                         if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
@@ -412,7 +413,12 @@ define(
                         program.viewer.focus();
                     }
                 }, function () {
-                    program.loading.error('打开项目失败!', 1000);
+                    if (window.confirm('打开项目失败，是否删除项目?')) {
+                        var fnRemoveProject = function () {
+                            program.projectViewer.show(program.project.items(), oldProjectId);
+                        };
+                        program.project.remove(e.projectId, true).then(fnRemoveProject, fnRemoveProject);
+                    }
                 });
 
             })

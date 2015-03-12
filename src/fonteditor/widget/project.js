@@ -107,9 +107,11 @@ define(
              * 删除一个项目
              *
              * @param {string} id 项目名称
+             * @param {boolean} force 是否强制删除，
+             * 有些项目数据损坏可以强制删除此项目索引
              * @return {Array} 现有项目列表
              */
-            remove: function (id) {
+            remove: function (id, force) {
                 var list = this.items();
                 for (var i = list.length - 1; i >= 0; i--) {
                     if (list[i].id === id) {
@@ -125,6 +127,7 @@ define(
                         storage.setItem('project-list', JSON.stringify(list));
                         resolver.resolve(list);
                     }, function () {
+                        force && storage.setItem('project-list', JSON.stringify(list));
                         resolver.reject(id);
                     });
 

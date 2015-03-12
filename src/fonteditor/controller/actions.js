@@ -141,8 +141,7 @@ define(
                             .then(function (id) {
                                 program.data.projectId = id;
                                 program.ttfManager.setState('new');
-                                program.projectViewer.show(program.project.items());
-                                program.projectViewer.select(id);
+                                program.projectViewer.show(program.project.items(), id);
                                 program.loading.show('保存成功...', 400);
                             }, function () {
                                 program.loading.show('保存失败...', 400);
