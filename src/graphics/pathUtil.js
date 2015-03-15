@@ -138,6 +138,7 @@ define(
 
         /**
          * 对path进行双向链表连接
+         *
          * @param  {Array} path 轮廓数组
          * @return {Array}         path
          */
@@ -146,8 +147,25 @@ define(
                 var cur = path[i];
                 var prev = i === 0 ? path[l - 1] : path[i - 1];
                 var next = i === l - 1 ? path[0] : path[i + 1];
+                cur.index = i;
                 cur.next = next;
                 cur.prev = prev;
+            }
+
+            return path;
+        }
+
+        /**
+         * 对path进行缩放
+         *
+         * @param  {Array} path 轮廓数组
+         * @return {Array}         path
+         */
+        function scale(path, ratio) {
+            for (var i = 0, l = path.length; i < l; i++) {
+                var cur = path[i];
+                cur.x *= ratio;
+                cur.y *= ratio;
             }
 
             return path;
@@ -159,7 +177,8 @@ define(
             isClockWise: isClockWise,
             removeOverlapPoints: removeOverlapPoints,
             getPathHash: getPathHash,
-            makeLink: makeLink
+            makeLink: makeLink,
+            scale: scale
         };
     }
 );
