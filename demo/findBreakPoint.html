@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas读取图片</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #points, #canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #points i {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: #CCC;
+        }
+
+        #points i.break {
+            width: 2px;
+            height: 2px;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="points" width="800" height="800"></div>
+    <canvas id="canvas" width="800" height="800"></canvas>
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>require(['demo/findBreakPoint'])</script>
+</body>
+</html>
