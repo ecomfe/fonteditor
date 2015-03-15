@@ -361,8 +361,8 @@ define(
                 var height = this.main.clientHeight;
 
                 this.layers.forEach(function (layer) {
-                    document.getElementById(layer.id).width = width;
-                    document.getElementById(layer.id).height = height;
+                    document.getElementById(layer.id).style.width = width + 'px';
+                    document.getElementById(layer.id).style.height = height + 'px';
                 });
 
                 this.width = width;
