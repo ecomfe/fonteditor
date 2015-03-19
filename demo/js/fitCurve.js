@@ -7,8 +7,8 @@ define(
     function(require) {
 
         var fitCurve = require('graphics/image/fitCurve');
-
-
+        var fitBezier = require('graphics/image/fitBezier');
+        var lang = require('common/lang');
 
         /**
          * 计算bezier曲线B0参数
@@ -126,12 +126,13 @@ define(
                         ctx.fillRect(curvePoints[i].x, curvePoints[i].y, 2, 2);
                     }
 
-                    var result = fitCurve(curvePoints, 10);
+                    var result = fitCurve(lang.clone(curvePoints), count);
                     result.unshift(points[0]);
-                    console.log(result);
+                    //console.log(result);
 
+                    ctx.beginPath();
                     ctx.strokeStyle='blue';
-
+                    //ctx.translate(0, 10);
                     ctx.moveTo(result[0].x, result[0].y);
                     for (var i = 1; i < result.length - 1; i+=3) {
                        ctx.bezierCurveTo(result[i].x, result[i].y, result[i + 1].x, result[i + 1].y, result[i + 2].x, result[i + 2].y);
@@ -140,6 +141,22 @@ define(
 
                     ctx.stroke();
 
+                    var bezierResult = fitBezier(lang.clone(curvePoints));
+                    bezierResult.unshift(curvePoints[0]);
+                    ctx.beginPath();
+                    ctx.strokeStyle='yellow';
+                    //ctx.translate(0, 10);
+                    ctx.moveTo(bezierResult[0].x, bezierResult[0].y);
+                    var last = bezierResult.length - 1;
+                    console.log(bezierResult.length);
+                    for (var i = 1; i < last; i+=2) {
+                       ctx.quadraticCurveTo(bezierResult[i].x, bezierResult[i].y, bezierResult[i + 1].x, bezierResult[i + 1].y);
+                       ctx.moveTo(bezierResult[i + 1].x, bezierResult[i + 1].y);
+                    }
+
+                    ctx.stroke();
+
+                    //ctx.translate(0, -20);
                 }
 
                 draw();

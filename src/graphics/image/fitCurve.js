@@ -512,7 +512,7 @@ define(
 
 
         /**
-         * 三次bezier曲线点拟合点集
+         * 三次bezier曲线点拟合点集，返回的结果不包含起始点和结束点
          *
          * @param  {Array} points 点集合
          * @param  {number} error  最大错误距离
