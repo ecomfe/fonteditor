@@ -65,7 +65,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points =[{"x":167,"y":449},{"x":233,"y":331},{"x":431,"y":332},{"x":481,"y":417}];
+                var points =[{"x":50,"y":50},{"x":300,"y":200},{"x":800,"y":160},{"x":600,"y":60}];
 
                 $(points).each(function(index, item) {
                     $('[data-index="'+index+'"]').css({
@@ -126,24 +126,16 @@ define(
                         ctx.fillRect(curvePoints[i].x, curvePoints[i].y, 2, 2);
                     }
 
-                    var result = fitCurve(curvePoints, 100);
+                    var result = fitCurve(curvePoints, 10);
                     result.unshift(points[0]);
                     console.log(result);
 
                     ctx.strokeStyle='blue';
-                    for (var i = 3; i < result.length - 1; i+=3) {
-                        var p = {
-                            x: (result[i].x + result[i + 1].x) / 2,
-                            y: (result[i].y + result[i + 1].y) / 2
-                        };
-                        result.push(p);
-                        i++;
-                    }
 
                     ctx.moveTo(result[0].x, result[0].y);
-                    for (var i = 0; i < result.length - 1; i+=4) {
-                       ctx.bezierCurveTo(result[i + 1].x, result[i + 1].y, result[i + 2].x, result[i + 2].y, result[i + 3].x, result[i + 3].y);
-                       ctx.moveTo(result[i + 3].x, result[i + 3].y);
+                    for (var i = 1; i < result.length - 1; i+=3) {
+                       ctx.bezierCurveTo(result[i].x, result[i].y, result[i + 1].x, result[i + 1].y, result[i + 2].x, result[i + 2].y);
+                       ctx.moveTo(result[i + 2].x, result[i + 2].y);
                     }
 
                     ctx.stroke();

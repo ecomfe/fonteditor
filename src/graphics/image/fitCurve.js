@@ -411,8 +411,8 @@ define(
             };
 
             bezCurve[2] = {
-                x: tHat1.x * alpha_r + firstPoint.x,
-                y: tHat1.y * alpha_r + firstPoint.y
+                x: tHat2.x * alpha_r + lastPoint.x,
+                y: tHat2.y * alpha_r + lastPoint.y
             };
 
             return bezCurve;
