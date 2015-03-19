@@ -164,7 +164,9 @@ define(
             end = joint[0];
             splitedPaths.push(path.slice(start.index).concat(path.slice(0, end.index + 1)));
 
-            return splitedPaths;
+            return splitedPaths.filter(function (path) {
+                return path.length > 2;
+            });
         }
 
         return pathSplit;

@@ -81,7 +81,9 @@ define(
             paths = clipper.execute(relation);
             paths = segment2Bezier(paths, bezierHash);
 
-            return paths.map(function (path) {
+            return paths.filter(function (path) {
+                return path.length > 2;
+            }).map(function (path) {
                 return deInterpolate(path);
             });
         }
