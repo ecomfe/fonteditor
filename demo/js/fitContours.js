@@ -9,7 +9,7 @@ define(
         var fitBezier = require('graphics/image/fitBezier');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours1');
+        var data = require('demo/../data/image-contours3');
         var drawPath = require('render/util/drawPath');
 
 
@@ -75,7 +75,7 @@ define(
                     drawPath(ctx, contour);
                 });
 
-                ctx.fill();
+                ctx.stroke();
 
                 $('#points').html(html);
             }
