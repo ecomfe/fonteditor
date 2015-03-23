@@ -23,28 +23,79 @@ define(
         var THETA_TANGENCY = 0.1; // 相切抑制
         var THETA_CORNER = 0.5; // 拐点抑制
         var THETA_MARK_COUNT = 0.8; // 标记点个数抑制
+        var THETA_INFLEXION_RANGE = 0.05; // 切线点之间的距离抑制
 
         function isLine(p0, p1, p) {
-            return 1 - Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y)) < 0.005;
+            return 1 - Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y)) < 0.001;
         }
 
-        function removeOnLinePoint(contour) {
+        function removeOnLinePoint(points) {
             // 移除直线上误判的点
-            for (var i = contour.length - 1, last = i; i >= 0; i--) {
+            for (var i = points.length - 1, last = i; i >= 0; i--) {
                 // 这里注意逆序
-                var p = contour[i];
-                var next = i === last ? contour[0] : contour[i + 1];
-                var prev = i === 0 ? contour[last] : contour[i - 1];
+                var p = points[i];
+                var next = i === last ? points[0] : points[i + 1];
+                var prev = i === 0 ? points[last] : points[i - 1];
 
                 if (isLine(prev, next, p)) {
-                    contour.splice(i, 1);
+                    points.splice(i, 1);
                     last--;
                     continue;
                 }
             }
 
-            return contour;
+            return points;
         }
+
+        function removeInflexionPoint(points, contour) {
+            // 移除过多的切线点
+            var contourSize = contour.length;
+            var range;
+            for (var i = points.length - 1, last = i; i >= 0; i--) {
+                // 这里注意逆序
+                var p = points[i];
+                var next = i === last ? points[0] : points[i + 1];
+                var prev = i === 0 ? points[last] : points[i - 1];
+
+                // 两个同为切线点
+                if (p.inflexion && next.inflexion) {
+                    range = i === last ? last + 1 - p.index + next.index : next.index - p.index;
+                    if (range / contourSize < THETA_INFLEXION_RANGE) {
+                        if (p.absTheta > next.absTheta) {
+                            points.splice(i, 1);
+                        }
+                        else {
+                            points.splice(i + 1, 1);
+                        }
+                        last--;
+                        continue;
+                    }
+                }
+                // 拐点附近的切线点
+                else if (p.breakPoint && next.inflexion) {
+                    range = i === last ? last + 1 - p.index + next.index : next.index - p.index;
+                    if (range / contourSize < THETA_INFLEXION_RANGE) {
+                        points.splice(i + 1, 1);
+                        i--;
+                        last--;
+                        continue;
+                    }
+                }
+                // 拐点附近的切线点
+                else if (p.inflexion && next.breakPoint) {
+                    range = i === last ? last + 1 - p.index + next.index : next.index - p.index;
+                    if (range / contourSize < THETA_INFLEXION_RANGE) {
+                        points.splice(i, 1);
+                        i--;
+                        last--;
+                        continue;
+                    }
+                }
+            }
+
+            return points;
+        }
+
 
         /**
          * 对轮廓中的关键点做进一步提取
@@ -57,42 +108,59 @@ define(
 
             var contourSize = contour.length;
             breakPoints = removeOnLinePoint(breakPoints);
+            breakPoints = removeInflexionPoint(breakPoints, contour);
 
             for (var i = 0, l = breakPoints.length; i < l; i++) {
                 var isLast = i === l - 1;
                 var start = breakPoints[i];
                 var end = breakPoints[ isLast ? 0 : i + 1];
 
-                // 中间点小于3个，则判断为直线
-                var count = isLast ? l - end.index : end.index - start.index;
-                if (start.breakPoint && end.breakPoint && count < 10) {
+                // 中间点小于10个，则判断为直线
+                var range = isLast ? l - start.index + end.index : end.index - start.index;
+                if (start.breakPoint && end.breakPoint && range < 10) {
                     start.right = 1;
                     end.left = 1;
                 }
                 else {
                     // 判断中间点距离
-                    mid = contour[Math.floor((end.index + (isLast ? contourSize : start.index)) / 2)];
+                    if (isLast) {
+                        mid = contour[Math.floor(start.index + (contourSize - start.index + end.index) / 2) % contourSize];
+                    }
+                    else {
+                        mid = contour[Math.floor((start.index + end.index) / 2)];
+                    }
 
+                    if (start.x === 3690 && start.y === 4250) {
+                        debugger;
+                    }
                     // 夹角接近直线
                     if (isLine(start, end, mid)) {
+                        console.log(start);
                         // 随机选取 几个点进行直线判断
-                        var startIndex = start.index + 10;
-                        var endIndex = end.index - 1;
+                        var startIndex = start.index;
+                        var endIndex = end.index;
                         if (isLast) {
-                            startIndex = end.index + 10;
-                            endIndex = l + startIndex.index;
+                            startIndex = start.index;
+                            endIndex = contourSize + end.index;
                         }
-
+                        var step = Math.floor(Math.max((endIndex - startIndex) / 10, 4));
                         var lineFlag = true;
-                        for (var j = startIndex; j < endIndex; j+= 10) {
+
+
+                        for (var j = startIndex + step; j < endIndex; j += step) {
                             if (!isLine(start, end, contour[j % contourSize])) {
                                 lineFlag = false;
                                 break;
                             }
                         }
+
                         if (lineFlag) {
                             start.right = 1;
                             end.left = 1;
+                        }
+                        else {
+                            start.right = 2;
+                            end.left = 2;
                         }
                     }
                     // 标记待选曲线
@@ -102,8 +170,6 @@ define(
                     }
                 }
             }
-
-            // 移除过多的切线点
 
             return breakPoints;
         }

@@ -519,15 +519,20 @@ define(
          *
          * @return {Array}  结果点集
          */
-        function fitCurve(points, error) {
+        function fitCurve(points, error, tHat1, tHat2) {
             var last = points.length - 1;
-            var tHat1 = computeLeftTangent(points, 0);
-            var tHat2 = computeRightTangent(points, last);
+            if (!tHat1) {
+                var tHat1 = computeLeftTangent(points, 0);
+            }
+            if (!tHat2) {
+                var tHat2 = computeRightTangent(points, last);
+            }
             var result = [];
             fitCubic(points, 0, last, tHat1, tHat2, error, result);
             return result;
         }
 
+        fitCurve.normalize = normalize;
 
         return fitCurve;
     }

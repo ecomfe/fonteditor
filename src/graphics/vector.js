@@ -84,10 +84,24 @@ define(
         }
 
 
+        /**
+         * 将点转换成余弦值
+         *
+         * @param  {Object} p 点
+         * @return {Object} 余弦值
+         */
+        function normalize(p) {
+            var factor = 1 / Math.sqrt(p.x * p.x + p.y * p.y);
+            p.x = p.x * factor;
+            p.y = p.y * factor;
+            return p;
+        }
+
         return {
             getCos: getCos,
             getDist: getDist,
-            getDistPow: getDistPow
+            getDistPow: getDistPow,
+            normalize: normalize
         };
     }
 );

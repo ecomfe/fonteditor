@@ -8,7 +8,7 @@ define(
         var fitBezier = require('graphics/image/fitBezier');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours3');
+        var data = require('demo/../data/image-contours1');
         var drawPath = require('render/util/drawPath');
 
         var entry = {
@@ -38,6 +38,10 @@ define(
                     contour = pathUtil.scale(contour, 0.1);
                 });
 
+                breakPoints.forEach(function (p) {
+                    console.log(p.right);
+                });
+
                 html = '';
                 for (var i = 0, l = breakPoints.length; i < l; i++) {
                     var c = "break";
@@ -47,8 +51,11 @@ define(
                     else if(breakPoints[i].inflexion) {
                         c = 'inflexion';
                     }
-
-                    html += '<i style="left:'+breakPoints[i].x+'px;top:'+breakPoints[i].y+'px;" class="'+c+'"></i>';
+                    var width = '';
+                    if (breakPoints[i].right == 1) {
+                        width = 'width: 4px;height: 4px';
+                    }
+                    html += '<i style="left:'+breakPoints[i].x+'px;top:'+breakPoints[i].y+'px;'+width+'" class="'+c+'"></i>';
                 }
 
                 $('#points-break').html(html);
