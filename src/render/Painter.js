@@ -12,7 +12,7 @@ define(
 
         var guid = require('./util/guid');
         var Layer = require('./Layer');
-
+        var pixelRatio = require('common/getPixelRatio');
         var SupportShape = require('./shape/support');
         var Camera = require('./Camera');
         var computeBoundingBox = require('graphics/computeBoundingBox');
@@ -363,6 +363,9 @@ define(
                 this.layers.forEach(function (layer) {
                     document.getElementById(layer.id).style.width = width + 'px';
                     document.getElementById(layer.id).style.height = height + 'px';
+                    document.getElementById(layer.id).width = width * pixelRatio;
+                    document.getElementById(layer.id).height = height * pixelRatio;
+
                 });
 
                 this.width = width;

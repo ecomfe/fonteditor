@@ -21,7 +21,7 @@ define(
         function fitBezier(points, scale) {
             scale = scale || 1;
             var size = points.length;
-            var maxError = 10000;
+            var maxError = 200;
 
             var cubicBezier = fitCurve(points, maxError);
             var start = points[0];

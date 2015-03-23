@@ -67,19 +67,23 @@ define(
             }
 
             var clipper = new Clipper();
-            for (i = 0, l = paths.length - 1; i < l; i++) {
-                clipper.addSubject(paths[i]);
-            }
-            // 非相交可以不需要clip路径，相交则把最后一个路径作为相交路径
-            if (relation === Relation.intersect) {
-                clipper.addClip(paths[i]);
-            }
-            else {
-                clipper.addSubject(paths[i]);
+            clipper.addSubject(paths[0]);
+
+            for (i = 1, l = paths.length; i < l; i++) {
+                // 非相交可以不需要clip路径，相交则把最后一个路径作为相交路径
+                if (relation === Relation.intersect || relation === Relation.tangency) {
+                    clipper.addClip(paths[i]);
+                }
+                else {
+                    clipper.addSubject(paths[i]);
+                }
             }
 
+
             paths = clipper.execute(relation);
-            paths = segment2Bezier(paths, bezierHash);
+            if (Object.keys(bezierHash).length) {
+                paths = segment2Bezier(paths, bezierHash);
+            }
 
             return paths.filter(function (path) {
                 return path.length > 2;

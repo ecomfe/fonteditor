@@ -24,20 +24,19 @@ define(
         var THETA_CORNER = 0.5; // 拐点抑制
         var THETA_MARK_COUNT = 0.8; // 标记点个数抑制
 
-        function isLine(p0, p1, p2) {
-            return 1 - Math.abs(getCos(p2.x - p0.x, p2.y - p0.y, p1.x - p0.x, p1.y - p0.y)) < 0.005;
+        function isLine(p0, p1, p) {
+            return 1 - Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y)) < 0.005;
         }
 
         function removeOnLinePoint(contour) {
             // 移除直线上误判的点
             for (var i = contour.length - 1, last = i; i >= 0; i--) {
-
                 // 这里注意逆序
                 var p = contour[i];
                 var next = i === last ? contour[0] : contour[i + 1];
                 var prev = i === 0 ? contour[last] : contour[i - 1];
 
-                if (isLine(prev, p, next)) {
+                if (isLine(prev, next, p)) {
                     contour.splice(i, 1);
                     last--;
                     continue;
@@ -105,8 +104,6 @@ define(
             }
 
             // 移除过多的切线点
-
-
 
             return breakPoints;
         }
@@ -236,7 +233,7 @@ define(
             });
 
             var thetaMarkCount = THETA_MARK_COUNT * 2 * r;
-            var halfThetaMarkCount = 0.6 * thetaMarkCount;
+            var halfThetaMarkCount = 0.5 * thetaMarkCount;
 
             contour.forEach(function (p) {
                 if (p.tangencyMark && !p.visited){

@@ -9,7 +9,7 @@ define(
         var fitBezier = require('graphics/image/fitBezier');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours3');
+        var data = require('demo/../data/image-contours4');
         var drawPath = require('render/util/drawPath');
 
 
@@ -20,8 +20,9 @@ define(
             var breakPoints = findBreakPoints(data);
             var resultContour = [];
             for (var i = 0, l = breakPoints.length; i < l; i++) {
+                var isLast = i === l - 1;
                 var start = breakPoints[i];
-                var end = breakPoints[i < l - 1 ? i + 1 : 0];
+                var end = breakPoints[ isLast ? 0 : i + 1];
                 resultContour.push({
                     x: start.x,
                     y: start.y,
@@ -29,7 +30,22 @@ define(
                 });
 
                 if (start.right !== 1) {
-                    var curvePoints = data.slice(start.index, end.index + 1);
+
+                    if (isLast) {
+                        var curvePoints = data.slice(start.index).concat(data.slice(0, end.index + 1));
+                    }
+                    else {
+                        var curvePoints = data.slice(start.index, end.index + 1);
+                    }
+
+                    if (curvePoints.length > 50) {
+                        curvePoints = curvePoints.filter(function (p) {
+                            return p.index % 10 === 0;
+                        });
+                    }
+
+
+
                     if (curvePoints.length > 6) {
                         var bezierCurve = fitBezier(curvePoints, 10);
                         if (bezierCurve.length) {
