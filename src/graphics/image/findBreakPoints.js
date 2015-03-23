@@ -26,7 +26,7 @@ define(
         var THETA_INFLEXION_RANGE = 0.05; // 切线点之间的距离抑制
 
         function isLine(p0, p1, p) {
-            return 1 - Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y)) < 0.001;
+            return 1 - Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y)) < 0.01;
         }
 
         function removeOnLinePoint(points) {
@@ -116,7 +116,7 @@ define(
                 var end = breakPoints[ isLast ? 0 : i + 1];
 
                 // 中间点小于10个，则判断为直线
-                var range = isLast ? l - start.index + end.index : end.index - start.index;
+                var range = isLast ? contourSize - start.index + end.index : end.index - start.index;
                 if (start.breakPoint && end.breakPoint && range < 10) {
                     start.right = 1;
                     end.left = 1;
@@ -130,12 +130,12 @@ define(
                         mid = contour[Math.floor((start.index + end.index) / 2)];
                     }
 
-                    if (start.x === 3690 && start.y === 4250) {
+                    if (start.x === 32 && start.y === 227) {
                         debugger;
                     }
                     // 夹角接近直线
                     if (isLine(start, end, mid)) {
-                        console.log(start);
+
                         // 随机选取 几个点进行直线判断
                         var startIndex = start.index;
                         var endIndex = end.index;

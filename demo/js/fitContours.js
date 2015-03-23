@@ -14,6 +14,9 @@ define(
         var drawPath = require('render/util/drawPath');
 
         function fitContour(data) {
+            // data.forEach(function(c) {
+            //     c.splice(0, 1);
+            // });
 
             data = pathUtil.scale(data, 10);
             var breakPoints = findBreakPoints(data);
@@ -26,11 +29,11 @@ define(
             var isLast;
             var start;
             var end;
-            var lasttHat;
+            var tHat1Point;
             for (var i = 0, l = breakPoints.length; i < l; i++) {
                 isLast = i === l - 1;
                 start = breakPoints[i];
-                end = breakPoints[ isLast ? 0 : i + 1];
+                 end = breakPoints[ isLast ? 0 : i + 1];
 
                 resultContour.push({
                     x: start.x,
@@ -41,7 +44,7 @@ define(
                 if (start.right !== 1) {
 
                     if (isLast) {
-                        var curvePoints = data.slice(start.index).concat(data.slice(0, end.index + 1));
+                        var curvePoints = data.slice(start.index).concat(data.slice(0, end.index));
                     }
                     else {
                         var curvePoints = data.slice(start.index, end.index + 1);
@@ -65,25 +68,31 @@ define(
                         });
                     }
 
+                    if ((start.tangency || start.inflexion) && tHat1Point) {
+                        tHat1 = vector.normalize({
+                            x: start.x - tHat1Point.x,
+                            y: start.y - tHat1Point.y
+                        });
+                        console.log(tHat1);
+                    }
+                    else {
+                        tHat1 = null;
+                    }
+
                     ///console.log(bezierCurvePoints.length);
-                    var bezierCurve = fitBezier(bezierCurvePoints, 10, lasttHat);
+                    var bezierCurve = fitBezier(bezierCurvePoints, 10, tHat1);
                     if (bezierCurve.length) {
                         bezierCurve.forEach(function (p) {
                             resultContour.push(p);
                         });
-                        end = bezierCurve[bezierCurve.length - 1];
-                        end.tangency = true;
+                        tHat1Point = bezierCurve[bezierCurve.length - 2];
+                    }
+                    else {
+                        tHat1Point = null;
                     }
                 }
-
-                if (end.tangency || end.inflexion) {
-                    lasttHat = vector.normalize({
-                        x: end.x - start.x,
-                        y: end.y - start.y
-                    });
-                }
                 else {
-                    lasttHat = null;
+                    tHat1Point = start;
                 }
             }
 
