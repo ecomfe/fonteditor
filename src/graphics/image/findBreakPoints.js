@@ -25,8 +25,16 @@ define(
         var THETA_MARK_COUNT = 0.8; // 标记点个数抑制
         var THETA_INFLEXION_RANGE = 0.05; // 切线点之间的距离抑制
 
+        function absCos(p0, p1, p) {
+            return Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y));
+        }
+
         function isLine(p0, p1, p) {
-            return 1 - Math.abs(getCos(p.x - p0.x, p.y - p0.y, p.x - p1.x, p.y - p1.y)) < 0.01;
+            return 1 - absCos(p0, p1, p) < 0.01;
+        }
+
+        function isPerfectLine(p0, p1, p) {
+            return 1 - absCos(p0, p1, p) < 0.002;
         }
 
         function removeOnLinePoint(points) {
@@ -37,7 +45,7 @@ define(
                 var next = i === last ? points[0] : points[i + 1];
                 var prev = i === 0 ? points[last] : points[i - 1];
 
-                if (isLine(prev, next, p)) {
+                if (p.inflexion && isPerfectLine(prev, next, p)) {
                     points.splice(i, 1);
                     last--;
                     continue;
@@ -46,6 +54,27 @@ define(
 
             return points;
         }
+
+        function isSegmentLine(contour, start, end, isLast) {
+            var contourSize = contour.length;
+            // 随机选取 几个点进行直线判断
+            var startIndex = start.index;
+            var endIndex = end.index;
+            if (isLast) {
+                startIndex = start.index;
+                endIndex = contourSize + end.index;
+            }
+            var step = Math.floor(Math.max((endIndex - startIndex) / 10, 4));
+            var lineFlag = true;
+            for (var j = startIndex + step; j < endIndex; j += step) {
+                if (!isLine(start, end, contour[j % contourSize])) {
+                    lineFlag = false;
+                    break;
+                }
+            }
+            return lineFlag;
+        }
+
 
         function removeInflexionPoint(points, contour) {
             // 移除过多的切线点
@@ -108,12 +137,11 @@ define(
 
             var contourSize = contour.length;
             breakPoints = removeOnLinePoint(breakPoints);
-            breakPoints = removeInflexionPoint(breakPoints, contour);
 
             for (var i = 0, l = breakPoints.length; i < l; i++) {
                 var isLast = i === l - 1;
                 var start = breakPoints[i];
-                var end = breakPoints[ isLast ? 0 : i + 1];
+                var end = breakPoints[isLast ? 0 : i + 1];
 
                 // 中间点小于10个，则判断为直线
                 var range = isLast ? contourSize - start.index + end.index : end.index - start.index;
@@ -130,31 +158,38 @@ define(
                         mid = contour[Math.floor((start.index + end.index) / 2)];
                     }
 
-                    if (start.x === 32 && start.y === 227) {
-                        debugger;
-                    }
-                    // 夹角接近直线
-                    if (isLine(start, end, mid)) {
+                    // 夹角接近直线，这里需要对夹角接近直线的点进行修正，使直线点扩大或者缩小
+                    var isOnLine = false;
+                    if (isLine(start.next, end.prev, mid)) {
+                        var isOnLine = true;
+                        var from = start.next;
+                        var to = end.prev;
 
-                        // 随机选取 几个点进行直线判断
-                        var startIndex = start.index;
-                        var endIndex = end.index;
-                        if (isLast) {
-                            startIndex = start.index;
-                            endIndex = contourSize + end.index;
+                        while (absCos(from.prev, to, mid) >= absCos(from, to, mid)) {
+                            if (from.prev !== start) {
+                                from.prev.inflexion = start.inflexion;
+                                from.prev.breakPoint = start.breakPoint;
+                                delete start.inflexion;
+                                delete start.breakPoint;
+                                start = breakPoints[i] = from.prev;
+                            }
+                            from = from.prev;
                         }
-                        var step = Math.floor(Math.max((endIndex - startIndex) / 10, 4));
-                        var lineFlag = true;
 
-
-                        for (var j = startIndex + step; j < endIndex; j += step) {
-                            if (!isLine(start, end, contour[j % contourSize])) {
-                                lineFlag = false;
-                                break;
+                        while (absCos(from, to.next, mid) >= absCos(from, to, mid)) {
+                            if (to.next !== to) {
+                                to.next.inflexion = end.inflexion;
+                                to.next.breakPoint = end.breakPoint;
+                                delete end.inflexion;
+                                delete end.breakPoint;
+                                end = breakPoints[isLast ? 0 : i + 1] = to.next;
+                                to = to.next;
                             }
                         }
+                    }
 
-                        if (lineFlag) {
+                    if (isOnLine || isLine(start, end, mid)) {
+                        if (isSegmentLine(contour, start, end, isLast)) {
                             start.right = 1;
                             end.left = 1;
                         }
@@ -170,6 +205,12 @@ define(
                     }
                 }
             }
+
+            if (breakPoints[0] === breakPoints[l - 1]) {
+                breakPoints.splice(l - 1, 1);
+            }
+
+            breakPoints = removeInflexionPoint(breakPoints, contour);
 
             return breakPoints;
         }
@@ -252,7 +293,7 @@ define(
         function findBreakPoints(contour) {
 
             contour = makeLink(contour);
-            var r = contour.length > 10 ? 12 : 4;
+            var r = contour.length > 10 ? 16 : 4;
             var j = 0;
             for (var i = 0, l = contour.length; i < l; i++) {
                 var p = contour[i];
@@ -377,7 +418,7 @@ define(
                         || leftMark[0] + rightMark[1] >= thetaMarkCount
                     ) {
 
-                        p.tangency = true;
+                        p.inflexion = true;
                         breakPoints.push(p);
                         markVisited(p, r);
                     }

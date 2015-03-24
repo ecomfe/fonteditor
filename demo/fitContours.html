@@ -11,29 +11,40 @@
             padding: 0;
         }
 
-        #points, #canvas {
+        #points, #points-break {
             position: absolute;
             left: 0;
             top: 0;
+            width: 800px;
+            height: 800px;
         }
 
-        #points i {
+        #points i,
+        #points-break i {
             position: absolute;
             width: 1px;
             height: 1px;
-            background: #CCC;
+            background: #ddd;
         }
 
-        #points i.break {
+        #points-break i.break {
             width: 2px;
             height: 2px;
             background: red;
         }
+
+        #points-break i.mark {
+            width: 1px;
+            height: 1px;
+            background: green;
+        }
+
     </style>
 </head>
 <body>
     <div id="points" width="800" height="800"></div>
     <canvas id="canvas" width="800" height="800"></canvas>
+    <div id="points-break"></div>
 <script>
     require.config({
         baseUrl: '../src',

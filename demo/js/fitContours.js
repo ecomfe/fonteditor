@@ -13,10 +13,10 @@ define(
         var data = require('demo/../data/image-contours1');
         var drawPath = require('render/util/drawPath');
 
+
+        var bezierCurvePointsArray = [];
+
         function fitContour(data) {
-            // data.forEach(function(c) {
-            //     c.splice(0, 1);
-            // });
 
             data = pathUtil.scale(data, 10);
             var breakPoints = findBreakPoints(data);
@@ -33,7 +33,7 @@ define(
             for (var i = 0, l = breakPoints.length; i < l; i++) {
                 isLast = i === l - 1;
                 start = breakPoints[i];
-                 end = breakPoints[ isLast ? 0 : i + 1];
+                end = breakPoints[ isLast ? 0 : i + 1];
 
                 resultContour.push({
                     x: start.x,
@@ -52,19 +52,22 @@ define(
 
                     var bezierCurvePoints = [];
                     var curvePointsLast = curvePoints.length - 1;
-                    if (curvePoints.length > 60) {
+
+                    if (curvePoints.length > 200) {
+                        var derive = Math.floor(curvePoints.length / 10);
                         bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return index === 0 || index === curvePointsLast || p.index % 6 === 0;
+                            return index === 0 || index === curvePointsLast || p.index % derive === 0;
                         });
                     }
                     else if (curvePoints.length > 30) {
+                        var derive = Math.floor(curvePoints.length / 5);
                         bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return  index === 0 || index === curvePointsLast || p.index % 3 === 0;
+                            return  index === 0 || index === curvePointsLast || p.index % derive === 0;
                         });
                     }
                     else {
                         bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return  index === 0 || index === curvePointsLast || p.index % 2 === 0;
+                            return  index === 0 || index === curvePointsLast || p.index % 5 === 0;
                         });
                     }
 
@@ -73,13 +76,15 @@ define(
                             x: start.x - tHat1Point.x,
                             y: start.y - tHat1Point.y
                         });
-                        console.log(tHat1);
                     }
                     else {
                         tHat1 = null;
                     }
 
-                    ///console.log(bezierCurvePoints.length);
+                    bezierCurvePoints.forEach(function (p) {
+                        bezierCurvePointsArray.push(p);
+                    });
+
                     var bezierCurve = fitBezier(bezierCurvePoints, 10, tHat1);
                     if (bezierCurve.length) {
                         bezierCurve.forEach(function (p) {
@@ -113,6 +118,9 @@ define(
                 var html = '';
                 var contours = [];
                 data.forEach(function(contour) {
+
+                    contour.splice(contour.length - 1, 1);
+
                     contour.forEach(function (p) {
                         html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
                     });
@@ -120,8 +128,17 @@ define(
                     contours.push(fitContour(contour));
                 });
 
+
+                $('#points').html(html);
+
+                html = '';
+                bezierCurvePointsArray.forEach(function (p) {
+                    html += '<i class="mark" style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
+                });
+
+
                 var ctx = $('#canvas').get(0).getContext('2d');
-                ctx.fillStyle = 'cyan';
+                ctx.strokeStyle = 'yellow';
 
                 contours.forEach(function (contour) {
                     for (var i = 0, l = contour.length; i < l; i++) {
@@ -131,8 +148,7 @@ define(
                 });
 
                 ctx.stroke();
-
-                $('#points').html(html);
+                $('#points-break').html(html);
             }
         };
 

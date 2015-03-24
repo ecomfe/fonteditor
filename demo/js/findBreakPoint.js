@@ -19,6 +19,12 @@ define(
             init: function () {
                 var breakPoints = [];
                 var html = '';
+
+                data.forEach(function(c) {
+                    c.splice(c.length - 1, 1);
+                });
+
+
                 data.forEach(function (contour) {
                     contour.forEach(function(p) {
                         html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';

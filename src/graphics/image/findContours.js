@@ -62,7 +62,7 @@ define(
                 }
             }
             while (x !== startX || y !== startY);
-
+            contour.splice(contour.length - 1, 1);
             return contour;
         }
 
