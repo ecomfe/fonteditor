@@ -8,7 +8,7 @@ define(
         var fitBezier = require('graphics/image/fitBezier');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours1');
+        var data = require('demo/../data/image-contours2');
         var drawPath = require('render/util/drawPath');
 
         var entry = {

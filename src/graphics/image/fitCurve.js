@@ -267,8 +267,8 @@ define(
             /* Generate control vertices for Q'' */
             for (i = 0; i <= 1; i++) {
                 Q2[i] = {
-                    x: (Q[i + 1].x - Q[i].x) * 2.0,
-                    y: (Q[i + 1].y - Q[i].y) * 2.0
+                    x: (Q[i + 1].x - Q[i].x) * 6.0,
+                    y: (Q[i + 1].y - Q[i].y) * 6.0
                 };
             }
 

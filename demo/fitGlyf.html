@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas读取图片</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <script src="../dep/clipper.js"></script>
+    <script src="../dep/hidpi-canvas.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/editor.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #points, #points-break, #canvas {
+            position: absolute;
+            left: 0;
+            top: 40px;
+            width: 800px;
+            height: 800px;
+        }
+
+        #points i,
+        #points-break i {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: #ddd;
+        }
+
+        #points-break i.break {
+            width: 2px;
+            height: 2px;
+            background: red;
+        }
+
+        #points-break i.inflection {
+            width: 1px;
+            height: 1px;
+            background: green;
+        }
+
+
+        #render-view {
+            margin-left: 800px;
+            margin-top: 40px;
+            width: auto;
+            height: 800px;
+        }
+
+    </style>
+</head>
+<body>
+    <input id="upload-file" type="file">
+    <div id="points" width="800" height="800"></div>
+    <div id="points-break" width="800" height="800"></div>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <div id="render-view" class="render-view glyf-editor" oncontextMenu="return false"></div>
+
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+        }
+    });
+    define('jquery', $);
+    define('ClipperLib', window.ClipperLib);
+</script>
+
+<script>require(['demo/fitGlyf'])</script>
+</body>
+</html>

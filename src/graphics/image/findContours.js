@@ -99,7 +99,7 @@ define(
                                 x: x,
                                 y: y
                             }, true);
-                            contours.push(contour);
+                            contour && contours.push(contour);
                         }
 
                     }
@@ -111,7 +111,7 @@ define(
                                 x: x - 1,
                                 y: y
                             }, true);
-                            contours.push(contour.reverse());
+                            contour && contours.push(contour.reverse());
                         }
                     }
                 }

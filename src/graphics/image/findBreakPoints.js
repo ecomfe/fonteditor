@@ -30,7 +30,7 @@ define(
         }
 
         function isLine(p0, p1, p) {
-            return 1 - absCos(p0, p1, p) < 0.01;
+            return 1 - absCos(p0, p1, p) < 0.004;
         }
 
         function isPerfectLine(p0, p1, p) {
@@ -212,7 +212,9 @@ define(
 
             breakPoints = removeInflexionPoint(breakPoints, contour);
 
-            return breakPoints;
+            return breakPoints.sort(function (a, b) {
+                return a.index - b.index;
+            });
         }
 
         /**
