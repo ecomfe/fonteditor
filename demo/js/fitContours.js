@@ -9,6 +9,7 @@ define(
         var fitContour = require('graphics/image/fitContour');
         var data = require('demo/../data/image-contours2');
         var drawPath = require('render/util/drawPath');
+        var pathUtil = require('graphics/pathUtil');
 
         var entry = {
 
@@ -27,7 +28,9 @@ define(
                         html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
                     });
 
+                    data = pathUtil.scale(data, 10);
                     contours.push(fitContour(contour));
+                    data = pathUtil.scale(data, 0.1);
                 });
 
 

@@ -13,26 +13,37 @@ define(
         var pathAdjust = require('graphics/pathAdjust');
         var drawPath = require('render/util/drawPath');
         var data = require('demo/../data/image-contours2');
+        var pathUtil = require('graphics/pathUtil');
+
 
         var editor = require('editor/main');
-
+        var canvas = null;
         var ctx = null;
+        var curImage = null;
+
+
+
 
         function fitGlyf(data) {
             var html = '';
             var contours = [];
+
             data.forEach(function(contour) {
                 contour.forEach(function (p) {
                     html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
                 });
-                contours.push(fitContour(contour));
+
+                contour = pathUtil.scale(contour, 10);
+                var result = pathUtil.scale(fitContour(contour, 10), 0.1);
+                contours.push(result);
+                contour = pathUtil.scale(contour, 0.1);
             });
 
             $('#points').html(html);
 
             html = '';
             ctx.beginPath();
-            ctx.clearRect(0,0, 1000, 1000);
+            ctx.clearRect(0,0, canvas.width, canvas.height);
             ctx.strokeStyle = 'pink';
             contours.forEach(function (contour) {
                 for (var i = 0, l = contour.length; i < l; i++) {
@@ -72,7 +83,9 @@ define(
 
                 var image = new Image();
                 image.onload = function () {
-                    ctx.clearRect(0,0, 1000, 1000);
+                    ctx.clearRect(0,0, canvas.width, canvas.height);
+                    canvas.width = image.width;
+                    canvas.height = image.height;
                     ctx.drawImage(image, 0, 0, image.width, image.height);
                     findImageContours(ctx.getImageData(0, 0, image.width, image.height));
                 };
@@ -96,10 +109,9 @@ define(
 
                 window.editor  = editor.create($('#render-view').get(0));
 
-                var upFile = document.getElementById('upload-file');
-                upFile.addEventListener('change', onUpFileChange);
-
-                ctx = $('#canvas').get(0).getContext('2d');
+                document.getElementById('upload-file').addEventListener('change', onUpFileChange);
+                canvas = $('#canvas').get(0);
+                ctx = canvas.getContext('2d');
 
                 if (data) {
                     data.forEach(function(contour) {

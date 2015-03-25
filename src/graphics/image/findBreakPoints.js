@@ -295,7 +295,7 @@ define(
         function findBreakPoints(contour) {
 
             contour = makeLink(contour);
-            var r = contour.length > 10 ? 16 : 4;
+            var r = contour.length > 16 ? 12 : 4;
             var j = 0;
             for (var i = 0, l = contour.length; i < l; i++) {
                 var p = contour[i];
@@ -440,7 +440,7 @@ define(
                 return a.index - b.index;
             });
 
-            breakPoints = filterBreakPoint(contour, breakPoints, r);
+            //breakPoints = filterBreakPoint(contour, breakPoints, r);
 
             return breakPoints;
         }

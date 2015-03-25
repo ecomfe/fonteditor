@@ -8,6 +8,10 @@ define(
 
         var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
+        var findBreakPoints = require('graphics/image/findBreakPoints');
+        var pathUtil = require('graphics/pathUtil');
+
+
 
         var ctx = null;
         var canvas = null;
@@ -46,7 +50,7 @@ define(
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
             var result = image2Values(imgData, gray, alpha);
-            var contours = findContours(result);
+
             var putData = new Uint8ClampedArray(imgData.data.buffer);
             for (var y = 0; y < height; y ++) {
                 var line = height * y;
@@ -60,18 +64,57 @@ define(
                     }
                 }
             }
+
+            var contours = findContours(result);
+
             contours.forEach(function (contour) {
                 contour.forEach(function (p) {
                     var offset = p.y * width + p.x;
-                    putData[offset * 4] = 255;
-                    putData[offset * 4 + 1] = 0;
-                    putData[offset * 4 + 2] = 0;
+                    putData[offset * 4] = 2;
+                    putData[offset * 4 + 1] = 242;
+                    putData[offset * 4 + 2] = 32;
                     putData[offset * 4 + 3] = 255;
                 });
             });
             ctx.putImageData(imgData, 0, 0);
+
+            getBreakPoint(contours);
         }
 
+
+        function getBreakPoint(contours) {
+            var breakPoints = [];
+            contours.forEach(function (contour) {
+
+                contour = pathUtil.scale(contour, 10);
+                var points  = findBreakPoints(contour);
+
+                if (points) {
+                    points.forEach(function (p) {
+                        breakPoints.push(p);
+                    });
+                }
+
+                contour = pathUtil.scale(contour, 0.1);
+            });
+
+
+
+            breakPoints.forEach(function (p) {
+
+                ctx.beginPath();
+
+                if (p.breakPoint) {
+                    ctx.fillStyle = 'red';
+                }
+                else if (p.inflexion) {
+                    ctx.fillStyle = 'blue';
+                }
+
+                ctx.fillRect(p.x, p.y, 3, 3);
+            });
+
+        }
 
 
 
@@ -91,6 +134,12 @@ define(
                 thresholdGray.onchange = thresholdAlpha.onchange = function () {
                     curImage && getContours(curImage, +thresholdGray.value, +thresholdAlpha.value);
                 }
+
+                var img = new Image();
+                img.onload = function () {
+                    getContours(curImage = img, +thresholdGray.value, +thresholdAlpha.value);
+                }
+                img.src = '../test/a.gif';
             }
         };
 

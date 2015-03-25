@@ -13,12 +13,10 @@ define(
         var vector = require('graphics/vector');
 
 
-        function fitContour(data) {
-
-            data = pathUtil.scale(data, 10);
+        function fitContour(data, scale) {
+            scale = scale || 1;
 
             var breakPoints = findBreakPoints(data);
-
             var resultContour = [];
             var isLast;
             var start;
@@ -77,10 +75,14 @@ define(
                         tHat1 = null;
                     }
 
-                    var bezierCurve = fitBezier(bezierCurvePoints, 10, tHat1);
+                    var bezierCurve = fitBezier(bezierCurvePoints, scale, tHat1);
                     if (bezierCurve.length) {
                         bezierCurve.forEach(function (p) {
-                            resultContour.push(p);
+                            resultContour.push({
+                                x: p.x,
+                                y: p.y,
+                                onCurve: p.onCurve
+                            });
                         });
                         tHat1Point = bezierCurve[bezierCurve.length - 2];
                     }
@@ -93,11 +95,7 @@ define(
                 }
             }
 
-            resultContour = pathUtil.scale(resultContour, 0.1);
-
-            data = pathUtil.scale(data, 0.1);
-
-            return resultContour;
+            return pathUtil.deInterpolate(resultContour);
         }
 
         return fitContour;

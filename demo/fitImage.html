@@ -9,17 +9,22 @@
     <script src="../dep/hidpi-canvas.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/editor.css">
     <style>
-        body {
+        body,
+        html {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
         }
 
         #points, #points-break, #canvas {
             position: absolute;
             left: 0;
             top: 40px;
-            width: 800px;
-            height: 800px;
+            bottom: 0;
+        }
+        #points, #points-break {
+            width: 50%;
         }
 
         #points i,
@@ -44,10 +49,9 @@
 
 
         #render-view {
-            margin-left: 800px;
-            margin-top: 40px;
+            margin-left: 50%;
             width: auto;
-            height: 800px;
+            height: 90%;
         }
 
     </style>
@@ -56,7 +60,7 @@
     <input id="upload-file" type="file">
     <div id="points" width="800" height="800"></div>
     <div id="points-break" width="800" height="800"></div>
-    <canvas id="canvas" width="800" height="800"></canvas>
+    <canvas id="canvas" width="50%" height="100%"></canvas>
     <div id="render-view" class="render-view glyf-editor" oncontextMenu="return false"></div>
 
 <script>
@@ -70,6 +74,6 @@
     define('ClipperLib', window.ClipperLib);
 </script>
 
-<script>require(['demo/fitGlyf'])</script>
+<script>require(['demo/fitImage'])</script>
 </body>
 </html>
