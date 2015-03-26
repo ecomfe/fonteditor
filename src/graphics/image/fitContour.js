@@ -95,6 +95,14 @@ define(
                 }
             }
 
+            // 去除last
+            start = resultContour[0];
+            end = resultContour[resultContour.length - 1];
+
+            if (vector.dist(start, end) < scale * 5) {
+                resultContour.splice(resultContour.length - 1, 1);
+            }
+
             return pathUtil.deInterpolate(resultContour);
         }
 

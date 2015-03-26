@@ -46,30 +46,27 @@ define(
          * @return {number} 距离
          */
         function getDistPow(p0, p1, p) {
-            var x = p.x;
-            var y = p.y;
-            var x1 = p0.x;
-            var y1 = p0.y;
-            var x2 = p1.x;
-            var y2 = p1.y;
-            var cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
 
-            if (cross <= 0) {
-                return ((x - x1) * (x - x1) + (y - y1) * (y - y1));
+            var A = p1.y - p0.y;
+            var B = p0.x - p1.x;
+
+            if (A === 0 && B === 0) {
+                return Math.pow(p.x - p0.x, 2) + Math.pow(p.y - p0.y, 2);
             }
 
-            var d2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-
-            if (cross >= d2) {
-                return ((x - x2) * (x - x2) + (y - y2) * (y - y2));
+            if (A === 0) {
+                return Math.pow(p.y - p0.y, 2);
             }
 
-            var r = cross / d2;
-            var px = x1 + (x2 - x1) * r;
-            var py = y1 + (y2 - y1) * r;
+            if (B === 0) {
+                return Math.pow(p.x - p0.x, 2);
+            }
 
-            return ((x - px) * (x - px) + (py - y1) * (py - y1));
+            var C = p1.x * p0.y - p0.x * p1.y;
+
+            return Math.pow(A * p.x + B * p.y + C, 2) / (A * A + B * B);
         }
+
 
         /**
          * 求点到向量的距离
@@ -81,6 +78,17 @@ define(
          */
         function getDist(p0, p1, p) {
             return Math.sqrt(getDistPow(p0, p1, p));
+        }
+
+        /**
+         * 求两点距离
+         *
+         * @param  {Object} p0 p0
+         * @param  {Object} p1 p1
+         * @return {number} 距离
+         */
+        function dist(p0, p1) {
+            return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
         }
 
 
@@ -101,7 +109,8 @@ define(
             getCos: getCos,
             getDist: getDist,
             getDistPow: getDistPow,
-            normalize: normalize
+            normalize: normalize,
+            dist: dist
         };
     }
 );

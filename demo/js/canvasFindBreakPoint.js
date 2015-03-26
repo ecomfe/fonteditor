@@ -111,7 +111,7 @@ define(
                     ctx.fillStyle = 'blue';
                 }
 
-                ctx.fillRect(p.x, p.y, 3, 3);
+                ctx.fillRect(p.x, p.y, p.right == 1 ? 4 : 2, p.right == 1 ? 4 : 2);
             });
 
         }
@@ -139,7 +139,7 @@ define(
                 img.onload = function () {
                     getContours(curImage = img, +thresholdGray.value, +thresholdAlpha.value);
                 }
-                img.src = '../test/a.gif';
+                img.src = '../test/meng1.gif';
             }
         };
 
