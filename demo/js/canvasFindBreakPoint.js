@@ -53,7 +53,7 @@ define(
 
             var putData = new Uint8ClampedArray(imgData.data.buffer);
             for (var y = 0; y < height; y ++) {
-                var line = height * y;
+                var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
                     if (result.data[offset]) {

@@ -6,6 +6,7 @@
 define(
     function (require) {
 
+        var grayImage = require('graphics/image/grayImage');
         var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
 
@@ -13,7 +14,6 @@ define(
         var canvas = null;
         var curImage = null;
         var thresholdGray = null;
-        var thresholdAlpha = null;
 
 
 
@@ -24,7 +24,7 @@ define(
 
                 var image = curImage = new Image();
                 image.onload = function () {
-                    getContours(image, +thresholdGray.value, +thresholdAlpha.value);
+                    getContours(image, thresholdFn.value ? thresholdFn.value : +thresholdGray.value);
                 };
 
                 image.src = e.target.result;
@@ -37,19 +37,22 @@ define(
             reader.readAsDataURL(file);
         }
 
-        function getContours(image, gray, alpha) {
+        function getContours(image, gray) {
             ctx.clearRect(0,0, canvas.width, canvas.height);
             var width = image.width;
             var height = image.height;
-            canvas.width = image.width;
-            canvas.height = image.height;
+            canvas.width = width;
+            canvas.height = height;
+
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
-            var result = image2Values(imgData, gray, alpha);
+
+            var result = image2Values(imgData, gray);
             var contours = findContours(result);
-            var putData = new Uint8ClampedArray(imgData.data.buffer);
+
+            var putData = imgData.data;
             for (var y = 0; y < height; y ++) {
-                var line = height * y;
+                var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
                     if (result.data[offset]) {
@@ -58,8 +61,15 @@ define(
                         putData[offset * 4 + 2] = 255;
                         putData[offset * 4 + 3] = 255;
                     }
+                    else {
+                        putData[offset * 4] = 255;
+                        putData[offset * 4 + 1] = 255;
+                        putData[offset * 4 + 2] = 255;
+                        putData[offset * 4 + 3] = 255;
+                    }
                 }
             }
+
             contours.forEach(function (contour) {
                 contour.forEach(function (p) {
                     var offset = p.y * width + p.x;
@@ -69,6 +79,8 @@ define(
                     putData[offset * 4 + 3] = 255;
                 });
             });
+
+
             ctx.putImageData(imgData, 0, 0);
         }
 
@@ -86,10 +98,13 @@ define(
                 canvas = document.getElementById("canvas");
                 ctx = canvas.getContext("2d");
                 thresholdGray = document.getElementById('threshold-gray');
-                thresholdAlpha = document.getElementById('threshold-alpha');
+                thresholdFn = document.getElementById('threshold-fn');
+                thresholdGray.onchange = function () {
+                    curImage && getContours(curImage, +thresholdGray.value);
+                }
 
-                thresholdGray.onchange = thresholdAlpha.onchange = function () {
-                    curImage && getContours(curImage, +thresholdGray.value, +thresholdAlpha.value);
+                thresholdFn.onchange = function (e) {
+                    curImage && getContours(curImage, e.target.value || 200);
                 }
             }
         };

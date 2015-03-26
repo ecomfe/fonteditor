@@ -17,7 +17,15 @@
     <div>
         <input id="upload-file" type="file">
         灰度阈值：<input id="threshold-gray" type="range" min="0" max="255" value="200">
-        alpha阈值：<input id="threshold-alpha" type="range" min="0" max="255" value="50">
+        二值算子：
+        <select id="threshold-fn">
+            <option value="">二值算子</option>
+            <option value="mean">基于灰度平均值的阈值</option>
+            <option value="minimum">基于谷底最小值的阈值</option>
+            <option value="intermodes">基于双峰平均值的阈值</option>
+            <option value="ostu">大津法</option>
+            <option value="isoData">ISODATA法</option>
+        </select>
     </div>
     <canvas id="canvas" width="800" height="800"></canvas>
 <script>

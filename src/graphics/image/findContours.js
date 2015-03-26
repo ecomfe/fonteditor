@@ -36,6 +36,7 @@ define(
             var dy;
             var contour = [startPoint];
             var finded;
+            var iterCount = 0;
             do {
                 startIndex = index + 11;
                 finded = false;
@@ -58,6 +59,10 @@ define(
                 }
 
                 if (!finded) {
+                    return null;
+                }
+
+                if (iterCount++ > 100000) {
                     return null;
                 }
             }
