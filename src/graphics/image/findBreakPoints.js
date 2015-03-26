@@ -19,6 +19,7 @@ define(
 
         var makeLink = require('../pathUtil').makeLink;
         var getCos = require('../vector').getCos;
+        var getDist = require('../vector').getDist;
 
         var THETA_TANGENCY = 0.1; // 相切抑制
         var THETA_CORNER = 0.5; // 拐点抑制
@@ -57,6 +58,21 @@ define(
 
         function isSegmentLine(contour, start, end, isLast) {
             var contourSize = contour.length;
+            var mid;
+            var THETA_DIST = 20; // 判断直线点距离
+
+            // 判断中间点距离
+            if (isLast) {
+                mid = contour[Math.floor(start.index + (contourSize - start.index + end.index) / 2) % contourSize];
+            }
+            else {
+                mid = contour[Math.floor((start.index + end.index) / 2)];
+            }
+
+            if (getDist(start, end, mid) > THETA_DIST) {
+                return false;
+            }
+
             // 随机选取 几个点进行直线判断
             var startIndex = start.index;
             var endIndex = end.index;
@@ -64,10 +80,12 @@ define(
                 startIndex = start.index;
                 endIndex = contourSize + end.index;
             }
+
             var step = Math.floor(Math.max((endIndex - startIndex) / 10, 4));
             var lineFlag = true;
+
             for (var j = startIndex + step; j < endIndex; j += step) {
-                if (!isLine(start, end, contour[j % contourSize])) {
+                if (getDist(start, end, mid) > THETA_DIST) {
                     lineFlag = false;
                     break;
                 }
@@ -286,6 +304,103 @@ define(
         }
 
 
+        function findLinePoints(contour, breakPoints, r) {
+            // 根据角点查找竖直和水平线
+            var linePoints = [];
+
+            // var fnDirection = function (start, direction, axis) {
+            //     // 查找水平线
+            //     var count = 0;
+            //     var cur = start;
+            //     while (cur[direction][axis] === cur[axis]) {
+            //         count++;
+            //         cur.visited = true;
+            //         cur = cur[direction];
+            //     }
+
+            //     if (count > 12) {
+            //         start.linePoint = true;
+            //         start[direction === 'prev' ? 'left' : 'right'] = 1;
+            //         cur.linePoint = true;
+            //         cur[direction === 'prev' ? 'right' : 'left'] = 1;
+            //         if (!breakPoints.indexOf(cur) && !linePoints.indexOf(cur)) {
+            //             linePoints.push(cur);
+            //             console.log(cur);
+            //         }
+            //     }
+            // };
+
+            var contourSize = contour.length;
+            for (var i = 0, l = breakPoints.length, last = l - 1; i < l; i++) {
+                var p = breakPoints[i];
+                var next = i === last ? breakPoints[0] : breakPoints[i + 1];
+
+                var range = i === last ? contourSize - p.index + next.index : next.index - p.index;
+                if (range < r) {
+                    start.right = 1;
+                    end.left = 1;
+                }
+                else {
+
+
+                }
+
+
+                // fnDirection(breakPoints[i], 'prev', 'x');
+                // fnDirection(breakPoints[i], 'next', 'x');
+                // fnDirection(breakPoints[i], 'prev', 'y');
+                // fnDirection(breakPoints[i], 'next', 'y');
+            }
+
+            // breakPoints = breakPoints.concat(linePoints).sort(function(a, b) {
+            //     return a.index - b.index;
+            // });
+
+            // for (var i = breakPoints.length - 1, last = i; i >= 0; i--) {
+            //     // 这里注意逆序
+            //     var p = breakPoints[i];
+            //     var next = i === last ? breakPoints[0] : breakPoints[i + 1];
+            //     var prev = i === 0 ? breakPoints[last] : breakPoints[i - 1];
+
+            //     if (p.x === 750 && p.y === 5080) {
+            //         debugger;
+            //     }
+
+            //     // 相近点
+            //     if (p.next === next || p.next.next === next) {
+
+            //         if (p.linePoint) {
+            //             breakPoints.splice(i, 1);
+            //             breakPoints[i] = p;
+            //         }
+            //         else {
+            //             breakPoints.splice(i, 1);
+            //         }
+
+            //         last--;
+            //         continue;
+            //     }
+            // }
+
+
+            // for (var i = 0, l = breakPoints.length, last = l - 1; i < l; i++) {
+            //     var p = breakPoints[i];
+            //     var next = i === last ? breakPoints[0] : breakPoints[i + 1];
+            //     var prev = i === 0 ? breakPoints[last] : breakPoints[i - 1];
+
+            //     var range = i === last  ? contourSize - p.index + next.index : next.index - p.index;
+            //     console.log(range);
+            //     if (p.right != 1 && Math.abs(p.x - p.next.x) <= 2 && range > 30) {
+            //         p.right = 1;
+            //     }
+            //     if (p.right != 1 && Math.abs(p.y - p.next.y) <= 2 && range > 30) {
+            //         p.right = 1;
+            //     }
+            // }
+
+            return breakPoints;
+        }
+
         /**
          * 查找轮廓中的关键点
          *
@@ -341,106 +456,106 @@ define(
                 }
             });
 
-            var thetaMarkCount = THETA_MARK_COUNT * 2 * r;
-            var halfThetaMarkCount = 0.5 * thetaMarkCount;
+            breakPoints = findLinePoints(contour, breakPoints, r);
 
-            contour.forEach(function (p) {
-                if (p.tangencyMark && !p.visited){
-                    j = 0;
-                    left = p;
-                    right = p;
-                    var leftMark = [0, 0, 0]; // 左侧标记数组，第一个为0的个数，第二个为-1的个数，第三个为1的个数
-                    var rightMark = [0, 0, 0];
-                    while (j++ < r) {
-                        left = left.prev;
-                        right = right.next;
+            // var thetaMarkCount = THETA_MARK_COUNT * 2 * r;
+            // var halfThetaMarkCount = 0.5 * thetaMarkCount;
 
-                        var thetaL = computeTheta(left, r, j);
-                        var thetaR = computeTheta(right, j, r);
+            // contour.forEach(function (p) {
+            //     if (p.tangencyMark && !p.visited){
+            //         j = 0;
+            //         left = p;
+            //         right = p;
+            //         var leftMark = [0, 0, 0]; // 左侧标记数组，第一个为0的个数，第二个为-1的个数，第三个为1的个数
+            //         var rightMark = [0, 0, 0];
+            //         while (j++ < r) {
+            //             left = left.prev;
+            //             right = right.next;
+
+            //             var thetaL = computeTheta(left, r, j);
+            //             var thetaR = computeTheta(right, j, r);
 
 
 
-                        if (Math.abs(thetaL) <= THETA_TANGENCY) {
-                            leftMark[0]++;
-                        }
-                        else if (thetaL < THETA_TANGENCY) {
-                            leftMark[1]++;
-                        }
-                        else if (thetaL > THETA_TANGENCY) {
-                            leftMark[1]++;
-                        }
+            //             if (Math.abs(thetaL) <= THETA_TANGENCY) {
+            //                 leftMark[0]++;
+            //             }
+            //             else if (thetaL < THETA_TANGENCY) {
+            //                 leftMark[1]++;
+            //             }
+            //             else if (thetaL > THETA_TANGENCY) {
+            //                 leftMark[1]++;
+            //             }
 
-                        if (Math.abs(thetaR) <= THETA_TANGENCY) {
-                            rightMark[0]++;
-                        }
-                        else if (thetaR < THETA_TANGENCY) {
-                            rightMark[1]++;
-                        }
-                        else if (thetaR > THETA_TANGENCY) {
-                            rightMark[1]++;
-                        }
+            //             if (Math.abs(thetaR) <= THETA_TANGENCY) {
+            //                 rightMark[0]++;
+            //             }
+            //             else if (thetaR < THETA_TANGENCY) {
+            //                 rightMark[1]++;
+            //             }
+            //             else if (thetaR > THETA_TANGENCY) {
+            //                 rightMark[1]++;
+            //             }
 
-                    }
+            //         }
 
-                    // 检查两直线夹角比较小的情况
-                    if (
-                        leftMark[0] + rightMark[0] >= halfThetaMarkCount
-                    ) {
+            //         // 检查两直线夹角比较小的情况
+            //         if (
+            //             leftMark[0] + rightMark[0] >= halfThetaMarkCount
+            //         ) {
 
-                        j = 0;
-                        var left = p;
-                        var right = p;
+            //             j = 0;
+            //             var left = p;
+            //             var right = p;
 
-                        var max = p.absTheta;
-                        while (j++ < r) {
-                            left = left.prev;
-                            right = right.next;
+            //             var max = p.absTheta;
+            //             while (j++ < r) {
+            //                 left = left.prev;
+            //                 right = right.next;
 
-                            if (left.absTheta > max) {
-                                max = left.absTheta;
-                            }
+            //                 if (left.absTheta > max) {
+            //                     max = left.absTheta;
+            //                 }
 
-                            if (right.absTheta > max) {
-                                max = right.absTheta;
-                            }
-                        }
+            //                 if (right.absTheta > max) {
+            //                     max = right.absTheta;
+            //                 }
+            //             }
 
-                        if (max === p.absTheta) {
-                            p.inflexion = true;
-                            breakPoints.push(p);
-                            markVisited(p, r);
-                        }
-                    }
+            //             if (max === p.absTheta) {
+            //                 p.inflexion = true;
+            //                 breakPoints.push(p);
+            //                 markVisited(p, r);
+            //             }
+            //         }
 
-                    // 检测直线曲线相切点
-                    else if (
-                        leftMark[2] + rightMark[0] >= thetaMarkCount
-                        || leftMark[0] + rightMark[2] >= thetaMarkCount
-                        || leftMark[1] + rightMark[0] >= thetaMarkCount
-                        || leftMark[0] + rightMark[1] >= thetaMarkCount
-                    ) {
+            //         // 检测直线曲线相切点
+            //         else if (
+            //             leftMark[2] + rightMark[0] >= thetaMarkCount
+            //             || leftMark[0] + rightMark[2] >= thetaMarkCount
+            //             || leftMark[1] + rightMark[0] >= thetaMarkCount
+            //             || leftMark[0] + rightMark[1] >= thetaMarkCount
+            //         ) {
 
-                        p.inflexion = true;
-                        breakPoints.push(p);
-                        markVisited(p, r);
-                    }
-                    // 检查曲线相切点
-                    else if (
-                        leftMark[1] + rightMark[2] >= thetaMarkCount
-                        || leftMark[2] + rightMark[1] >= thetaMarkCount
-                    ) {
-                        p.inflexion = true;
-                        breakPoints.push(p);
-                        markVisited(p, r);
-                    }
-                }
-            });
+            //             p.inflexion = true;
+            //             breakPoints.push(p);
+            //             markVisited(p, r);
+            //         }
+            //         // 检查曲线相切点
+            //         else if (
+            //             leftMark[1] + rightMark[2] >= thetaMarkCount
+            //             || leftMark[2] + rightMark[1] >= thetaMarkCount
+            //         ) {
+            //             p.inflexion = true;
+            //             breakPoints.push(p);
+            //             markVisited(p, r);
+            //         }
+            //     }
+            // });
 
             breakPoints.sort(function (a, b) {
                 return a.index - b.index;
             });
-
-            //breakPoints = filterBreakPoint(contour, breakPoints, r);
 
             return breakPoints;
         }
