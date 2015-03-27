@@ -90,6 +90,19 @@ define(
             var contours = [];
             var contour;
 
+            // 填充白框
+            for (y = 0; y < height; y ++) {
+                line = y * width;
+                data[line] = 0;
+                data[line + width - 1] = 0;
+            }
+
+            line = (height - 1) * width;
+            for (x = 0; x < width; x++) {
+                data[x] = 0;
+                data[line + x] = 0;
+            }
+
             // 查找外轮廓坐标
             for (y = 0; y < height; y ++) {
                 line = y * width;

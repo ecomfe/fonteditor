@@ -252,6 +252,17 @@ define(
                 }).show(program.setting.get('editor'));
             },
 
+            'import-pic': function () {
+                var SettingEditor = settingSupport['import-pic'];
+                if (program.editor.isVisible()) {
+                    !new SettingEditor({
+                        onChange: function (setting) {
+                            setting.contours && program.editor.addContours(setting.contours);
+                        }
+                    }).show();
+                }
+            },
+
             'setting-import-and-export': function () {
                 var SettingEditor = settingSupport.ie;
                 !new SettingEditor({

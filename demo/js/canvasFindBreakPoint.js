@@ -16,10 +16,13 @@ define(
         var ctx = null;
         var canvas = null;
         var curImage = null;
-        var thresholdGray = null;
-        var thresholdAlpha = null;
 
-
+        function getOptions() {
+            return {
+                threshold: $('#threshold-fn').val() ? $('#threshold-fn').val() : +$('#threshold-gray').val(),
+                reverse: !!$('#threshold-reverse').get(0).checked
+            }
+        }
 
         function onUpFileChange(e) {
             var file = e.target.files[0];
@@ -28,7 +31,7 @@ define(
 
                 var image = curImage = new Image();
                 image.onload = function () {
-                    getContours(image, +thresholdGray.value, +thresholdAlpha.value);
+                    getContours(image);
                 };
 
                 image.src = e.target.result;
@@ -41,24 +44,31 @@ define(
             reader.readAsDataURL(file);
         }
 
-        function getContours(image, gray, alpha) {
+        function getContours(image) {
             ctx.clearRect(0,0, canvas.width, canvas.height);
             var width = image.width;
             var height = image.height;
             canvas.width = image.width;
             canvas.height = image.height;
+
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
-            var result = image2Values(imgData, gray, alpha);
+            var result = image2Values(imgData, getOptions());
 
-            var putData = new Uint8ClampedArray(imgData.data.buffer);
+            var putData = imgData.data;
             for (var y = 0; y < height; y ++) {
                 var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
                     if (result.data[offset]) {
-                        putData[offset * 4] = 240;
-                        putData[offset * 4 + 1] = 248;
+                        putData[offset * 4] = 208;
+                        putData[offset * 4 + 1] = 247;
+                        putData[offset * 4 + 2] = 113;
+                        putData[offset * 4 + 3] = 255;
+                    }
+                    else {
+                        putData[offset * 4] = 255;
+                        putData[offset * 4 + 1] = 255;
                         putData[offset * 4 + 2] = 255;
                         putData[offset * 4 + 3] = 255;
                     }
@@ -70,9 +80,9 @@ define(
             contours.forEach(function (contour) {
                 contour.forEach(function (p) {
                     var offset = p.y * width + p.x;
-                    putData[offset * 4] = 2;
-                    putData[offset * 4 + 1] = 242;
-                    putData[offset * 4 + 2] = 32;
+                    putData[offset * 4] = 255;
+                    putData[offset * 4 + 1] = 0;
+                    putData[offset * 4 + 2] = 0;
                     putData[offset * 4 + 3] = 255;
                 });
             });
@@ -111,12 +121,14 @@ define(
                     ctx.fillStyle = 'blue';
                 }
 
-                ctx.fillRect(p.x, p.y, p.right == 1 ? 4 : 2, p.right == 1 ? 4 : 2);
+                ctx.fillRect(p.x, p.y, p.right == 1 ? 6 : 3, p.right == 1 ? 6 : 3);
             });
 
         }
 
-
+        function refresh() {
+            curImage && getContours(curImage, getOptions());
+        }
 
         var entry = {
 
@@ -128,16 +140,19 @@ define(
                 document.getElementById('upload-file').addEventListener('change', onUpFileChange);
                 canvas = document.getElementById("canvas");
                 ctx = canvas.getContext("2d");
-                thresholdGray = document.getElementById('threshold-gray');
-                thresholdAlpha = document.getElementById('threshold-alpha');
 
-                thresholdGray.onchange = thresholdAlpha.onchange = function () {
-                    curImage && getContours(curImage, +thresholdGray.value, +thresholdAlpha.value);
-                }
+                $('#threshold-gray').on('change', function () {
+                    $('#threshold-fn').val('');
+                    refresh();
+                });
+
+                $('#threshold-fn').on('change', refresh);
+                $('#threshold-reverse').on('change', refresh);
 
                 var img = new Image();
                 img.onload = function () {
-                    getContours(curImage = img, +thresholdGray.value, +thresholdAlpha.value);
+                    curImage = img;
+                    refresh();
                 }
                 img.src = '../test/meng1.gif';
             }

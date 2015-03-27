@@ -8,6 +8,7 @@ define(
     function (require) {
 
         var grayImage = require('./grayImage');
+        var imageFilter = require('./imageFilter');
         var binarizeImage = require('./binarizeImage');
 
         /**
@@ -20,9 +21,11 @@ define(
          *
          * @param {number} threshold 截止阈值， 0~255
          */
-        function image2values(imageData, threshold) {
-            imageData = grayImage(imageData);
-            return binarizeImage(imageData, threshold);
+        function image2values(imageData, options) {
+            options = options || {};
+            imageData = grayImage(imageData, options.reverse);
+            //imageData = imageFilter(imageData);
+            return binarizeImage(imageData, options.threshold);
         }
 
         return image2values;

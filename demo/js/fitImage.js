@@ -84,10 +84,33 @@ define(
                 var image = new Image();
                 image.onload = function () {
                     ctx.clearRect(0,0, canvas.width, canvas.height);
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-                    ctx.drawImage(image, 0, 0, image.width, image.height);
-                    findImageContours(ctx.getImageData(0, 0, image.width, image.height));
+                    var width = image.width;
+                    var height = image.height;
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(image, 0, 0, width, height);
+                    var imgData = ctx.getImageData(0, 0, width, height);
+                    var result = image2Values(imgData, getOptions());
+
+                    var putData = imgData.data;
+                    for (var y = 0; y < height; y ++) {
+                        var line = width * y;
+                        for (var x = 0; x < width; x++) {
+                            var offset = line + x;
+                            if (result.data[offset]) {
+                                putData[offset * 4] = 208;
+                                putData[offset * 4 + 1] = 247;
+                                putData[offset * 4 + 2] = 113;
+                                putData[offset * 4 + 3] = 255;
+                            }
+                            else {
+                                putData[offset * 4] = 255;
+                                putData[offset * 4 + 1] = 255;
+                                putData[offset * 4 + 2] = 255;
+                                putData[offset * 4 + 3] = 255;
+                            }
+                        }
+                    }
                 };
 
                 image.src = e.target.result;

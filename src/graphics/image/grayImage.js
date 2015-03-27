@@ -11,9 +11,11 @@ define(
          * 对图像进行灰度化处理
          *
          * @param  {Object} imageData 图像数据
+         * @param  {boolean} reverse 是否翻转
+         *
          * @return {Object}           处理后的数据
          */
-        function grayImage(imageData) {
+        function grayImage(imageData, reverse) {
 
             var width = imageData.width;
             var height = imageData.height;
@@ -25,15 +27,17 @@ define(
                 line = y * width;
                 for (var x = 0; x < width; x++) {
                     var idx = (x + line) * 4;
-                    if (data[idx + 3] < 10) {
-                        newData[x + line] = 255;
+                    var gray = 255;
+                    if (data[idx + 3] < 25) {
+                        gray = 255;
                     }
                     else {
                         var r = data[idx + 0];
                         var g = data[idx + 1];
                         var b = data[idx + 2];
-                        newData[x + line] = Math.floor(0.299 * r + 0.587 * g + 0.114 * b);
+                        gray = Math.floor(0.299 * r + 0.587 * g + 0.114 * b);
                     }
+                    newData[x + line] = reverse ? 255 - gray : gray;
                 }
             }
 

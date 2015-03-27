@@ -236,7 +236,7 @@ define(
          * @return {boolean} 是否
          */
         GLYFEditor.prototype.isVisible = function () {
-            return this.main.get(0).style.display !== 'none';
+            return this.editor && this.main.get(0).style.display !== 'none';
         };
 
         /**
