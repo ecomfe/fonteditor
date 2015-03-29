@@ -10,6 +10,7 @@ define(
         var fitBezier = require('graphics/image/fitBezier');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
+        var reducePath = require('graphics/reducePath');
         var vector = require('graphics/vector');
 
 
@@ -136,7 +137,11 @@ define(
                 resultContour.splice(resultContour.length - 1, 1);
             }
 
-            return pathUtil.deInterpolate(resultContour);
+            return pathUtil.deInterpolate(reducePath(resultContour)).map(function (p) {
+                p.x = Math.floor(p.x);
+                p.y = Math.floor(p.y);
+                return p;
+            });
         }
 
         return fitContour;
