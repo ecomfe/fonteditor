@@ -2,51 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>canvas读取图片</title>
+    <title>canvas拟合图像</title>
     <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <script src="../dep/clipper.js"></script>
     <script src="../dep/hidpi-canvas.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/editor.css">
     <style>
-        body,
-        html {
+        body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
         }
 
-        #points, #points-break, #canvas {
+        #canvas {
             position: absolute;
-            left: 0;
-            top: 40px;
-            bottom: 0;
+            max-width: 50%;
         }
-        #points, #points-break {
-            width: 50%;
-        }
-
-        #points i,
-        #points-break i {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            background: #ddd;
-        }
-
-        #points-break i.break {
-            width: 2px;
-            height: 2px;
-            background: red;
-        }
-
-        #points-break i.inflection {
-            width: 1px;
-            height: 1px;
-            background: green;
-        }
-
 
         #render-view {
             margin-left: 50%;
@@ -57,12 +28,23 @@
     </style>
 </head>
 <body>
-    <input id="upload-file" type="file">
-    <div id="points" width="800" height="800"></div>
-    <div id="points-break" width="800" height="800"></div>
-    <canvas id="canvas" width="50%" height="100%"></canvas>
-    <div id="render-view" class="render-view glyf-editor" oncontextMenu="return false"></div>
+    <div>
+        <input id="upload-file" type="file">
+        灰度阈值：<input id="threshold-gray" type="range" min="0" max="255" value="200">
+        反转图像：<input id="threshold-reverse" type="checkbox">
+        二值算子：
+        <select id="threshold-fn">
+            <option value="">二值算子</option>
+            <option value="mean">基于灰度平均值的阈值</option>
+            <option value="minimum">基于谷底最小值的阈值</option>
+            <option value="intermodes">基于双峰平均值的阈值</option>
+            <option value="ostu">大津法</option>
+            <option value="isoData">ISODATA法</option>
+        </select>
+    </div>
 
+    <canvas id="canvas"></canvas>
+    <div id="render-view" class="render-view glyf-editor" oncontextMenu="return false"></div>
 <script>
     require.config({
         baseUrl: '../src',
@@ -70,7 +52,7 @@
             demo: '../demo/js',
         }
     });
-    define('jquery', $);
+    define('jquery', window.jQuery);
     define('ClipperLib', window.ClipperLib);
 </script>
 

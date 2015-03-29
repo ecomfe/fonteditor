@@ -44,6 +44,7 @@ define(
             return {
                 width: width,
                 height: height,
+                gray: true,
                 data: newData
             };
         }

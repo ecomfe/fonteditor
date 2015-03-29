@@ -257,7 +257,13 @@ define(
                 if (program.editor.isVisible()) {
                     !new SettingEditor({
                         onChange: function (setting) {
-                            setting.contours && program.editor.addContours(setting.contours);
+                            if (setting.contours) {
+                                program.editor.execCommand('addcontours', setting.contours, {
+                                    scale: 1,
+                                    flip: true,
+                                    selected: true
+                                });
+                            }
                         }
                     }).show();
                 }

@@ -18,8 +18,9 @@ define(
     function (require) {
 
         var makeLink = require('../pathUtil').makeLink;
-        var getCos = require('../vector').getCos;
-        var getDist = require('../vector').getDist;
+        var vector = require('../vector');
+        var getCos = vector.getCos;
+        var getDist = vector.getDist;
 
         var THETA_TANGENCY = 0.1; // 相切抑制
         var THETA_CORNER = 0.5; // 拐点抑制
@@ -27,34 +28,29 @@ define(
         var THETA_INFLEXION_RANGE = 0.05; // 切线点之间的距离抑制
 
 
-        function isSegmentLine(contour, start, end, isLast) {
+        function isSegmentLine(contour, start, end, isLast, scale) {
             var contourSize = contour.length;
             var mid;
-            var thetaDistance = 10; // 判断直线点距离
-
-            // 判断中间点距离
-            if (isLast) {
-                mid = contour[Math.floor(start.index + (contourSize - start.index + end.index) / 2) % contourSize];
-            }
-            else {
-                mid = contour[Math.floor((start.index + end.index) / 2)];
-            }
-
-            if (getDist(start, end, mid) > thetaDistance) {
-                return false;
-            }
+            var thetaDistance = scale; // 判断直线点距离
 
             // 随机选取 几个点进行直线判断
             var startIndex = start.index;
             var endIndex = end.index;
+
             if (isLast) {
                 startIndex = start.index;
                 endIndex = contourSize + end.index;
             }
 
+            mid = contour[Math.floor(startIndex / 2 + endIndex / 2) % contourSize];
+
+            if (getDist(start, end, mid) > thetaDistance) {
+                return false;
+            }
+
             // 距离比较长的话可以适当放大
-            if (endIndex - startIndex > 100) {
-                thetaDistance = 20;
+            if (endIndex - startIndex > 40) {
+                thetaDistance = 2 * scale;
             }
 
             var step = Math.floor(Math.max((endIndex - startIndex) / 10, 4));
@@ -148,7 +144,7 @@ define(
          * @param  {number} r           查找范围
          * @return {Array}             关键点
          */
-        function findLinePoints(contour, breakPoints, r) {
+        function findLinePoints(contour, breakPoints, r, scale) {
 
             // 根据角点查找竖直和水平线
             var linePoints = [];
@@ -160,11 +156,12 @@ define(
                 var next = isLast ? breakPoints[0] : breakPoints[i + 1];
 
                 var range = isLast ? contourSize - p.index + next.index : next.index - p.index;
+
                 if (range < r) {
                     p.right = 1;
                     next.left = 1;
                 }
-                else if (isSegmentLine(contour, p, next, isLast)){
+                else if(isSegmentLine(contour, p, next, isLast, scale)){
                     p.right = 1;
                     next.left = 1;
                 }
@@ -239,11 +236,12 @@ define(
          * @param  {Array} contour 轮廓点集合
          * @return {Array}         轮廓点集合
          */
-        function getBreakPoints(contour) {
+        function getBreakPoints(contour, scale) {
 
+            scale = scale || 1;
             contour = makeLink(contour);
 
-            var r = contour.length > 16 ? 12 : 4;
+            var r = contour.length > 16 ? 10 : 4;
             var j = 0;
 
             var contourSize = contour.length;
@@ -274,17 +272,22 @@ define(
                 else {
                     var step = Math.floor(contourSize / 4) + 1;
                 }
+
                 var startIndex = breakPoints[0] ? breakPoints[0].index : 0;
-                for (var i = 0; i < contourSize; i += step) {
+
+                for (var i = step; i < contourSize; i += step) {
                     breakPoints.push(contour[(startIndex + i) % contourSize]);
                 }
             }
 
+            breakPoints.sort(function (a, b) {
+                return a.index - b.index;
+            });
 
             // 查找直线点
-            breakPoints = findLinePoints(contour, breakPoints, r);
+            breakPoints = findLinePoints(contour, breakPoints, r, scale);
 
-            breakPoints = findTangencyPoints(contour, breakPoints, r);
+            breakPoints = findTangencyPoints(contour, breakPoints, r, scale);
 
 
             breakPoints.sort(function (a, b) {

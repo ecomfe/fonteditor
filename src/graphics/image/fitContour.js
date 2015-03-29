@@ -16,7 +16,7 @@ define(
         function fitContour(data, scale) {
             scale = scale || 1;
 
-            var breakPoints = findBreakPoints(data);
+            var breakPoints = findBreakPoints(data, scale);
             var resultContour = [];
             var isLast;
             var start;
@@ -59,10 +59,27 @@ define(
                             return  index === 0 || index === curvePointsLast || p.index % derive === 0;
                         });
                     }
-                    else {
+                    else if (curvePoints.length > 20) {
                         bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return  index === 0 || index === curvePointsLast || p.index % 5 === 0;
+                            return  index === 0 || index === curvePointsLast || p.index % 4 === 0;
                         });
+                    }
+                    else if (curvePoints.length > 10) {
+                        bezierCurvePoints = curvePoints.filter(function (p, index) {
+                            return  index === 0 || index === curvePointsLast || p.index % 3 === 0;
+                        });
+                    }
+                    else {
+
+                        end = curvePoints[curvePointsLast];
+                        resultContour.push({
+                            x: end.x,
+                            y: end.y,
+                            onCurve: true
+                        });
+
+                        tHat1 = null;
+                        continue;
                     }
 
                     if (start.tangency && tHat1Point) {
@@ -78,13 +95,21 @@ define(
                     var bezierCurve = fitBezier(bezierCurvePoints, scale, tHat1);
                     if (bezierCurve.length) {
                         bezierCurve.forEach(function (p) {
-                            resultContour.push({
-                                x: p.x,
-                                y: p.y,
-                                onCurve: p.onCurve
-                            });
+                            if (!isNaN(p.x) && !isNaN(p.y)) {
+                                resultContour.push({
+                                    x: p.x,
+                                    y: p.y,
+                                    onCurve: p.onCurve
+                                });
+                            }
                         });
-                        tHat1Point = bezierCurve[bezierCurve.length - 2];
+                        end = bezierCurve[bezierCurve.length - 2];
+                        if (!isNaN(end.x) && !isNaN(end.y)) {
+                            tHat1Point = end;
+                        }
+                        else {
+                            tHat1Point = null;
+                        }
                     }
                     else {
                         tHat1Point = null;
@@ -93,6 +118,14 @@ define(
                 else {
                     tHat1Point = start;
                 }
+            }
+
+            // 去除直线
+            if (resultContour.length <= 2) {
+                return null;
+            }
+            else if (resultContour.length <= 4 && vector.getDist(resultContour[0], resultContour[1], resultContour[2]) < scale) {
+                return null;
             }
 
             // 去除last

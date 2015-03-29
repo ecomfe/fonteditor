@@ -10,9 +10,7 @@
 define(
     function (require) {
 
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('graphics/pathAdjust');
-
+        var pathsUtil = require('graphics/pathsUtil');
 
 
         return {
@@ -130,24 +128,20 @@ define(
                 }
 
                 if (pos) {
-                    var bound = computeBoundingBox.computePath.apply(null,
-                        shapes.map(function (shape) {
-                            return shape.points;
-                        })
-                    );
+                    var paths = shapes.map(function (shape) {
+                        return shape.points;
+                    });
                     // 需要根据坐标原点以及缩放换算成鼠标位置移动
                     var origin = this.axis;
                     var scale = this.render.camera.scale;
                     var x = (pos.x - origin.x) / scale;
                     var y = (origin.y - pos.y) / scale;
 
-                    shapes.forEach(function (shape) {
-                        pathAdjust(shape.points, 1, 1, x - bound.x, y - bound.y - bound.height);
-                    });
+                    pathsUtil.move(paths, x, y);
                 }
 
 
-                this.setShapes(shapes);
+                this.addShapes(shapes);
                 this.setMode('shapes', shapes);
             },
 
@@ -155,10 +149,32 @@ define(
              * 增加shapes
              *
              * @param {Array} shapes 形状集合
+             * @param {boolean} selected 是否选中
              */
-            addshapes: function (shapes) {
-                this.setShapes(shapes);
-                this.fontLayer.refresh();
+            addshapes: function (shapes, selected) {
+                this.addShapes(shapes);
+                selected && this.setSelected(shapes);
+            },
+
+            /**
+             * 增加轮廓
+             *
+             * @param {Array} contours 轮廓集合
+             * @param {Object} options 选项
+             * @param {number} scale 缩放级别
+             * @param {boolean} selected 是否选中
+             */
+            addcontours: function (contours, options) {
+                options = options || {};
+
+                // 是否翻转图像
+                if (options.flip) {
+                    pathsUtil.mirror(contours, 1, -1);
+                }
+
+                var shapes = this.addContours(contours, options.scale);
+
+                options.selected && this.setSelected(shapes);
             }
         };
     }

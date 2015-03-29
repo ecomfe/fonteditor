@@ -511,7 +511,9 @@ define(
                         program.viewer.fire('paste');
                     }
                     else {
-                        program.editor.addContours(clip.glyf[0].contours);
+                        program.editor.execCommand('addcontours', clip.glyf[0].contours, {
+                            selected: true
+                        });
                     }
                 }
             })

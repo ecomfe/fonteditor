@@ -78,13 +78,15 @@ define(
             var contours = findContours(result);
 
             contours.forEach(function (contour) {
-                contour.forEach(function (p) {
+                var flag = contour.flag;
+                for (var i = 0, l = contour.length; i < l; i++) {
+                    var p = contour[i];
                     var offset = p.y * width + p.x;
-                    putData[offset * 4] = 255;
+                    putData[offset * 4] = flag ? 100 : 255;
                     putData[offset * 4 + 1] = 0;
                     putData[offset * 4 + 2] = 0;
                     putData[offset * 4 + 3] = 255;
-                });
+                }
             });
             ctx.putImageData(imgData, 0, 0);
 
@@ -97,7 +99,7 @@ define(
             contours.forEach(function (contour) {
 
                 contour = pathUtil.scale(contour, 10);
-                var points  = findBreakPoints(contour);
+                var points  = findBreakPoints(contour, 10);
 
                 if (points) {
                     points.forEach(function (p) {
@@ -154,7 +156,7 @@ define(
                     curImage = img;
                     refresh();
                 }
-                img.src = '../test/meng1.gif';
+                img.src = '../test/circle.bmp';
             }
         };
 

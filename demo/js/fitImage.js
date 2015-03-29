@@ -1,116 +1,40 @@
 /**
- * @file 拟合图像字形
+ * @file canvas读取图片
  * @author mengke01(kekee000@gmail.com)
  */
 
 define(
     function (require) {
 
-        var fitContour = require('graphics/image/fitContour');
+        var lang = require('common/lang');
         var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('graphics/pathAdjust');
-        var drawPath = require('render/util/drawPath');
-        var data = require('demo/../data/image-contours2');
+        var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-
+        var pathsUtil = require('graphics/pathsUtil');
+        var fitImageContours = require('graphics/image/fitImageContours');
 
         var editor = require('editor/main');
-        var canvas = null;
+
         var ctx = null;
+        var canvas = null;
         var curImage = null;
 
-
-
-
-        function fitGlyf(data) {
-            var html = '';
-            var contours = [];
-
-            data.forEach(function(contour) {
-                contour.forEach(function (p) {
-                    html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
-                });
-
-                contour = pathUtil.scale(contour, 10);
-                var result = pathUtil.scale(fitContour(contour, 10), 0.1);
-                contours.push(result);
-                contour = pathUtil.scale(contour, 0.1);
-            });
-
-            $('#points').html(html);
-
-            html = '';
-            ctx.beginPath();
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'pink';
-            contours.forEach(function (contour) {
-                for (var i = 0, l = contour.length; i < l; i++) {
-                    html += '<i style="left:'+contour[i].x+'px;top:'+contour[i].y+'px;" class="break"></i>';
-                }
-                drawPath(ctx, contour);
-            });
-
-            ctx.stroke();
-
-            $('#points-break').html(html);
-
-            var bound = computeBoundingBox.computePath.apply(null, contours);
-
-            window.editor.setFont({
-                contours: contours.map(function (contour) {
-                    pathAdjust(contour, 1, -1);
-                    pathAdjust(contour, 1, 1, 0, bound.height);
-                    return contour;
-                })
-            });
+        function getOptions() {
+            return {
+                threshold: $('#threshold-fn').val() ? $('#threshold-fn').val() : +$('#threshold-gray').val(),
+                reverse: !!$('#threshold-reverse').get(0).checked
+            }
         }
-
-        function findImageContours(imgData) {
-            var result = image2Values(imgData);
-            var contours = findContours(result);
-
-            fitGlyf(contours);
-        }
-
-
 
         function onUpFileChange(e) {
             var file = e.target.files[0];
             var reader = new FileReader();
             reader.onload = function(e) {
 
-                var image = new Image();
+                var image = curImage = new Image();
                 image.onload = function () {
-                    ctx.clearRect(0,0, canvas.width, canvas.height);
-                    var width = image.width;
-                    var height = image.height;
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(image, 0, 0, width, height);
-                    var imgData = ctx.getImageData(0, 0, width, height);
-                    var result = image2Values(imgData, getOptions());
-
-                    var putData = imgData.data;
-                    for (var y = 0; y < height; y ++) {
-                        var line = width * y;
-                        for (var x = 0; x < width; x++) {
-                            var offset = line + x;
-                            if (result.data[offset]) {
-                                putData[offset * 4] = 208;
-                                putData[offset * 4 + 1] = 247;
-                                putData[offset * 4 + 2] = 113;
-                                putData[offset * 4 + 3] = 255;
-                            }
-                            else {
-                                putData[offset * 4] = 255;
-                                putData[offset * 4 + 1] = 255;
-                                putData[offset * 4 + 2] = 255;
-                                putData[offset * 4 + 3] = 255;
-                            }
-                        }
-                    }
+                    getContours(image);
                 };
 
                 image.src = e.target.result;
@@ -123,6 +47,98 @@ define(
             reader.readAsDataURL(file);
         }
 
+        function getContours(image) {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            var width = image.width;
+            var height = image.height;
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            ctx.drawImage(image, 0, 0, width, height);
+            var imgData = ctx.getImageData(0, 0, width, height);
+            var result = image2Values(imgData, getOptions());
+
+            var putData = imgData.data;
+            for (var y = 0; y < height; y ++) {
+                var line = width * y;
+                for (var x = 0; x < width; x++) {
+                    var offset = line + x;
+                    if (result.data[offset]) {
+                        putData[offset * 4] = 208;
+                        putData[offset * 4 + 1] = 247;
+                        putData[offset * 4 + 2] = 113;
+                        putData[offset * 4 + 3] = 255;
+                    }
+                    else {
+                        putData[offset * 4] = 255;
+                        putData[offset * 4 + 1] = 255;
+                        putData[offset * 4 + 2] = 255;
+                        putData[offset * 4 + 3] = 255;
+                    }
+                }
+            }
+
+            var contours = findContours(lang.clone(result));
+
+            contours.forEach(function (contour) {
+                contour.forEach(function (p) {
+                    var offset = p.y * width + p.x;
+                    putData[offset * 4] = 255;
+                    putData[offset * 4 + 1] = 0;
+                    putData[offset * 4 + 2] = 0;
+                    putData[offset * 4 + 3] = 255;
+                });
+            });
+            ctx.putImageData(imgData, 0, 0);
+
+            getBreakPoint(contours);
+
+            var contours = fitImageContours(result, getOptions());
+
+            window.editor.setFont({
+                contours: pathsUtil.mirror(contours, 1, -1)
+            });
+        }
+
+
+        function getBreakPoint(contours) {
+            var breakPoints = [];
+            contours.forEach(function (contour) {
+
+                contour = pathUtil.scale(contour, 10);
+                var points  = findBreakPoints(contour, 10);
+
+                if (points) {
+                    points.forEach(function (p) {
+                        breakPoints.push(p);
+                    });
+                }
+
+                contour = pathUtil.scale(contour, 0.1);
+            });
+
+
+
+            breakPoints.forEach(function (p) {
+
+                ctx.beginPath();
+
+                if (p.breakPoint) {
+                    ctx.fillStyle = 'red';
+                }
+                else if (p.inflexion) {
+                    ctx.fillStyle = 'blue';
+                }
+
+                ctx.fillRect(p.x, p.y, p.right == 1 ? 6 : 3, p.right == 1 ? 6 : 3);
+            });
+
+        }
+
+        function refresh() {
+            curImage && getContours(curImage, getOptions());
+        }
+
         var entry = {
 
             /**
@@ -133,18 +149,24 @@ define(
                 window.editor  = editor.create($('#render-view').get(0));
 
                 document.getElementById('upload-file').addEventListener('change', onUpFileChange);
-                canvas = $('#canvas').get(0);
-                ctx = canvas.getContext('2d');
+                canvas = document.getElementById("canvas");
+                ctx = canvas.getContext("2d");
 
-                if (data) {
-                    data.forEach(function(contour) {
-                        contour.splice(contour.length - 1, 1);
-                    });
+                $('#threshold-gray').on('change', function () {
+                    $('#threshold-fn').val('');
+                    refresh();
+                });
 
-                    fitGlyf(data);
+                $('#threshold-fn').on('change', refresh);
+                $('#threshold-reverse').on('change', refresh);
+
+                var img = new Image();
+                img.onload = function () {
+                    curImage = img;
+                    refresh();
                 }
+                img.src = '../test/meng1.gif';
             }
-
         };
 
         entry.init();

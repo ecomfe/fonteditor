@@ -15,7 +15,12 @@ define(
 
         function bindClick(components) {
             var me = this;
+
             document.body.addEventListener('click', function (e) {
+
+                if (!me.listening) {
+                    return;
+                }
 
                 // 监听查看器
                 if (components.viewer === e.target || components.viewer.contains(e.target)) {

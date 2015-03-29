@@ -8,13 +8,10 @@ define(
     function (require) {
         var program = require('../widget/program');
 
-
-        var pathUtil = require('graphics/pathUtil');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathAdjust = require('graphics/pathAdjust');
         var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
-        var fitContour = require('graphics/image/fitContour');
+        var fitImageContours = require('graphics/image/fitImageContours');
+
 
         function getOptions() {
             return {
@@ -26,8 +23,9 @@ define(
 
         function refreshImage(image) {
             var canvas = $('#import-pic-canvas').get(0);
+            canvas.style.visiblity = 'hidden';
+
             var ctx = canvas.getContext('2d');
-            ctx.clearRect(0,0, canvas.width, canvas.height);
             var width = image.width;
             var height = image.height;
             canvas.width = width;
@@ -68,41 +66,22 @@ define(
             });
 
             ctx.putImageData(imgData, 0, 0);
+
+            canvas.style.visiblity = 'visible';
         }
 
-        function fitImageContour(image) {
-            var canvas = document.getElementById('import-pic-canvas');
+        function fitImage(image) {
+            var canvas = $('#import-pic-canvas').get(0);
+            canvas.style.visiblity = 'hidden';
             var ctx = canvas.getContext('2d');
-            ctx.clearRect(0,0, canvas.width, canvas.height);
             var width = image.width;
             var height = image.height;
             canvas.width = width;
             canvas.height = height;
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
-            var result = image2Values(imgData, getOptions());
 
-            if (result && result.data.length > 20) {
-                var contoursPoints = findContours(result);
-                var contours = [];
-                contoursPoints.forEach(function(points) {
-                    points = pathUtil.scale(points, 10);
-                    contours.push(pathUtil.scale(fitContour(points, 10), 0.1));
-                });
-
-                var bound = computeBoundingBox.computePath.apply(null, contours);
-                var y = bound.y;
-                var h = bound.height;
-                contours.forEach(function (contour) {
-                    pathAdjust(contour, 1, -1, 0, -y);
-                    pathAdjust(contour, 1, 1, 0, y + h);
-                    contour.reverse();
-                });
-
-                return contours;
-            }
-
-            return false;
+            return fitImageContours(imgData, getOptions());
         }
 
 
@@ -128,7 +107,7 @@ define(
             +   '<div class="form-group">'
             +       '<div class="input-group input-group-sm">'
             +         '<span class="input-group-addon">灰度阈值</span>'
-            +         '<span class="form-control"><input id="import-pic-threshold-gray" type="range" min="0" max="255" value="200"></span>'
+            +         '<span class="form-control"><input id="import-pic-threshold-gray" type="range" min="0" max="255" value="200" step="1"></span>'
             +       '</div>'
             +   '</div>'
 
@@ -209,12 +188,12 @@ define(
                 $('#import-pic-threshold-reverse').off('change');
                 $('#import-pic-threshold-gray').off('change');
                 $('#import-pic-threshold-fn').off('change');
-                 $('#import-pic-fitpanel').off('click');
+                $('#import-pic-fitpanel').off('click');
                 $('#import-pic-canvas').css('visiblity', 'hidden');
 
                 if (program.data.importedImage) {
 
-                    var contours = fitImageContour(program.data.importedImage);
+                    var contours = fitImage(program.data.importedImage);
                     program.data.importedImage = null;
 
                     if (!contours || !contours.length) {

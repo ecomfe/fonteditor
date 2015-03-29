@@ -23,7 +23,9 @@ define(
          */
         function image2values(imageData, options) {
             options = options || {};
+
             imageData = grayImage(imageData, options.reverse);
+
             //imageData = imageFilter(imageData);
             return binarizeImage(imageData, options.threshold);
         }

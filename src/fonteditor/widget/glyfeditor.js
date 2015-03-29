@@ -168,7 +168,7 @@ define(
          *
          * @param {string} command 命令名
          */
-        function execCommand(command) {
+        function execCommand() {
             if (this.editor) {
                 this.editor.execCommand.apply(this.editor, arguments);
             }
@@ -290,6 +290,13 @@ define(
             return this.editor ? this.editor.options : editorOptions.editor;
         };
 
+
+        /**
+         * 获取设置项目
+         * @return {Object} 设置项目
+         */
+        GLYFEditor.prototype.execCommand = execCommand;
+
         /**
          * 注销
          */
@@ -300,7 +307,7 @@ define(
 
         // 导出editor的函数
         [
-            'reset', 'setFont', 'getFont', 'addContours',
+            'reset', 'setFont', 'getFont',
             'isChanged', 'setChanged', 'setAxis', 'adjustFont'
         ].forEach(function (fn) {
             GLYFEditor.prototype[fn] = function () {

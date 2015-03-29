@@ -62,6 +62,7 @@ define(
                 }
             }
 
+            imageData.binarize = true;
             return imageData;
         }
 

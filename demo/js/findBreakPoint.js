@@ -35,7 +35,7 @@ define(
 
                 data.forEach(function (contour) {
                     contour = pathUtil.scale(contour, 10);
-                    var points  = findBreakPoints(contour);
+                    var points  = findBreakPoints(contour, 10);
                     if (points) {
                         points.forEach(function (p) {
                             breakPoints.push(p);
