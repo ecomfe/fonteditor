@@ -94,7 +94,7 @@ define(
          * @return {number}
          */
         function getPointHash(p) {
-            return Math.floor(7 * Math.floor(p.x * 100) + 31 * Math.floor(p.y * 100));
+            return Math.floor(7 * Math.floor(p.x * 11) + 31 * Math.floor(p.y * 131));
         }
 
         return {

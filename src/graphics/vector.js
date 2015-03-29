@@ -37,8 +37,80 @@ define(
             return (x1 * x2 + y1 * y2) / Math.sqrt(x1 * x1 + y1 * y1) / Math.sqrt(x2 * x2 + y2 * y2);
         }
 
+        /**
+         * 求点到向量的距离平方
+         *
+         * @param  {Object} p0 p0
+         * @param  {Object} p1 p1
+         * @param  {Object} p  p
+         * @return {number} 距离
+         */
+        function getDistPow(p0, p1, p) {
+
+            var A = p1.y - p0.y;
+            var B = p0.x - p1.x;
+
+            if (A === 0 && B === 0) {
+                return Math.pow(p.x - p0.x, 2) + Math.pow(p.y - p0.y, 2);
+            }
+
+            if (A === 0) {
+                return Math.pow(p.y - p0.y, 2);
+            }
+
+            if (B === 0) {
+                return Math.pow(p.x - p0.x, 2);
+            }
+
+            var C = p1.x * p0.y - p0.x * p1.y;
+
+            return Math.pow(A * p.x + B * p.y + C, 2) / (A * A + B * B);
+        }
+
+
+        /**
+         * 求点到向量的距离
+         *
+         * @param  {Object} p0 p0
+         * @param  {Object} p1 p1
+         * @param  {Object} p  p
+         * @return {number} 距离
+         */
+        function getDist(p0, p1, p) {
+            return Math.sqrt(getDistPow(p0, p1, p));
+        }
+
+        /**
+         * 求两点距离
+         *
+         * @param  {Object} p0 p0
+         * @param  {Object} p1 p1
+         * @return {number} 距离
+         */
+        function dist(p0, p1) {
+            return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
+        }
+
+
+        /**
+         * 将点转换成余弦值
+         *
+         * @param  {Object} p 点
+         * @return {Object} 余弦值
+         */
+        function normalize(p) {
+            var factor = 1 / Math.sqrt(p.x * p.x + p.y * p.y);
+            p.x = p.x * factor;
+            p.y = p.y * factor;
+            return p;
+        }
+
         return {
-            getCos: getCos
+            getCos: getCos,
+            getDist: getDist,
+            getDistPow: getDistPow,
+            normalize: normalize,
+            dist: dist
         };
     }
 );

@@ -39,7 +39,7 @@ define(
             undo: function () {
                 var shapes = this.history.back();
                 this.fontLayer.shapes.length = 0;
-                this.setShapes(shapes);
+                this.addShapes(shapes);
                 this.setMode();
             },
 
@@ -49,7 +49,7 @@ define(
             redo: function () {
                 var shapes = this.history.forward();
                 this.fontLayer.shapes.length = 0;
-                this.setShapes(shapes);
+                this.addShapes(shapes);
                 this.setMode();
             },
 

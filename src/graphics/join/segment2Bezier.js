@@ -46,7 +46,10 @@ define(
                         break;
                     }
                 }
-                path = [].concat(path.slice(startIndex)).concat(path.slice(0, startIndex));
+
+                if (startIndex > 0) {
+                    path = [].concat(path.slice(startIndex)).concat(path.slice(0, startIndex));
+                }
 
                 // 移除插值点
                 for (var j = 0; j < path.length; j++) {

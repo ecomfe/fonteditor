@@ -95,6 +95,8 @@ define(
             if (3 === e.which) {
                 this.fire('rightdown', event);
             }
+
+            document.addEventListener('mouseup', this.handlers.mouseup, false);
         }
 
         /**
@@ -162,6 +164,7 @@ define(
         function mouseup(e) {
 
 
+
             if (false === this.events.mouseup) {
                 return;
             }
@@ -191,6 +194,8 @@ define(
             }
 
             this.isDown = false;
+
+            document.removeEventListener('mouseup', this.handlers.mouseup);
         }
 
         /**
@@ -305,7 +310,6 @@ define(
                     target.addEventListener('dblclick', this.handlers.dblclick, false);
                     target.addEventListener('mouseover', this.handlers.mouseover, false);
                     target.addEventListener('mouseout', this.handlers.mouseout, false);
-                    document.addEventListener('mouseup', this.handlers.mouseup, false);
                 }
 
                 return this;

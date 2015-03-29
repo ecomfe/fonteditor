@@ -15,7 +15,6 @@ define(
         var Clipper = require('./join/Clipper');
         var Relation = require('./join/relation');
         var pathUtil = require('./pathUtil');
-        var reducePath = require('./reducePath');
         var interpolate = pathUtil.interpolate;
         var deInterpolate = pathUtil.deInterpolate;
 
@@ -68,23 +67,27 @@ define(
             }
 
             var clipper = new Clipper();
-            for (i = 0, l = paths.length - 1; i < l; i++) {
-                clipper.addSubject(paths[i]);
+            clipper.addSubject(paths[0]);
+
+            for (i = 1, l = paths.length; i < l; i++) {
+                // 非相交可以不需要clip路径，相交则把最后一个路径作为相交路径
+                if (relation === Relation.intersect || relation === Relation.tangency) {
+                    clipper.addClip(paths[i]);
+                }
+                else {
+                    clipper.addSubject(paths[i]);
+                }
             }
-            // 非相交可以不需要clip路径，相交则把最后一个路径作为相交路径
-            if (relation === Relation.intersect) {
-                clipper.addClip(paths[i]);
-            }
-            else {
-                clipper.addSubject(paths[i]);
-            }
+
 
             paths = clipper.execute(relation);
-            paths = segment2Bezier(paths, bezierHash);
+            if (Object.keys(bezierHash).length) {
+                paths = segment2Bezier(paths, bezierHash);
+            }
 
-            return paths.map(function (path) {
-                // 有些情况下分割节点处会出现线段重叠的情况，这里需要去除重叠线段
-                path = reducePath(path);
+            return paths.filter(function (path) {
+                return path.length > 2;
+            }).map(function (path) {
                 return deInterpolate(path);
             });
         }

@@ -5,10 +5,11 @@
 
 define(
     function (require) {
-
+        var fitBezier = require('graphics/image/fitBezier');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contour4');
+        var data = require('demo/../data/image-contours2');
+        var drawPath = require('render/util/drawPath');
 
         var entry = {
 
@@ -16,34 +17,54 @@ define(
              * 初始化
              */
             init: function () {
-
-                data = pathUtil.scale(data, 10);
-                var breakPoints = findBreakPoints(data);
-
-                data = pathUtil.scale(data, 0.1);
-
+                var breakPoints = [];
                 var html = '';
-                data.forEach(function(p) {
-                    html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
+
+                data.forEach(function(c) {
+                    c.splice(c.length - 1, 1);
                 });
 
-                var ctx = $('#canvas').get(0).getContext('2d');
-                ctx.strokeColor = 'red';
 
-                for (var i = 0, l = breakPoints.length; i < l; i++) {
-                    var start = breakPoints[i];
-                    var end = breakPoints[i < l - 1 ? i + 1 : 0];
-                    if (start.right == 1) {
-                        ctx.moveTo(start.x, start.y);
-                        ctx.lineTo(end.x, end.y);
-                    }
-
-                    html += '<i style="left:'+start.x+'px;top:'+start.y+'px;" class="break"></i>';
-                }
-
-                ctx.stroke();
+                data.forEach(function (contour) {
+                    contour.forEach(function(p) {
+                        html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
+                    });
+                });
 
                 $('#points').html(html);
+
+                data.forEach(function (contour) {
+                    contour = pathUtil.scale(contour, 10);
+                    var points  = findBreakPoints(contour, 10);
+                    if (points) {
+                        points.forEach(function (p) {
+                            breakPoints.push(p);
+                        });
+                    }
+                    contour = pathUtil.scale(contour, 0.1);
+                });
+
+                breakPoints.forEach(function (p) {
+                    console.log(p.right);
+                });
+
+                html = '';
+                for (var i = 0, l = breakPoints.length; i < l; i++) {
+                    var c = "break";
+                    if (breakPoints[i].tangency) {
+                        c = 'tangency';
+                    }
+                    else if(breakPoints[i].inflexion) {
+                        c = 'inflexion';
+                    }
+                    var width = '';
+                    if (breakPoints[i].right == 1) {
+                        width = 'width: 4px;height: 4px';
+                    }
+                    html += '<i style="left:'+breakPoints[i].x+'px;top:'+breakPoints[i].y+'px;'+width+'" class="'+c+'"></i>';
+                }
+
+                $('#points-break').html(html);
             }
         };
 

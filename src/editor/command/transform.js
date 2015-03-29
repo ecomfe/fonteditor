@@ -11,9 +11,7 @@
 define(
     function (require) {
 
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var pathRotate = require('graphics/pathRotate');
-        var pathAdjust = require('graphics/pathAdjust');
+        var pathsUtil = require('graphics/pathsUtil');
 
         /**
          * 旋转图形
@@ -26,18 +24,11 @@ define(
             if (!angle) {
                 return false;
             }
-
-            var points = shapes.map(function (shape) {
+            var paths = shapes.map(function (shape) {
                 return shape.points;
             });
-            var bound = computeBoundingBox.computePath.apply(null, points);
 
-            var cx = bound.x + (bound.width) / 2;
-            var cy = bound.y + (bound.height) / 2;
-
-            points.forEach(function (p) {
-                pathRotate(p, angle, cx, cy);
-            });
+            pathsUtil.rotate(paths, angle);
         }
 
         /**
@@ -48,31 +39,11 @@ define(
          * @param {number} yScale y翻转
          */
         function mirror(shapes, xScale, yScale) {
-            var points = shapes.map(function (shape) {
+            var paths = shapes.map(function (shape) {
                 return shape.points;
             });
-            var bound = computeBoundingBox.computePath.apply(null, points);
-            var x = bound.x;
-            var y = bound.y;
-            var w = bound.width;
-            var h = bound.height;
 
-            if (xScale === -1) {
-                points.forEach(function (p) {
-                    pathAdjust(p, -1, 1, -x, 0);
-                    pathAdjust(p, 1, 1, x + w, 0);
-                    p.reverse();
-                });
-
-            }
-
-            if (yScale === -1) {
-                points.forEach(function (p) {
-                    pathAdjust(p, 1, -1, 0, -y);
-                    pathAdjust(p, 1, 1, 0, y + h);
-                    p.reverse();
-                });
-            }
+            pathsUtil.mirror(paths, xScale, yScale);
         }
 
         var support = {

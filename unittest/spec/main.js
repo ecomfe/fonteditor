@@ -13,5 +13,8 @@ define(
 
         // ttf
         require('./ttf/reader-writer.spec');
+
+        // graphics
+        require('./graphics/vector.spec');
     }
 );

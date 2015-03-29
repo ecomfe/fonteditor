@@ -56,6 +56,9 @@ a:hover {
 .i-github:before {
   content: '\e01e';
 }
+.i-help:before {
+  content: '\e016';
+}
 .i-new:before {
   content: '\e019';
 }
@@ -156,6 +159,7 @@ a:hover {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  display: none;
 }
 .glyf-editor .marker-x,
 .glyf-editor .marker-y {
@@ -247,4 +251,5 @@ html {
   height: 100%;
   position: relative;
   -webkit-text-size-adjust: none;
+  display: block;
 }

@@ -89,14 +89,15 @@ define(
         }
 
         /**
-         * 设置编辑中的shapes
+         * 添加编辑中的shapes
          *
          * @param {Array} shapes 轮廓数组
+         * @param {number} scale 原始轮廓缩放级别，没有设置则按照camera的缩放级别来进行缩放
          * @return {this}
          */
-        function setShapes(shapes) {
+        function addShapes(shapes, scale) {
+            scale = scale || this.render.camera.scale;
             var origin = this.axis;
-            var scale = this.render.camera.scale;
             var fontLayer = this.fontLayer;
 
             // 建立id hash 防止重复
@@ -126,24 +127,27 @@ define(
          * 设置编辑中的轮廓
          *
          * @param {Array} contours 轮廓数组
+         * @param {number} scale 原始轮廓缩放级别
          * @return {this}
          */
-        function addContours(contours) {
+        function addContours(contours, scale) {
             if (!contours || contours.length === 0) {
                 return this;
             }
 
-            this.setShapes(contours.map(function (contour) {
+            var shapes = contours.map(function (contour) {
                 return {
                     id: guid('shape'),
                     type: 'path',
                     points: contour
                 };
-            }));
+            });
+
+            this.addShapes(shapes, scale);
 
             this.fire('change');
 
-            return this;
+            return shapes;
         }
 
         /**
@@ -288,7 +292,7 @@ define(
             this.getFont = getFont;
             this.adjustFont = adjustFont;
 
-            this.setShapes = setShapes;
+            this.addShapes = addShapes;
             this.getShapes = getShapes;
             this.addContours = addContours;
         };
