@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>canvas查找关键点</title>
+    <title>图像操作</title>
     <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <style>
-        body {
+        body,html {
             margin: 0;
             padding: 0;
+            height: 100%;
+        }
+
+        .left,.right {
+            position: absolute;
+            width: 50%;
+            top: 40px;
+            bottom: 0;
+            overflow: auto;
+        }
+
+        .right {
+            right: 0;
         }
 
     </style>
@@ -28,7 +41,8 @@
             <option value="isoData">ISODATA法</option>
         </select>
     </div>
-    <canvas id="canvas" width="800" height="800"></canvas>
+    <div class="left"><canvas id="canvas-src" width="800" height="800"></canvas></div>
+    <div class="right"><canvas id="canvas" width="800" height="800"></canvas></div>
 <script>
     require.config({
         baseUrl: '../src',

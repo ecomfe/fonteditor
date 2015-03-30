@@ -7,6 +7,7 @@
 define(
     function (require) {
 
+        var smoothContour = require('./contour/smooth');
 
         var ICV_SINGLE = 1;
         var ICV_CONNECTING_ABOVE = 2;
@@ -52,37 +53,6 @@ define(
 
 
             return newContour;
-        }
-
-
-        /**
-         * 对轮廓进行平滑处理
-         *
-         * @param  {Array} contour 轮廓集合
-         * @return {Array}         插值后轮廓集合
-         */
-        function smoothContour(contour, smooth) {
-            smooth = Math.floor(smooth / 2);
-            var div = smooth * 2 + 1;
-            for (var i = 0, l = contour.length; i < l; i++) {
-                var p = contour[i];
-                var xAvg = p.x;
-                var yAvg = p.y;
-                var index;
-                for (var j = 0; j < smooth; j++) {
-                    index = (i + l - j) % l;
-                    xAvg += contour[index].x;
-                    yAvg += contour[index].y;
-
-                    index = (i + l + j) % l;
-                    xAvg += contour[index].x;
-                    yAvg += contour[index].y;
-                }
-                p.x = Math.floor(xAvg / div);
-                p.y = Math.floor(yAvg / div);
-            }
-
-            return contour;
         }
 
 
@@ -369,12 +339,7 @@ define(
                     contour = interPolateContour(contour);
 
                     if (contour.length >= minPoints) {
-                        if (smooth > 1) {
-
-                            if (contour.length < smooth - 10) {
-                                smooth = contour.length - 10;
-                            }
-
+                        if (smooth > 1 && contour.length >= 2 * smooth) {
                             contour = smoothContour(contour, smooth);
                         }
                         contour.flag = k === 0 ? 0 : 1;

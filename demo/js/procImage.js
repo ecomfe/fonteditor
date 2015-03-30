@@ -5,15 +5,18 @@
 
 define(
     function (require) {
-        var grayImage = require('graphics/image/grayImage');
+
         var procImage = require('graphics/image/procImage');
         var binarizeImage = require('graphics/image/filter/binarize');
         var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
         var pathUtil = require('graphics/pathUtil');
+        var openProc = require('graphics/image/filter/open');
+        var closeProc = require('graphics/image/filter/close');
 
         var ctx = null;
         var canvas = null;
+        var canvasSrc = null;
         var curImage = null;
 
         function getOptions() {
@@ -28,12 +31,16 @@ define(
             var reader = new FileReader();
             reader.onload = function(e) {
 
-                var image = curImage = new Image();
-                image.onload = function () {
-                    getContours(image);
+                var img = curImage = new Image();
+                img.onload = function () {
+
+                    canvasSrc.width = img.width;
+                    canvasSrc.height = img.height;
+                    canvasSrc.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+                    getContours(img);
                 };
 
-                image.src = e.target.result;
+                img.src = e.target.result;
             }
 
             reader.onerror = function(e) {
@@ -52,50 +59,44 @@ define(
 
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
-
             var grayData = procImage(imgData);
-            var putData = imgData.data;
-            var putGrayData = grayData.data;
+            var result = binarizeImage(grayData, getOptions().threshold);
 
+            result = closeProc(result, 'square', 5);
+
+            var putData = imgData.data;
             for (var y = 0; y < height; y ++) {
                 var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
-                    var gray = putGrayData[offset];
-                    putData[offset * 4] = gray;
-                    putData[offset * 4 + 1] = gray;
-                    putData[offset * 4 + 2] = gray;
-                    putData[offset * 4 + 3] = 255;
-
-                    // if (result.data[offset]) {
-                    //     putData[offset * 4] = 208;
-                    //     putData[offset * 4 + 1] = 247;
-                    //     putData[offset * 4 + 2] = 113;
-                    //     putData[offset * 4 + 3] = 255;
-                    // }
-                    // else {
-                    //     putData[offset * 4] = 255;
-                    //     putData[offset * 4 + 1] = 255;
-                    //     putData[offset * 4 + 2] = 255;
-                    //     putData[offset * 4 + 3] = 255;
-                    // }
+                    if (result.data[offset]) {
+                        putData[offset * 4] = 0;
+                        putData[offset * 4 + 1] = 0;
+                        putData[offset * 4 + 2] = 0;
+                        putData[offset * 4 + 3] = 255;
+                    }
+                    else {
+                        putData[offset * 4] = 255;
+                        putData[offset * 4 + 1] = 255;
+                        putData[offset * 4 + 2] = 255;
+                        putData[offset * 4 + 3] = 255;
+                    }
                 }
             }
 
-            // var result = binarizeImage(grayData, getOptions().threshold);
-            // var contours = findContours(result);
+            var contours = findContours(result);
 
-            // contours.forEach(function (contour) {
-            //     var flag = contour.flag;
-            //     for (var i = 0, l = contour.length; i < l; i++) {
-            //         var p = contour[i];
-            //         var offset = p.y * width + p.x;
-            //         putData[offset * 4] = flag ? 100 : 255;
-            //         putData[offset * 4 + 1] = 0;
-            //         putData[offset * 4 + 2] = 0;
-            //         putData[offset * 4 + 3] = 255;
-            //     }
-            // });
+            contours.forEach(function (contour) {
+                var flag = contour.flag;
+                for (var i = 0, l = contour.length; i < l; i++) {
+                    var p = contour[i];
+                    var offset = p.y * width + p.x;
+                    putData[offset * 4] = flag ? 100 : 255;
+                    putData[offset * 4 + 1] = 0;
+                    putData[offset * 4 + 2] = 0;
+                    putData[offset * 4 + 3] = 255;
+                }
+            });
             ctx.putImageData(imgData, 0, 0);
         }
 
@@ -111,6 +112,7 @@ define(
             init: function () {
 
                 document.getElementById('upload-file').addEventListener('change', onUpFileChange);
+                canvasSrc = document.getElementById("canvas-src");
                 canvas = document.getElementById("canvas");
                 ctx = canvas.getContext("2d");
 
@@ -124,6 +126,10 @@ define(
 
                 var img = new Image();
                 img.onload = function () {
+                    canvasSrc.width = img.width;
+                    canvasSrc.height = img.height;
+                    canvasSrc.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
                     curImage = img;
                     refresh();
                 }

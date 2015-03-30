@@ -7,7 +7,7 @@
 define(
     function (require) {
 
-        var grayImage = require('./grayImage');
+        var grayImage = require('./filter/gray');
         var binarizeImage = require('./filter/binarize');
 
         /**

@@ -6,12 +6,10 @@
 define(
     function (require) {
 
-
         var thresholdTypes = require('./threshold');
 
-
         /**
-         * 获取图像的灰度统计信息
+         * 获取图像的灰度分布信息
          *
          * @param  {Object} imageData 图像数据
          * @return {Array}            灰度统计信息
@@ -32,12 +30,25 @@ define(
             return histGram;
         }
 
+
+        /**
+         * 获取图像的二值阈值
+         *
+         * @param  {Array} histGram     灰度分布数组
+         * @param  {string} thresholdType 阈值类型
+         * @return {number}               阈值
+         */
+        function getThreshold(histGram, thresholdType) {
+            var thrFunction = thresholdTypes[thresholdType] || thresholdTypes.mean;
+            threshold = thrFunction(histGram);
+        }
+
         /**
          * 二值化图像数据
          * @param  {Object} imageData 图像数据
          * @return {Array}           二值化后的数据
          */
-        function binarizeImage(imageData, thresholdType) {
+        function binarize(imageData, thresholdType) {
 
             var threshold = 200;
             var width = imageData.width;
@@ -50,9 +61,7 @@ define(
                 threshold = thresholdType;
             }
             else {
-                var thrFunction = thresholdTypes[thresholdType] || thresholdTypes.mean;
-                var histGram = getHistGram(imageData);
-                threshold = thrFunction(histGram);
+                threshold = getThreshold(getHistGram(imageData), thresholdType);
             }
 
             for (var y = 0; y < height; y++) {
@@ -66,7 +75,9 @@ define(
             return imageData;
         }
 
+        binarize.getHistGram = getHistGram;
+        binarize.getThreshold = getThreshold;
 
-        return binarizeImage;
+        return binarize;
     }
 );

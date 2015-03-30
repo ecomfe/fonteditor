@@ -8,11 +8,13 @@ define(
     function (require) {
 
 
-        var grayImage = require('./grayImage');
+        var grayImage = require('./filter/gray');
         var binarizeImage = require('./filter/binarize');
 
         var gaussBlur = require('./filter/gaussBlur');
         var brightness = require('./filter/brightness');
+        var sharp = require('./filter/sharp');
+
 
         /**
          * 对图像进行二值化
@@ -28,9 +30,9 @@ define(
             options = options || {};
 
             imageData = grayImage(imageData, options.reverse);
-            //imageData = gaussBlur(imageData);
+            //imageData = gaussBlur(imageData, 10);
 
-            imageData = brightness(imageData, -30);
+            //imageData = sharp(imageData);
             return imageData;
         }
 

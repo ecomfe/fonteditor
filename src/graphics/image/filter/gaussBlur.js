@@ -43,19 +43,19 @@ define(
         /**
          * 灰度图像高斯模糊
          *
-         * @param  {Object} imgData  图像数据
+         * @param  {Object} imageData  图像数据
          * @param  {number} radius 取样区域半径, 正数, 可选, 默认为 3.0
          * @param  {number} sigma 标准方差, 可选, 默认取值为 radius / 3
          *
          * @return {Object}
          */
-        function gaussBlur(imgData, radius, sigma) {
+        function gaussBlur(imageData, radius, sigma) {
 
             radius = Math.floor(radius) || 1;
 
-            var data = imgData.data;
-            var width = imgData.width;
-            var height = imgData.height;
+            var data = imageData.data;
+            var width = imageData.width;
+            var height = imageData.height;
             var gaussMatrix = getGaussMatrix(radius, sigma || 1.5);
 
             var x;
@@ -93,7 +93,7 @@ define(
                 }
             }
 
-            return imgData;
+            return imageData;
         }
 
 
