@@ -5,13 +5,12 @@
 
 define(
     function (require) {
-
+        var grayImage = require('graphics/image/grayImage');
+        var procImage = require('graphics/image/procImage');
+        var binarizeImage = require('graphics/image/filter/binarize');
         var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
-        var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-
-
 
         var ctx = null;
         var canvas = null;
@@ -53,19 +52,27 @@ define(
 
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
-            var result = image2Values(imgData, getOptions());
 
+            var grayData = procImage(imgData);
             var putData = imgData.data;
+            var putGrayData = grayData.data;
+
             for (var y = 0; y < height; y ++) {
                 var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
-                    if (result.data[offset]) {
-                        putData[offset * 4] = 208;
-                        putData[offset * 4 + 1] = 247;
-                        putData[offset * 4 + 2] = 113;
-                        putData[offset * 4 + 3] = 255;
-                    }
+                    var gray = putGrayData[offset];
+                    putData[offset * 4] = gray;
+                    putData[offset * 4 + 1] = gray;
+                    putData[offset * 4 + 2] = gray;
+                    putData[offset * 4 + 3] = 255;
+
+                    // if (result.data[offset]) {
+                    //     putData[offset * 4] = 208;
+                    //     putData[offset * 4 + 1] = 247;
+                    //     putData[offset * 4 + 2] = 113;
+                    //     putData[offset * 4 + 3] = 255;
+                    // }
                     // else {
                     //     putData[offset * 4] = 255;
                     //     putData[offset * 4 + 1] = 255;
@@ -75,57 +82,21 @@ define(
                 }
             }
 
-            var contours = findContours(result);
+            // var result = binarizeImage(grayData, getOptions().threshold);
+            // var contours = findContours(result);
 
-            contours.forEach(function (contour) {
-                var flag = contour.flag;
-                for (var i = 0, l = contour.length; i < l; i++) {
-                    var p = contour[i];
-                    var offset = p.y * width + p.x;
-                    putData[offset * 4] = flag ? 100 : 255;
-                    putData[offset * 4 + 1] = 0;
-                    putData[offset * 4 + 2] = 0;
-                    putData[offset * 4 + 3] = 255;
-                }
-            });
+            // contours.forEach(function (contour) {
+            //     var flag = contour.flag;
+            //     for (var i = 0, l = contour.length; i < l; i++) {
+            //         var p = contour[i];
+            //         var offset = p.y * width + p.x;
+            //         putData[offset * 4] = flag ? 100 : 255;
+            //         putData[offset * 4 + 1] = 0;
+            //         putData[offset * 4 + 2] = 0;
+            //         putData[offset * 4 + 3] = 255;
+            //     }
+            // });
             ctx.putImageData(imgData, 0, 0);
-
-            getBreakPoint(contours);
-        }
-
-
-        function getBreakPoint(contours) {
-            var breakPoints = [];
-            contours.forEach(function (contour) {
-
-                contour = pathUtil.scale(contour, 10);
-                var points  = findBreakPoints(contour, 10);
-
-                if (points) {
-                    points.forEach(function (p) {
-                        breakPoints.push(p);
-                    });
-                }
-
-                contour = pathUtil.scale(contour, 0.1);
-            });
-
-
-
-            breakPoints.forEach(function (p) {
-
-                ctx.beginPath();
-
-                if (p.breakPoint) {
-                    ctx.fillStyle = 'red';
-                }
-                else if (p.inflexion) {
-                    ctx.fillStyle = 'blue';
-                }
-
-                ctx.fillRect(p.x, p.y, p.right == 1 ? 6 : 3, p.right == 1 ? 6 : 3);
-            });
-
         }
 
         function refresh() {
@@ -156,7 +127,7 @@ define(
                     curImage = img;
                     refresh();
                 }
-                img.src = '../test/circle.bmp';
+                img.src = '../test/rw1.jpg';
             }
         };
 

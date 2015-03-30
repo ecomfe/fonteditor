@@ -1,5 +1,5 @@
 /**
- * @file 对图像进行二值化
+ * @file 对图像进行预处理
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -7,8 +7,12 @@
 define(
     function (require) {
 
+
         var grayImage = require('./grayImage');
         var binarizeImage = require('./filter/binarize');
+
+        var gaussBlur = require('./filter/gaussBlur');
+        var brightness = require('./filter/brightness');
 
         /**
          * 对图像进行二值化
@@ -18,14 +22,18 @@ define(
          * @param {number} imageData.width 宽度
          * @param {number} imageData.height 高度
          *
-         * @param {number} threshold 截止阈值， 0~255
+         * @param {number} reverse 是否反转图像， 0~255
          */
-        function image2values(imageData, options) {
+        function procImage(imageData, options) {
             options = options || {};
+
             imageData = grayImage(imageData, options.reverse);
-            return binarizeImage(imageData, options.threshold);
+            //imageData = gaussBlur(imageData);
+
+            imageData = brightness(imageData, -30);
+            return imageData;
         }
 
-        return image2values;
+        return procImage;
     }
 );

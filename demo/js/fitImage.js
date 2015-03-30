@@ -91,7 +91,7 @@ define(
             });
             ctx.putImageData(imgData, 0, 0);
 
-            getBreakPoint(contours);
+            //getBreakPoint(contours);
 
             var contours = fitImageContours(result, getOptions());
 
