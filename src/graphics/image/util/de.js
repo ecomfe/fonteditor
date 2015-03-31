@@ -63,6 +63,32 @@ define(
                     }
                 }
             }
+            // 十字
+            else if(mode === 'cross')
+            {
+                for(i = radius; i > 0; i--) {
+                    offsetArray.push({
+                        x: 0,
+                        y: -i
+                    });
+                    offsetArray.push({
+                        x: -i,
+                        y: 0
+                    });
+                    offsetArray.push({
+                        x: 0,
+                        y: i
+                    });
+                    offsetArray.push({
+                        x: i,
+                        y: 0
+                    });
+                }
+                offsetArray.push({
+                    x: 0,
+                    y: 0
+                });
+            }
 
             return offsetArray;
         }
@@ -132,7 +158,7 @@ define(
          */
         function execute(imageData, operation, mode, radius) {
 
-            mode = mode || 'square';
+            mode = mode || 'cross';
             radius = Math.floor((radius || 2) / 2);
 
             var from = 255;

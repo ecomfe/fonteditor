@@ -202,7 +202,7 @@ define(
         /**
          * 二值图像腐蚀
          *
-         * @param  {string} mode 模板，'square', 'circle', 'rhomb'
+         * @param  {string} mode 模板
          * @param  {number} radius   半径
          * @return {this}
          */

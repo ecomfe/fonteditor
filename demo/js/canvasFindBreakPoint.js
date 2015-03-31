@@ -10,7 +10,10 @@ define(
 
         var findContours = require('graphics/image/findContours');
         var findBreakPoints = require('graphics/image/findBreakPoints');
+        var fitContour = require('graphics/image/fitContour');
+        var drawPath = require('render/util/drawPath');
         var pathUtil = require('graphics/pathUtil');
+        var lang = require('common/lang');
 
         var ctx = null;
         var canvas = null;
@@ -49,13 +52,12 @@ define(
             var width = canvas.width;
             var height = canvas.height;
             var imgData = ctx.getImageData(0, 0, width, height);
-            var binarizeProcessor = processor.clone().binarize(+$('#threshold-gray').val());
-            if (processor.pending) {
-                binarizeProcessor[processor.pending]();
-                processor.pending = null;
+
+            if (!processor.get().binarize) {
+                processor.binarize(+$('#threshold-gray').val());
             }
 
-            result = binarizeProcessor.get();
+            result = processor.get();
 
             var putData = imgData.data;
             for (var y = 0; y < height; y ++) {
@@ -77,9 +79,9 @@ define(
                 }
             }
 
-            var contours = findContours(result);
+            var contoursPoints = findContours(result);
 
-            contours.forEach(function (contour) {
+            contoursPoints.forEach(function (contour) {
                 var flag = contour.flag;
                 for (var i = 0, l = contour.length; i < l; i++) {
                     var p = contour[i];
@@ -90,44 +92,70 @@ define(
                     putData[offset * 4 + 3] = 255;
                 }
             });
+
             ctx.putImageData(imgData, 0, 0);
 
-            //getBreakPoint(contours);
-        }
+            setTimeout(function() {
 
-
-        function getBreakPoint(contours) {
-            var breakPoints = [];
-            contours.forEach(function (contour) {
-
-                contour = pathUtil.scale(contour, 10);
-                var points  = findBreakPoints(contour, 10);
-
-                if (points) {
-                    points.forEach(function (p) {
-                        breakPoints.push(p);
-                    });
+                if (!!$('#show-breakpoints').get(0).checked) {
+                    getBreakPoints(contoursPoints);
                 }
 
-                contour = pathUtil.scale(contour, 0.1);
+                getContours(contoursPoints);
+            }, 20);
+
+        }
+
+        function getBreakPoints(contoursPoints) {
+            var contoursBreakPoints = [];
+            contoursPoints.forEach(function (ps) {
+                points = pathUtil.scale(lang.clone(ps), 10);
+                var breakPoints  = findBreakPoints(points, 10);
+                if (breakPoints) {
+                    contoursBreakPoints = contoursBreakPoints.concat(pathUtil.scale(breakPoints, 0.1));
+                }
             });
 
-
-
-            breakPoints.forEach(function (p) {
-
-                ctx.beginPath();
-
+            // 绘制关键点
+            ctx.beginPath();
+            contoursBreakPoints.forEach(function (p) {
                 if (p.breakPoint) {
                     ctx.fillStyle = 'red';
                 }
                 else if (p.inflexion) {
                     ctx.fillStyle = 'blue';
                 }
+                ctx.fillRect(p.x, p.y, p.right == 1 ? 4 : 2, p.right == 1 ? 4 : 2);
+            });
+        }
 
-                ctx.fillRect(p.x, p.y, p.right == 1 ? 6 : 3, p.right == 1 ? 6 : 3);
+        function getContours(contoursPoints) {
+
+            var result = processor.get();
+            var canvas = $('#canvas-glyf').get(0);
+            canvas.width = result.width;
+            canvas.height = result.height;
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, result.width, result.height);
+
+            var contoursBreakPoints = [];
+            var resultContours = [];
+            contoursPoints.forEach(function (ps) {
+                points = pathUtil.scale(ps, 10);
+                var contour = fitContour(points, 10);
+                if (contour) {
+                    resultContours.push(pathUtil.scale(contour, 0.1));
+                }
             });
 
+
+            // 绘制拟合曲线
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            resultContours.forEach(function (contour) {
+                drawPath(ctx, contour);
+            });
+            ctx.fill();
         }
 
 
@@ -140,7 +168,22 @@ define(
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
             processor = new ImageProcessor(imgData);
+            processor.filters = {};
             processor.save();
+        }
+
+        function binarize() {
+            processor.restore();
+
+            if (processor.filters.reverse) {
+                processor.reverse();
+            }
+
+            if (processor.filters.gaussBlur) {
+                processor.gaussBlur(processor.filters.gaussBlur);
+            }
+
+            processor.binarize(+$('#threshold-gray').val());
         }
 
         var entry = {
@@ -154,19 +197,28 @@ define(
                 canvas = document.getElementById("canvas");
                 ctx = canvas.getContext("2d");
 
-                $('#threshold-gray').on('change', refresh);
-
                 $('[data-action]').on('click', function () {
                     var action = $(this).data('action');
 
-                    if (action === 'restore') {
-                        processor.restore();
+                    if (action === 'binarize') {
+                        binarize();
+                    }
+                    else if (action === 'restore') {
+                        processor.filters = {};
+                        $('[data-action="reverse"]').get(0).checked = false;
+                        $('[data-action="gaussBlur"]').val(0);
+                        binarize();
                     }
                     else if (action === 'open' || action === 'close' || action === 'dilate' || action === 'erode') {
-                        processor.pending = action;
-                    }
-                    else if (processor[action]) {
                         processor[action]();
+                    }
+                    else if (action === 'reverse') {
+                        processor.filters.reverse = !!this.checked;
+                        binarize();
+                    }
+                    else if (action === 'gaussBlur') {
+                        processor.filters.gaussBlur = +$(this).val();
+                        binarize();
                     }
 
                     refresh();
@@ -179,7 +231,7 @@ define(
                     refresh();
                 }
 
-                img.src = '../test/circle.bmp';
+                img.src = '../test/rw1.jpg';
             }
         };
 
