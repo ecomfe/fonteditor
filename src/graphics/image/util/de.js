@@ -24,6 +24,7 @@ define(
             var offsetArray = [];
             var i;
             var j;
+            // 正方形
             if (mode === 'square') {
                 for (i = 0; i < 2 * radius + 1; i++) {
                     for (j = 0; j < 2 * radius + 1; j++) {
@@ -34,6 +35,7 @@ define(
                     }
                 }
             }
+            // 圆形
             else if (mode === 'circle') {
                 for (i = 0; i < 2 * radius + 1; i++) {
                     for (j = 0; j < 2 * radius + 1; j++) {
@@ -47,7 +49,8 @@ define(
                     }
                 }
             }
-            else if(mode === 'square2')
+            // 菱形
+            else if(mode === 'rhomb')
             {
                 for(i = -radius; i <= radius; i++) {
                     for(j = -radius; j <= radius; j++) {
@@ -132,12 +135,12 @@ define(
             mode = mode || 'square';
             radius = Math.floor((radius || 2) / 2);
 
-            var from = 1;
+            var from = 255;
             var to = 0;
 
             if (operation === 'erode') {
                 from = 0;
-                to = 1;
+                to = 255;
             }
 
             var width = imageData.width;
@@ -158,7 +161,6 @@ define(
             imageData.data = newData;
             return imageData;
         }
-
 
         return {
             execute: execute

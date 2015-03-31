@@ -6,18 +6,16 @@
 define(
     function (require) {
 
-        var procImage = require('graphics/image/procImage');
-        var binarizeImage = require('graphics/image/filter/binarize');
-        var image2Values = require('graphics/image/image2Values');
+        var ImageProcessor = require('graphics/image/ImageProcessor');
         var findContours = require('graphics/image/findContours');
-        var pathUtil = require('graphics/pathUtil');
-        var openProc = require('graphics/image/filter/open');
-        var closeProc = require('graphics/image/filter/close');
-
+        var binarizeImage = require('graphics/image/filter/binarize');
+        var clone
         var ctx = null;
         var canvas = null;
         var canvasSrc = null;
         var curImage = null;
+        var processor = new ImageProcessor();
+
 
         function getOptions() {
             return {
@@ -37,7 +35,12 @@ define(
                     canvasSrc.width = img.width;
                     canvasSrc.height = img.height;
                     canvasSrc.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-                    getContours(img);
+                    var imgData = canvasSrc.getContext('2d').getImageData(0, 0, img.width, img.height);
+
+
+                    processor.set(imgData);
+                    processor.save();
+                    processingImage();
                 };
 
                 img.src = e.target.result;
@@ -50,58 +53,68 @@ define(
             reader.readAsDataURL(file);
         }
 
-        function getContours(image) {
+        function processingImage() {
+
             ctx.clearRect(0,0, canvas.width, canvas.height);
-            var width = image.width;
-            var height = image.height;
-            canvas.width = image.width;
-            canvas.height = image.height;
 
-            ctx.drawImage(image, 0, 0, width, height);
+            var width = processor.imageData.width;
+            var height = processor.imageData.height;
+            canvas.width = width;
+            canvas.height = height;
+
             var imgData = ctx.getImageData(0, 0, width, height);
-            var grayData = procImage(imgData);
-            var result = binarizeImage(grayData, getOptions().threshold);
-
-            result = closeProc(result, 'square', 5);
-
             var putData = imgData.data;
-            for (var y = 0; y < height; y ++) {
-                var line = width * y;
-                for (var x = 0; x < width; x++) {
-                    var offset = line + x;
-                    if (result.data[offset]) {
-                        putData[offset * 4] = 0;
+
+            if ($('#show-binarized').get(0).checked) {
+
+                var result = processor.clone().binarize(+$('#threshold-gray').val()).get();
+
+                var resultData = result.data;
+                for (var y = 0; y < height; y ++) {
+                    var line = width * y;
+                    for (var x = 0; x < width; x++) {
+                        var offset = line + x;
+                        putData[offset * 4] = resultData[offset];
+                        putData[offset * 4 + 1] = resultData[offset];
+                        putData[offset * 4 + 2] = resultData[offset];
+                        putData[offset * 4 + 3] = 255;
+                    }
+                }
+
+                var contours = findContours(result);
+                contours.forEach(function (contour) {
+                    var flag = contour.flag;
+                    for (var i = 0, l = contour.length; i < l; i++) {
+                        var p = contour[i];
+                        var offset = p.y * width + p.x;
+                        putData[offset * 4] = flag ? 100 : 255;
                         putData[offset * 4 + 1] = 0;
                         putData[offset * 4 + 2] = 0;
                         putData[offset * 4 + 3] = 255;
                     }
-                    else {
-                        putData[offset * 4] = 255;
-                        putData[offset * 4 + 1] = 255;
-                        putData[offset * 4 + 2] = 255;
+                });
+            }
+            else {
+                var result = processor.get();
+                var resultData = result.data;
+                for (var y = 0; y < height; y ++) {
+                    var line = width * y;
+                    for (var x = 0; x < width; x++) {
+                        var offset = line + x;
+
+                        putData[offset * 4] = resultData[offset];
+                        putData[offset * 4 + 1] = resultData[offset];
+                        putData[offset * 4 + 2] = resultData[offset];
                         putData[offset * 4 + 3] = 255;
                     }
                 }
             }
 
-            var contours = findContours(result);
-
-            contours.forEach(function (contour) {
-                var flag = contour.flag;
-                for (var i = 0, l = contour.length; i < l; i++) {
-                    var p = contour[i];
-                    var offset = p.y * width + p.x;
-                    putData[offset * 4] = flag ? 100 : 255;
-                    putData[offset * 4 + 1] = 0;
-                    putData[offset * 4 + 2] = 0;
-                    putData[offset * 4 + 3] = 255;
-                }
-            });
             ctx.putImageData(imgData, 0, 0);
         }
 
         function refresh() {
-            curImage && getContours(curImage, getOptions());
+            processingImage();
         }
 
         var entry = {
@@ -121,19 +134,53 @@ define(
                     refresh();
                 });
 
-                $('#threshold-fn').on('change', refresh);
-                $('#threshold-reverse').on('change', refresh);
+                $('[data-action]').on('change', function (e) {
+                    var action = $(this).data('action');
+                    if (action === 'threshold') {
+                        var threshold = parseInt(processor.getThreshold(e.target.value));
+                        $('#threshold-gray').val(threshold);
+                    }
+                    else if (action === 'brightness') {
+                        processor.brightness(+$('#brightness-bright').val(), +$('#brightness-contrast').val());
+                    }
+                    else if (action === 'open' || action === 'close' || action === 'dilate' || action === 'erode') {
+                        if (!processor.imageData.binarize) {
+                            processor.binarize(+$('#threshold-gray').val());
+                        }
+
+                        processor[action]('square', +$(this).val());
+                    }
+                    else if (action === 'sharp' || action === 'blur' || action === 'gaussBlur' || action === 'reverse') {
+                        processor[action](+$(this).val());
+                    }
+
+                    refresh();
+                });
+
+                $('#pic-reset').on('click', function () {
+                    processor.restore();
+                    refresh();
+                });
+
+                $('#show-binarized').on('click', function (e) {
+                    $('#pan-binarize')[e.target.checked ? 'show' : 'hide']();
+                    refresh();
+                });
 
                 var img = new Image();
                 img.onload = function () {
                     canvasSrc.width = img.width;
                     canvasSrc.height = img.height;
                     canvasSrc.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+                    var imgData = canvasSrc.getContext('2d').getImageData(0, 0, img.width, img.height);
 
-                    curImage = img;
+                    processor.set(imgData);
+                    processor.save();
+
+
                     refresh();
                 }
-                img.src = '../test/rw1.jpg';
+                img.src = '../test/a.gif';
             }
         };
 

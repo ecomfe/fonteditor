@@ -7,7 +7,7 @@
 define(
     function (require) {
 
-        var execute = require('./deUtil').execute;
+        var execute = require('../util/de').execute;
 
         return function (imageData, mode, radius) {
             return execute(imageData, 'dilate', mode, radius);

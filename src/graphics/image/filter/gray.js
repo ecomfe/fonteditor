@@ -10,7 +10,7 @@ define(
          * 对图像进行灰度化处理
          *
          * @param  {Object} imageData 图像数据
-         * @param  {boolean} reverse 是否翻转
+         * @param  {boolean} reverse 是否反转图像
          *
          * @return {Object}           处理后的数据
          */

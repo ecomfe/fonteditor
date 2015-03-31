@@ -1,6 +1,9 @@
 /**
  * @file 亮度对比度计算
  * @author mengke01(kekee000@gmail.com)
+ *
+ * @reference
+ * https://github.com/AlloyTeam/AlloyImage
  */
 
 
@@ -18,12 +21,12 @@ define(
          */
         function brightness(imageData, brightness, contrast) {
 
-            brightness = brightness || 50;
+            brightness = brightness || 0;
             contrast = contrast || 0;
 
             var data = imageData.data;
             var b = brightness / 50; // -1 , 1
-            var c = (brightness || 0) / 50; // -1 , 1
+            var c = contrast / 50; // -1 , 1
             var k = Math.tan((45 + 44 * c) * Math.PI / 180);
 
             for (var i = 0, l = data.length; i < l; i++) {

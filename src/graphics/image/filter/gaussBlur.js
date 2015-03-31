@@ -11,6 +11,7 @@
 define(
     function (require) {
 
+        var filteringImage = require('../util/filteringImage');
 
         function getGaussMatrix(radius, sigma) {
             var gaussMatrix = [];
@@ -44,54 +45,21 @@ define(
          * 灰度图像高斯模糊
          *
          * @param  {Object} imageData  图像数据
-         * @param  {number} radius 取样区域半径, 正数, 可选, 默认为 3.0
-         * @param  {number} sigma 标准方差, 可选, 默认取值为 radius / 3
+         * @param  {number} radius 取样区域半径, 正数, 可选, 默认为 3
+         * @param  {number} sigma 标准方差, 可选, 默认取值为 1.5
          *
          * @return {Object}
          */
         function gaussBlur(imageData, radius, sigma) {
 
-            radius = Math.floor(radius) || 1;
+            radius = Math.floor((radius || 3) / 2);
 
             var data = imageData.data;
             var width = imageData.width;
             var height = imageData.height;
-            var gaussMatrix = getGaussMatrix(radius, sigma || 1.5);
+            var matrix = getGaussMatrix(radius, sigma || 1.5);
 
-            var x;
-            var y;
-            var i;
-            var j;
-            var k;
-            var r;
-            var posX;
-            var posY;
-
-            for (y = 0; y < height; y++) {
-                for (x = 0; x < width; x++) {
-                    r = 0;
-
-                    // 计算高斯权值
-                    for (k = 0, i = -radius; i <= radius; i++) {
-                        for (j = -radius; j <= radius; j++) {
-                            posX = x + i;
-
-                            if (posX < 0 || posX >= width) {
-                                posX = x - i;
-                            }
-
-                            posY = y + j;
-                            if (posY < 0 || posY >= height) {
-                                posY = y - j;
-                            }
-
-                            r += data[posX + posY * width] * gaussMatrix[k++];
-                        }
-                    }
-
-                    data[x + y * width] = Math.floor(r);
-                }
-            }
+            imageData.data = filteringImage(data, width, height, radius, matrix);
 
             return imageData;
         }

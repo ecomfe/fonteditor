@@ -6,16 +6,16 @@
 define(
     function (require) {
 
-        var image2Values = require('graphics/image/image2Values');
+        var ImageProcessor = require('graphics/image/ImageProcessor');
+
         var findContours = require('graphics/image/findContours');
         var findBreakPoints = require('graphics/image/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
 
-
-
         var ctx = null;
         var canvas = null;
         var curImage = null;
+        var processor = null;
 
         function getOptions() {
             return {
@@ -31,7 +31,8 @@ define(
 
                 var image = curImage = new Image();
                 image.onload = function () {
-                    getContours(image);
+                    refreshImg(image);
+                    refresh();
                 };
 
                 image.src = e.target.result;
@@ -44,34 +45,35 @@ define(
             reader.readAsDataURL(file);
         }
 
-        function getContours(image) {
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            var width = image.width;
-            var height = image.height;
-            canvas.width = image.width;
-            canvas.height = image.height;
-
-            ctx.drawImage(image, 0, 0, width, height);
+        function refresh() {
+            var width = canvas.width;
+            var height = canvas.height;
             var imgData = ctx.getImageData(0, 0, width, height);
-            var result = image2Values(imgData, getOptions());
+            var binarizeProcessor = processor.clone().binarize(+$('#threshold-gray').val());
+            if (processor.pending) {
+                binarizeProcessor[processor.pending]();
+                processor.pending = null;
+            }
+
+            result = binarizeProcessor.get();
 
             var putData = imgData.data;
             for (var y = 0; y < height; y ++) {
                 var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
-                    if (result.data[offset]) {
+                    if (result.data[offset] === 0) {
                         putData[offset * 4] = 208;
                         putData[offset * 4 + 1] = 247;
                         putData[offset * 4 + 2] = 113;
                         putData[offset * 4 + 3] = 255;
                     }
-                    // else {
-                    //     putData[offset * 4] = 255;
-                    //     putData[offset * 4 + 1] = 255;
-                    //     putData[offset * 4 + 2] = 255;
-                    //     putData[offset * 4 + 3] = 255;
-                    // }
+                    else {
+                        putData[offset * 4] = 255;
+                        putData[offset * 4 + 1] = 255;
+                        putData[offset * 4 + 2] = 255;
+                        putData[offset * 4 + 3] = 255;
+                    }
                 }
             }
 
@@ -90,7 +92,7 @@ define(
             });
             ctx.putImageData(imgData, 0, 0);
 
-            getBreakPoint(contours);
+            //getBreakPoint(contours);
         }
 
 
@@ -128,8 +130,17 @@ define(
 
         }
 
-        function refresh() {
-            curImage && getContours(curImage, getOptions());
+
+        function refreshImg(image) {
+            var width = image.width;
+            var height = image.height;
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            ctx.drawImage(image, 0, 0, width, height);
+            var imgData = ctx.getImageData(0, 0, width, height);
+            processor = new ImageProcessor(imgData);
+            processor.save();
         }
 
         var entry = {
@@ -143,19 +154,31 @@ define(
                 canvas = document.getElementById("canvas");
                 ctx = canvas.getContext("2d");
 
-                $('#threshold-gray').on('change', function () {
-                    $('#threshold-fn').val('');
+                $('#threshold-gray').on('change', refresh);
+
+                $('[data-action]').on('click', function () {
+                    var action = $(this).data('action');
+
+                    if (action === 'restore') {
+                        processor.restore();
+                    }
+                    else if (action === 'open' || action === 'close' || action === 'dilate' || action === 'erode') {
+                        processor.pending = action;
+                    }
+                    else if (processor[action]) {
+                        processor[action]();
+                    }
+
                     refresh();
                 });
 
-                $('#threshold-fn').on('change', refresh);
-                $('#threshold-reverse').on('change', refresh);
-
                 var img = new Image();
+
                 img.onload = function () {
-                    curImage = img;
+                    refreshImg(img);
                     refresh();
                 }
+
                 img.src = '../test/circle.bmp';
             }
         };

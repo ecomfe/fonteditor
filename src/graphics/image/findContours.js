@@ -67,6 +67,9 @@ define(
             minPoints = minPoints || 10;
             smooth = smooth || 3;
 
+            var fg = 0; // 前景色
+            var bg = 255; // 背景色
+
             var data = imageData.data;
             var width = imageData.width;
             var height = imageData.height;
@@ -98,19 +101,19 @@ define(
             // 填充白框
             for (j = 0; j < height; j ++) {
                 row = j * width;
-                data[row] = 0;
-                data[row + width - 1] = 0;
+                data[row] = bg;
+                data[row + width - 1] = bg;
             }
 
             row = (height - 1) * width;
             for (j = 0; j < width; j++) {
-                data[j] = 0;
-                data[row + j] = 0;
+                data[j] = bg;
+                data[row + j] = bg;
             }
 
             // 查找 第一行
             for (j = 0; j < width;) {
-                for( ; j < width && !data[j]; j++ ) {
+                for( ; j < width && data[j] === bg; j++ ) {
                 }
 
                 if( j === width) {
@@ -124,7 +127,7 @@ define(
 
                 upperLine.push(tmpPrev = tmpPrev.next);
 
-                for (; j < width && data[j]; j++) {
+                for (; j < width && data[j] === fg; j++) {
                 }
 
                 tmpPrev.next = tmpPrev.link = {
@@ -141,7 +144,7 @@ define(
                 lowerLine = [];
 
                 for (j = 0; j < width;) {
-                    for (; j < width && !data[row + j]; j++ ) {
+                    for (; j < width && data[row + j] === bg; j++ ) {
                     }
 
                     if( j === width) {
@@ -155,7 +158,7 @@ define(
 
                     lowerLine.push(tmpPrev = tmpPrev.next);
 
-                    for (;j < width && data[row + j]; j++) {
+                    for (;j < width && data[row + j] === fg; j++) {
                     }
 
                     tmpPrev.next = tmpPrev.link = {
