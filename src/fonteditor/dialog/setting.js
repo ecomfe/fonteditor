@@ -94,10 +94,11 @@ define(
                 program.listening = true;
                 if (dlg) {
                     this.onDispose && this.onDispose();
-                    delete this.options;
                     this.style && dlg.removeClass(this.style);
                     dlg.off('hidden.bs.modal');
                     dlg.find('.btn-confirm').off('click');
+                    dlg.find('.modal-body').html('');
+                    delete this.options;
                     dlg = null;
                 }
             }, this));

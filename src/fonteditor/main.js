@@ -147,20 +147,6 @@ define(
                     program.editor.setSetting(setting.editor);
                 }
 
-
-                var ImportPicDlg = require('./dialog/setting-import-pic');
-                !new ImportPicDlg({
-                    onChange: function (setting) {
-                        // if (setting.contours) {
-                        //     program.editor.execCommand('addcontours', setting.contours, {
-                        //         scale: 1,
-                        //         flip: true,
-                        //         selected: true
-                        //     });
-                        // }
-                    }
-                }).show();
-
             }
         };
 

@@ -14,6 +14,8 @@ define(
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
         var lang = require('common/lang');
+        var glyfAdjust = require('ttf/util/glyfAdjust');
+
 
         /**
          * 读取在线字体
@@ -254,15 +256,22 @@ define(
 
             'import-pic': function () {
                 var SettingEditor = settingSupport['import-pic'];
-                if (program.editor.isVisible()) {
+                if (program.ttfManager.get()) {
                     !new SettingEditor({
                         onChange: function (setting) {
                             if (setting.contours) {
-                                program.editor.execCommand('addcontours', setting.contours, {
-                                    scale: 1,
-                                    flip: true,
-                                    selected: true
-                                });
+
+                                if (program.editor.isVisible()) {
+                                    program.editor.execCommand('addcontours', setting.contours, {
+                                        selected: true
+                                    });
+                                }
+                                else {
+                                    var selected = program.viewer.getSelected();
+                                    program.ttfManager.insertGlyf(glyfAdjust({
+                                        contours: setting.contours
+                                    }, 1, 1, 0, 0, false), selected[0]);
+                                }
                             }
                         }
                     }).show();

@@ -1,8 +1,8 @@
 <div id="import-pic-dialog">
     <div class="form-group">
-        <div class="btn-group btn-group-sm btn-right">
-            <button type="button" data-action="fitwindow" class="btn btn-flat btn-new btn-sm">适应窗口</button>
-            <button type="button" data-action="fitwindow-left" class="btn btn-flat btn-new btn-sm">查看原图</button>
+        <div class="input-group btn-right">
+            <button type="button" data-action="fitwindow" class="btn btn-flat btn-new btn-sm">适应窗口</button>&nbsp;
+            <button type="button" data-action="fitwindow-left" class="btn btn-flat btn-new btn-sm">查看原图</button>&nbsp;
             <button type="button" data-action="fitwindow-right" class="btn btn-flat btn-new btn-sm">查看轮廓</button>
         </div>
         <button data-action="openfile" type="button" class="btn btn-flat btn-new btn-sm">选择图片</button>
@@ -38,7 +38,7 @@
         <span class="form-title">轮　廓：</span>
         <div class="form-group">
             <div class="input-group input-group-sm">
-                <span class="input-group-addon">二值阈值</span>
+                <span class="input-group-addon">二值化阈值</span>
                 <span class="form-control"><input data-filter="threshold" type="range" min="0" max="255" value="200" step="1"></span>
             </div>
             <div class="input-group input-group-sm">

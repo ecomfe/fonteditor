@@ -62,7 +62,9 @@ define(
                 });
                 this.setFields(setting || {});
             },
-
+            onDispose: function () {
+                $('#setting-glyf-unicode').off('blur');
+            },
             validate: function () {
 
                 var unicode = $('#setting-glyf-unicode').val();

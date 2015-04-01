@@ -241,9 +241,10 @@ define(
                     me.setFields(metrics);
                 });
             },
-
-            validate: function () {
+            onDispose: function () {
                 $('#setting-calc-metrics').off('click');
+            },
+            validate: function () {
                 var setting = this.getFields();
                 var length = panose.length;
                 (setting.panose || '').split('-').forEach(function (val, i) {

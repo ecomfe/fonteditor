@@ -51,7 +51,9 @@ define(
                     me.setFields(me.setting);
                 });
             },
-
+            onDispose: function () {
+                $('#setting-ie-default').off('click');
+            },
             validate: function () {
                 var setting = this.getFields(this.setting);
                 return setting;

@@ -169,7 +169,11 @@ define(
 
                 // 是否翻转图像
                 if (options.flip) {
-                    pathsUtil.mirror(contours, 1, -1);
+                    pathsUtil.flip(contours);
+                }
+
+                if (options.mirror) {
+                    pathsUtil.mirror(contours);
                 }
 
                 var shapes = this.addContours(contours, options.scale);

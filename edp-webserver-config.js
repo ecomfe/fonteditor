@@ -7,22 +7,7 @@ exports.getLocations = function () {
             location: /\/$/,
             handler: home( 'index.html' )
         },
-        {
-            location: /^\/redirect-local/,
-            handler: redirect('redirect-target', false)
-        },
-        {
-            location: /^\/redirect-remote/,
-            handler: redirect('http://www.baidu.com', false)
-        },
-        {
-            location: /^\/redirect-target/,
-            handler: content('redirectd!')
-        },
-        {
-            location: '/empty',
-            handler: empty()
-        },
+
         {
             location: /\.css($|\?)/,
             handler: [
@@ -33,6 +18,7 @@ exports.getLocations = function () {
                 })
             ]
         },
+
         {
             location: /\.less($|\?)/,
             handler: [
@@ -40,13 +26,8 @@ exports.getLocations = function () {
                 less()
             ]
         },
-        {
-            location: /\.styl($|\?)/,
-            handler: [
-                file(),
-                stylus()
-            ]
-        },
+
+
         {
             location: /^.*$/,
             handler: [

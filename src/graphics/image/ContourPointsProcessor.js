@@ -19,7 +19,7 @@ define(
          * @param {Array} contourPoints 轮廓点集合
          */
         function Processor(contourPoints) {
-            this.set(contourPoints);
+            contourPoints && this.set(contourPoints);
         }
 
         // 默认的缩放级别
