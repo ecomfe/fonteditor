@@ -17,8 +17,8 @@
 define(
     function (require) {
 
-        var makeLink = require('../pathUtil').makeLink;
-        var vector = require('../vector');
+        var makeLink = require('graphics/pathUtil').makeLink;
+        var vector = require('graphics/vector');
         var getCos = vector.getCos;
         var getDist = vector.getDist;
 

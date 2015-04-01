@@ -21,8 +21,14 @@
             bottom: 0;
             overflow: auto;
         }
+
         .right {
             right: 0;
+        }
+
+        .fitwindow {
+            max-width: 100%;
+            max-height: 100%;
         }
 
     </style>
@@ -40,6 +46,7 @@
         <input data-action="dilate" type="button" value="膨胀">
         <input data-action="erode" type="button" value="侵蚀">
         <label><input id="show-breakpoints" data-action="breakpoints" type="checkbox">显示关键点</label>
+        <label><input data-action="fitwindow" type="checkbox">适应窗口</label>
     </div>
 
     <div class="left"><canvas id="canvas"></canvas></div>

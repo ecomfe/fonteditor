@@ -7,17 +7,24 @@
 define(
     function (require) {
 
-        var fitBezier = require('graphics/image/fitBezier');
-        var findBreakPoints = require('graphics/image/findBreakPoints');
+        var fitBezier = require('./fitBezier');
+        var findBreakPoints = require('./findBreakPoints');
+
         var pathUtil = require('graphics/pathUtil');
         var reducePath = require('graphics/reducePath');
         var vector = require('graphics/vector');
 
-
-        function fitContour(data, scale) {
+        /**
+         * 拟合轮廓点曲线
+         * @param  {Array} data        轮廓点数组
+         * @param  {number} scale       缩放级别
+         * @param  {Array?} breakPoints 关键点数组
+         * @return {Array}             拟合后轮廓
+         */
+        function fitContour(data, scale, breakPoints) {
             scale = scale || 1;
 
-            var breakPoints = findBreakPoints(data, scale);
+            breakPoints = breakPoints || findBreakPoints(data, scale);
             var resultContour = [];
             var isLast;
             var start;
@@ -125,23 +132,23 @@ define(
             if (resultContour.length <= 2) {
                 return null;
             }
-            else if (resultContour.length <= 4 && vector.getDist(resultContour[0], resultContour[1], resultContour[2]) < scale) {
+            // 去除拟合后变成了直线轮廓
+            else if (
+                resultContour.length <= 4
+                && vector.getDist(resultContour[0], resultContour[1], resultContour[2]) < scale
+            ) {
                 return null;
             }
 
-            // 去除last
-            start = resultContour[0];
-            end = resultContour[resultContour.length - 1];
-
-            if (vector.dist(start, end) < scale * 5) {
+            if (vector.dist(resultContour[0], resultContour[resultContour.length - 1]) <= scale) {
                 resultContour.splice(resultContour.length - 1, 1);
             }
 
-            return pathUtil.deInterpolate(reducePath(resultContour)).map(function (p) {
+            return pathUtil.deInterpolate(reducePath(resultContour).map(function (p) {
                 p.x = Math.floor(p.x);
                 p.y = Math.floor(p.y);
                 return p;
-            });
+            }));
         }
 
         return fitContour;

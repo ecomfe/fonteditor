@@ -7,8 +7,8 @@ define(
     function (require) {
 
         var ImageProcessor = require('graphics/image/ImageProcessor');
-        var findContours = require('graphics/image/findContours');
         var binarizeImage = require('graphics/image/filter/binarize');
+        var findContours = require('graphics/image/contour/findContours');
         var clone
         var ctx = null;
         var canvas = null;

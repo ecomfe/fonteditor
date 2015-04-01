@@ -17,9 +17,9 @@
 define(
     function (require) {
 
-        var makeLink = require('../pathUtil').makeLink;
-        var getCos = require('../vector').getCos;
-        var getDist = require('../vector').getDist;
+        var makeLink = require('graphics/pathUtil').makeLink;
+        var getCos = require('graphics/vector').getCos;
+        var getDist = require('graphics/vector').getDist;
 
         var THETA_TANGENCY = 0.1; // 相切抑制
         var THETA_CORNER = 0.5; // 拐点抑制

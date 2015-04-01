@@ -7,10 +7,8 @@ define(
     function (require) {
 
         var ImageProcessor = require('graphics/image/ImageProcessor');
+        var ContourPointsProcessor = require('graphics/image/ContourPointsProcessor');
 
-        var findContours = require('graphics/image/findContours');
-        var findBreakPoints = require('graphics/image/findBreakPoints');
-        var fitContour = require('graphics/image/fitContour');
         var drawPath = require('render/util/drawPath');
         var pathUtil = require('graphics/pathUtil');
         var lang = require('common/lang');
@@ -19,6 +17,7 @@ define(
         var canvas = null;
         var curImage = null;
         var processor = null;
+        var pointsProcessor = new ContourPointsProcessor();;
 
         function getOptions() {
             return {
@@ -79,7 +78,8 @@ define(
                 }
             }
 
-            var contoursPoints = findContours(result);
+            pointsProcessor.import(result);
+            var contoursPoints = pointsProcessor.get();
 
             contoursPoints.forEach(function (contour) {
                 var flag = contour.flag;
@@ -96,29 +96,18 @@ define(
             ctx.putImageData(imgData, 0, 0);
 
             setTimeout(function() {
-
                 if (!!$('#show-breakpoints').get(0).checked) {
                     getBreakPoints(contoursPoints);
                 }
-
                 getContours(contoursPoints);
             }, 20);
 
         }
 
         function getBreakPoints(contoursPoints) {
-            var contoursBreakPoints = [];
-            contoursPoints.forEach(function (ps) {
-                points = pathUtil.scale(lang.clone(ps), 10);
-                var breakPoints  = findBreakPoints(points, 10);
-                if (breakPoints) {
-                    contoursBreakPoints = contoursBreakPoints.concat(pathUtil.scale(breakPoints, 0.1));
-                }
-            });
-
             // 绘制关键点
             ctx.beginPath();
-            contoursBreakPoints.forEach(function (p) {
+            pointsProcessor.getBreakPoints().forEach(function (p) {
                 if (p.breakPoint) {
                     ctx.fillStyle = 'red';
                 }
@@ -138,21 +127,10 @@ define(
             var ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, result.width, result.height);
 
-            var contoursBreakPoints = [];
-            var resultContours = [];
-            contoursPoints.forEach(function (ps) {
-                points = pathUtil.scale(ps, 10);
-                var contour = fitContour(points, 10);
-                if (contour) {
-                    resultContours.push(pathUtil.scale(contour, 0.1));
-                }
-            });
-
-
             // 绘制拟合曲线
             ctx.fillStyle = 'green';
             ctx.beginPath();
-            resultContours.forEach(function (contour) {
+            pointsProcessor.getContours().forEach(function (contour) {
                 drawPath(ctx, contour);
             });
             ctx.fill();
@@ -200,7 +178,13 @@ define(
                 $('[data-action]').on('click', function () {
                     var action = $(this).data('action');
 
-                    if (action === 'binarize') {
+                    if (action === 'fitwindow') {
+                        var fit = $(this).get(0).checked;
+                        $('#canvas')[fit ? 'addClass' : 'removeClass']('fitwindow');
+                        $('#canvas-glyf')[fit ? 'addClass' : 'removeClass']('fitwindow');
+                        return;
+                    }
+                    else if (action === 'binarize') {
                         binarize();
                     }
                     else if (action === 'restore') {

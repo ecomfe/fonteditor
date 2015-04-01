@@ -95,6 +95,7 @@ define(
                 if (dlg) {
                     this.onDispose && this.onDispose();
                     delete this.options;
+                    this.style && dlg.removeClass(this.style);
                     dlg.off('hidden.bs.modal');
                     dlg.find('.btn-confirm').off('click');
                     dlg = null;
@@ -251,7 +252,11 @@ define(
          */
         Setting.prototype.show = function (setting) {
             program.listening = false;
-            $('#model-dialog').modal('show');
+            var dlg = $('#model-dialog');
+            if (this.style) {
+                dlg.addClass(this.style);
+            }
+            dlg.modal('show');
             this.set(setting);
             return this;
         };

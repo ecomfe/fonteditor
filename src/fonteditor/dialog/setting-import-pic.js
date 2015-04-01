@@ -6,25 +6,26 @@
 
 define(
     function (require) {
+
+        var TPL = require('text!template/dialog/setting-import-pic.tpl');
+
+        var lang = require('common/lang');
         var program = require('../widget/program');
-
-        var image2Values = require('graphics/image/image2Values');
         var findContours = require('graphics/image/findContours');
-        var fitImageContours = require('graphics/image/fitImageContours');
+        var fitContour = require('graphics/image/fitContour');
+        var drawPath = require('render/util/drawPath');
+        var ImageProcessor = require('graphics/image/ImageProcessor');
+        var getHistogram = require('graphics/image/util/getHistogram');
+        var getThreshold = require('graphics/image/util/getThreshold');
+        var pathUtil = require('graphics/pathUtil');
 
-
-        function getOptions() {
-            return {
-                threshold: $('#import-pic-threshold-fn').val() ? $('#threshold-fn').val() : +$('#import-pic-threshold-gray').val(),
-                reverse: !!$('#import-pic-threshold-reverse').get(0).checked
-            }
+        function gf(filter) {
+            return $('#import-pic-dialog').find('[data-filter="' + filter + '"]');
         }
 
-
-        function refreshImage(image) {
-            var canvas = $('#import-pic-canvas').get(0);
+        function fitImage(image) {
+            var canvas = $('#import-pic-canvas-origin').get(0);
             canvas.style.visiblity = 'hidden';
-
             var ctx = canvas.getContext('2d');
             var width = image.width;
             var height = image.height;
@@ -32,13 +33,64 @@ define(
             canvas.height = height;
             ctx.drawImage(image, 0, 0, width, height);
             var imgData = ctx.getImageData(0, 0, width, height);
-            var result = image2Values(imgData, getOptions());
+
+            return fitImageContours(imgData, getOptions());
+        }
+
+
+        /**
+         * 保存当前的灰度图像
+         * @param {Object} image 图片对象
+         */
+        function updateImage(image) {
+
+            program.data.imageProcessor && program.data.imageProcessor.dispose();
+            var canvas = $('#import-pic-canvas-origin').get(0);
+            canvas.style.visiblity = 'hidden';
+            var ctx = canvas.getContext('2d');
+            var width = image.width;
+            var height = image.height;
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(image, 0, 0, width, height);
+            var imgData = ctx.getImageData(0, 0, width, height);
+            var processor = new ImageProcessor(imgData);
+            processor.grayData = processor.clone();
+
+            // 使用ostu来设置灰度阈值
+            var histoGram = getHistogram(processor.get());
+            gf('threshold').val(getThreshold(histoGram, 'ostu'));
+
+            program.data.imageProcessor = processor;
+            processImage();
+            binarizeImage();
+            refreshCanvasOrigin();
+        }
+
+        function refreshCanvasOrigin() {
+
+            var canvas = $('#import-pic-canvas-origin').get(0);
+            canvas.style.visiblity = 'hidden';
+
+            var binarizedImage = program.data.imageProcessor.get();
+            var width = binarizedImage.width;
+            var height = binarizedImage.height;
+            var ctx = canvas.getContext('2d');
+            var imgData = ctx.getImageData(0, 0, width, height);
+
+            if (!binarizedImage.binarize) {
+                binarizeImage();
+                binarizedImage = program.data.imageProcessor.get();
+            }
+
             var putData = imgData.data;
+            var binarizedImageData = binarizedImage.data;
+
             for (var y = 0; y < height; y ++) {
                 var line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
-                    if (result.data[offset]) {
+                    if (binarizedImageData[offset] === 0) {
                         putData[offset * 4] = 208;
                         putData[offset * 4 + 1] = 247;
                         putData[offset * 4 + 2] = 113;
@@ -53,10 +105,9 @@ define(
                 }
             }
 
-            var contours = findContours(result);
-
-            contours.forEach(function (contour) {
-                contour.forEach(function (p) {
+            var contoursPoints = findContours(binarizedImage);
+            contoursPoints.forEach(function (points) {
+                points.forEach(function (p) {
                     var offset = p.y * width + p.x;
                     putData[offset * 4] = 255;
                     putData[offset * 4 + 1] = 0;
@@ -68,133 +119,188 @@ define(
             ctx.putImageData(imgData, 0, 0);
 
             canvas.style.visiblity = 'visible';
+            program.loading.hide();
+
+            setTimeout(function () {
+                refreshCanvasFit(contoursPoints);
+            }, 20);
         }
 
-        function fitImage(image) {
-            var canvas = $('#import-pic-canvas').get(0);
-            canvas.style.visiblity = 'hidden';
+        function refreshCanvasFit(contoursPoints) {
+            var processor = program.data.imageProcessor;
+            var result = processor.get();
+            var canvas = $('#import-pic-canvas-fit').get(0);
+            canvas.width = result.width;
+            canvas.height = result.height;
             var ctx = canvas.getContext('2d');
-            var width = image.width;
-            var height = image.height;
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(image, 0, 0, width, height);
-            var imgData = ctx.getImageData(0, 0, width, height);
+            ctx.clearRect(0, 0, result.width, result.height);
 
-            return fitImageContours(imgData, getOptions());
+            var resultContours = [];
+            contoursPoints.forEach(function (ps) {
+                points = pathUtil.scale(ps, 10);
+                var contour = fitContour(points, 10);
+                if (contour) {
+                    resultContours.push(pathUtil.scale(contour, 0.1));
+                }
+            });
+
+            processor.resultContours = resultContours;
+
+            // 绘制拟合曲线
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            resultContours.forEach(function (contour) {
+                drawPath(ctx, contour);
+            });
+            ctx.fill();
         }
 
 
-        var tpl = ''
+        function processImage() {
+            var processor = program.data.imageProcessor;
+            processor.set(processor.grayData.clone().get());
 
-            + '<div class="form-group">'
-            +   '<button id="import-pic-fitpanel" type="button" class="btn btn-flat btn-preview btn-sm import-pic-fitpanel">适应窗口</button>'
-            +   '<button id="import-pic-select" type="button" class="btn btn-flat btn-new btn-sm">选择图片</button> 请选择字形图片，支持jpg|gif|png。'
-            +   '<form id="import-pic-form" style="width:0px;height:0px;overflow:hidden;"><input id="import-pic-file" type="file"></form>'
-            + '</div>'
+            if (gf('reverse').is(':checked')) {
+                processor.reverse();
+            }
 
-            + '<div class="import-pic-panel"><canvas id="import-pic-canvas"></canvas></div>'
+            if (+gf('gaussBlur').val() >= 2) {
+                processor.gaussBlur(+gf('gaussBlur').val());
+            }
 
-            + '<div class="form-inline">'
+            if (+gf('contrast').val()) {
+                processor.brightness(0, +gf('contrast').val());
+            }
 
-            +   '<div class="form-group">'
-            +       '<div class="input-group input-group-sm">'
-            +         '<span class="input-group-addon">反转图像</span>'
-            +         '<span class="form-control"><input id="import-pic-threshold-reverse" type="checkbox"></span>'
-            +       '</div>'
-            +   '</div>'
+            // 保存一份处理后的
+            processor.save();
+        }
 
-            +   '<div class="form-group">'
-            +       '<div class="input-group input-group-sm">'
-            +         '<span class="input-group-addon">灰度阈值</span>'
-            +         '<span class="form-control"><input id="import-pic-threshold-gray" type="range" min="0" max="255" value="200" step="1"></span>'
-            +       '</div>'
-            +   '</div>'
+        function binarizeImage() {
+            program.data.imageProcessor.binarize(+gf('threshold').val());
+        }
 
-            +   '<div class="form-group">'
-            +       '<div class="input-group input-group-sm">'
-            +         '<span class="input-group-addon">预设阈值</span>'
-            +           '<select id="import-pic-threshold-fn" class="form-control">'
-            +               '<option value=""> </option>'
-            +               '<option value="mean">灰度平均值</option>'
-            +               '<option value="minimum">谷底最小值</option>'
-            +               '<option value="intermodes">双峰平均值</option>'
-            +               '<option value="ostu">大津法</option>'
-            +               '<option value="isoData">ISODATA法</option>'
-            +           '</select>'
-            +       '</div>'
-            +   '</div>'
-            + '</div>';
+
+
+        function bindEvent() {
+            $('#import-pic-file').get(0).onchange = function (e) {
+                var file = e.target.files[0];
+                var reader = new FileReader();
+                program.loading.show('正在加载图片...', 10000);
+
+                reader.onload = function(e) {
+                    var image = new Image();
+                    image.onload = function () {
+                        updateImage(image);
+                    };
+                    image.src = e.target.result;
+                    e.target.value = '';
+                };
+                reader.onerror = function(e) {
+                    program.loading.warn('读取图片失败...', 4000);
+                    throw e;
+                };
+                reader.readAsDataURL(file);
+            };
+
+            var throttleAction = lang.debounce(function (action) {
+                // 调整灰度阈值，只需要恢复未二值化的数据不需要重新计算图像
+                if (action === 'threshold') {
+                    program.data.imageProcessor.restore();
+                    binarizeImage();
+                }
+                else if (action === 'threshold-pre') {
+                    var histoGram = getHistogram(program.data.imageProcessor.getOrigin());
+                    gf('threshold').val(getThreshold(histoGram, $('#import-pic-threshold-pre').val()));
+                    program.data.imageProcessor.restore();
+
+                    binarizeImage();
+                }
+                // 处理图片的情况，需要调用处理图片和二值化函数
+                else if (action === 'restore') {
+                   gf('reverse').get(0).checked = false;
+                   gf('gaussBlur').val(0);
+                   gf('contrast').val(0);
+                   processImage();
+                   binarizeImage();
+                }
+                else if (action === 'reverse' || action === 'gaussBlur' || action === 'contrast' || action === 'restore-binarize') {
+                    processImage();
+                    binarizeImage();
+                }
+                // 腐蚀和膨胀只需要处理二值数据
+                else if (action === 'open' || action === 'close' || action === 'dilate' || action === 'erode') {
+                    program.data.imageProcessor[action]();
+                }
+                refreshCanvasOrigin();
+            }, 100);
+
+
+            $('#import-pic-dialog').on('click', '[data-action]', function () {
+                var action = $(this).data('action');
+
+                if (action === 'openfile') {
+                    $('#import-pic-file').click();
+                }
+                else if (action === 'fitwindow') {
+                    $('#import-pic-dialog').find('.preview-panel').toggleClass('fitpanel');
+                }
+                else if (action === 'fitwindow-left') {
+                    $('#import-pic-dialog').find('.preview-panel')
+                        .removeClass('fitpanel').removeClass('showright').toggleClass('showleft');
+                }
+                else if (action === 'fitwindow-right') {
+                    $('#import-pic-dialog').find('.preview-panel')
+                        .removeClass('fitpanel').removeClass('showleft').toggleClass('showright');
+                }
+
+            }).on('click', '[data-filter]', function (e) {
+                if (!program.data.imageProcessor) {
+                    return;
+                }
+                var action = $(this).data('filter');
+                program.loading.show('正在处理...', 10000);
+                throttleAction(action);
+            })
+
+            $('#import-pic-threshold-pre').on('change', function (e) {
+                if (!program.data.imageProcessor) {
+                    return;
+                }
+                program.loading.show('正在处理...', 10000);
+                throttleAction('threshold-pre');
+            });
+        }
+
+        function unbindEvent() {
+            $('#import-pic-file').get(0).onchange = null;
+            $('#import-pic-dialog').off('click');
+             $('#import-pic-threshold-pre').off('change');
+            $('#import-pic-canvas-origin').css('visiblity', 'hidden');
+        }
 
         return require('./setting').derive({
 
             title: '导入字形图片',
 
+            style: 'import-pic-dialog',
+
             getTpl: function () {
-                return tpl;
+                return TPL;
             },
 
             set: function () {
-
-                $('#import-pic-file').get(0).onchange = function (e) {
-                    program.data.importedImage = null;
-
-                    var file = e.target.files[0];
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        var image = new Image();
-                        image.onload = function () {
-                            refreshImage(image);
-                        };
-
-                        image.src = e.target.result;
-                        program.data.importedImage = image;
-
-                        e.target.value = '';
-                    };
-                    reader.onerror = function(e) {
-                        alert('读取图片失败!');
-                    };
-                    reader.readAsDataURL(file);
-                };
-
-                $('#import-pic-select').on('click', function () {
-                    $('#import-pic-file').click();
-                });
-
-                $('#import-pic-threshold-reverse').on('change', function () {
-                    program.data.importedImage && refreshImage(program.data.importedImage);
-                });
-
-                $('#import-pic-threshold-gray').on('change', function () {
-                    $('#import-pic-threshold-fn').val('');
-                    program.data.importedImage && refreshImage(program.data.importedImage);
-                });
-
-                $('#import-pic-threshold-fn').on('change', function () {
-                    program.data.importedImage && refreshImage(program.data.importedImage);
-                });
-
-                $('#import-pic-fitpanel').on('click', function () {
-                    $('#import-pic-canvas').toggleClass('fitpanel');
-                });
-
+                bindEvent();
             },
 
             validate: function () {
 
-                $('#import-pic-file').get(0).onchange = null;
-                $('#import-pic-select').off('click');
-                $('#import-pic-threshold-reverse').off('change');
-                $('#import-pic-threshold-gray').off('change');
-                $('#import-pic-threshold-fn').off('change');
-                $('#import-pic-fitpanel').off('click');
-                $('#import-pic-canvas').css('visiblity', 'hidden');
+                unbindEvent();
 
-                if (program.data.importedImage) {
-
-                    var contours = fitImage(program.data.importedImage);
-                    program.data.importedImage = null;
+                if (program.data.imageProcessor) {
+                    var contours = program.data.imageProcessor.resultContours;
+                    program.data.imageProcessor.dispose();
+                    program.data.imageProcessor = null;
 
                     if (!contours || !contours.length) {
                         alert('没有找到可导入的字形！');
@@ -205,8 +311,6 @@ define(
                         };
                     }
                 }
-
-                program.data.importedImage = null;
 
                 return {};
             }

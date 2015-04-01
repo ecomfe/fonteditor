@@ -59,6 +59,15 @@ define(
             return this.imageData;
         };
 
+        /**
+         * 获取上一个保存点
+         *
+         * @return {Object} 图像数据
+         */
+        ImageProcessor.prototype.getOrigin = function () {
+            return this.originData;
+        };
+
 
         /**
          * 备份当前编辑

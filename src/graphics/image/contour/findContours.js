@@ -7,7 +7,7 @@
 define(
     function (require) {
 
-        var smoothContour = require('./contour/smooth');
+        var smoothContour = require('./smooth');
 
         var ICV_SINGLE = 1;
         var ICV_CONNECTING_ABOVE = 2;
