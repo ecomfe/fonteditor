@@ -15,7 +15,7 @@ define(
         var string = require('common/string');
         var lang = require('common/lang');
         var glyfAdjust = require('ttf/util/glyfAdjust');
-
+        var emptyttf = require('ttf/data/empty');
 
         /**
          * 读取在线字体
@@ -83,13 +83,10 @@ define(
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
                     return;
                 }
-
-                $.getJSON('./font/empty.json', function (imported) {
-                    program.ttfManager.set(imported);
-                    program.data.projectId = null;
-                    // 建立项目 提示保存
-                    actions.save();
-                });
+                program.ttfManager.set(lang.clone(emptyttf));
+                program.data.projectId = null;
+                // 建立项目 提示保存
+                actions.save();
             },
 
             'open': function () {

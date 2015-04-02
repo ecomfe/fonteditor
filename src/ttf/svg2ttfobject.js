@@ -10,6 +10,7 @@
 define(
     function (require) {
         var string = require('common/string');
+        var lang = require('common/lang');
         var DOMParser = require('common/DOMParser');
         var path2contours = require('./svg/path2contours');
         var svgnode2contours = require('./svg/svgnode2contours');
@@ -17,6 +18,7 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var glyfAdjust = require('./util/glyfAdjust');
         var error = require('./error');
+        var emptyttf = require('./data/empty');
 
         /**
          * 加载xml字符串
@@ -39,7 +41,19 @@ define(
         }
 
         /**
-         * 获取空的ttfObject
+         * 获取空的ttf格式对象
+         *
+         * @return {Object} ttfObject对象
+         */
+        function getEmptyTTFObject() {
+            var ttf = lang.clone(emptyttf);
+            ttf.head.unitsPerEm = 0; // 去除unitsPerEm以便于重新计算
+            ttf.from = 'svgfont';
+            return ttf;
+        }
+
+        /**
+         * 获取空的对象，用来作为ttf的容器
          *
          * @return {Object} ttfObject对象
          */
@@ -226,7 +240,12 @@ define(
                     missing.contours = path2contours(d);
                 }
 
-                ttf.glyf.push(missing);
+                // 去除默认的空字形
+                if (ttf.glyf[0] && ttf.glyf[0].name === '.notdef') {
+                    ttf.glyf.splice(0, 1);
+                }
+
+                ttf.glyf.unshift(missing);
             }
 
             var glyfNodes = xmlDoc.getElementsByTagName('glyph');
@@ -331,19 +350,20 @@ define(
          */
         function parseXML(xmlDoc, options) {
 
-            var ttf = getEmptyObject();
-
             if (!xmlDoc.getElementsByTagName('svg').length) {
                 error.raise(10106);
             }
 
-            parseFont(xmlDoc, ttf);
+            var ttf;
 
             // 如果是svg字体格式，则解析glyf，否则解析path
-            if (ttf.from === 'svgfont') {
+            if (xmlDoc.getElementsByTagName('font')[0]) {
+                ttf = getEmptyTTFObject();
+                parseFont(xmlDoc, ttf);
                 parseGlyf(xmlDoc, ttf);
             }
             else {
+                ttf = getEmptyObject();
                 parsePath(xmlDoc, ttf);
             }
 
