@@ -88,7 +88,9 @@ define(
         var program = {
 
             // 在线地址读取接口
-            fontUrl: './php/readFont.php?file=${0}',
+            readOnline: location.hostname.indexOf('baidu.com') >= 0
+                ? '/font/proxy?type=${0}&url=${1}'
+                :'./php/readOnline.php?type=${0}&file=${1}',
 
             /**
              * 初始化

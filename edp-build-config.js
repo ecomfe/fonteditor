@@ -17,12 +17,28 @@ exports.getProcessors = function () {
                 relativeUrls: false
             }
         }),
+
+
+        new Html2JsCompiler({
+            mode: 'default',
+            files: ['src/fonteditor/template/**/*.tpl'],
+            extnames: ['tpl'],
+            combine: true
+        }),
+
         new ModuleCompiler( {
             files: [
                 'src/fonteditor/main.js'
             ],
             configFile: './module.conf'
         }),
+
+        // new Html2JsCompiler({
+        //     mode: 'default',
+        //     files: ['src/fonteditor/template/**/*.tpl'],
+        //     extnames: ['tpl'],
+        //     clean: true
+        // }),
 
         new JsCompressor({
             files: [
@@ -54,9 +70,10 @@ exports.exclude = [
     "*.bat",
     "*.md",
     "demo",
-    "agent/*",
+    "agent",
     "mock",
-    "test/*",
+    "test",
+    "unittest",
     "edp-*",
     "output",
     ".DS_Store",

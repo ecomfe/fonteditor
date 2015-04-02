@@ -14,6 +14,8 @@ define(
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
         var lang = require('common/lang');
+        var glyfAdjust = require('ttf/util/glyfAdjust');
+        var emptyttf = require('ttf/data/empty');
 
         /**
          * 读取在线字体
@@ -81,13 +83,10 @@ define(
                 if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
                     return;
                 }
-
-                $.getJSON('./font/empty.json', function (imported) {
-                    program.ttfManager.set(imported);
-                    program.data.projectId = null;
-                    // 建立项目 提示保存
-                    actions.save();
-                });
+                program.ttfManager.set(lang.clone(emptyttf));
+                program.data.projectId = null;
+                // 建立项目 提示保存
+                actions.save();
             },
 
             'open': function () {
@@ -174,7 +173,7 @@ define(
                             var fontUrl = url;
 
                             if (/^https?:\/\//i.test(url)) {
-                                fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                                fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
                             }
 
                             readOnlineFont(type, fontUrl);
@@ -191,7 +190,7 @@ define(
                         program.loading.show('正在加载..', 1000);
                         // 此处延迟处理
                         setTimeout(function () {
-                            var fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                            var fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
                             readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
                         }, 20);
                     }
@@ -254,15 +253,24 @@ define(
 
             'import-pic': function () {
                 var SettingEditor = settingSupport['import-pic'];
-                if (program.editor.isVisible()) {
+                if (program.ttfManager.get()) {
                     !new SettingEditor({
                         onChange: function (setting) {
                             if (setting.contours) {
-                                program.editor.execCommand('addcontours', setting.contours, {
-                                    scale: 1,
-                                    flip: true,
-                                    selected: true
-                                });
+
+                                if (program.editor.isVisible()) {
+                                    program.editor.execCommand('addcontours', setting.contours, {
+                                        scale: 1,
+                                        selected: true
+                                    });
+                                    editorDelayFocus();
+                                }
+                                else {
+                                    var selected = program.viewer.getSelected();
+                                    program.ttfManager.insertGlyf(glyfAdjust({
+                                        contours: setting.contours
+                                    }, 1, 1, 0, 0, false), selected[0]);
+                                }
                             }
                         }
                     }).show();

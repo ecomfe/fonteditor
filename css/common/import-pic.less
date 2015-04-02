@@ -1,20 +1,77 @@
 
+.import-pic-dialog {
+    .modal-dialog {
+        width: 960px;
+    }
 
-.import-pic-panel {
-    height: 400px;
-    overflow: auto;
-    background: #FFF;
-    margin-bottom: 15px;
-    overflow: auto;
+    .form-group {
+        width: auto;
+    }
 
-    .fitpanel {
-        max-width: 98%;
-        max-height: 98%;
+    .modal-body {
+        padding-bottom: 0;
+    }
+
+    .preview-panel {
+        background: #FFF;
+        margin-bottom: 15px;
+
+        .canvas-left,
+        .canvas-right {
+            display: inline-block;
+            width: 50%;
+            height: 420px;
+            overflow: auto;
+        }
+
+        .canvas-left {
+            border-right: 1px solid #BAC1CB;
+        }
+
+        &.fitpanel {
+            canvas {
+                max-width: 100%;
+                max-height: 99%;
+            }
+        }
+
+        &.showleft {
+            .canvas-left {
+                width: 100%;
+                border-right: none;
+                display: inline-block;
+            }
+            .canvas-right {
+                display: none;
+            }
+        }
+
+        &.showright {
+            .canvas-right {
+                width: 100%;
+                display: inline-block;
+            }
+            .canvas-left {
+                display: none;
+            }
+        }
+    }
+
+    .import-pic-url {
+        position: absolute;
+        margin-top: 30px;
+        background: #4A90E2;
+        padding: 10px 10px 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        display: none;
+
+        &.show-url {
+            display: block;
+        }
     }
 }
 
-.import-pic-fitpanel {
-    float: right;
-}
+
 
 

@@ -24,7 +24,7 @@ define(
         var interpolatePathCrossBezier = require('./join/interpolatePathCrossBezier');
         var bezier2Segment = require('./join/bezier2Segment');
         var segment2Bezier = require('./join/segment2Bezier');
-
+        var reducePath = require('./reducePath');
 
         /**
          * 求路径交集、并集、差集
@@ -88,7 +88,7 @@ define(
             return paths.filter(function (path) {
                 return path.length > 2;
             }).map(function (path) {
-                return deInterpolate(path);
+                return reducePath(deInterpolate(path));
             });
         }
 

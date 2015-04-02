@@ -6,9 +6,29 @@
     <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <style>
-        body {
+
+        body,html {
             margin: 0;
             padding: 0;
+            height: 100%;
+            font-size: 12px;
+        }
+
+        .left,.right {
+            position: absolute;
+            width: 50%;
+            top: 40px;
+            bottom: 0;
+            overflow: auto;
+        }
+
+        .right {
+            right: 0;
+        }
+
+        .fitwindow {
+            max-width: 100%;
+            max-height: 100%;
         }
 
     </style>
@@ -16,19 +36,21 @@
 <body>
     <div>
         <input id="upload-file" type="file">
-        灰度阈值：<input id="threshold-gray" type="range" min="0" max="255" value="200">
-        反转图像：<input id="threshold-reverse" type="checkbox">
-        二值算子：
-        <select id="threshold-fn">
-            <option value="">二值算子</option>
-            <option value="mean">基于灰度平均值的阈值</option>
-            <option value="minimum">基于谷底最小值的阈值</option>
-            <option value="intermodes">基于双峰平均值的阈值</option>
-            <option value="ostu">大津法</option>
-            <option value="isoData">ISODATA法</option>
-        </select>
+        灰度阈值：<input id="threshold-gray" data-action="binarize" type="range" min="0" max="255" value="200">
+
+        <input data-action="restore" type="button" value="恢复">
+        <label><input data-action="reverse" type="checkbox">反转</label>
+        高斯平滑：<input data-action="gaussBlur" type="range" min="0" max="20" step="1" value="0">
+        <input data-action="open" type="button" value="消除杂点">
+        <input data-action="close" type="button" value="消除孔洞">
+        <input data-action="dilate" type="button" value="膨胀">
+        <input data-action="erode" type="button" value="侵蚀">
+        <label><input id="show-breakpoints" data-action="breakpoints" type="checkbox">显示关键点</label>
+        <label><input data-action="fitwindow" type="checkbox">适应窗口</label>
     </div>
-    <canvas id="canvas" width="800" height="800"></canvas>
+
+    <div class="left"><canvas id="canvas"></canvas></div>
+    <div class="right"><canvas id="canvas-glyf"></canvas></div>
 <script>
     require.config({
         baseUrl: '../src',

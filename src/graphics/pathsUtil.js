@@ -93,7 +93,12 @@ define(
 
         return {
             rotate: rotatePaths,
-            mirror: mirrorPaths,
+            mirror: function (paths) {
+                return mirrorPaths(paths, -1, 1)
+            },
+            flip: function (paths) {
+                return mirrorPaths(paths, 1, -1)
+            },
             move: movePaths
         };
     }

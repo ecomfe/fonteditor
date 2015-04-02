@@ -171,6 +171,22 @@ define(
             return path;
         }
 
+
+        function clone(path) {
+            return path ? path.map(function (p) {
+                var newP = {
+                    x: p.x,
+                    y: p.y
+                };
+
+                if (p.onCurve) {
+                    newP.onCurve = true;
+                }
+
+                return newP;
+            }) : path;
+        }
+
         return {
             interpolate: interpolate,
             deInterpolate: deInterpolate,
@@ -178,7 +194,8 @@ define(
             removeOverlapPoints: removeOverlapPoints,
             getPathHash: getPathHash,
             makeLink: makeLink,
-            scale: scale
+            scale: scale,
+            clone: clone
         };
     }
 );

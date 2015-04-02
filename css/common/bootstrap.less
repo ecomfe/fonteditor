@@ -126,16 +126,39 @@ hr {
 .btn-new {
     color: #FFF;
     background: #4A90E2;
+
+    &:hover,
+    &:focus {
+        background: darken(#4A90E2, 10%);
+        color: #FFF;
+    }
 }
 
 .btn-preview {
     color: #FFF;
     background: #28B4A0;
+
+    &:hover,
+    &:focus {
+        background: lighten(#28B4A0, 10%);
+        color: #FFF;
+    }
+
+    &.dropdown-toggle:focus {
+        background: #323842;
+        color: #B6CBDD;
+    }
 }
 
 .btn-confirm {
     color: #FFF;
     background: #4A90E2;
+
+    &:hover,
+    &:focus {
+        background: darken(#4A90E2, 10%);
+        color: #FFF;
+    }
 }
 
 .btn-ico {
@@ -227,4 +250,13 @@ hr {
 
 .form-line {
     line-height: 34px;
+}
+
+
+.form-title {
+    vertical-align: 3px;
+}
+
+.btn-right {
+    float: right;
 }
