@@ -36,8 +36,12 @@ define(
 
             canvas.width = width;
             canvas.height = height;
-            canvas.style.width = (width / pixelRatio) + 'px';
-            canvas.style.height = (height / pixelRatio) + 'px';
+
+            if (pixelRatio !== 1) {
+                canvas.style.width = (width / pixelRatio) + 'px';
+                canvas.style.height = (height / pixelRatio) + 'px';
+            }
+
             canvas.ctx.drawImage(image, 0, 0, width, height);
 
             var imgData = canvas.ctx.getImageData(0, 0, width, height);
@@ -121,8 +125,10 @@ define(
 
             canvas.width = pixelRatio * width;
             canvas.height = pixelRatio * height;
-            canvas.style.width = (width / pixelRatio) + 'px';
-            canvas.style.height = (height / pixelRatio) + 'px';
+            if (pixelRatio !== 1) {
+                canvas.style.width = (width / pixelRatio) + 'px';
+                canvas.style.height = (height / pixelRatio) + 'px';
+            }
 
             // 绘制拟合曲线
             canvas.ctx.fillStyle = 'green';
@@ -160,16 +166,18 @@ define(
         }
 
         function bindEvent() {
-            // 这里由于对hidpi进行修正，需要修复下设置
             var canvasOrigin = $('#import-pic-canvas-origin').get(0);
             canvasOrigin.ctx = canvasOrigin.getContext('2d');
-            canvasOrigin.width = canvasOrigin.height = 0;
-            canvasOrigin.style.width = canvasOrigin.style.height = 'auto';
             var canvasFit = $('#import-pic-canvas-fit').get(0);
             canvasFit.ctx = canvasFit.getContext('2d');
-            canvasFit.width = canvasFit.height = 0;
-            canvasFit.style.width = canvasFit.style.height = 'auto';
 
+            // 这里由于对retina屏幕进行修正，需要修复下设置
+            if (pixelRatio !== 1) {
+                canvasOrigin.width = canvasOrigin.height = 0;
+                canvasOrigin.style.width = canvasOrigin.style.height = 'auto';
+                canvasFit.width = canvasFit.height = 0;
+                canvasFit.style.width = canvasFit.style.height = 'auto';
+            }
 
             $('#import-pic-file').get(0).onchange = function (e) {
                 var file = e.target.files[0];
