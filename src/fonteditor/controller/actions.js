@@ -263,8 +263,10 @@ define(
 
                                 if (program.editor.isVisible()) {
                                     program.editor.execCommand('addcontours', setting.contours, {
+                                        scale: 1,
                                         selected: true
                                     });
+                                    editorDelayFocus();
                                 }
                                 else {
                                     var selected = program.viewer.getSelected();

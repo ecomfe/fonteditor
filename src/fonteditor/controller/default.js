@@ -527,6 +527,13 @@ define(
                         hideEditor();
                     }
                 }
+                // F3, F4
+                else if (e.keyCode === 114 || e.keyCode === 115) {
+                    var ttf = program.ttfManager.get();
+                    if (ttf) {
+                        program.previewer.load(ttf, e.keyCode === 114 ? 'ttf' : 'woff');
+                    }
+                }
             });
         }
 

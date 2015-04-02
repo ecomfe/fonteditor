@@ -22,7 +22,7 @@ define(
         var extend = require('common/lang').extend;
         var ttf2icon = require('ttf/ttf2icon');
 
-        var previewTplRender = null; // 模板渲染函数
+        var previewRender = require('../template/preview-render'); // 模板渲染函数
 
         var isIE = !!window.ActiveXObject || 'ActiveXObject' in window;
 
@@ -34,7 +34,7 @@ define(
          * @return {string} html字符串
          */
         function generatePreviewHTML(ttf, fontFormat) {
-            fontFormat = !fontFormat || fontFormat === 'ttf' ? 'truetype' : fontFormat;
+            fontFormat = fontFormat || ttf;
 
             var fontData = '';
             var buffer;
@@ -63,22 +63,11 @@ define(
                 ttf2icon(ttf)
             );
 
-            return previewTplRender(data);
+            return previewRender.renderPreview(data);
         }
 
 
         var previewer = {
-
-            /**
-             * 初始化
-             */
-            init: function () {
-                if (!previewTplRender) {
-                    previewTplRender = utpl.template(
-                        require('text!template/preview-ttf.tpl')
-                    );
-                }
-            },
 
             /**
              * 加载预览按钮
@@ -108,8 +97,6 @@ define(
                 }
             }
         };
-
-        previewer.init();
 
         return previewer;
     }

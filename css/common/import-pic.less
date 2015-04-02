@@ -25,6 +25,10 @@
             overflow: auto;
         }
 
+        .canvas-left {
+            border-right: 1px solid #BAC1CB;
+        }
+
         &.fitpanel {
             canvas {
                 max-width: 100%;
@@ -35,6 +39,7 @@
         &.showleft {
             .canvas-left {
                 width: 100%;
+                border-right: none;
                 display: inline-block;
             }
             .canvas-right {

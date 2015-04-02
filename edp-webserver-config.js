@@ -1,4 +1,4 @@
-exports.port = 8008;
+exports.port = 9999;
 exports.directoryIndexes = true;
 exports.documentRoot = __dirname;
 exports.getLocations = function () {
@@ -26,7 +26,15 @@ exports.getLocations = function () {
                 less()
             ]
         },
-
+        {
+            location: /\.tpl\.js/,
+            handler: [
+                html2js({
+                    wrap: true,
+                    mode: 'default'
+                })
+            ]
+        },
 
         {
             location: /^.*$/,

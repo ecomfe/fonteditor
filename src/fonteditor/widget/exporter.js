@@ -16,22 +16,8 @@ define(
         var ttf2svg = require('ttf/ttf2svg');
         var ttf2icon = require('ttf/ttf2icon');
         var bytes2base64 = require('ttf/util/bytes2base64');
+        var exportRender = require('../template/export-render');
         var JSZip = require('JSZip');
-        var utpl = require('utpl');
-
-        // icon tpl
-        var tplExample = require('text!template/icon-example.tpl');
-        var renderExample = utpl.template(tplExample);
-
-        // icon css
-        var tplCss = require('text!template/icon-css.tpl');
-
-        // example css
-        // @坑
-        var tplPreviewCss = '';
-
-        // css render
-        var renderCss = utpl.template(tplCss);
 
         /**
          * 导出SFNT结构字体 base64
@@ -81,8 +67,8 @@ define(
         function exportFile(ttf, options) {
 
             if (ttf) {
-                try {
 
+                try {
                     var base64Str = '';
                     var fileName = (options.fileName || ttf.name.fontFamily || 'export');
 
@@ -111,19 +97,19 @@ define(
                         // css
                         fontzip.file(
                             'icon.css',
-                            renderCss(iconData)
+                            exportRender.renderFontCss(iconData)
                         );
 
                         // page
                         fontzip.file(
                             'page.css',
-                            tplPreviewCss
+                            exportRender.renderPreviewCss()
                         );
 
                         // html
                         fontzip.file(
                             'example.html',
-                            renderExample(iconData)
+                            exportRender.renderFontExample(iconData)
                         );
 
                         // zip
@@ -170,16 +156,6 @@ define(
 
 
         var exporter = {
-            /**
-             * 初始化
-             */
-            init: function () {
-                if (!tplPreviewCss) {
-                    $.get('./css/prevew.css', function (text) {
-                        tplPreviewCss = text;
-                    });
-                }
-            },
             'export': exportFile
         };
 
