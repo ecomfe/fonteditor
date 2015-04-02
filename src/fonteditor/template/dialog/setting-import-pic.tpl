@@ -1,12 +1,19 @@
 <div id="import-pic-dialog">
     <div class="form-group">
         <div class="input-group btn-right">
+            <div class="import-pic-url">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">图片URL</span>
+                    <input id="import-pic-url-text" value="" class="form-control">
+                </div>
+            </div>
+            <button type="button" data-action="import-url" class="btn btn-flat btn-new btn-sm" title="指定图片URL加载图片">从URL导入图片</button>&nbsp;
             <button type="button" data-action="fitwindow" class="btn btn-flat btn-new btn-sm">适应窗口</button>&nbsp;
             <button type="button" data-action="fitwindow-left" class="btn btn-flat btn-new btn-sm">查看原图</button>&nbsp;
             <button type="button" data-action="fitwindow-right" class="btn btn-flat btn-new btn-sm">查看轮廓</button>
         </div>
         <button data-action="openfile" type="button" class="btn btn-flat btn-new btn-sm">选择图片</button>
-        <span>请选择字形图片，支持jpg|gif|png。</span>
+        <span>请选择字形图片，支持jpg、gif、png、bmp、svg。</span>
         <form id="import-pic-form" style="width:0px;height:0px;overflow:hidden;"><input id="import-pic-file" type="file"></form>
     </div>
     <div class="preview-panel"><div class="canvas-left"><canvas id="import-pic-canvas-origin"></canvas></div><div class="canvas-right"><canvas id="import-pic-canvas-fit"></canvas></div></div>

@@ -173,7 +173,7 @@ define(
                             var fontUrl = url;
 
                             if (/^https?:\/\//i.test(url)) {
-                                fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                                fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
                             }
 
                             readOnlineFont(type, fontUrl);
@@ -190,7 +190,7 @@ define(
                         program.loading.show('正在加载..', 1000);
                         // 此处延迟处理
                         setTimeout(function () {
-                            var fontUrl = string.format(program.fontUrl, [encodeURIComponent(url)]);
+                            var fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
                             readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
                         }, 20);
                     }

@@ -91,11 +91,6 @@ define(
             init: function () {
                 bindEvent();
 
-                // font baidu online
-                if (location.hostname.indexOf('baidu.com') > -1) {
-                    program.fontUrl = '/font/proxy?url=${0}';
-                }
-
                 program.setting = require('./widget/settingmanager');
 
                 // glyf查看器命令组

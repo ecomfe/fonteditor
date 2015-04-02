@@ -8,6 +8,8 @@ define(
     function (require) {
 
         var tpl = require('../template/dialog/setting-import-pic.tpl');
+
+        var string = require('common/string');
         var pixelRatio = require('common/getPixelRatio');
         var lang = require('common/lang');
         var program = require('../widget/program');
@@ -171,6 +173,16 @@ define(
 
             $('#import-pic-file').get(0).onchange = function (e) {
                 var file = e.target.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                if (!/\.(?:jpg|gif|png|jpeg|bmp|svg)$/i.test(file.name)) {
+                    alert('不支持的文件类型！');
+                    return;
+                }
+
                 var reader = new FileReader();
                 program.loading.show('正在加载图片...', 10000);
 
@@ -179,12 +191,14 @@ define(
                     image.onload = function () {
                         updateImage(image);
                     };
+                    image.onerror = function () {
+                        program.loading.warn('读取图片失败...', 2000);
+                    };
                     image.src = e.target.result;
                     e.target.value = '';
                 };
                 reader.onerror = function(e) {
-                    program.loading.warn('读取图片失败...', 4000);
-                    throw e;
+                    program.loading.warn('读取图片失败...', 2000);
                 };
                 reader.readAsDataURL(file);
             };
@@ -248,6 +262,10 @@ define(
                     $('#import-pic-dialog').find('.preview-panel')
                         .removeClass('fitpanel').removeClass('showleft').toggleClass('showright');
                 }
+                else if (action === 'import-url') {
+                    $('#import-pic-dialog').find('.import-pic-url').toggleClass('show-url');
+                }
+
 
             }).on('click', '[data-filter]', function (e) {
                 if (!program.data.imageProcessor.grayData) {
@@ -266,12 +284,37 @@ define(
                 program.loading.show('正在处理...', 10000);
                 throttleAction('threshold-pre');
             });
+
+            $('#import-pic-url-text').on('keyup', function (e) {
+
+                if (e.keyCode !== 13) {
+                    return;
+                }
+                var val = this.value.trim();
+                if (/^https?:\/\//i.test(val)) {
+                    this.value = '';
+                    $('#import-pic-dialog').find('.import-pic-url').removeClass('show-url');
+                    program.loading.show('正在加载图片...', 10000);
+                    var image = new Image();
+                    image.onload = function () {
+                        updateImage(image);
+                    };
+                    image.onerror = function () {
+                        program.loading.warn('读取图片失败...', 2000);
+                    };
+                    image.src = string.format(program.readOnline, ['image', val]);
+                }
+                else {
+                    alert('请输入图片URL!');
+                }
+            });
         }
 
         function unbindEvent() {
             $('#import-pic-file').get(0).onchange = null;
             $('#import-pic-dialog').off('click');
             $('#import-pic-threshold-pre').off('change');
+            $('#import-pic-url-text').off('keyup');
         }
 
         return require('./setting').derive({
