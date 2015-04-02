@@ -8,6 +8,7 @@ define(
     function (require) {
 
         var tpl = require('../template/dialog/setting-import-pic.tpl');
+        var pixelRatio = require('common/getPixelRatio');
         var lang = require('common/lang');
         var program = require('../widget/program');
         var drawPath = require('render/util/drawPath');
@@ -21,21 +22,6 @@ define(
             return $('#import-pic-dialog').find('[data-filter="' + filter + '"]');
         }
 
-        function fitImage(image) {
-            var canvas = $('#import-pic-canvas-origin').get(0);
-            canvas.style.visiblity = 'hidden';
-            var ctx = canvas.getContext('2d');
-            var width = image.width;
-            var height = image.height;
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(image, 0, 0, width, height);
-            var imgData = ctx.getImageData(0, 0, width, height);
-
-            return fitImageContours(imgData, getOptions());
-        }
-
-
         /**
          * 保存当前的灰度图像
          * @param {Object} image 图片对象
@@ -43,14 +29,16 @@ define(
         function updateImage(image) {
             var canvas = $('#import-pic-canvas-origin').get(0);
             canvas.style.visiblity = 'hidden';
-            var ctx = canvas.getContext('2d');
             var width = image.width;
             var height = image.height;
+
             canvas.width = width;
             canvas.height = height;
-            ctx.drawImage(image, 0, 0, width, height);
-            var imgData = ctx.getImageData(0, 0, width, height);
+            canvas.style.width = (width / pixelRatio) + 'px';
+            canvas.style.height = (height / pixelRatio) + 'px';
+            canvas.ctx.drawImage(image, 0, 0, width, height);
 
+            var imgData = canvas.ctx.getImageData(0, 0, width, height);
             var processor = program.data.imageProcessor;
             processor.set(imgData);
             processor.grayData = processor.clone();
@@ -67,24 +55,23 @@ define(
 
         function refreshCanvasOrigin() {
 
+            var binarizedImage = program.data.imageProcessor.get();
             var canvas = $('#import-pic-canvas-origin').get(0);
             canvas.style.visiblity = 'hidden';
-
-            var binarizedImage = program.data.imageProcessor.get();
             var width = binarizedImage.width;
             var height = binarizedImage.height;
-            var ctx = canvas.getContext('2d');
-            var imgData = ctx.getImageData(0, 0, width, height);
 
             if (!binarizedImage.binarize) {
                 binarizeImage();
                 binarizedImage = program.data.imageProcessor.get();
             }
 
+            var imgData = canvas.ctx.getImageData(0, 0,  width, height);
             var putData = imgData.data;
             var binarizedImageData = binarizedImage.data;
+            var line;
             for (var y = 0; y < height; y ++) {
-                var line = width * y;
+                line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
                     if (binarizedImageData[offset] === 0) {
@@ -113,7 +100,7 @@ define(
                 });
             });
 
-            ctx.putImageData(imgData, 0, 0);
+            canvas.ctx.putImageData(imgData, 0, 0);
 
             canvas.style.visiblity = 'visible';
             program.loading.hide();
@@ -125,20 +112,24 @@ define(
 
         function refreshCanvasFit() {
             var result = program.data.imageProcessor.get();
+            var width = result.width;
+            var height = result.height;
             var canvas = $('#import-pic-canvas-fit').get(0);
-            canvas.width = result.width;
-            canvas.height = result.height;
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, result.width, result.height);
+            canvas.ctx.clearRect(0, 0, width, height);
+
+            canvas.width = pixelRatio * width;
+            canvas.height = pixelRatio * height;
+            canvas.style.width = (width / pixelRatio) + 'px';
+            canvas.style.height = (height / pixelRatio) + 'px';
 
             // 绘制拟合曲线
-            ctx.fillStyle = 'green';
-            ctx.beginPath();
+            canvas.ctx.fillStyle = 'green';
+            canvas.ctx.beginPath();
             var contours = program.data.imageProcessor.resultContours = program.data.pointsProcessor.getContours();
             contours.forEach(function (contour) {
-                drawPath(ctx, contour);
+                drawPath(canvas.ctx, contour);
             });
-            ctx.fill();
+            canvas.ctx.fill();
         }
 
 
@@ -167,8 +158,18 @@ define(
         }
 
         function bindEvent() {
-            $('#import-pic-file').get(0).onchange = function (e) {
+            // 这里由于对hidpi进行修正，需要修复下设置
+            var canvasOrigin = $('#import-pic-canvas-origin').get(0);
+            canvasOrigin.ctx = canvasOrigin.getContext('2d');
+            canvasOrigin.width = canvasOrigin.height = 0;
+            canvasOrigin.style.width = canvasOrigin.style.height = 'auto';
+            var canvasFit = $('#import-pic-canvas-fit').get(0);
+            canvasFit.ctx = canvasFit.getContext('2d');
+            canvasFit.width = canvasFit.height = 0;
+            canvasFit.style.width = canvasFit.style.height = 'auto';
 
+
+            $('#import-pic-file').get(0).onchange = function (e) {
                 var file = e.target.files[0];
                 var reader = new FileReader();
                 program.loading.show('正在加载图片...', 10000);

@@ -8,6 +8,7 @@ define(
     function (require) {
 
         var utpl = require('utpl');
+        var exportRender = require('./export-render');
         var previewRender = null; // 预览渲染器
 
         var render = {
@@ -22,6 +23,7 @@ define(
              * @return {string}          html片段
              */
             renderPreview: function (data) {
+                data.previewCss = exportRender.renderPreviewCss();
                 previewRender = previewRender || utpl.template(require('./export/preview-ttf.tpl'));
                 return previewRender(data);
             }

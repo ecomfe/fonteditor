@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="./css/preview.css">
+<style>{%=previewCss%}</style>
 <style>
     @font-face {
         font-family: '{%=fontFamily%}';
