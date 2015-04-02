@@ -16,6 +16,7 @@ define(
         var svgnode2contours = require('./svg/svgnode2contours');
         var contoursTransform = require('./svg/contoursTransform');
         var computeBoundingBox = require('graphics/computeBoundingBox');
+        var pathsUtil = require('graphics/pathsUtil');
         var glyfAdjust = require('./util/glyfAdjust');
         var error = require('./error');
         var emptyttf = require('./data/empty');
@@ -282,21 +283,6 @@ define(
             return ttf;
         }
 
-        function mirrorContours(contours) {
-            // 这里为了使ai等工具里面的字形方便导入，对svg做了反向处理
-            var bound = computeBoundingBox.computePathBox.apply(null, contours);
-            contours = contoursTransform(contours, [
-                {
-                    name: 'scale',
-                    params: [1, -1]
-                },
-                {
-                    name: 'translate',
-                    params: [1, bound.height]
-                }
-            ]);
-            return contours;
-        }
 
         /**
          * 解析字体信息相关节点
@@ -391,7 +377,8 @@ define(
 
                 // 对字形进行反转
                 for (i = 0, l = glyf.length; i < l; i++) {
-                    glyf[i].contours  =  mirrorContours(glyf[i].contours);
+                    // 这里为了使ai等工具里面的字形方便导入，对svg做了反向处理
+                    glyf[i].contours  =  pathsUtil.flip(glyf[i].contours);
                 }
             }
 
