@@ -22,7 +22,7 @@ define(
              * @return {string}          html片段
              */
             renderPreview: function (data) {
-                previewRender = previewRender || utpl.template(require('./preview-ttf.tpl'));
+                previewRender = previewRender || utpl.template(require('./export/preview-ttf.tpl'));
                 return previewRender(data);
             }
         };

@@ -26,7 +26,7 @@ define(
              * @return {string}          html片段
              */
             renderFontExample: function (iconData) {
-                fontExampleRender = fontExampleRender || utpl.template(require('./icon-example.tpl'));
+                fontExampleRender = fontExampleRender || utpl.template(require('./export/icon-example.tpl'));
                 return fontExampleRender(iconData);
             },
 
@@ -38,7 +38,7 @@ define(
              * @return {string}          html片段
              */
             renderFontCss: function (iconData) {
-                fontCssRender = fontCssRender || utpl.template(require('./icon-css.tpl'));
+                fontCssRender = fontCssRender || utpl.template(require('./export/icon-css.tpl'));
                 return fontCssRender(iconData);
             },
 

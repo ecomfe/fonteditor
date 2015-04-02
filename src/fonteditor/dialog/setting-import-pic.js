@@ -7,8 +7,7 @@
 define(
     function (require) {
 
-        var TPL_FILE = require('../template/dialog/setting-import-pic.tpl');
-
+        var tpl = require('../template/dialog/setting-import-pic.tpl');
         var lang = require('common/lang');
         var program = require('../widget/program');
         var drawPath = require('render/util/drawPath');
@@ -281,7 +280,7 @@ define(
             style: 'import-pic-dialog',
 
             getTpl: function () {
-                return TPL_FILE;
+                return tpl;
             },
 
             set: function () {
