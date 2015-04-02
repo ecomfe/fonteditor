@@ -1,17 +1,17 @@
 <div class="form-inline">
   <div class="input-group input-group-sm">
-      <span class="input-group-addon">翻转</span>
-      <span class="form-control">
-          <input data-field="reverse" type="checkbox">
-      </span>
+    <span class="input-group-addon">翻转</span>
+    <span class="form-control">
+      <input data-field="reverse" type="checkbox">
+    </span>
   </div>
 </div>
 <div class="form-inline">
   <div class="input-group input-group-sm">
-      <span class="input-group-addon">镜像</span>
-      <span class="form-control">
-          <input data-field="mirror" type="checkbox">
-      </span>
+    <span class="input-group-addon">镜像</span>
+    <span class="form-control">
+      <input data-field="mirror" type="checkbox">
+    </span>
   </div>
 </div>
 <div class="form-inline">
@@ -25,7 +25,7 @@
     <div class="input-group input-group-sm">
       <span class="input-group-addon">缩放字形到上下边界</span>
       <span class="form-control">
-          <input data-field="ajdustToEmBox" type="checkbox" onclick="$(\'#setting-ajdustToEmPadding\')[this.checked ? \'removeClass\' : \'addClass\'](\'hide\')">
+        <input data-field="ajdustToEmBox" type="checkbox" onclick="$(\'#setting-ajdustToEmPadding\')[this.checked ? \'removeClass\' : \'addClass\'](\'hide\')">
       </span>
     </div>
   </div>

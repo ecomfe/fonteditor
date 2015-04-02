@@ -23,7 +23,7 @@
             <div class="input-group input-group-sm">
                 <span class="input-group-addon">高斯模糊</span>
                 <span class="form-control"><input data-filter="gaussBlur" type="range" min="0" max="20" value="0"
-                    step="1"></span>
+                step="1"></span>
             </div>
         </div>
         <div class="form-group">
