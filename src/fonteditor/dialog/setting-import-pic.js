@@ -53,6 +53,7 @@ define(
             // 使用ostu来设置灰度阈值
             var histoGram = getHistogram(processor.get());
             getFilter('threshold').val(getThreshold(histoGram, 'ostu'));
+            $('#import-pic-threshold-pre').val('ostu');
 
             processImage();
             binarizeImage();
@@ -218,11 +219,13 @@ define(
                     binarizeImage();
                 }
                 else if (action === 'threshold-pre') {
-                    var histoGram = getHistogram(program.data.imageProcessor.getOrigin());
-                    getFilter('threshold').val(getThreshold(histoGram, $('#import-pic-threshold-pre').val()));
-                    program.data.imageProcessor.restore();
-
-                    binarizeImage();
+                    var val = $('#import-pic-threshold-pre').val();
+                    if (val) {
+                        var histoGram = getHistogram(program.data.imageProcessor.getOrigin());
+                        getFilter('threshold').val(getThreshold(histoGram, $('#import-pic-threshold-pre').val()));
+                        program.data.imageProcessor.restore();
+                        binarizeImage();
+                    }
                 }
                 // 处理图片的情况，需要调用处理图片和二值化函数
                 else if (action === 'restore') {
