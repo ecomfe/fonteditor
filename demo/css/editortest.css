@@ -1,0 +1,268 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  color: #03C;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.hide {
+  display: none;
+}
+@font-face {
+  font-family: 'fonteditor';
+  src: url('../font/fonteditor.ttf') format('truetype');
+}
+.ico {
+  display: inline-block;
+}
+.ico:before,
+.ico:after {
+  font-family: 'fonteditor';
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.1px;
+}
+.i-leave:before {
+  content: '\e00c';
+}
+.i-edit,
+.i-del,
+.i-leave {
+  font-size: 12px;
+}
+.i-edit:hover,
+.i-del:hover,
+.i-leave:hover {
+  cursor: pointer;
+  color: #4A90E2;
+}
+.i-edit,
+.i-del {
+  color: #76abe9;
+}
+.i-edit:before {
+  content: '\e021';
+}
+.i-del:before {
+  content: '\e020';
+}
+.i-github:before {
+  content: '\e01e';
+}
+.i-help:before {
+  content: '\e016';
+}
+.i-new:before {
+  content: '\e019';
+}
+.i-open:before {
+  content: '\e01A';
+}
+.i-add:before {
+  content: '\e003';
+}
+.i-undo:before {
+  content: '\e001';
+}
+.i-redo:before {
+  content: '\e002';
+}
+.i-down:before {
+  content: '\e00e';
+}
+.i-left:before {
+  content: '\e00a';
+}
+.i-ttf:before {
+  content: '\e00f';
+}
+.i-woff:before {
+  content: '\e010';
+}
+.i-zip:before {
+  content: '\e011';
+}
+.i-save:before {
+  content: '\e022';
+}
+.i-upshape:before {
+  content: '\e014';
+}
+.i-downshape:before {
+  content: '\e00b';
+}
+.i-reversepoints:before {
+  content: '\e00d';
+}
+.i-alignleft:before {
+  content: '\e006';
+}
+.i-aligncenter:before {
+  content: '\e004';
+}
+.i-alignright:before {
+  content: '\e007';
+}
+.i-aligntop:before {
+  content: '\e008';
+}
+.i-alignmiddle:before {
+  content: '\e005';
+}
+.i-aligndescent:before {
+  content: '\e009';
+}
+.i-alignbaseline:before {
+  content: '\e009';
+}
+.i-rotateleft:before {
+  content: '\e01c';
+}
+.i-rotateright:before {
+  content: '\e01d';
+}
+.i-flip:before {
+  content: '\e013';
+}
+.i-mirror:before {
+  content: '\e012';
+}
+.i-splitshapes:before {
+  content: '\e024';
+}
+.i-joinshapes:before {
+  content: '\e025';
+}
+.i-intersectshapes:before {
+  content: '\e026';
+}
+.i-tangencyshapes:before {
+  content: '\e027';
+}
+.i-rangemode:before {
+  content: '\e029';
+}
+.i-pointmode:before {
+  content: '\e028';
+}
+.glyf-editor {
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  display: none;
+}
+.glyf-editor .marker-x,
+.glyf-editor .marker-y {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+.glyf-editor .marker-x {
+  width: 20px;
+  border-top: 1px dashed #000;
+}
+.glyf-editor .marker-y {
+  height: 20px;
+  border-left: 1px dashed #000;
+}
+.editor-contextmenu {
+  color: #333;
+  width: 140px;
+  border: 1px solid #999;
+  background: #FEFEFE;
+  line-height: 24px;
+  padding: 0 4px;
+  box-shadow: 1px 1px 1px #CCC;
+  position: absolute;
+}
+.editor-contextmenu li {
+  padding-left: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #CCC;
+}
+.editor-contextmenu li > ul {
+  display: none;
+  color: #333;
+  width: 140px;
+  border: 1px solid #999;
+  background: #FEFEFE;
+  line-height: 24px;
+  padding: 0 4px;
+  box-shadow: 1px 1px 1px #CCC;
+  position: absolute;
+  margin-left: 120px;
+}
+.editor-contextmenu > li[data-sub] {
+  color: #4A90E2;
+}
+.editor-contextmenu > li[data-sub]:after {
+  content: '>';
+  margin-right: 10px;
+  float: right;
+  font-family: 'Simsun';
+}
+.editor-contextmenu li[data-tag="selected"] {
+  display: inline-block;
+  display: block;
+}
+.editor-contextmenu li[data-tag="selected"]:before,
+.editor-contextmenu li[data-tag="selected"]:after {
+  font-family: 'fonteditor';
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.1px;
+}
+.editor-contextmenu li[data-tag="selected"]:after {
+  content: '\e01f';
+}
+.editor-contextmenu li[data-tag="selected"]:after {
+  float: right;
+  margin-right: 10px;
+  color: #4A90E2;
+}
+.editor-contextmenu li:hover {
+  background: #EEE;
+}
+.editor-contextmenu li:hover > ul {
+  display: block;
+}
+.editor-contextmenu li:last-child {
+  border-bottom: none;
+}
+body,
+html {
+  height: 100%;
+}
+#render-view {
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  -webkit-text-size-adjust: none;
+  display: block;
+}
+.pan-left {
+  float: left;
+  width: 180px;
+  background: #ECECEC;
+}
+#glyf-list a {
+  display: block;
+  line-height: 24px;
+}
+#render-view {
+  margin-left: 200px;
+  width: auto;
+}

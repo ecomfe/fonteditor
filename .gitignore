@@ -13,5 +13,5 @@ results
 release
 npm-debug.log
 node_modules
-*.css
+css/common/*.css
 

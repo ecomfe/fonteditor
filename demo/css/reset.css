@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  color: #03C;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.hide {
+  display: none;
+}
