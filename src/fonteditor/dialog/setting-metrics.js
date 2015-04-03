@@ -10,43 +10,49 @@ define(
     function (require) {
 
         var tpl = require('../template/dialog/setting-metrics.tpl');
+        var string = require('common/string');
         var program = require('../widget/program');
         var weightClass = require('ttf/enum/weightClass');
         var widthClass = require('ttf/enum/widthClass');
-        var panose = [
-            'bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
-            'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'
-        ];
+        var panose = require('ttf/enum/panose');
 
 
         return require('./setting').derive({
 
             title: '字体度量',
 
+            style: 'setting-metrics',
+
             getTpl: function () {
-                return tpl;
+                // width and weight
+                var optionsHolder = {};
+
+                optionsHolder.weightOptions = Object.keys(weightClass).map(function (key) {
+                    return '<option value="' + key + '">' + weightClass[key] + '</option>';
+                }).join('');
+
+                optionsHolder.widthOptions = Object.keys(widthClass).map(function (key) {
+                    return '<option value="' + key + '">' + widthClass[key] + '</option>';
+                }).join('');
+
+                optionsHolder.panoseOptions = Object.keys(panose).map(function (key, index) {
+                    return ''
+                        + '<div class="form-group">'
+                        +   '<div class="input-group input-group-sm">'
+                        +       '<span class="input-group-addon">' + (index + 1) + '-' + key + '</span>'
+                        +       '<select data-field="' + key + '" data-type="number" class="form-control">'
+                        +           panose[key].map(function (value, i) {
+                                        return '<option value="' + i + '">'+ value +'</option>';
+                                    }).join('')
+                        +       '</select>'
+                        +   '</div>'
+                        + '</div>';
+                }).join('');
+
+                return string.format(tpl, optionsHolder);
             },
 
             set: function (setting) {
-
-                // width and weight
-                var html = '';
-
-                Object.keys(weightClass).forEach(function (key) {
-                    html += '<option value="' + key + '">' + weightClass[key] + '</option>';
-                });
-
-                $('#setting-weight').html(html);
-
-                html = '';
-                Object.keys(widthClass).forEach(function (key) {
-                    html += '<option value="' + key + '">' + widthClass[key] + '</option>';
-                });
-                $('#setting-width').html(html);
-
-                setting.panose = panose.map(function (name) {
-                    return setting[name];
-                }).join('-');
 
                 this.setFields(setting);
 
@@ -63,12 +69,6 @@ define(
             },
             validate: function () {
                 var setting = this.getFields();
-                var length = panose.length;
-                (setting.panose || '').split('-').forEach(function (val, i) {
-                    if (i < length) {
-                        setting[panose[i]] = (+val || 0) & 0xF;
-                    }
-                });
 
                 return setting;
             }

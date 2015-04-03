@@ -18,6 +18,8 @@
     </div>
   </div>
 </div>
+
+
 <div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
@@ -53,6 +55,9 @@
     </div>
   </div>
 </div>
+
+
+
 <div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
@@ -66,9 +71,6 @@
       <input data-field="sCapHeight" type="number" class="form-control">
     </div>
   </div>
-</div>
-<hr>
-<div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">删除线位置</span>
@@ -81,8 +83,6 @@
       <input data-field="yStrikeoutSize" type="number" class="form-control">
     </div>
   </div>
-</div>
-<div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">下划线位置</span>
@@ -97,6 +97,8 @@
   </div>
 </div>
 <hr>
+
+
 <div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
@@ -110,8 +112,6 @@
       <input data-field="ySubscriptYSize" type="number" class="form-control">
     </div>
   </div>
-</div>
-<div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">下标X偏移</span>
@@ -125,6 +125,8 @@
     </div>
   </div>
 </div>
+
+
 <div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
@@ -138,8 +140,6 @@
       <input data-field="ySuperscriptYSize" type="number" class="form-control">
     </div>
   </div>
-</div>
-<div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">上标X偏移</span>
@@ -154,6 +154,7 @@
   </div>
 </div>
 <hr>
+
 <div class="form-inline">
   <div class="form-group">
     <div class="input-group input-group-sm">
@@ -164,17 +165,17 @@
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">粗细</span>
-    <select id="setting-weight" data-field="usWeightClass" data-type="number" class="form-control"></select>
+      <select id="setting-weight" data-field="usWeightClass" data-type="number" class="form-control">${weightOptions}</select>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon">宽度</span>
+      <select id="setting-width" data-field="usWidthClass" data-type="number" class="form-control">${widthOptions}</select>
+    </div>
   </div>
 </div>
-<div class="form-group">
-  <div class="input-group input-group-sm">
-    <span class="input-group-addon">宽度</span>
-  <select id="setting-width" data-field="usWidthClass" data-type="number" class="form-control"></select>
-</div>
-</div>
-</div>
-<div class="input-group input-group-sm">
-<span class="input-group-addon">panose</span>
-<input data-field="panose" type="text" class="form-control">
+
+<label for="panose-bFamilyType">panose</label>
+<div class="form-inline panose-inline">${panoseOptions}</div>
 </div>

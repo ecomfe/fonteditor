@@ -142,6 +142,14 @@ define(
                     program.editor.setSetting(setting.editor);
                 }
 
+                // var SettingMetrics = require('./dialog/setting-metrics');
+                // !new SettingMetrics({
+                //     onChange: function (setting) {
+                //         program.ttfManager.setMetrics(setting);
+                //     }
+                // }).show($.extend({}));
+
+
             }
         };
 
