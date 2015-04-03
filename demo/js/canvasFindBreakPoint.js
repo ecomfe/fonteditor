@@ -114,7 +114,7 @@ define(
                 else if (p.inflexion) {
                     ctx.fillStyle = 'blue';
                 }
-                ctx.fillRect(p.x, p.y, p.right == 1 ? 4 : 2, p.right == 1 ? 4 : 2);
+                ctx.fillRect(p.x, p.y, p.right == 1 ? 6 : 3, p.right == 1 ? 6 : 3);
             });
         }
 
@@ -215,7 +215,7 @@ define(
                     refresh();
                 }
 
-                img.src = '../test/rw1.jpg';
+                img.src = '../test/qg.gif';
             }
         };
 
