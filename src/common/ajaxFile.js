@@ -24,27 +24,30 @@ define(
             var xhr = new XMLHttpRequest();
 
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    if (options.onSuccess) {
+                if (xhr.readyState === 4) {
+                    var status = xhr.status;
+                    if (status >= 200 && status < 300 || status === 304) {
+                        if (options.onSuccess) {
+                            if (options.type === 'binary') {
+                                var buffer = xhr.responseBlob || xhr.response;
+                                options.onSuccess(buffer);
+                            }
+                            else if (options.type === 'xml') {
+                                options.onSuccess(xhr.responseXML);
+                            }
+                            else if (options.type === 'json') {
+                                options.onSuccess(JSON.parse(xhr.responseText));
+                            }
+                            else {
+                                options.onSuccess(xhr.responseText);
+                            }
+                        }
 
-                        if (options.type === 'binary') {
-                            var buffer = xhr.responseBlob || xhr.response;
-                            options.onSuccess(buffer);
-                        }
-                        else if (options.type === 'xml') {
-                            options.onSuccess(xhr.responseXML);
-                        }
-                        else if (options.type === 'json') {
-                            options.onSuccess(JSON.parse(xhr.responseText));
-                        }
-                        else {
-                            options.onSuccess(xhr.responseText);
-                        }
                     }
-                }
-                else if (xhr.status > 200) {
-                    if (options.onError) {
-                        options.onError(xhr, xhr.status);
+                    else {
+                        if (options.onError) {
+                            options.onError(xhr, xhr.status);
+                        }
                     }
                 }
             };

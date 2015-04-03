@@ -6,8 +6,8 @@
 define(
     function(require) {
 
-        var fitCurve = require('graphics/image/fitCurve');
-        var fitBezier = require('graphics/image/fitBezier');
+        var fitCurve = require('graphics/image/contour/fitCurve');
+        var fitBezier = require('graphics/image/contour/fitBezier');
         var lang = require('common/lang');
 
         /**

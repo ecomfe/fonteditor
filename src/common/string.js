@@ -57,28 +57,6 @@ define(
             },
 
             /**
-             * 按字节截取字符串
-             * @param {string} str 字符串
-             * @param {number} length 截取长度
-             * @param {string} tail 加的后缀
-             * @return {string} 截取后的字符串
-             */
-            cut: function (str, length, tail) {
-                tail = tail || '';
-                str = String(str);
-                var size = 0;
-                var l = str.length;
-
-                for (var i = 0; i < l; i++) {
-                    size += str.charCodeAt(i) > 255 ? 2 : 1;
-                    if (size > length) {
-                        return str.slice(0, i) + tail;
-                    }
-                }
-                return str + tail;
-            },
-
-            /**
              * 字符串格式化，支持如 ${xxx.xxx} 的语法
              * @param {string} source 模板字符串
              * @param {Object} data 数据
