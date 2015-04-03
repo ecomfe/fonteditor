@@ -9,6 +9,7 @@ define(
 
         var TTFReader = require('./ttfreader');
         var error = require('./error');
+        var config = require('./data/default');
 
         /**
          * listUnicode
@@ -52,7 +53,7 @@ define(
             });
 
             return {
-                fontFamily: ttf.name.fontFamily || 'fonteditor',
+                fontFamily: ttf.name.fontFamily || config.name.fontFamily,
                 iconPrefix: options.iconPrefix || 'icon',
                 glyfList: glyfList
             };

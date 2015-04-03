@@ -75,14 +75,7 @@ define(
                 "name": ".notdef"
             }],
             "cmap": {},
-            "name": {
-                "fontFamily": "fonteditor",
-                "fontSubFamily": "Medium",
-                "uniqueSubFamily": "FontEditor 1.0 : fonteditor : 6-10-2014",
-                "fullName": "fonteditor",
-                "version": "Version 1.0 ; FontEditor (v0.0.1) -l 8 -r 50 -G 200 -x 14 -w \"G\" -f -s",
-                "postScriptName": "fonteditor"
-            },
+            "name": {},
             "hhea": {
                 "version": 1,
                 "ascent": 812,

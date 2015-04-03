@@ -16,6 +16,7 @@ define(
         var ttf2svg = require('ttf/ttf2svg');
         var ttf2icon = require('ttf/ttf2icon');
         var bytes2base64 = require('ttf/util/bytes2base64');
+        var config = require('ttf/data/default');
         var exportRender = require('../template/export-render');
         var JSZip = require('JSZip');
 
@@ -77,7 +78,7 @@ define(
 
                         // zip
                         var zip = new JSZip();
-                        var fontzip = zip.folder('fonteditor');
+                        var fontzip = zip.folder(config.fontId);
 
                         // ttf
                         ['woff', 'eot', 'svg', 'ttf'].forEach(function (fileType) {

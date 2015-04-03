@@ -20,6 +20,7 @@ define(
         var Writer = require('./writer');
         var string = require('common/string');
         var error = require('./error');
+        var config = require('./data/default');
 
         /**
          * metadata 转换成XML
@@ -60,7 +61,7 @@ define(
                 + '<?xml version="1.0" encoding="UTF-8"?>'
                 +   '<metadata version="1.0">';
 
-            metadata.uniqueid = metadata.uniqueid || 'fonteditor.' + Date.now();
+            metadata.uniqueid = metadata.uniqueid || (config.fontId + '.' + Date.now());
             xml += '<uniqueid id="' + string.encodeHTML(metadata.uniqueid) + '" />';
 
             if (metadata.vendor) {

@@ -16,8 +16,10 @@ define(
         var contours2svg = require('./util/contours2svg');
         var unicode2xml = require('./util/unicode2xml');
         var error = require('./error');
+        var config = require('./data/default');
+
         // svg font id
-        var SVG_FONT_ID = 'fonteditor';
+        var SVG_FONT_ID = config.fontId;
 
         // xml 模板
         var XML_TPL = ''
@@ -52,7 +54,7 @@ define(
 
             // 用来填充xml的数据
             var xmlObject = {
-                id: SVG_FONT_ID,
+                id: ttf.name.uniqueSubFamily || SVG_FONT_ID,
                 metadata: string.encodeHTML(options.metadata || ''),
                 advanceWidth: ttf.hhea.advanceWidthMax,
                 fontFamily: ttf.name.fontFamily,

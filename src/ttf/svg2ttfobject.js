@@ -18,7 +18,7 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var glyfAdjust = require('./util/glyfAdjust');
         var error = require('./error');
-        var emptyttf = require('./data/empty');
+        var getEmptyttfObject = require('./getEmptyttfObject');
 
         /**
          * 加载xml字符串
@@ -45,8 +45,8 @@ define(
          *
          * @return {Object} ttfObject对象
          */
-        function getEmptyTTFObject() {
-            var ttf = lang.clone(emptyttf);
+        function getEmptyTTF() {
+            var ttf = getEmptyttfObject();
             ttf.head.unitsPerEm = 0; // 去除unitsPerEm以便于重新计算
             ttf.from = 'svgfont';
             return ttf;
@@ -358,7 +358,7 @@ define(
 
             // 如果是svg字体格式，则解析glyf，否则解析path
             if (xmlDoc.getElementsByTagName('font')[0]) {
-                ttf = getEmptyTTFObject();
+                ttf = getEmptyTTF();
                 parseFont(xmlDoc, ttf);
                 parseGlyf(xmlDoc, ttf);
             }

@@ -17,7 +17,7 @@ define(
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var glyfAdjust = require('./util/glyfAdjust');
-
+        var config = require('./data/default');
 
         /**
          * 缩放到EM框
@@ -622,12 +622,13 @@ define(
          * @return {Object} 名字对象
          */
         TTF.prototype.setName = function (name) {
+
             if (name) {
-                name.fontFamily = name.fontFamily || 'fonteditor';
-                name.fontSubFamily = name.fontSubFamily || 'Medium';
-                name.fullName = name.fontFamily;
-                this.ttf.name  = name;
+                this.ttf.name.fontFamily = this.ttf.name.fullName = name.fontFamily || config.name.fontFamily;
+                this.ttf.name.fontSubFamily = name.fontSubFamily || config.name.fontSubFamily;
+                this.ttf.name.uniqueSubFamily = name.uniqueSubFamily || '';
             }
+
             return this.ttf.name;
         };
 

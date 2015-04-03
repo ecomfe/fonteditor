@@ -11,6 +11,10 @@
       <input data-field="fullName" type="text" class="form-control">
 </div>
 <div class="input-group input-group-sm">
+      <span class="input-group-addon">唯一字体识别名</span>
+      <input data-field="uniqueSubFamily" type="text" class="form-control">
+</div>
+<div class="input-group input-group-sm">
       <span class="input-group-addon">版本</span>
       <input data-field="version" type="text" class="form-control">
 </div>
