@@ -5,11 +5,11 @@
 
 define(
     function (require) {
-        var fitBezier = require('graphics/image/contour/fitBezier');
+        //var fitBezier = require('graphics/image/contour/fitBezier');
         var findBreakPoints = require('graphics/image/contour/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours3');
-        var drawPath = require('render/util/drawPath');
+        var data = require('demo/../data/image-contours5');
+        //var drawPath = require('render/util/drawPath');
 
         var entry = {
 
@@ -24,7 +24,6 @@ define(
                     c.splice(c.length - 1, 1);
                 });
 
-
                 data.forEach(function (contour) {
                     contour.forEach(function(p) {
                         html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
@@ -34,19 +33,16 @@ define(
                 $('#points').html(html);
 
                 data.forEach(function (contour) {
-                    contour = pathUtil.scale(contour, 10);
+                    pathUtil.scale(contour, 10);
                     var points  = findBreakPoints(contour, 10);
                     if (points) {
                         points.forEach(function (p) {
                             breakPoints.push(p);
                         });
                     }
-                    contour = pathUtil.scale(contour, 0.1);
+                    pathUtil.scale(contour, 0.1);
                 });
 
-                breakPoints.forEach(function (p) {
-                    console.log(p.right);
-                });
 
                 html = '';
                 for (var i = 0, l = breakPoints.length; i < l; i++) {

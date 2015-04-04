@@ -19,6 +19,9 @@ define(
 
         var makeLink = require('graphics/pathUtil').makeLink;
         var vector = require('graphics/vector');
+        var markVisited = require('./markVisited');
+
+
         var getCos = vector.getCos;
         var getDist = vector.getDist;
 
@@ -118,23 +121,6 @@ define(
             return 0;
         }
 
-        /**
-         * 标记点的左右已经被访问过了
-         *
-         * @param  {Object} p 点
-         * @param  {number} r 半径
-         */
-        function markVisited(p, r) {
-            var j = 0;
-            var left = p;
-            var right = p;
-            p.visited = true;
-            while (j++ < r) {
-                left = left.prev;
-                right = right.next;
-                left.visited = right.visited = true;
-            }
-        }
 
         /**
          * 查找和标记直线点
@@ -169,21 +155,6 @@ define(
 
             return breakPoints;
         }
-
-
-        /**
-         * 查找和标记切线点
-         *
-         * @param  {Array} contour     轮廓
-         * @param  {Array} breakPoints 关键点
-         * @param  {number} r           查找范围
-         * @return {Array}             关键点
-         */
-        function findTangencyPoints(contour, breakPoints, r) {
-
-            return breakPoints;
-        }
-
 
         /**
          * 查找和标记拐点
@@ -286,9 +257,6 @@ define(
 
             // 查找直线点
             breakPoints = findLinePoints(contour, breakPoints, r, scale);
-
-            breakPoints = findTangencyPoints(contour, breakPoints, r, scale);
-
 
             breakPoints.sort(function (a, b) {
                 return a.index - b.index;
