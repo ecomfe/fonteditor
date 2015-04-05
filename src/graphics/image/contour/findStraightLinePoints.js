@@ -8,8 +8,46 @@ define(
     function (require) {
 
         var markVisited = require('./markVisited');
+        var vector = require('graphics/vector');
+        var getCos = vector.getCos;
 
         var STRAIGHT_LINE_POINTS = 20; // 直线点过滤计数
+        var THETA_CORNER = 0.4; // 拐点抑制
+
+        /**
+         * 计算theta夹角
+         *
+         * @param  {Object} p     当前点
+         * @param  {Object} left  左侧点
+         * @param  {Object} right 右侧点
+         * @return {number}       theta角
+         */
+        function computeTheta(p, left, right) {
+
+            var leftX = p.x - left.x;
+            var leftY = p.y - left.y;
+            var rightX = right.x - p.x;
+            var rightY = right.y - p.y;
+            var cos = getCos(leftX, leftY, rightX, rightY);
+            var theta = Math.acos(cos > 1 ? 1 : cos);
+            // 计算theta的顺时针或逆时针
+            return theta;
+        }
+
+        function getTheta(p) {
+            // 判断是拐点还是切线点
+            var left = p;
+            var right = p;
+            var j = 0;
+
+            while (j++ < STRAIGHT_LINE_POINTS) {
+                left = left.prev;
+                right = right.next;
+            }
+
+            return computeTheta(p, left, right);
+        }
+
 
         /**
         /**
@@ -59,7 +97,7 @@ define(
                         cur.vertical = 1;
                         linePoints.push(p);
                         linePoints.push(cur);
-                        markVisited(p, 15, count);
+                        markVisited(p, 10, count);
                     }
                 }
                 // 查找水平直线点
@@ -79,7 +117,7 @@ define(
                         cur.hoz = 1;
                         linePoints.push(p);
                         linePoints.push(cur);
-                        markVisited(p, 15, count);
+                        markVisited(p, 10, count);
                     }
                 }
                 else {
@@ -110,11 +148,13 @@ define(
                         if (i === l - 1) {
                             next.x = p.vertical ? p.x : next.x;
                             next.y = p.hoz ? p.y : next.y;
+                            next.breakPoint = true;
                         }
                         else {
                             p.right = 1;
                             p.x = p.vertical ? p.x : next.x;
                             p.y = p.hoz ? p.y : next.y;
+                            p.breakPoint = true;
                             newLinePoints.push(p);
                         }
                         i++;
@@ -128,10 +168,36 @@ define(
             for (i = 0, l = newLinePoints.length; i < l; i++) {
                 p = newLinePoints[i];
                 next = newLinePoints[i === l - 1 ? 0 : i + 1];
-                p.breakPoints = 1;
 
                 if (p.start && (p.hoz && p.y === next.y || p.vertical && p.x === next.x)) {
                     p.right = 1;
+                }
+            }
+
+            // 如果直线点不是拐点则需要按照切线点回退一定的点
+            for (i = 0, l = newLinePoints.length; i < l; i++) {
+
+                p = newLinePoints[i];
+
+                if (!p.breakPoint) {
+                    p.theta = getTheta(p);
+                    p.absTheta = Math.abs(p.theta);
+                    if (p.absTheta > THETA_CORNER) {
+                        p.breakPoint = true;
+                    }
+                    else {
+                        var backCount = p.absTheta < 0.05 ? 10 : (p.absTheta < 0.2 ? 5 : 2);
+                        var isRight = p.right;
+                        var isStart = p.start;
+                        while (backCount-- > 0) {
+                            p = isStart ? p.next : p.prev;
+                        }
+                        if (isRight) {
+                            p.right = 1;
+                        }
+                        p.tangency = 1;
+                        newLinePoints.splice(i, 1, p);
+                    }
                 }
             }
 

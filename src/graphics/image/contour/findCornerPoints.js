@@ -9,13 +9,61 @@ define(
 
         var vector = require('graphics/vector');
         var markVisited = require('./markVisited');
-
-        var SEARCH_RANGE = 14; // 查找的范围
-        var THETA_CORNER = 0.4; // 拐点抑制
-        var THETA_DIST_TANGENCY = 1; // 相切抑制
-        var THETA_DIST = 5; // 距离抑制
         var getCos = vector.getCos;
         var getDist = vector.getDist;
+
+        var SEARCH_RANGE = 10; // 查找的范围
+        var THETA_CORNER = 0.5; // 拐点抑制
+        var THETA_DIST_TANGENCY = 1; // 相切抑制
+        var THETA_DIST = 2; // 距离抑制
+
+        /**
+         * 查找和标记直线点
+         *
+         * @param  {Array} contour     轮廓
+         * @param  {Array} breakPoints 关键点
+         * @param  {number} r           查找范围
+         * @return {Array}             关键点
+         */
+        function findLinePoints(contour, breakPoints, r, scale) {
+
+            // 根据角点判断是否直线点
+            var contourSize = contour.length;
+            for (var i = 0, l = breakPoints.length; i < l; i++) {
+                var isLast = i === l - 1;
+                var start = breakPoints[i];
+                var end = isLast ? breakPoints[0] : breakPoints[i + 1];
+
+                var j = 1;
+                var cur = start.next;
+                var lineFlag = true;
+                var maxDist = 0;
+
+                while (cur !== end) {
+
+                    if (0 === j++  % 4) {
+                        var dist = getDist(start, end, cur) / scale;
+
+                        if (dist > 2) {
+                            lineFlag = false;
+                            break;
+                        }
+                        else if (dist > maxDist) {
+                            maxDist = dist;
+                        }
+                    }
+                    cur = cur.next;
+                }
+
+                if (j > r && lineFlag) {
+                    if (maxDist <= 1 || j > 30) {
+                        start.right = 1;
+                    }
+                }
+            }
+
+            return breakPoints;
+        }
 
 
         /**
@@ -115,6 +163,7 @@ define(
                 right = right.next;
             }
 
+            var dist = scale * THETA_DIST;
             while (p !== end) {
 
                 if (!p.visited) {
@@ -125,9 +174,9 @@ define(
                     if (p.absTheta > THETA_CORNER && !p.visited) {
                         p.markBreak = true;
                     }
-                    else if (p.dist > THETA_DIST && !p.visited) {
-                        p.markInflexion = true;
-                    }
+                    // else if (p.dist > dist && !p.visited) {
+                    //     p.markInflexion = true;
+                    // }
                 }
 
                 left = left.next;
@@ -137,6 +186,7 @@ define(
 
             // 计算相切点
             findCorner(contour, breakPoints, r);
+            findLinePoints(contour, breakPoints, r, scale);
 
             return breakPoints;
         }

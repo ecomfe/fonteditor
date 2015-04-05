@@ -25,56 +25,6 @@ define(
         var findCornerPoints = require('./findCornerPoints');
 
 
-
-        /**
-         * 查找和标记直线点
-         *
-         * @param  {Array} contour     轮廓
-         * @param  {Array} breakPoints 关键点
-         * @param  {number} r           查找范围
-         * @return {Array}             关键点
-         */
-        function findLinePoints(contour, breakPoints, r, scale) {
-
-            // 根据角点判断是否直线点
-            var contourSize = contour.length;
-            for (var i = 0, l = breakPoints.length; i < l; i++) {
-                var isLast = i === l - 1;
-                var start = breakPoints[i];
-                var end = isLast ? breakPoints[0] : breakPoints[i + 1];
-
-                var j = 1;
-                var cur = start.next;
-                var lineFlag = true;
-                var maxDist = 0;
-
-                while (cur !== end) {
-
-                    if (0 === j++  % r) {
-                        var dist = getDist(start, end, cur) / scale;
-
-                        if (dist > 2) {
-                            lineFlag = false;
-                            break;
-                        }
-                        else if (dist > maxDist) {
-                            maxDist = dist;
-                        }
-                    }
-                    cur = cur.next;
-                }
-
-                if (j > r && lineFlag) {
-                    if (maxDist <= 1 || j > 40) {
-                        start.right = 1;
-                    }
-                }
-            }
-
-            return breakPoints;
-        }
-
-
         /* 查找轮廓中的关键点
          *
          * @param  {Array} contour 轮廓点集合
@@ -84,6 +34,7 @@ define(
 
             scale = scale || 1;
             var contourSize = contour.length;
+            contour = makeLink(contour);
 
             // 如果小于指定的点数，返回中间点
             if (contourSize < 36) {
@@ -93,7 +44,6 @@ define(
                 ]
             }
 
-            contour = makeLink(contour);
 
             var p;
             var next;

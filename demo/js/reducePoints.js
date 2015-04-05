@@ -5,12 +5,10 @@
 
 define(
     function (require) {
+
         var reducePoints = require('graphics/image/contour/douglasPeuckerReducePoints');
-        var findBreakPoints = require('graphics/image/contour/findBreakPoints');
-
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours1');
-
+        var data = require('demo/../data/image-contours10');
 
         var entry = {
 
@@ -35,8 +33,7 @@ define(
 
                 data.forEach(function (contour) {
                     pathUtil.scale(contour, 2);
-                    var ctr = reducePoints(contour, 0, contour.length - 1, 2);
-                    var points  = findBreakPoints(ctr, 2);
+                    var points  = reducePoints(contour, 0, contour.length - 1, 2);
                     if (points) {
                         points.forEach(function (p) {
                             breakPoints.push(p);
@@ -48,12 +45,8 @@ define(
 
                 html = '';
                 for (var i = 0, l = breakPoints.length; i < l; i++) {
-                    var c = "";
-
-                    if (breakPoints[i].breakPoint) {
-                        c = 'break';
-                    }
-                    else if (breakPoints[i].tangency) {
+                    var c = "break";
+                    if (breakPoints[i].tangency) {
                         c = 'tangency';
                     }
                     else if(breakPoints[i].inflexion) {
@@ -63,7 +56,7 @@ define(
                     if (breakPoints[i].right == 1) {
                         width = 'width: 4px;height: 4px';
                     }
-                    html += '<i title="'+ breakPoints[i].theta +'" style="left:'+breakPoints[i].x+'px;top:'+breakPoints[i].y+'px;'+width+'" class="'+c+'"></i>';
+                    html += '<i style="left:'+breakPoints[i].x+'px;top:'+breakPoints[i].y+'px;'+width+'" class="'+c+'"></i>';
                 }
 
                 $('#points-break').html(html);

@@ -1,10 +1,7 @@
 /**
- * @file 三次bezier曲线点拟合
+ * @file 二次bezier曲线点拟合
  *
- * An Algorithm for Automatically Fitting Digitized Curves
- * by Philip J. Schneider
- * from "Graphics Gems", Academic Press, 1990
- *
+ * modify from fitcurve
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -94,7 +91,7 @@ define(
          */
         function B0(u) {
             var tmp = 1.0 - u;
-            return (tmp * tmp * tmp);
+            return (tmp * tmp);
         }
 
         /**
@@ -104,8 +101,7 @@ define(
          * @return {number}
          */
         function B1(u) {
-            var tmp = 1.0 - u;
-            return (3 * u * (tmp * tmp));
+            return (2 * u * (1.0 - u));
         }
 
         /**
@@ -115,18 +111,7 @@ define(
          * @return {number}
          */
         function B2(u) {
-            var tmp = 1.0 - u;
-            return (3 * u * u * tmp);
-        }
-
-        /**
-         * 计算bezier曲线B3参数
-         *
-         * @param {number} u t值
-         * @return {number}
-         */
-        function B3(u) {
-            return (u * u * u);
+            return (u * u);
         }
 
         /**
@@ -203,6 +188,7 @@ define(
             return temp[0];
         }
 
+
         /**
          * 计算最大错误点的位置和错误值
          *
@@ -219,7 +205,7 @@ define(
 
             var splitPoint = Math.floor((last - first + 1) / 2);
             for (var i = first + 1; i < last; i++) {
-                var p = bezierII(3, bezCurve, u[i - first]);
+                var p = bezierII(2, bezCurve, u[i - first]);
                 var x = p.x - points[i].x;
                 var y = p.y - points[i].y;
                 var dist = x * x + y * y;
@@ -253,27 +239,25 @@ define(
             var Q2_u;
             var i;
 
-            Q_u = bezierII(3, Q, u);
+            Q_u = bezierII(2, Q, u);
 
             /* Generate control vertices for Q' */
-            for (i = 0; i <= 2; i++) {
+            for (i = 0; i <= 1; i++) {
                 Q1[i] = {
-                    x: (Q[i + 1].x - Q[i].x) * 3.0,
-                    y: (Q[i + 1].y - Q[i].y) * 3.0
+                    x: (Q[i + 1].x - Q[i].x) * 2.0,
+                    y: (Q[i + 1].y - Q[i].y) * 2.0
                 };
             }
 
             /* Generate control vertices for Q'' */
-            for (i = 0; i <= 1; i++) {
-                Q2[i] = {
-                    x: (Q[i + 1].x - Q[i].x) * 6.0,
-                    y: (Q[i + 1].y - Q[i].y) * 6.0
-                };
-            }
+            Q2[0] = {
+                x: (Q[0].x) * 2.0,
+                y: (Q[0].y) * 2.0
+            };
 
             /* Compute Q'(u) and Q''(u) */
-            Q1_u = bezierII(2, Q1, u);
-            Q2_u = bezierII(1, Q2, u);
+            Q1_u = bezierII(1, Q1, u);
+            Q2_u = Q2[0];
 
             /* Compute f(u)/f'(u) */
             numerator = (Q_u.x - P.x) * (Q1_u.x) + (Q_u.y - P.y) * (Q1_u.y);
@@ -323,7 +307,7 @@ define(
         function generateBezier(points, first, last, uPrime, tHat1, tHat2) {
 
             var A = [];
-            var C = [[0, 0], [0, 0]]; // Matrix C
+            var C = [[0], [0]]; // Matrix C
             var X = [0, 0];  // Matrix X
             var tmp; // Utility variable
             var u;
@@ -342,8 +326,8 @@ define(
                 u = uPrime[i];
                 v1.x *= B1(u);
                 v1.y *= B1(u);
-                v2.x *= B2(u);
-                v2.y *= B2(u);
+                v2.x *= B1(u);
+                v2.y *= B1(u);
                 A[i] = [v1, v2];
             }
 
@@ -351,29 +335,24 @@ define(
             var lastPoint = points[last]; // 结束点
             for (var i = 0; i < nPts; i++) {
                 C[0][0] += v2Dot(A[i][0], A[i][0]);
-                C[0][1] += v2Dot(A[i][0], A[i][1]);
-                C[1][0] = C[0][1];
-                C[1][1] += v2Dot(A[i][1], A[i][1]);
+                C[1][0] += v2Dot(A[i][1], A[i][1]);
 
                 var pi = points[first + i]; // 当前点
                 u = uPrime[i];
-                tmp = {
-                    x: pi.x - (firstPoint.x * B0(u) + firstPoint.x * B1(u) + lastPoint.x * B2(u) + lastPoint.x * B3(u)),
-                    y: pi.y - (firstPoint.y * B0(u) + firstPoint.y * B1(u) + lastPoint.y * B2(u) + lastPoint.y * B3(u))
-                };
 
-                X[0] += v2Dot(A[i][0], tmp);
-                X[1] += v2Dot(A[i][1], tmp);
+                X[0] += v2Dot(A[i][0], {
+                    x: pi.x - (firstPoint.x * B0(u) + firstPoint.x * B1(u) + lastPoint.x * B2(u)),
+                    y: pi.y - (firstPoint.x * B0(u) + firstPoint.x * B1(u) + lastPoint.x * B2(u))
+                });
+                X[1] += v2Dot(A[i][1], {
+                    x: pi.x - (firstPoint.x * B0(u) + lastPoint.x * B1(u) + lastPoint.x * B2(u)),
+                    y: pi.y - (firstPoint.x * B0(u) + lastPoint.x * B1(u) + lastPoint.x * B2(u))
+                });
             }
 
-            /* Compute the determinants of C and X  */
-            var det_C0_C1 = C[0][0] * C[1][1] - C[1][0] * C[0][1];
-            var det_C0_X = C[0][0] * X[1] - C[1][0] * X[0];
-            var det_X_C1 = X[0] * C[1][1] - X[1] * C[0][1];
-
             /* Finally, derive alpha values */
-            var alpha_l = (det_C0_C1 == 0) ? 0.0 : det_X_C1 / det_C0_C1;
-            var alpha_r = (det_C0_C1 == 0) ? 0.0 : det_C0_X / det_C0_C1;
+            var alpha_l = (X[0] == 0) ? 0.0 : X[0] / C[0][0];
+            var alpha_r = (X[1] == 0) ? 0.0 : X[1] / C[1][0];
 
             /* If alpha negative, use the Wu/Barsky heuristic (see text) */
             /* (if alpha is 0, you get coincident control points that lead to
@@ -382,18 +361,14 @@ define(
             var epsilon = 1.0e-6 * segLength;
             var bezCurve = [];
             bezCurve[0] = firstPoint;
-            bezCurve[3] = lastPoint;
+            bezCurve[2] = lastPoint;
 
             if (alpha_l < epsilon || alpha_r < epsilon) {
                 /* fall back on standard (probably inaccurate) formula, and subdivide further if needed. */
-                var dist = segLength / 3.0;
+                var dist = segLength / 2.0;
                 bezCurve[1] = {
-                    x: tHat1.x * dist + firstPoint.x,
-                    y: tHat1.y * dist + firstPoint.y
-                };
-                bezCurve[2] = {
-                    x: tHat2.x * dist + lastPoint.x,
-                    y: tHat2.y * dist + lastPoint.y
+                    x: (tHat1.x * dist + firstPoint.x + tHat2.x * dist + lastPoint.x) / 2,
+                    y: (tHat1.y * dist + firstPoint.y + tHat2.y * dist + lastPoint.y) / 2
                 };
 
                 return bezCurve;
@@ -405,13 +380,8 @@ define(
             /*  on the tangent vectors, left and right, respectively */
 
             bezCurve[1] = {
-                x: tHat1.x * alpha_l + firstPoint.x,
-                y: tHat1.y * alpha_l + firstPoint.y
-            };
-
-            bezCurve[2] = {
-                x: tHat2.x * alpha_r + lastPoint.x,
-                y: tHat2.y * alpha_r + lastPoint.y
+                x: (tHat1.x * alpha_l + firstPoint.x + tHat2.x * alpha_r + lastPoint.x) / 2,
+                y: (tHat1.y * alpha_l + firstPoint.y + tHat2.y * alpha_r + lastPoint.y) / 2
             };
 
             return bezCurve;
@@ -420,7 +390,7 @@ define(
 
 
         /**
-         * 三次bezier曲线拟合
+         * 二次bezier曲线拟合
          *
          * @param  {Array} points 点集合
          * @param  {number} first 起始点
@@ -430,7 +400,7 @@ define(
          * @param  {number} error 最大错误
          * @param  {Array} result 结果点集合
          */
-        function fitCubic(points, first, last, tHat1, tHat2, error, result) {
+        function fitQuadratic(points, first, last, tHat1, tHat2, error, result) {
             var bezCurve = []; // Control points of fitted Bezier curve
             var nPts; // Number of points in subset
             var i;
@@ -443,22 +413,17 @@ define(
 
             //  Use heuristic if region only has two points in it
             if (nPts == 2) {
-                var dist = segLength / 3.0;
+                var dist = segLength / 2.0;
 
                 bezCurve[0] = firstPoint;
-                bezCurve[3] = lastPoint;
+                bezCurve[2] = lastPoint;
                 bezCurve[1] = {
-                    x: tHat1.x * dist + firstPoint.x,
-                    y: tHat1.y * dist + firstPoint.y
-                };
-                bezCurve[2] = {
-                    x: tHat2.x * dist + lastPoint.x,
-                    y: tHat2.y * dist + lastPoint.y
+                    x: (tHat1.x * dist + firstPoint.x + tHat2.x * dist + lastPoint.x) / 2,
+                    y: (tHat1.y * dist + firstPoint.y + tHat2.y * dist + lastPoint.y) / 2
                 };
 
                 result.push(bezCurve[1]);
                 result.push(bezCurve[2]);
-                result.push(bezCurve[3]);
                 return;
             }
 
@@ -475,7 +440,6 @@ define(
             if (maxError.dist < error) {
                 result.push(bezCurve[1]);
                 result.push(bezCurve[2]);
-                result.push(bezCurve[3]);
                 return;
             }
 
@@ -491,7 +455,6 @@ define(
                     if (maxError.dist < error) {
                         result.push(bezCurve[1]);
                         result.push(bezCurve[2]);
-                        result.push(bezCurve[3]);
                         return;
                     }
 
@@ -502,16 +465,16 @@ define(
             /* Fitting failed -- split at max error point and fit recursively */
             var splitPoint = maxError.index;
             var tHatCenter = computeCenterTangent(points, splitPoint); // Unit tangent vector at splitPoint
-            fitCubic(points, first, splitPoint, tHat1, tHatCenter, error, result);
+            fitQuadratic(points, first, splitPoint, tHat1, tHatCenter, error, result);
             tHatCenter.x = -tHatCenter.x;
             tHatCenter.y = -tHatCenter.y;
-            fitCubic(points, splitPoint, last, tHatCenter, tHat2, error, result);
+            fitQuadratic(points, splitPoint, last, tHatCenter, tHat2, error, result);
         }
 
 
 
         /**
-         * 三次bezier曲线点拟合点集，返回的结果不包含起始点
+         * 三次bezier曲线点拟合点集，返回的结果不包含起始点和结束点
          *
          * @param  {Array} points 点集合
          * @param  {number} error  最大错误距离
@@ -527,7 +490,7 @@ define(
                 var tHat2 = computeRightTangent(points, last);
             }
             var result = [];
-            fitCubic(points, 0, last, tHat1, tHat2, error, result);
+            fitQuadratic(points, 0, last, tHat1, tHat2, error, result);
             return result;
         }
 

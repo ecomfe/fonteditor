@@ -101,6 +101,9 @@ define(
                 else if (p.inflexion) {
                     ctx.fillStyle = 'blue';
                 }
+                else if (p.tangency) {
+                    ctx.fillStyle = 'green';
+                }
                 ctx.fillRect(p.x, p.y, p.right == 1 ? 6 : 3, p.right == 1 ? 6 : 3);
             });
 

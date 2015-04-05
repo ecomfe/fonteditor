@@ -6,8 +6,7 @@
 define(
     function(require) {
 
-        var fitCurve = require('graphics/image/contour/fitCurve');
-        var fitBezier = require('graphics/image/contour/fitBezier');
+        var fitQ2Curve = require('graphics/image/contour/fitQ2Curve');
         var lang = require('common/lang');
 
         /**
@@ -18,7 +17,7 @@ define(
          */
         function B0(u) {
             var tmp = 1.0 - u;
-            return (tmp * tmp * tmp);
+            return (tmp * tmp);
         }
 
         /**
@@ -29,18 +28,7 @@ define(
          */
         function B1(u) {
             var tmp = 1.0 - u;
-            return (3 * u * (tmp * tmp));
-        }
-
-        /**
-         * 计算bezier曲线B2参数
-         *
-         * @param {number} u t值
-         * @return {number}
-         */
-        function B2(u) {
-            var tmp = 1.0 - u;
-            return (3 * u * u * tmp);
+            return (2 * u * (tmp));
         }
 
         /**
@@ -49,8 +37,8 @@ define(
          * @param {number} u t值
          * @return {number}
          */
-        function B3(u) {
-            return (u * u * u);
+        function B2(u) {
+            return (u * u);
         }
 
         var entry = {
@@ -65,7 +53,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":50,"y":50},{"x":264,"y":354},{"x":451,"y":332},{"x":600,"y":60}];
+                var points =[{"x":50,"y":50},{"x":350,"y":450},{"x":600,"y":60}];
 
                 $(points).each(function(index, item) {
                     $('[data-index="'+index+'"]').css({
@@ -107,17 +95,17 @@ define(
                     ctx.beginPath();
                     ctx.strokeStyle='gray';
                     ctx.moveTo(points[0].x, points[0].y);
-                    ctx.bezierCurveTo(points[1].x,points[1].y,points[2].x,points[2].y,points[3].x,points[3].y);
+                    ctx.quadraticCurveTo(points[1].x,points[1].y,points[2].x,points[2].y);
                     ctx.stroke();
 
                     var curvePoints = [];
                     var count = 40;
                     var tSegment = 1 / count;
-                    for (var i = 0; i <= count; i++) {
+                    for (var i = 0; i < count; i++) {
                         var t = tSegment * i;
                         curvePoints.push({
-                            x: points[0].x * B0(t) + points[1].x * B1(t) + points[2].x * B2(t) + points[3].x * B3(t),
-                            y: points[0].y * B0(t) + points[1].y * B1(t) + points[2].y * B2(t) + points[3].y * B3(t)
+                            x: points[0].x * B0(t) + points[1].x * B1(t) + points[2].x * B2(t),
+                            y: points[0].y * B0(t) + points[1].y * B1(t) + points[2].y * B2(t)
                         });
                     }
 
@@ -126,37 +114,24 @@ define(
                         ctx.fillRect(curvePoints[i].x, curvePoints[i].y, 2, 2);
                     }
 
-                    var result = fitCurve(lang.clone(curvePoints), 36);
+                    var result = fitQ2Curve(lang.clone(curvePoints), 100
+                    );
                     result.unshift(points[0]);
                     console.log(result.length);
 
                     ctx.beginPath();
                     ctx.strokeStyle='blue';
-                    //ctx.translate(0, 5);
+                    //ctx.translate(0, 10);
                     ctx.moveTo(result[0].x, result[0].y);
-                    for (var i = 1; i < result.length - 1; i+=3) {
-                       ctx.bezierCurveTo(result[i].x, result[i].y, result[i + 1].x, result[i + 1].y, result[i + 2].x, result[i + 2].y);
-                       ctx.moveTo(result[i + 2].x, result[i + 2].y);
+
+                    for (var i = 1; i < result.length - 1; i+=2) {
+                       ctx.quadraticCurveTo(result[i].x, result[i].y, result[i + 1].x, result[i + 1].y);
+                       ctx.moveTo(result[i + 1].x, result[i + 1].y);
                     }
 
                     ctx.stroke();
 
-                    var bezierResult = fitBezier(lang.clone(curvePoints));
-                    bezierResult.unshift(curvePoints[0]);
-                    ctx.beginPath();
-                    ctx.strokeStyle='yellow';
-                    //ctx.translate(0, 5);
-                    ctx.moveTo(bezierResult[0].x, bezierResult[0].y);
-                    var last = bezierResult.length - 1;
-                    console.log(bezierResult.length);
-                    for (var i = 1; i < last; i+=2) {
-                       ctx.quadraticCurveTo(bezierResult[i].x, bezierResult[i].y, bezierResult[i + 1].x, bezierResult[i + 1].y);
-                       ctx.moveTo(bezierResult[i + 1].x, bezierResult[i + 1].y);
-                    }
-
-                    ctx.stroke();
-
-                    //ctx.translate(0, -10);
+                    //ctx.translate(0, -20);
                 }
 
                 draw();

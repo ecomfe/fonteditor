@@ -1,5 +1,5 @@
 /**
- * @file 根据关键点数据拟合轮廓
+ * @file bezier曲线拟合2
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -7,9 +7,9 @@
 define(
     function (require) {
 
-        var fitBezier = require('./fitBezier');
+        var reducePoints = require('graphics/image/contour/douglasPeuckerReducePoints');
         var findBreakPoints = require('./findBreakPoints');
-
+        var fitBezier = require('./fitBezier');
         var pathUtil = require('graphics/pathUtil');
         var reducePath = require('graphics/reducePath');
         var vector = require('graphics/vector');
@@ -23,15 +23,10 @@ define(
          */
         function fitContour(data, scale, breakPoints) {
             scale = scale || 1;
-
+            data = reducePoints(data, 0, data.length - 1, scale);
             breakPoints = breakPoints || findBreakPoints(data, scale);
+            var tHat1Point = null;
             var resultContour = [];
-            var isLast;
-            var start;
-            var end;
-            var curvePoints;
-            var tHat1Point;
-
             for (var i = 0, l = breakPoints.length; i < l; i++) {
                 isLast = i === l - 1;
                 start = breakPoints[i];
@@ -52,44 +47,6 @@ define(
                         curvePoints = data.slice(start.index, end.index + 1);
                     }
 
-                    var bezierCurvePoints = [];
-                    var curvePointsLast = curvePoints.length - 1;
-
-                    if (curvePoints.length > 200) {
-                        var derive = Math.floor(curvePoints.length / 20);
-                        bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return index === 0 || index === curvePointsLast || p.index % derive === 0;
-                        });
-                    }
-                    else if (curvePoints.length > 40) {
-                        var derive = Math.floor(curvePoints.length / 10);
-                        bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return  index === 0 || index === curvePointsLast || p.index % derive === 0;
-                        });
-                    }
-                    else if (curvePoints.length > 20) {
-                        bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return  index === 0 || index === curvePointsLast || p.index % 4 === 0;
-                        });
-                    }
-                    else if (curvePoints.length > 10) {
-                        bezierCurvePoints = curvePoints.filter(function (p, index) {
-                            return  index === 0 || index === curvePointsLast || p.index % 3 === 0;
-                        });
-                    }
-                    else {
-
-                        end = curvePoints[curvePointsLast];
-                        resultContour.push({
-                            x: end.x,
-                            y: end.y,
-                            onCurve: true
-                        });
-
-                        tHat1 = null;
-                        continue;
-                    }
-
                     if ((start.inflexion || start.tangency) && tHat1Point) {
                         tHat1 = vector.normalize({
                             x: start.x - tHat1Point.x,
@@ -100,7 +57,12 @@ define(
                         tHat1 = null;
                     }
 
-                    var bezierCurve = fitBezier(bezierCurvePoints, scale, tHat1);
+                    if (curvePoints.length <= 1) {
+                        continue;
+                    }
+
+                    console.log(curvePoints.length);
+                    var bezierCurve = fitBezier(curvePoints, scale, tHat1);
                     if (bezierCurve.length) {
                         bezierCurve.forEach(function (p) {
                             if (!isNaN(p.x) && !isNaN(p.y)) {
@@ -111,7 +73,9 @@ define(
                                 });
                             }
                         });
+
                         end = bezierCurve[bezierCurve.length - 2];
+
                         if (!isNaN(end.x) && !isNaN(end.y)) {
                             tHat1Point = end;
                         }
@@ -126,6 +90,7 @@ define(
                 else {
                     tHat1Point = start;
                 }
+
             }
 
             // 去除直线
@@ -149,7 +114,10 @@ define(
                 p.y = Math.floor(p.y);
                 return p;
             }));
+
         }
+
+
 
         return fitContour;
     }

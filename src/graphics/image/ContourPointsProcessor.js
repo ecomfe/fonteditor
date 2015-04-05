@@ -10,7 +10,7 @@ define(
         var lang = require('common/lang');
         var findContours = require('./contour/findContours');
         var findBreakPoints = require('./contour/findBreakPoints');
-        var fitContour = require('./contour/fitContour');
+        var fitContour = require('./contour/fitContour2');
         var pathUtil = require('graphics/pathUtil');
 
         /**
@@ -23,7 +23,7 @@ define(
         }
 
         // 默认的缩放级别
-        Processor.prototype.scale = 10;
+        Processor.prototype.scale = 2;
 
         /**
          * 从二值图像中导入轮廓点集

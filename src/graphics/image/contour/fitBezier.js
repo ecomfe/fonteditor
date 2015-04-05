@@ -18,12 +18,12 @@ define(
          *
          * @return {Array}  结果点集
          */
-        function fitBezier(points, scale, tHat1) {
+        function fitBezier(points, scale, tHat1, tHat2) {
             scale = scale || 1;
             var size = points.length;
-            var maxError = 20 * scale;
+            var maxError = 16;
 
-            var cubicBezier = fitCurve(points, maxError, tHat1);
+            var cubicBezier = fitCurve(points, maxError, tHat1, tHat2);
             var start = points[0];
             var result = [];
             for (var i = 0, l = cubicBezier.length; i < l; i += 3) {
