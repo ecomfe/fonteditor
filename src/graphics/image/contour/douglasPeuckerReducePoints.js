@@ -13,7 +13,7 @@ define(
 
         function reduce(contour, firstIndex, lastIndex, tolerance, splitArray) {
 
-            if (lastIndex - firstIndex <= 3) {
+            if (lastIndex - firstIndex < 3) {
                 return;
             }
 
@@ -55,12 +55,17 @@ define(
 
             if (splitArray.length) {
                 splitArray.unshift(firstIndex);
-                return splitArray.map(function (index) {
+                splitArray = splitArray.map(function (index) {
                     contour[index].index = index;
                     return contour[index];
-                }).sort(function (a, b) {
+                })
+
+                // 去除临近的点
+
+                splitArray.sort(function (a, b) {
                     return a.index - b.index;
                 });
+                return splitArray;
             }
 
             return contour;

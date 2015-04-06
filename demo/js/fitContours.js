@@ -7,7 +7,7 @@ define(
     function (require) {
 
         var fitContour = require('graphics/image/contour/fitContour');
-        var data = require('demo/../data/image-contours10');
+        var data = require('demo/../data/image-contours5');
         var drawPath = require('render/util/drawPath');
         var pathUtil = require('graphics/pathUtil');
 
