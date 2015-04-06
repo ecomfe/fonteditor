@@ -6,8 +6,8 @@
 define(
     function (require) {
 
-        var fitContour = require('graphics/image/contour/fitContour2');
-        var data = require('demo/../data/image-contours2');
+        var fitContour = require('graphics/image/contour/fitContour');
+        var data = require('demo/../data/image-contours10');
         var drawPath = require('render/util/drawPath');
         var pathUtil = require('graphics/pathUtil');
 
@@ -20,17 +20,15 @@ define(
 
                 var html = '';
                 var contours = [];
-                data.forEach(function(contour) {
+                data.forEach(function(points) {
 
-                    contour.splice(contour.length - 1, 1);
-
-                    contour.forEach(function (p) {
+                    points.forEach(function (p) {
                         html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
                     });
 
-                    data = pathUtil.scale(data, 2);
-                    contours.push(fitContour(contour, 2));
-                    data = pathUtil.scale(data, 0.5);
+                    points = pathUtil.scale(points, 2);
+                    contours.push(pathUtil.scale(fitContour(points, 2), 0.5));
+                    points = pathUtil.scale(points, 0.5);
                 });
 
 

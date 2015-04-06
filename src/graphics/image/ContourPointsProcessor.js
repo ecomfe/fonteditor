@@ -10,8 +10,9 @@ define(
         var lang = require('common/lang');
         var findContours = require('./contour/findContours');
         var findBreakPoints = require('./contour/findBreakPoints');
-        var fitContour = require('./contour/fitContour2');
+        var fitContour = require('./contour/fitContour');
         var pathUtil = require('graphics/pathUtil');
+        var reducePoints = require('graphics/image/contour/douglasPeuckerReducePoints');
 
         /**
          * 轮廓点集合
@@ -71,7 +72,8 @@ define(
             var breakPoints = [];
             var contourPoints = index >= 0 ? [this.contourPoints[index]] : this.contourPoints;
             contourPoints.forEach(function (points) {
-                breakPoints = breakPoints.concat(findBreakPoints(pathUtil.clone(points), scale));
+                var reducedData = reducePoints(points, 0, points.length - 1, scale);
+                breakPoints = breakPoints.concat(findBreakPoints(pathUtil.clone(reducedData), scale));
             });
             return pathUtil.scale(breakPoints, 1 / this.scale);
         };

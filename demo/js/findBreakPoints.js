@@ -7,9 +7,8 @@ define(
     function (require) {
         var reducePoints = require('graphics/image/contour/douglasPeuckerReducePoints');
         var findBreakPoints = require('graphics/image/contour/findBreakPoints');
-
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours1');
+        var data = require('demo/../data/image-contours10');
 
 
         var entry = {
@@ -37,11 +36,7 @@ define(
                     pathUtil.scale(contour, 2);
                     var ctr = reducePoints(contour, 0, contour.length - 1, 2);
                     var points  = findBreakPoints(ctr, 2);
-                    if (points) {
-                        points.forEach(function (p) {
-                            breakPoints.push(p);
-                        });
-                    }
+                    breakPoints = breakPoints.concat(ctr);
                     pathUtil.scale(contour, 0.5);
                 });
 
@@ -49,21 +44,24 @@ define(
                 html = '';
                 for (var i = 0, l = breakPoints.length; i < l; i++) {
                     var c = "";
-
-                    if (breakPoints[i].breakPoint) {
+                    var p = breakPoints[i];
+                    if (p.breakPoint) {
                         c = 'break';
                     }
-                    else if (breakPoints[i].tangency) {
-                        c = 'tangency';
+                    else if (p.apex) {
+                        c = 'apex';
                     }
-                    else if(breakPoints[i].inflexion) {
+                    else if(p.inflexion) {
                         c = 'inflexion';
                     }
+                    else if(p.tangency) {
+                        c = 'tangency';
+                    }
                     var width = '';
-                    if (breakPoints[i].right == 1) {
+                    if (p.right == 1) {
                         width = 'width: 4px;height: 4px';
                     }
-                    html += '<i title="'+ breakPoints[i].theta +'" style="left:'+breakPoints[i].x+'px;top:'+breakPoints[i].y+'px;'+width+'" class="'+c+'"></i>';
+                    html += '<i data-index="'+ p.index +'" '+ (p.tangency ? 'data-tangency="1"' : '') + (p.visited ? 'data-visited="1"' : '') +' title="'+ p.theta +'"  style="left:'+p.x+'px;top:'+p.y+'px;'+width+'" class="'+c+'"></i>';
                 }
 
                 $('#points-break').html(html);

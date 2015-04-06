@@ -38,9 +38,15 @@
         }
 
         #points-break i.tangency {
+            width: 4px;
+            height: 4px;
+            background: blue;
+        }
+
+        #points-break i.apex {
             width: 2px;
             height: 2px;
-            background: blue;
+            background: cyan;
         }
 
         #points-break i.inflexion {
@@ -49,6 +55,11 @@
             background: green;
         }
 
+        #points-break i[data-visited] {
+            width: 3px;
+            height: 3px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
