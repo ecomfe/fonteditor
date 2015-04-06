@@ -8,7 +8,7 @@ define(
         var reducePoints = require('graphics/image/contour/reducePoints');
         var findBreakPoints = require('graphics/image/contour/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours2');
+        var data = require('demo/../data/image-contours5');
 
 
         var entry = {

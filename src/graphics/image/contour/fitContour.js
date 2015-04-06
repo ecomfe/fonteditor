@@ -24,7 +24,17 @@ define(
         function fitContour(data, scale, breakPoints) {
             scale = scale || 1;
             var reducedData = reducePoints(data, 0, data.length - 1, scale);
-            breakPoints = breakPoints || findBreakPoints(reducedData, scale);
+
+
+            return reducedData.map(function (p){
+                return {
+                    x: p.x,
+                    y: p.y,
+                    onCurve: true
+                }
+            });
+
+            //breakPoints = breakPoints || findBreakPoints(reducedData, scale);
 
             var tHat1Point = null;
             var resultContour = [];

@@ -26,70 +26,7 @@ define(
          * @return {Array}  消减后的点集
          */
         function reducePoints(contour, firstIndex, lastIndex, scale, tolerance) {
-            var points = douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, tolerance);
-            points = makeLink(points);
-
-            var start = points[0];
-            var tinyDist = 3 * scale;
-            var shortDistance = 10 * scale;
-            var longDistance = 40 * scale;
-            var rightAngle = Math.PI / 2;
-
-            var cur = start;
-
-            do {
-                cur.ndist = cur.next.pdist = dist(cur, cur.next);
-                cur = cur.next;
-            } while (cur !== start);
-
-
-            cur = start;
-            do {
-
-                if (cur.visited) {
-                    cur = cur.next;
-                    continue;
-                }
-
-                if (Math.abs(cur.x - cur.next.x) <= tinyDist && Math.abs(cur.y - cur.next.y) <= tinyDist) {
-                    var theta = Math.acos(getCos(cur.x - cur.prev.x, cur.y - cur.prev.y, cur.next.next.x - cur.next.x, cur.next.next.y - cur.next.y)) || 1;
-                    // 小于直角则考虑移除点
-                    if (theta < rightAngle) {
-                        // 顶角
-                        if (
-                            cur.x >= cur.prev.x && cur.x >= cur.next.x
-                            || cur.x <= cur.prev.x && cur.x <= cur.next.x
-                            || cur.y >= cur.prev.y && cur.y >= cur.next.y
-                            || cur.y <= cur.prev.y && cur.y <= cur.next.y
-
-                        ) {
-                            cur.next.deleted = true;
-                        }
-                        else {
-                            cur.deleted = true;
-                        }
-                    }
-
-                    cur.visited = cur.next.visited = true;
-                }
-                // 一个点距离比较近一个非常远
-                else if (
-                    cur.ndist > longDistance && cur.pdist < shortDistance
-                    || cur.pdist > longDistance && cur.ndist < shortDistance
-                    && getCos(cur.prev, cur, cur.next) > 0.9
-                ) {
-                    cur.deleted = true;
-                    cur.visited = cur.next.visited = true;
-                }
-
-                cur = cur.next;
-            } while (cur !== start);
-
-
-            return points.filter(function (p) {
-                delete p.visited;
-                return !p.deleted;
-            });
+            return douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, tolerance);
         }
 
         return reducePoints;
