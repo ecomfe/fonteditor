@@ -25,16 +25,7 @@ define(
             scale = scale || 1;
             var reducedData = reducePoints(data, 0, data.length - 1, scale);
 
-
-            return reducedData.map(function (p){
-                return {
-                    x: p.x,
-                    y: p.y,
-                    onCurve: true
-                }
-            });
-
-            //breakPoints = breakPoints || findBreakPoints(reducedData, scale);
+            breakPoints = breakPoints || findBreakPoints(reducedData, scale);
 
             var tHat1Point = null;
             var resultContour = [];
@@ -44,13 +35,28 @@ define(
                 end = breakPoints[ isLast ? 0 : i + 1];
 
 
-                resultContour.push({
-                    x: start.x,
-                    y: start.y,
-                    onCurve: true
-                });
+                if (start.right === 3 && end.right !== 3) {
+                    resultContour.push({
+                        x: start.x,
+                        y: start.y
+                    });
+                    tHat1Point = start;
+                }
+                else if (start.right === 1) {
+                    resultContour.push({
+                        x: start.x,
+                        y: start.y,
+                        onCurve: true
+                    });
+                    tHat1Point = start;
+                }
+                else {
 
-                if (start.right !== 1) {
+                    resultContour.push({
+                        x: start.x,
+                        y: start.y,
+                        onCurve: true
+                    });
 
                     if (isLast) {
                         curvePoints = reducedData.slice(start.index).concat(reducedData.slice(0, end.index));
@@ -74,35 +80,36 @@ define(
                     }
 
                     var bezierCurve = fitBezier(curvePoints, scale);
-                    if (bezierCurve.length) {
+                    if (false &&
+                        bezierCurve.length
+                        && bezierCurve.every(function (p) {
+                            return !isNaN(p.x) && !isNaN(p.y)
+                        })
+                    ) {
                         bezierCurve.forEach(function (p) {
-                            if (!isNaN(p.x) && !isNaN(p.y)) {
-                                resultContour.push({
-                                    x: p.x,
-                                    y: p.y,
-                                    onCurve: p.onCurve
-                                });
-                            }
-                            else {
-                                console.log('nan');
-                            }
+                            resultContour.push({
+                                x: p.x,
+                                y: p.y,
+                                onCurve: p.onCurve
+                            });
                         });
 
                         end = bezierCurve[bezierCurve.length - 2];
-
-                        if (!isNaN(end.x) && !isNaN(end.y)) {
-                            tHat1Point = end;
-                        }
-                        else {
-                            tHat1Point = null;
-                        }
+                        tHat1Point = end;
                     }
                     else {
+                        curvePoints.slice(1, curvePoints.length - 2).forEach(function (p) {
+                            resultContour.push({
+                                x: p.x,
+                                y: p.y,
+                                onCurve: true
+                            });
+                        });
+
                         tHat1Point = null;
+                        console.warn('error fitting curve');
                     }
-                }
-                else {
-                    tHat1Point = start;
+
                 }
 
             }

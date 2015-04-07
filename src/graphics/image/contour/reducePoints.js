@@ -26,7 +26,51 @@ define(
          * @return {Array}  消减后的点集
          */
         function reducePoints(contour, firstIndex, lastIndex, scale, tolerance) {
-            return douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, tolerance);
+            var points = douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, tolerance);
+            points = makeLink(points);
+
+            var start = points[0];
+            var tinyDist = 3 * scale;
+            var rightAngle = Math.PI / 2;
+
+            var cur = start;
+            do {
+
+                if (cur.visited) {
+                    cur = cur.next;
+                    continue;
+                }
+
+                if (Math.abs(cur.x - cur.next.x) <= tinyDist && Math.abs(cur.y - cur.next.y) <= tinyDist) {
+                    var cos = getCos(cur.x - cur.prev.x, cur.y - cur.prev.y, cur.next.next.x - cur.next.x, cur.next.next.y - cur.next.y);
+                    var theta = Math.acos(cos > 1 ? 1 : cos);
+                    // 小于直角则考虑移除点
+                    if (theta < rightAngle) {
+                        // 顶角
+                        if (
+                            cur.x >= cur.prev.x && cur.x >= cur.next.x
+                            || cur.x <= cur.prev.x && cur.x <= cur.next.x
+                            || cur.y >= cur.prev.y && cur.y >= cur.next.y
+                            || cur.y <= cur.prev.y && cur.y <= cur.next.y
+
+                        ) {
+                            cur.next.deleted = true;
+                        }
+                        else {
+                            cur.deleted = true;
+                        }
+                    }
+
+                    cur.visited = cur.next.visited = true;
+                }
+
+                cur = cur.next;
+            } while (cur !== start);
+
+            return points.filter(function (p) {
+                delete p.visited;
+                return !p.deleted;
+            });
         }
 
         return reducePoints;

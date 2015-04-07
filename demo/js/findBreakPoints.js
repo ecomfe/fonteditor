@@ -8,7 +8,7 @@ define(
         var reducePoints = require('graphics/image/contour/reducePoints');
         var findBreakPoints = require('graphics/image/contour/findBreakPoints');
         var pathUtil = require('graphics/pathUtil');
-        var data = require('demo/../data/image-contours5');
+        var data = require('demo/../data/image-contours13');
 
 
         var entry = {
@@ -61,7 +61,10 @@ define(
                     if (p.right == 1) {
                         width = 'width: 4px;height: 4px';
                     }
-                    html += '<i data-index="'+ p.index +'" '+ (p.ntiny || p.ptiny ? 'data-tiny="1"' : '') + (p.tangency ? 'data-tangency="1"' : '') + (p.visited ? 'data-visited="1"' : '') +' title="'+ p.theta +'"  style="left:'+p.x+'px;top:'+p.y+'px;'+width+'" class="'+c+'"></i>';
+                    html += '<i data-index="'+ p.index +'" data-pdist="'+ (p.pdist / 2)+'" data-ndist="'+(p.ndist/2) +'"'
+                        + (p.ntiny || p.ptiny ? 'data-tiny="1"' : '')
+                        + (p.tangency ? 'data-tangency="1"' : '')
+                        + (p.visited ? 'data-visited="1"' : '') +' title="'+ p.theta +'"  style="left:'+p.x+'px;top:'+p.y+'px;'+width+'" class="'+c+'"></i>';
                 }
 
                 $('#points-break').html(html);
