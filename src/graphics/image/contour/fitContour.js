@@ -22,96 +22,116 @@ define(
          * @return {Array}             拟合后轮廓
          */
         function fitContour(data, scale, breakPoints) {
-            scale = scale || 1;
-            var reducedData = reducePoints(data, 0, data.length - 1, scale);
 
+            scale = scale || 1;
+
+            var resultContour = [];
+            var reducedData = reducePoints(data, 0, data.length - 1, scale);
             breakPoints = breakPoints || findBreakPoints(reducedData, scale);
 
-            var tHat1Point = null;
-            var resultContour = [];
-            for (var i = 0, l = breakPoints.length; i < l; i++) {
-                isLast = i === l - 1;
-                start = breakPoints[i];
-                end = breakPoints[ isLast ? 0 : i + 1];
-
-
-                if (start.right === 3 && end.right !== 3) {
+            if (!breakPoints.length) {
+                reducedData.forEach(function (p) {
                     resultContour.push({
-                        x: start.x,
-                        y: start.y
+                        x: p.x,
+                        y: p.y
                     });
-                    tHat1Point = start;
-                }
-                else if (start.right === 1) {
-                    resultContour.push({
-                        x: start.x,
-                        y: start.y,
-                        onCurve: true
-                    });
-                    tHat1Point = start;
-                }
-                else {
+                });
+            }
+            else {
 
-                    resultContour.push({
-                        x: start.x,
-                        y: start.y,
-                        onCurve: true
-                    });
+                var tHat1Point = null;
+                for (var i = 0, l = breakPoints.length; i < l; i++) {
+                    isLast = i === l - 1;
+                    start = breakPoints[i];
+                    end = breakPoints[ isLast ? 0 : i + 1];
 
-                    if (isLast) {
-                        curvePoints = reducedData.slice(start.index).concat(reducedData.slice(0, end.index));
-                    }
-                    else {
-                        curvePoints = reducedData.slice(start.index, end.index + 1);
-                    }
 
-                    if (curvePoints.length <= 2) {
-                        continue;
-                    }
+                    if (start.right === 3) {
+                        console.log(start);
+                        if (isLast) {
+                            curvePoints = reducedData.slice(start.index).concat(reducedData.slice(0, end.index));
+                        }
+                        else {
+                            curvePoints = reducedData.slice(start.index, end.index);
+                        }
 
-                    if (start.tangency && tHat1Point && start !== tHat1Point) {
-                        tHat1 = vector.normalize({
-                            x: start.x - tHat1Point.x,
-                            y: start.y - tHat1Point.y
-                        });
-                    }
-                    else {
-                        tHat1 = null;
-                    }
-
-                    var bezierCurve = fitBezier(curvePoints, scale);
-                    if (false &&
-                        bezierCurve.length
-                        && bezierCurve.every(function (p) {
-                            return !isNaN(p.x) && !isNaN(p.y)
-                        })
-                    ) {
-                        bezierCurve.forEach(function (p) {
+                        curvePoints.forEach(function (p) {
                             resultContour.push({
                                 x: p.x,
-                                y: p.y,
-                                onCurve: p.onCurve
+                                y: p.y
                             });
                         });
 
-                        end = bezierCurve[bezierCurve.length - 2];
-                        tHat1Point = end;
+                        tHat1Point = curvePoints[curvePoints.length - 1] || start;
+                    }
+                    else if (start.right === 1) {
+                        resultContour.push({
+                            x: start.x,
+                            y: start.y,
+                            onCurve: true
+                        });
+                        tHat1Point = start;
                     }
                     else {
-                        curvePoints.slice(1, curvePoints.length - 2).forEach(function (p) {
-                            resultContour.push({
-                                x: p.x,
-                                y: p.y,
-                                onCurve: true
-                            });
+
+                        resultContour.push({
+                            x: start.x,
+                            y: start.y,
+                            onCurve: (start.corner || !start.tangency) ? true : false
                         });
 
-                        tHat1Point = null;
-                        console.warn('error fitting curve');
+                        if (isLast) {
+                            curvePoints = reducedData.slice(start.index).concat(reducedData.slice(0, end.index + 1));
+                        }
+                        else {
+                            curvePoints = reducedData.slice(start.index, end.index + 1);
+                        }
+
+                        if (curvePoints.length <= 2) {
+                            continue;
+                        }
+
+                        if (start.tangency && tHat1Point && start !== tHat1Point) {
+                            tHat1 = vector.normalize({
+                                x: start.x - tHat1Point.x,
+                                y: start.y - tHat1Point.y
+                            });
+                        }
+                        else {
+                            tHat1 = null;
+                        }
+
+                        var bezierCurve = fitBezier(curvePoints, scale);
+                        if (bezierCurve.length && bezierCurve.every(function (p) {
+                                return !isNaN(p.x) && !isNaN(p.y)
+                            })
+                        ) {
+                            bezierCurve.forEach(function (p) {
+                                resultContour.push({
+                                    x: p.x,
+                                    y: p.y,
+                                    onCurve: p.onCurve
+                                });
+                            });
+
+                            end = bezierCurve[bezierCurve.length - 2];
+                            tHat1Point = end;
+                        }
+                        else {
+                            curvePoints.slice(1, curvePoints.length - 2).forEach(function (p) {
+                                resultContour.push({
+                                    x: p.x,
+                                    y: p.y
+                                });
+                            });
+
+                            tHat1Point = null;
+                            console.warn('error fitting curve');
+                        }
+
                     }
 
                 }
-
             }
 
             // 去除直线

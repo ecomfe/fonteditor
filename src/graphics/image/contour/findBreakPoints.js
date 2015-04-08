@@ -118,6 +118,18 @@ define(
                 else if (cur.corner) {
                     cur.visited = true;
                     cur.breakPoint = true;
+
+                    // 对于临近的点也需要处理，防止拟合后跑偏
+                    if (cur.pdist < shortDist && !cur.prev.corner) {
+                        cur.prev.tangency = true;
+                        cur.prev.breakPoint = true;
+                    }
+
+                    if (cur.ndist < shortDist && !cur.next.corner) {
+                        cur.next.tangency = true;
+                        cur.next.breakPoint = true;
+                    }
+
                 }
                 else if (cur.apex && cur.next.apex && cur.prev.theta < 0.4 && cur.next.theta < 0.4) {
 
@@ -150,18 +162,31 @@ define(
                 // 查找距离比较近的连续点
                 if (cur.ndist < shortDist) {
                     var p = cur;
+
                     while (p.ndist < shortDist) {
-                        p.breakPoint = true;
-                        p.right = 3; // 悬空点
                         p.visited = true;
                         p = p.next;
                         if (p === cur) {
                             break;
                         }
                     }
-                    p.breakPoint = true;
-                    p.right = 3; // 悬空点
-                    p.visited = true;
+
+                    if (p !== cur) {
+                        cur.right = 3;
+                        cur.tangency = true;
+                        cur.breakPoint = true;
+                        p.left = 3; // 悬空点
+                        p.tangency = true;
+                        p.visited = true;
+                        p.breakPoint = true;
+                    }
+                }
+
+                // 判断折线段
+                if (cur.theta > 0.3 && cur.ndist > longDist && cur.pdist > longDist) {
+                    cur.corner = true;
+                    cur.visited = true;
+                    cur.breakPoint = true;
                 }
 
                 // // 修正直角连接点的x，y坐标
@@ -232,6 +257,15 @@ define(
             var breakPoints = contour.filter(function (p) {
                 return p.breakPoint;
             });
+
+
+            // 判断是否存在角点，不存在角点则为连续弧线
+            if (!breakPoints.some(function (p) {
+                return p.corner;
+            })) {
+                return false;
+            }
+
 
             breakPoints.sort(function (a, b) {
                 return a.index - b.index;
