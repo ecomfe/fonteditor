@@ -18,13 +18,16 @@ define(
          * 轮廓点集合
          *
          * @param {Array} contourPoints 轮廓点集合
+         * @param {?Object} options 参数
+         * @param {number} options.scale 缩放级别
+         * @param {boolean} options.segment 是否线段
          */
-        function Processor(contourPoints) {
+        function Processor(contourPoints, options) {
+            options = options || {};
+            this.scale = options.scale || 2;
+            this.segment = options.segment || false;
             contourPoints && this.set(contourPoints);
         }
-
-        // 默认的缩放级别
-        Processor.prototype.scale = 2;
 
         /**
          * 从二值图像中导入轮廓点集
@@ -85,8 +88,11 @@ define(
          */
         Processor.prototype.getContours = function () {
             var scale = this.scale;
+            var segment = this.segment;
             return this.contourPoints.map(function (points) {
-                return fitContour(pathUtil.clone(points), scale);
+                return fitContour(pathUtil.clone(points), scale, {
+                    segment: segment
+                });
             }).filter(function (contour) {
                 return contour && contour.length > 2;
             }).map(function (contour) {

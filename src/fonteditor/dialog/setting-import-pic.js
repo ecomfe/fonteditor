@@ -253,6 +253,10 @@ define(
                 ) {
                     program.data.imageProcessor[action]();
                 }
+                // 是否仅线段
+                else if (action === 'smooth') {
+                    program.data.pointsProcessor.segment = !getFilter('smooth').get(0).checked;
+                }
                 refreshCanvasOrigin();
             }, 100);
 

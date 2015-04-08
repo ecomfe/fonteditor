@@ -60,6 +60,12 @@
             </div>
         </div>
         <div class="form-group">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon">平滑</span>
+                <span class="form-control"><input data-filter="smooth" type="checkbox" checked="checked"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <span class="input-group">
                 <button type="button" data-filter="open" class="btn btn-sm btn-flat btn-new">消除杂点</button>&nbsp;
                 <button type="button" data-filter="close" class="btn btn-sm btn-flat btn-new">消除孔洞</button>&nbsp;
