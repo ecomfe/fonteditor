@@ -91,7 +91,7 @@ define(
                             continue;
                         }
 
-                        if (start.tangency && tHat1Point && start !== tHat1Point) {
+                        if (start.theta < 0.5 && tHat1Point && start !== tHat1Point) {
                             tHat1 = vector.normalize({
                                 x: start.x - tHat1Point.x,
                                 y: start.y - tHat1Point.y

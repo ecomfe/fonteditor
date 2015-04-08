@@ -27,8 +27,9 @@ define(
             contour = makeLink(contour);
 
             var start = contour[0];
+            var farDist = 100 * scale;
             var longDist = 30 * scale;
-            var shortDist = 10 * scale;
+            var shortDist = 12 * scale;
             var lineDist = 10 * scale;
             var tinyDist = 3 * scale;
 
@@ -122,11 +123,13 @@ define(
                     // 对于临近的点也需要处理，防止拟合后跑偏
                     if (cur.pdist < shortDist && !cur.prev.corner) {
                         cur.prev.tangency = true;
+                        cur.prev.visited = true;
                         cur.prev.breakPoint = true;
                     }
 
                     if (cur.ndist < shortDist && !cur.next.corner) {
                         cur.next.tangency = true;
+                        cur.next.visited = true;
                         cur.next.breakPoint = true;
                     }
 
@@ -159,8 +162,23 @@ define(
                     continue;
                 }
 
+                // 判断水平和垂直的长线段
+                if (
+                    cur.apex && cur.ndist > longDist
+                    && cur.theta > 0.3 && cur.next.theta > 0.3
+                    && cur.pdist < shortDist && cur.next.ndist < shortDist
+                ) {
+                    cur.corner = true;
+                    cur.visited = true;
+                    cur.breakPoint = true;
+                    cur.right = 1;
+                    cur.next.corner = true;
+                    cur.next.visited = true;
+                    cur.next.breakPoint = true;
+                }
+
                 // 查找距离比较近的连续点
-                if (cur.ndist < shortDist) {
+                if (!cur.visited && cur.ndist < shortDist) {
                     var p = cur;
 
                     while (p.ndist < shortDist) {
@@ -182,74 +200,22 @@ define(
                     }
                 }
 
+
+                // 判断超长线段两端最好用直线连接
+                if (!cur.visited && cur.ndist > farDist && cur.pdist > shortDist || cur.pdist > farDist && cur.ndist > shortDist) {
+                    if (cur.theta < 0.3) {
+                        cur.tangency = true;
+                    }
+
+                    cur.breakPoint = true;
+                }
+
                 // 判断折线段
-                if (cur.theta > 0.3 && cur.ndist > longDist && cur.pdist > longDist) {
+                if (!cur.visited && cur.theta > 0.3 && (cur.ndist > longDist || cur.pdist > longDist)) {
                     cur.corner = true;
                     cur.visited = true;
                     cur.breakPoint = true;
                 }
-
-                // // 修正直角连接点的x，y坐标
-                // if (cur.corner && cur.hoz && cur.vertical) {
-                //     cur.x = (Math.abs(cur.prev.x - cur.x) <= scale) ? cur.prev.x : cur.next.x;
-                //     cur.y = (Math.abs(cur.prev.y - cur.y) <= scale) ? cur.prev.y : cur.next.y;
-                //     cur.prev.right = 1;
-                //     cur.right = 1;
-                //     cur.visited = true;
-                //     cur.breakPoint = true;
-                // }
-                // // 判断单独的角点
-                // else if (cur.corner) {
-                //     cur.visited = true;
-                //     cur.breakPoint = true;
-                // }
-                // // 判断单独的顶角切线点
-                // else if (cur.apex && !cur.prev.apex && !cur.next.apex) {
-                //     if (cur.theta < 0.3) {
-                //         cur.tangency = true;
-                //     }
-                //     cur.visited = true;
-                //     cur.breakPoint = true;
-                // }
-
-                // // 判断边界点中的切线点
-                // // else if (cur.theta < 0.3 && (cur.ndist > longDist || cur.pdist > longDist)) {
-                // //     cur.visited = true;
-                // //     cur.tangency = true;
-                // //     cur.breakPoint = true;
-                // // }
-                // // 判断边界点中的切线点
-                // else if (cur.apex && (cur.ndist > longDist || cur.pdist > longDist)) {
-                //     cur.visited = true;
-                //     cur.breakPoint = true;
-                // }
-                // // 直线段
-                // else if (cur.theta > 0.8 && (cur.ndist > longDist || cur.pdist > longDist)) {
-                //     cur.visited = true;
-                //     cur.breakPoint = true;
-                // }
-                // // 判断成对的顶角切线点
-                // else if (cur.apex && cur.next.apex && cur.prev.theta < 0.4 && cur.next.theta < 0.4) {
-                //     // 修正切线点位置
-                //     if (cur.xTop && cur.next.xTop || cur.xBottom && cur.next.xBottom) {
-                //         var minus = Math.max(Math.floor(Math.abs(cur.next.y - cur.y) / 4), 4 * scale);
-                //         cur.y = cur.y > cur.next.y ? cur.y - minus : cur.y + minus;
-                //         cur.next.y = cur.next.y > cur.y ? cur.next.y - minus : cur.next.y + minus;
-                //     }
-
-                //     if (cur.yTop && cur.next.yTop || cur.yBottom && cur.next.yBottom) {
-                //         var minus = Math.max(Math.floor(Math.abs(cur.next.x - cur.x) / 4), 4 * scale);
-                //         cur.x = cur.x > cur.next.x ? cur.x - minus : cur.x + minus;
-                //         cur.next.x = cur.next.x > cur.x ? cur.next.x - minus : cur.next.x + minus;
-                //     }
-
-                //     cur.visited = true;
-                //     cur.tangency = true;
-                //     cur.breakPoint = true;
-                //     cur.next.visited = true;
-                //     cur.next.tangency = true;
-                //     cur.next.breakPoint = true;
-                // }
 
                 cur = cur.next;
             } while (cur !== start);
