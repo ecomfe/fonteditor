@@ -1,14 +1,11 @@
 /**
- * @file circle.js
- * @author mengke01
- * @description
- * 圆路径集合，逆时针
+ * @file 圆路径集合，逆时针
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {
-
+        /* eslint-disable fecs-properties-quote */
         return [
             {
                 'x': 582,

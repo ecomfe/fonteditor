@@ -82,11 +82,11 @@ define(
 
         /**
          * 将bezier曲线和直线，bezier曲线之间相交部分进行插值分段
+         *
          * @param  {Array} subjectPath 主路径
          * @param  {Array} clipPath 剪切路径
-         * @return  {Array} 相交的点集
          */
-        function interpolatePathCrossBezier (subjectPath, clipPath) {
+        function interpolatePathCrossBezier(subjectPath, clipPath) {
 
             var isSelfInterpolate = subjectPath === clipPath;
             var curPointSubject;
@@ -95,21 +95,19 @@ define(
             var curPointClip;
             var prevPointClip;
             var nextPointClip;
+
             // 记录贝塞尔曲线分割点
             var subjectJoints = {};
             var clipJoints = {};
-            var i;
-            var j;
-            var subjectSize;
             var clipSize;
+            var result;
 
-
-            for (i = 0, subjectSize = subjectPath.length; i < subjectSize; i++) {
+            for (var i = 0, subjectSize = subjectPath.length, j; i < subjectSize; i++) {
                 curPointSubject = subjectPath[i];
                 prevPointSubject = i === 0 ? subjectPath[subjectSize - 1] : subjectPath[i - 1];
                 nextPointSubject =  i === subjectSize - 1 ? subjectPath[0] : subjectPath[i + 1];
 
-                for (var j = 0, clipSize = clipPath.length; j < clipSize; j++) {
+                for (j = 0, clipSize = clipPath.length; j < clipSize; j++) {
                     curPointClip = clipPath[j];
                     prevPointClip = j === 0 ? clipPath[clipSize - 1] : clipPath[j - 1];
                     nextPointClip =  j === clipSize - 1 ? clipPath[0] : clipPath[j + 1];

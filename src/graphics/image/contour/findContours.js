@@ -13,8 +13,6 @@ define(
         var ICV_CONNECTING_ABOVE = 2;
         var ICV_CONNECTING_BELOW = 3;
 
-
-
         /**
          * 对轮廓横向坐标进行插值
          *
@@ -55,16 +53,17 @@ define(
             return newContour;
         }
 
-
+        /* eslint-disable fecs-max-statements */
         /**
          * 查找轮廓集合
          * @param  {Object} imageData 二值图像数据
-         * @param  {number} minPoints     最少点数
+         * @param  {number} minimumPoints     最少点数，如果轮廓点个数小于最少点数，则被去除
+         * @param  {number} smooth 平滑边界
          * @return {Array}           轮廓集合
          */
-        function cvFindContours(imageData, minPoints, smooth) {
+        function cvFindContours(imageData, minimumPoints, smooth) {
 
-            minPoints = minPoints || 10;
+            minimumPoints = minimumPoints || 10;
             smooth = smooth || 3;
 
             var fg = 0; // 前景色
@@ -99,7 +98,7 @@ define(
 
 
             // 填充白框
-            for (j = 0; j < height; j ++) {
+            for (j = 0; j < height; j++) {
                 row = j * width;
                 data[row] = bg;
                 data[row + width - 1] = bg;
@@ -113,10 +112,10 @@ define(
 
             // 查找 第一行
             for (j = 0; j < width;) {
-                for( ; j < width && data[j] === bg; j++ ) {
+                for (; j < width && data[j] === bg; j++) {
                 }
 
-                if( j === width) {
+                if (j === width) {
                     break;
                 }
 
@@ -138,16 +137,16 @@ define(
             }
 
             // 查找中间行
-            for( i = 1; i < height; i++) {
+            for (i = 1; i < height; i++) {
 
                 row = i * width;
                 lowerLine = [];
 
                 for (j = 0; j < width;) {
-                    for (; j < width && data[row + j] === bg; j++ ) {
+                    for (; j < width && data[row + j] === bg; j++) {
                     }
 
-                    if( j === width) {
+                    if (j === width) {
                         break;
                     }
 
@@ -181,7 +180,7 @@ define(
                     switch (connectFlag) {
                         case ICV_SINGLE:
                             if (upperRun.next.x < lowerRun.next.x) {
-                                if (upperRun.next.x >= lowerRun.x - 1 ) {
+                                if (upperRun.next.x >= lowerRun.x - 1) {
                                     lowerRun.link = upperRun;
                                     connectFlag = ICV_CONNECTING_ABOVE;
                                     prevPoint = upperRun.next;
@@ -194,7 +193,7 @@ define(
                                 upperRun = upperRun.next.next;
                             }
                             else {
-                                if( upperRun.x <= lowerRun.next.x + 1) {
+                                if (upperRun.x <= lowerRun.next.x + 1) {
                                     lowerRun.link = upperRun;
                                     connectFlag = ICV_CONNECTING_BELOW;
                                     prevPoint = lowerRun.next;
@@ -216,9 +215,8 @@ define(
                                 lowerRun = lowerRun.next.next;
                             }
                             else {
-
                                 prevPoint.link = upperRun;
-                                if( upperRun.next.x < lowerRun.next.x) {
+                                if (upperRun.next.x < lowerRun.next.x) {
                                     k++;
                                     prevPoint = upperRun.next;
                                     upperRun = upperRun.next.next;
@@ -233,7 +231,7 @@ define(
                             break;
 
                         case ICV_CONNECTING_BELOW:
-                            if( lowerRun.x > upperRun.next.x + 1) {
+                            if (lowerRun.x > upperRun.next.x + 1) {
                                 upperRun.next.link = prevPoint;
                                 connectFlag = ICV_SINGLE;
                                 k++;
@@ -258,7 +256,7 @@ define(
                             }
                             break;
                     }
-                }// k, n
+                }
 
                 for (; n < lowerTotal; n++) {
 
@@ -271,12 +269,12 @@ define(
 
                     lowerRun.link = lowerRun.next;
 
-                    //First point of contour
+                    // First point of contour
                     extPoints.push(lowerRun);
                     lowerRun = lowerRun.next.next;
                 }
 
-                for (; k < upperTotal; k++ ) {
+                for (; k < upperTotal; k++) {
 
                     if (connectFlag !== ICV_SINGLE) {
                         upperRun.next.link = prevPoint;
@@ -295,29 +293,28 @@ define(
             upperTotal = Math.floor(upperLine.length / 2);
             upperRun = upperLine[0];
 
-            //the last line of image
-            for( k = 0; k < upperTotal; k++ ) {
+            // the last line of image
+            for (k = 0; k < upperTotal; k++) {
                 upperRun.next.link = upperRun;
                 upperRun = upperRun.next.next;
             }
 
             var contours = [];
             var count = 0;
-            var p_temp;
-            var p00;
-            var p01;
+            var curPoint;
+            var startPoint;
             var contour;
             var points;
 
             // 查找轮廓集合
-            for ( k = 0; k < 2; k++ ) {
+            for (k = 0; k < 2; k++) {
 
                 points = k === 0 ? extPoints : inPoints;
                 for (j = 0, n = points.length; j < n; j++, count++) {
 
-                    p01 = p00 = points[j];
+                    startPoint = curPoint = points[j];
 
-                    if (!p00.link) {
+                    if (!curPoint.link) {
                         continue;
                     }
 
@@ -325,15 +322,15 @@ define(
 
                     do {
                         contour.push({
-                            x: p00.x,
-                            y: p00.y
+                            x: curPoint.x,
+                            y: curPoint.y
                         });
 
-                        p_temp = p00;
-                        p00 = p00.link;
-                        p_temp.link = 0;
+                        var temp = curPoint;
+                        curPoint = curPoint.link;
+                        temp.link = 0;
 
-                    } while(p00 && p00 !== p01);
+                    } while (curPoint && curPoint !== startPoint);
 
                     if (contour.length < 4) {
                         continue;
@@ -341,7 +338,7 @@ define(
 
                     contour = interPolateContour(contour);
 
-                    if (contour.length >= minPoints) {
+                    if (contour.length >= minimumPoints) {
                         if (smooth > 1 && contour.length >= 2 * smooth) {
                             contour = smoothContour(contour, smooth);
                         }

@@ -71,7 +71,7 @@ define(
                     if (this.curShapes) {
                         var fontLayer = this.fontLayer;
                         var shapes = lang.clone(this.coverLayer.shapes);
-                        for (var i = 0, l = shapes.length; i < l ; i++) {
+                        for (var i = 0, l = shapes.length; i < l; i++) {
                             fontLayer.addShape(shapes[i]);
                         }
 

@@ -164,7 +164,7 @@ define(function (require) {
                     py = 0;
                 }
 
-                for (q = 0, ql = segment.args.length; q < ql ; q += 2) {
+                for (q = 0, ql = segment.args.length; q < ql; q += 2) {
 
                     if (relative) {
                         px += segment.args[q];
@@ -369,7 +369,7 @@ define(function (require) {
                     y: 2 * p1.y - prevCubicC1.y
                 };
 
-                for (q = 0, ql = segment.args.length; q < ql ; q += 4) {
+                for (q = 0, ql = segment.args.length; q < ql; q += 4) {
 
                     c2 = {
                         x: px + segment.args[q],

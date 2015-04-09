@@ -22,13 +22,13 @@ define(
 
         // windows encoding id
         var windows = {
-            'Symbol': 0,
-            'UCS2': 1, // default use
-            'ShiftJIS': 2,
-            'PRC': 3,
-            'BigFive': 4,
-            'Johab': 5,
-            'UCS4': 6
+            Symbol: 0,
+            UCS2: 1, // default use
+            ShiftJIS: 2,
+            PRC: 3,
+            BigFive: 4,
+            Johab: 5,
+            UCS4: 6
         };
 
         return {

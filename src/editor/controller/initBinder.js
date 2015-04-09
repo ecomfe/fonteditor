@@ -15,7 +15,7 @@ define(
         /**
          * 初始化绑定器
          */
-        function initBinder () {
+        function initBinder() {
             var me = this;
 
             // 保存历史记录

@@ -42,7 +42,7 @@ define(
                         +       '<span class="input-group-addon">' + (index + 1) + '-' + key + '</span>'
                         +       '<select data-field="' + key + '" data-type="number" class="form-control">'
                         +           panose[key].map(function (value, i) {
-                                        return '<option value="' + i + '">'+ value +'</option>';
+                                        return '<option value="' + i + '">' + value + '</option>';
                                     }).join('')
                         +       '</select>'
                         +   '</div>'

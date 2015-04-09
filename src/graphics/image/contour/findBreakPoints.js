@@ -10,13 +10,18 @@ define(
         var makeLink = require('graphics/pathUtil').makeLink;
         var vector = require('graphics/vector');
         var getCos = vector.getCos;
-        var getDist = vector.getDist;
+
         var THETA_CORNER = 1.0; // 拐点抑制
+        var THRESHOLD_FAR_DIST = 80; // 远距离抑制
+        var THRESHOLD_LONG_DIST = 30; // 长距离抑制
+        var THRESHOLD_SHORT_DIST = 12; // 短距离抑制
+        var THRESHOLD_TINY_DIST = 3; // 微距离抑制，可能是噪音点
 
         function dist(p0, p1) {
             return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
         }
 
+        /* eslint-disable fecs-max-statements */
         /* 查找轮廓中的关键点
          *
          * @param  {Array} contour 轮廓点集合
@@ -26,13 +31,14 @@ define(
 
             contour = makeLink(contour);
 
-            var start = contour[0];
-            var farDist = 80 * scale;
-            var longDist = 30 * scale;
-            var shortDist = 12 * scale;
-            var tinyDist = 3 * scale;
+            var farDist = THRESHOLD_FAR_DIST * scale;
+            var longDist = THRESHOLD_LONG_DIST * scale;
+            var shortDist = THRESHOLD_SHORT_DIST * scale;
+            var tinyDist = THRESHOLD_TINY_DIST * scale;
 
+            var start = contour[0];
             var cur = start;
+
             // 标记距离和theta
             do {
 
@@ -69,12 +75,12 @@ define(
                 }
 
                 // 判断边界点
-                if(cur.x <= cur.prev.x && cur.x <= cur.next.x) {
+                if (cur.x <= cur.prev.x && cur.x <= cur.next.x) {
                     cur.xTop = true;
                     cur.apex = true;
                 }
 
-                if(cur.y <= cur.prev.y && cur.y <= cur.next.y) {
+                if (cur.y <= cur.prev.y && cur.y <= cur.next.y) {
                     cur.yTop = true;
                     cur.apex = true;
                 }
@@ -105,7 +111,10 @@ define(
                 }
 
                 // 判断超长线段两端最好用直线连接
-                if (!cur.visited && cur.theta > 0.3 && (cur.ndist > farDist && cur.pdist > farDist || cur.pdist > farDist && cur.ndist > farDist)) {
+                if (
+                    !cur.visited && cur.theta > 0.3
+                    && (cur.ndist > farDist && cur.pdist > farDist || cur.pdist > farDist && cur.ndist > farDist)
+                ) {
                     cur.corner = true;
                     cur.visited = true;
                     cur.breakPoint = true;
@@ -152,7 +161,7 @@ define(
                 }
 
                 cur = cur.next;
-            } while(cur !== start);
+            } while (cur !== start);
 
             // 对特殊点做修复
             cur = start;
@@ -163,30 +172,30 @@ define(
                     cur.x = (Math.abs(cur.prev.x - cur.x) <= scale) ? cur.prev.x : cur.next.x;
                     cur.y = (Math.abs(cur.prev.y - cur.y) <= scale) ? cur.prev.y : cur.next.y;
                 }
-
+                // 修复比较小的顶角点为平滑点
+                else if (cur.corner && cur.pdist < shortDist && cur.ndist < shortDist) {
+                    cur.tangency = true;
+                }
                 // 修复比较大的切线点位置，使曲线更平滑
                 else if (cur.apex && cur.next.apex
                     && cur.prev.theta < 0.4 && cur.next.theta < 0.4
                     && cur.pdist > shortDist && cur.ndist > shortDist
                 ) {
-
+                    var minus;
                     // 修正切线点位置
                     if (cur.xTop && cur.next.xTop || cur.xBottom && cur.next.xBottom) {
-                        var minus = Math.max(Math.floor(Math.abs(cur.next.y - cur.y) / 4), 4 * scale);
+                        minus = Math.max(Math.floor(Math.abs(cur.next.y - cur.y) / 4), 4 * scale);
                         cur.y = cur.y > cur.next.y ? cur.y - minus : cur.y + minus;
                         cur.next.y = cur.next.y > cur.y ? cur.next.y - minus : cur.next.y + minus;
                     }
 
                     if (cur.yTop && cur.next.yTop || cur.yBottom && cur.next.yBottom) {
-                        var minus = Math.max(Math.floor(Math.abs(cur.next.x - cur.x) / 4), 4 * scale);
+                        minus = Math.max(Math.floor(Math.abs(cur.next.x - cur.x) / 4), 4 * scale);
                         cur.x = cur.x > cur.next.x ? cur.x - minus : cur.x + minus;
                         cur.next.x = cur.next.x > cur.x ? cur.next.x - minus : cur.next.x + minus;
                     }
                 }
-                // 修复比较小的顶角点为平滑点
-                else if (cur.breakPoint && cur.pdist < shortDist && cur.ndist < shortDist) {
-                    cur.tangency = true;
-                }
+
 
                 cur = cur.next;
             } while (cur !== start);

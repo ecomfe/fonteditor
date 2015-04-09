@@ -10,6 +10,7 @@ define(
         /**
          * 平滑图像轮廓
          * @param  {Array} contour 轮廓点集
+         * @param  {number} smooth 平滑边界
          * @return {Array}         平滑后轮廓
          */
         function smooth(contour, smooth) {

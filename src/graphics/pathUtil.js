@@ -126,7 +126,7 @@ define(
         function removeOverlapPoints(points) {
             var hash = {};
             var ret = [];
-            for (var i = 0, l = points.length; i < l ; i++) {
+            for (var i = 0, l = points.length; i < l; i++) {
                 var hashcode = points[i].x * 31 + points[i].y;
                 if (!hash[hashcode]) {
                     ret.push(points[i]);
@@ -159,6 +159,8 @@ define(
          * 对path进行缩放
          *
          * @param  {Array} path 轮廓数组
+         * @param  {number} ratio 缩放大小
+         *
          * @return {Array}         path
          */
         function scale(path, ratio) {

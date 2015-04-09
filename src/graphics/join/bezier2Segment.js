@@ -5,7 +5,7 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var util = require('graphics/util');
         var ceilPoint = util.ceilPoint;

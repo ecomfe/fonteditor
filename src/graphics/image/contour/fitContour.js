@@ -8,25 +8,20 @@ define(
     function (require) {
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var reducePoints = require('graphics/image/contour/reducePoints');
-        var pathUtil = require('graphics/pathUtil');
         var vector = require('graphics/vector');
         var findBreakPoints = require('./findBreakPoints');
         var fitBezier = require('./fitBezier');
         var fitOval = require('./fitOval');
 
-        /**
-         * 获取轮廓线的边界
-         * @param  {Array} points 轮廓
-         * @return {Object}         bound
-         */
-        function getBound(points) {
-            return computeBoundingBox.computeBounding(points);
+        function isNaNPoint(p) {
+            return !isNaN(p.x) && !isNaN(p.y);
         }
 
         /**
          * 去除路径中的插值点
          *
          * @param {Array} path 路径
+         * @param {number} scale 缩放
          * @return {Array} 路径
          */
         function reducePath(path, scale) {
@@ -40,15 +35,15 @@ define(
                 if (cur.onCurve
                     && Math.abs(cur.x - next.x) < delta
                     && Math.abs(cur.y - next.y) < delta
-                ){
+                ) {
                     continue;
                 }
 
                 // 插值
                 if (
                     !prev.onCurve && cur.onCurve && !next.onCurve
-                    && Math.abs(2 * cur.x -prev.x - next.x) < delta
-                    && Math.abs(2 * cur.y -prev.y - next.y) < delta
+                    && Math.abs(2 * cur.x - prev.x - next.x) < delta
+                    && Math.abs(2 * cur.y - prev.y - next.y) < delta
                 ) {
                     continue;
                 }
@@ -62,13 +57,14 @@ define(
 
         /**
          * 判断轮廓是否圆
+         *
          * @param  {Array}  contour contour
-         * @return {Boolean}         [description]
+         * @return {boolean}
          */
         function isCircle(contour) {
             var start = contour[0];
             var cur = start;
-            var bound = getBound(contour);
+            var bound = computeBoundingBox.computeBounding(contour);
 
             if (Math.abs(bound.width - bound.height) / bound.width > 0.1) {
                 return false;
@@ -83,6 +79,8 @@ define(
             return true;
         }
 
+
+
         /**
          * 拟合轮廓点曲线
          * @param  {Array} data        轮廓点数组
@@ -94,7 +92,6 @@ define(
             options = options || {};
             scale = scale || 1;
 
-            var resultContour = [];
             var reducedData = reducePoints(data, 0, data.length - 1, scale);
 
             // 仅线段
@@ -108,7 +105,8 @@ define(
                 });
             }
 
-            breakPoints = findBreakPoints(reducedData, scale);
+            var  breakPoints = findBreakPoints(reducedData, scale);
+            var resultContour = [];
 
             if (false === breakPoints) {
 
@@ -124,11 +122,16 @@ define(
                 });
             }
             else {
+                var isLast;
+                var start;
+                var end;
+                var curvePoints;
+                var bezierCurve;
 
-                for (var i = 0, l = breakPoints.length; i < l; i++) {
-                    isLast = i === l - 1;
+                for (var i = 0, l = breakPoints.length, j, jl; i < l; i++) {
+                    isLast = i === (l - 1);
                     start = breakPoints[i];
-                    end = breakPoints[ isLast ? 0 : i + 1];
+                    end = breakPoints[isLast ? 0 : i + 1];
 
                     if (start.right === 1) {
                         resultContour.push({
@@ -136,7 +139,6 @@ define(
                             y: start.y,
                             onCurve: true
                         });
-                        tHat1Point = start;
                     }
                     else {
 
@@ -147,7 +149,8 @@ define(
                         });
 
                         if (isLast) {
-                            curvePoints = reducedData.slice(start.index).concat(reducedData.slice(0, end.index + 1));
+                            curvePoints = reducedData.slice(start.index)
+                                .concat(reducedData.slice(0, end.index + 1));
                         }
                         else {
                             curvePoints = reducedData.slice(start.index, end.index + 1);
@@ -157,30 +160,26 @@ define(
                             continue;
                         }
 
-                        var bezierCurve = fitBezier(curvePoints, scale);
-                        if (bezierCurve.length && bezierCurve.every(function (p) {
-                                return !isNaN(p.x) && !isNaN(p.y)
-                            })
-                        ) {
-                            bezierCurve.slice(0, bezierCurve.length - 1).forEach(function (p) {
+                        bezierCurve = fitBezier(curvePoints, scale);
+                        if (bezierCurve.length && bezierCurve.every(isNaNPoint)) {
+                            for (j = 0, jl = bezierCurve.length - 1; j < jl; j++) {
                                 resultContour.push({
-                                    x: p.x,
-                                    y: p.y,
-                                    onCurve: p.onCurve
+                                    x: bezierCurve[j].x,
+                                    y: bezierCurve[j].y,
+                                    onCurve: bezierCurve[j].onCurve
                                 });
-                            });
-
-                            end = bezierCurve[bezierCurve.length - 1];
+                            }
                         }
                         else {
-                            curvePoints.slice(1, curvePoints.length - 2).forEach(function (p) {
-                                resultContour.push({
-                                    x: p.x,
-                                    y: p.y
-                                });
-                            });
 
-                            console.warn('error fitting curve');
+                            for (j = 1, jl = curvePoints.length - 1; j < jl; j++) {
+                                resultContour.push({
+                                    x: curvePoints[j].x,
+                                    y: curvePoints[j].y
+                                });
+                            }
+
+                            // console.warn('error fitting curve');
                         }
                     }
 
@@ -206,8 +205,6 @@ define(
             }), scale);
 
         }
-
-
 
         return fitContour;
     }

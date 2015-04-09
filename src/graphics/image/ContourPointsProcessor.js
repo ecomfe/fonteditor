@@ -7,7 +7,6 @@
 define(
     function (require) {
 
-        var lang = require('common/lang');
         var findContours = require('./contour/findContours');
         var findBreakPoints = require('./contour/findBreakPoints');
         var fitContour = require('./contour/fitContour');
@@ -32,7 +31,6 @@ define(
         /**
          * 从二值图像中导入轮廓点集
          * @param  {Object} imageData 图像数据
-         * @return {Array}           contourPoints
          */
         Processor.prototype.import = function (imageData) {
             var contourPoints = findContours(imageData);
@@ -55,6 +53,7 @@ define(
 
         /**
          * 获取轮廓点集
+         * @return {Array} 轮廓点集
          */
         Processor.prototype.get = function () {
             var scale = 1 / this.scale;

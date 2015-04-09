@@ -76,8 +76,8 @@ define(
             var imgData = canvas.ctx.getImageData(0, 0,  width, height);
             var putData = imgData.data;
             var binarizedImageData = binarizedImage.data;
-            var line;
-            for (var y = 0; y < height; y ++) {
+
+            for (var y = 0, line; y < height; y++) {
                 line = width * y;
                 for (var x = 0; x < width; x++) {
                     var offset = line + x;
@@ -195,7 +195,7 @@ define(
                 var reader = new FileReader();
                 program.loading.show('正在加载图片...', 10000);
 
-                reader.onload = function(e) {
+                reader.onload = function (loadEvent) {
                     var image = new Image();
                     image.onload = function () {
                         updateImage(image);
@@ -203,12 +203,14 @@ define(
                     image.onerror = function () {
                         program.loading.warn('读取图片失败...', 2000);
                     };
-                    image.src = e.target.result;
-                    e.target.value = '';
+                    image.src = loadEvent.target.result;
+                    loadEvent.target.value = '';
                 };
-                reader.onerror = function(e) {
+
+                reader.onerror = function () {
                     program.loading.warn('读取图片失败...', 2000);
                 };
+
                 reader.readAsDataURL(file);
             };
 
@@ -229,11 +231,11 @@ define(
                 }
                 // 处理图片的情况，需要调用处理图片和二值化函数
                 else if (action === 'restore') {
-                   getFilter('reverse').get(0).checked = false;
-                   getFilter('gaussBlur').val(0);
-                   getFilter('contrast').val(0);
-                   processImage();
-                   binarizeImage();
+                    getFilter('reverse').get(0).checked = false;
+                    getFilter('gaussBlur').val(0);
+                    getFilter('contrast').val(0);
+                    processImage();
+                    binarizeImage();
                 }
                 else if (
                     action === 'reverse'
@@ -290,7 +292,7 @@ define(
                 var action = $(this).data('filter');
                 program.loading.show('正在处理...', 10000);
                 throttleAction(action);
-            })
+            });
 
             $('#import-pic-threshold-pre').on('change', function (e) {
                 if (!program.data.imageProcessor.grayData) {

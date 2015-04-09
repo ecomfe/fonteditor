@@ -3,7 +3,9 @@
  * @author mengke01(kekee000@gmail.com)
  */
 define(
-    function(require) {
+    function (require) {
+
+        /* eslint-disable */
         return {
             "version": 1,
             "numTables": 12,

@@ -9,6 +9,8 @@ define(
 
         var ClipperLib = require('ClipperLib');
 
+        /* eslint-disable new-cap */
+
         /**
          * 将数据转换成clipper格式
          *
@@ -50,7 +52,7 @@ define(
          * 添加路径
          *
          * @param {Array} contour 轮廓集合
-         * @param {number} 填充规则
+         * @param {number} polyType 填充规则
          * @param {boolean} isClosed 是否闭合
          */
         function addPath(contour, polyType, isClosed) {
@@ -84,7 +86,7 @@ define(
         /**
          * 执行裁剪路径
          *
-         * @param  {number} 裁剪方法, 相交、相切、合并
+         * @param  {number} relation 裁剪方法, 相交、相切、合并
          * @return {Array} 裁剪后的路径
          */
         Clipper.prototype.execute = function (relation) {

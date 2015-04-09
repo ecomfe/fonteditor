@@ -4,7 +4,6 @@
  *
  * reference:
  * http://www.cnblogs.com/chnhideyoshi/p/ErodeDilateAlgs.html
- *
  * github: https://github.com/chnhideyoshi/SeededGrow2d
  */
 
@@ -50,11 +49,10 @@ define(
                 }
             }
             // 菱形
-            else if(mode === 'rhomb')
-            {
-                for(i = -radius; i <= radius; i++) {
-                    for(j = -radius; j <= radius; j++) {
-                        if ( Math.abs(i) + Math.abs(j) <= radius) {
+            else if (mode === 'rhomb') {
+                for (i = -radius; i <= radius; i++) {
+                    for (j = -radius; j <= radius; j++) {
+                        if (Math.abs(i) + Math.abs(j) <= radius) {
                             offsetArray.push({
                                 x: i,
                                 y: j
@@ -64,9 +62,8 @@ define(
                 }
             }
             // 十字
-            else if(mode === 'cross')
-            {
-                for(i = radius; i > 0; i--) {
+            else if (mode === 'cross') {
+                for (i = radius; i > 0; i--) {
                     offsetArray.push({
                         x: 0,
                         y: -i
@@ -93,16 +90,18 @@ define(
             return offsetArray;
         }
 
+        /* eslint-disable max-params */
+
         /**
          * 在结构数组内赋值
          *
          * @param  {Array} data        二值数据
          * @param  {number} width       宽度
          * @param  {number} height      高度
-         * @param  {Array} offsetArray 结构数据
          * @param  {number} x           x
          * @param  {number} y           y
-         * @param  {number} value       查找的值
+         * @param  {Array} offsetArray 结构数据
+         * @param  {number} value       要设置的值
          * @return {boolean}
          */
         function setWindow(data, width, height, x, y, offsetArray, value) {
@@ -121,6 +120,7 @@ define(
             return false;
         }
 
+        /* eslint-enable max-params */
 
         /**
          * 是否临近指定的点
@@ -140,7 +140,7 @@ define(
                 (x > 0 && data[x - 1 + row] === value) // 左侧
                 || (y > 0 && data[x + row - width] === value) // 上侧
                 || (x < width - 1 && data[x + 1 + row] === value) // 右侧
-                || (y < height - 1 && data[x + row + width] ===value) // 下侧
+                || (y < height - 1 && data[x + row + width] === value) // 下侧
 
             ) {
                 return true;
@@ -153,6 +153,8 @@ define(
          * 对二值图像进行膨胀操作
          *
          * @param  {Object} imageData 图像数据
+         * @param  {string} operation 操作类型 `cross` or `erode`
+         * @param  {string} mode    模板类型，see `getOffsetArray`
          * @param  {number} radius    半径
          * @return {Object}           膨胀后图像
          */

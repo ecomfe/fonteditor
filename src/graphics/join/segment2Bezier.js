@@ -5,10 +5,9 @@
 
 
 define(
-    function(require) {
+    function (require) {
 
         var util = require('graphics/util');
-        var ceilPoint = util.ceilPoint;
         var getPointHash = util.getPointHash;
 
 
@@ -19,14 +18,13 @@ define(
          * @return {Array}            转换后的路径
          */
         function segment2Bezier(paths, bezierHash) {
-            var i;
-            var l;
+
             // 重新转换成曲线路径
-            for (i = 0, l = paths.length; i < l; i++) {
+            for (var i = 0, l = paths.length, j, jl; i < l; i++) {
                 var path = paths[i];
                 // 寻找第一个插值点
                 var startIndex;
-                for (var j = 0, jl = path.length; j < jl; j++) {
+                for (j = 0, jl = path.length; j < jl; j++) {
                     var start = bezierHash[getPointHash(path[j])];
                     if (start) {
                         if (j + 8 < jl) {
@@ -52,7 +50,7 @@ define(
                 }
 
                 // 移除插值点
-                for (var j = 0; j < path.length; j++) {
+                for (j = 0; j < path.length; j++) {
                     var point = bezierHash[getPointHash(path[j])];
                     if (point) {
                         path.splice(j, 9, point);

@@ -11,11 +11,7 @@ define(
         var makeLink = require('graphics/pathUtil').makeLink;
         var vector = require('graphics/vector');
         var getCos = vector.getCos;
-        var getDist = vector.getDist;
 
-        function dist(p0, p1) {
-            return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
-        }
 
         /**
          * 消减非必要的点
@@ -23,10 +19,12 @@ define(
          * @param  {Array} contour 轮廓点集
          * @param  {number} firstIndex   起始索引
          * @param  {number} lastIndex    结束索引
+         * @param  {number} scale    缩放级别
+         * @param  {number} threshold    消减阈值，see `douglasPeuckerReducePoints`
          * @return {Array}  消减后的点集
          */
-        function reducePoints(contour, firstIndex, lastIndex, scale, tolerance) {
-            var points = douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, tolerance);
+        function reducePoints(contour, firstIndex, lastIndex, scale, threshold) {
+            var points = douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, threshold);
             points = makeLink(points);
 
             var start = points[0];
@@ -42,7 +40,12 @@ define(
                 }
 
                 if (Math.abs(cur.x - cur.next.x) <= tinyDist && Math.abs(cur.y - cur.next.y) <= tinyDist) {
-                    var cos = getCos(cur.x - cur.prev.x, cur.y - cur.prev.y, cur.next.next.x - cur.next.x, cur.next.next.y - cur.next.y);
+                    var cos = getCos(
+                        cur.x - cur.prev.x,
+                        cur.y - cur.prev.y,
+                        cur.next.next.x - cur.next.x,
+                         cur.next.next.y - cur.next.y
+                    );
                     var theta = Math.acos(cos > 1 ? 1 : cos);
                     // 小于直角则考虑移除点
                     if (theta < rightAngle) {

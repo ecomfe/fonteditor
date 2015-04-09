@@ -14,6 +14,8 @@ define(
 
         var MAX_ITERATIONS = 4; // 最大的迭代次数
 
+        /* eslint-disable new-cap */
+
         /**
          * 将点转换成余弦值
          *
@@ -74,7 +76,7 @@ define(
          * 计算中间正切点
          *
          * @param  {Array} points 点集合
-         * @param  {number} end    点索引
+         * @param  {number} center    中间点索引
          * @return {Object} 点
          */
         function computeCenterTangent(points, center) {
@@ -134,6 +136,7 @@ define(
          *
          * @param {Object} a a点
          * @param {Object} b b点
+         * @return {number}
          */
         function v2Dot(a, b) {
             return (a.x * b.x) + (a.y * b.y);
@@ -150,8 +153,7 @@ define(
          * @param  {number} last    点索引
          * @return {Array} t值集合
          */
-        function chordLengthParameterize(points, first, last)
-        {
+        function chordLengthParameterize(points, first, last) {
             var i;
             var u = [0];
             for (i = first + 1; i <= last; i++) {
@@ -165,25 +167,21 @@ define(
             return u;
         }
 
-        /*
-         *  Bezier :
-         *      Evaluate a Bezier curve at a particular parameter value
-         *
-         */
+
         /**
-         * 计算bezier点在特定位置起始点位置，使用连接点法，参考bezier曲线定义
+         * 计算bezier点在特定t的坐标，参考bezier曲线定义
          *
          * @param {number} degree 深度
          * @param {Array} bezierPoints bezier点集合
          * @param {number} t t值
+         * @return {Object} 点
          */
         function bezierII(degree, bezierPoints, t) {
             var i;
             var j;
-            var temp = []; // Local copy of control points
+            var temp = [];
 
-            for (i = 0; i <= degree; i++)
-            {
+            for (i = 0; i <= degree; i++) {
                 temp[i] = {
                     x: bezierPoints[i].x,
                     y: bezierPoints[i].y
@@ -191,10 +189,8 @@ define(
             }
 
             /* Triangle computation */
-            for (i = 1; i <= degree; i++)
-            {
-                for (j = 0; j <= degree - i; j++)
-                {
+            for (i = 1; i <= degree; i++) {
+                for (j = 0; j <= degree - i; j++) {
                     temp[j].x = (1.0 - t) * temp[j].x + t * temp[j + 1].x;
                     temp[j].y = (1.0 - t) * temp[j].y + t * temp[j + 1].y;
                 }
@@ -214,10 +210,10 @@ define(
          *
          * @return {Object} 最大错误点的位置和错误值
          */
-        function computeMaxError(points, first, last, bezCurve, u, splitPoint) {
+        function computeMaxError(points, first, last, bezCurve, u) {
             var maxDist = 0; // Maximum error
-
             var splitPoint = Math.floor((last - first + 1) / 2);
+
             for (var i = first + 1; i < last; i++) {
                 var p = bezierII(3, bezCurve, u[i - first]);
                 var x = p.x - points[i].x;
@@ -248,12 +244,12 @@ define(
             var denominator;
             var Q1 = []; //  Q'
             var Q2 = [];  // Q''
-            var Q_u; // u evaluated at Q, Q', & Q''
-            var Q1_u;
-            var Q2_u;
+            var Qu; // u evaluated at Q, Q', & Q''
+            var Q1u;
+            var Q2u;
             var i;
 
-            Q_u = bezierII(3, Q, u);
+            Qu = bezierII(3, Q, u);
 
             /* Generate control vertices for Q' */
             for (i = 0; i <= 2; i++) {
@@ -272,15 +268,15 @@ define(
             }
 
             /* Compute Q'(u) and Q''(u) */
-            Q1_u = bezierII(2, Q1, u);
-            Q2_u = bezierII(1, Q2, u);
+            Q1u = bezierII(2, Q1, u);
+            Q2u = bezierII(1, Q2, u);
 
             /* Compute f(u)/f'(u) */
-            numerator = (Q_u.x - P.x) * (Q1_u.x) + (Q_u.y - P.y) * (Q1_u.y);
-            denominator = (Q1_u.x) * (Q1_u.x)
-                + (Q1_u.y) * (Q1_u.y)
-                + (Q_u.x - P.x) * (Q2_u.x)
-                + (Q_u.y - P.y) * (Q2_u.y);
+            numerator = (Qu.x - P.x) * (Q1u.x) + (Qu.y - P.y) * (Q1u.y);
+            denominator = (Q1u.x) * (Q1u.x)
+                + (Q1u.y) * (Q1u.y)
+                + (Qu.x - P.x) * (Q2u.x)
+                + (Qu.y - P.y) * (Q2u.y);
 
             if (denominator === 0) {
                 return u;
@@ -328,6 +324,7 @@ define(
             var tmp; // Utility variable
             var u;
             var nPts = last - first + 1; // number of pts in sub-curve
+            var i;
 
             /* Compute the A's  */
             for (i = 0; i < nPts; i++) {
@@ -349,7 +346,7 @@ define(
 
             var firstPoint = points[first]; // 起始点
             var lastPoint = points[last]; // 结束点
-            for (var i = 0; i < nPts; i++) {
+            for (i = 0; i < nPts; i++) {
                 C[0][0] += v2Dot(A[i][0], A[i][0]);
                 C[0][1] += v2Dot(A[i][0], A[i][1]);
                 C[1][0] = C[0][1];
@@ -367,24 +364,26 @@ define(
             }
 
             /* Compute the determinants of C and X  */
-            var det_C0_C1 = C[0][0] * C[1][1] - C[1][0] * C[0][1];
-            var det_C0_X = C[0][0] * X[1] - C[1][0] * X[0];
-            var det_X_C1 = X[0] * C[1][1] - X[1] * C[0][1];
+            var detC0C1 = C[0][0] * C[1][1] - C[1][0] * C[0][1];
+            var detC0X = C[0][0] * X[1] - C[1][0] * X[0];
+            var detXC1 = X[0] * C[1][1] - X[1] * C[0][1];
 
             /* Finally, derive alpha values */
-            var alpha_l = (det_C0_C1 == 0) ? 0.0 : det_X_C1 / det_C0_C1;
-            var alpha_r = (det_C0_C1 == 0) ? 0.0 : det_C0_X / det_C0_C1;
+            var alphaL = (detC0C1 === 0) ? 0.0 : detXC1 / detC0C1;
+            var alphaR = (detC0C1 === 0) ? 0.0 : detC0X / detC0C1;
 
             /* If alpha negative, use the Wu/Barsky heuristic (see text) */
             /* (if alpha is 0, you get coincident control points that lead to
              * divide by zero in any subsequent NewtonRaphsonRootFind() call. */
-            var segLength = Math.sqrt(Math.pow(firstPoint.x - lastPoint.x, 2) + Math.pow(firstPoint.y - lastPoint.y, 2));
+            var segLength = Math.sqrt(
+                Math.pow(firstPoint.x - lastPoint.x, 2) + Math.pow(firstPoint.y - lastPoint.y, 2)
+            );
             var epsilon = 1.0e-6 * segLength;
             var bezCurve = [];
             bezCurve[0] = firstPoint;
             bezCurve[3] = lastPoint;
 
-            if (alpha_l < epsilon || alpha_r < epsilon) {
+            if (alphaL < epsilon || alphaR < epsilon) {
                 /* fall back on standard (probably inaccurate) formula, and subdivide further if needed. */
                 var dist = segLength / 3.0;
                 bezCurve[1] = {
@@ -405,20 +404,20 @@ define(
             /*  on the tangent vectors, left and right, respectively */
 
             bezCurve[1] = {
-                x: tHat1.x * alpha_l + firstPoint.x,
-                y: tHat1.y * alpha_l + firstPoint.y
+                x: tHat1.x * alphaL + firstPoint.x,
+                y: tHat1.y * alphaL + firstPoint.y
             };
 
             bezCurve[2] = {
-                x: tHat2.x * alpha_r + lastPoint.x,
-                y: tHat2.y * alpha_r + lastPoint.y
+                x: tHat2.x * alphaR + lastPoint.x,
+                y: tHat2.y * alphaR + lastPoint.y
             };
 
             return bezCurve;
         }
 
 
-
+        /* eslint-disable max-params */
         /**
          * 三次bezier曲线拟合
          *
@@ -437,13 +436,13 @@ define(
 
             nPts = last - first + 1;
 
-            var firstPoint = points[first]; // 起始点
-            var lastPoint = points[last]; // 结束点
-            var segLength = Math.sqrt(Math.pow(firstPoint.x - lastPoint.x, 2) + Math.pow(firstPoint.y - lastPoint.y, 2));
-
             //  Use heuristic if region only has two points in it
-            if (nPts == 2) {
-                var dist = segLength / 3.0;
+            if (nPts === 2) {
+                var firstPoint = points[first]; // 起始点
+                var lastPoint = points[last]; // 结束点
+                var dist = Math.sqrt(
+                    Math.pow(firstPoint.x - lastPoint.x, 2) + Math.pow(firstPoint.y - lastPoint.y, 2)
+                ) / 3;
 
                 bezCurve[0] = firstPoint;
                 bezCurve[3] = lastPoint;
@@ -464,11 +463,10 @@ define(
 
             /*  Parameterize points, and attempt to fit curve */
             var uPrime; // Improved parameter values
-            var maxError; // Maximum fitting error
-            var iterationError = error * error; // Error below which you try iterating
             var u = chordLengthParameterize(points, first, last); // Parameter values for point
 
             bezCurve = generateBezier(points, first, last, u, tHat1, tHat2);
+
             /*  Find max deviation of points to fitted curve */
             var maxError = computeMaxError(points, first, last, bezCurve, u);
 
@@ -482,7 +480,7 @@ define(
 
             /*  If error not too large, try some reparameterization  */
             /*  and iteration */
-            if (maxError.dist < iterationError) {
+            if (maxError.dist < error * error) {
                 for (i = 0; i < MAX_ITERATIONS; i++) {
                     uPrime = reparameterize(points, first, last, u, bezCurve);
                     bezCurve = generateBezier(points, first, last, uPrime, tHat1, tHat2);
@@ -507,7 +505,7 @@ define(
             tHatCenter.y = -tHatCenter.y;
             fitCubic(points, splitPoint, last, tHatCenter, tHat2, error, result);
         }
-
+        /* eslint-enable max-params */
 
 
         /**
@@ -515,16 +513,17 @@ define(
          *
          * @param  {Array} points 点集合
          * @param  {number} error  最大错误距离
-         *
-         * @return {Array}  结果点集
+         * @param  {?Object} tHat1  起始点向量
+         * @param  {?Object} tHat2  结束点向量
+         * @return {Array}  拟合后的点
          */
         function fitCurve(points, error, tHat1, tHat2) {
             var last = points.length - 1;
             if (!tHat1) {
-                var tHat1 = computeLeftTangent(points, 0);
+                tHat1 = computeLeftTangent(points, 0);
             }
             if (!tHat2) {
-                var tHat2 = computeRightTangent(points, last);
+                tHat2 = computeRightTangent(points, last);
             }
             var result = [];
             fitCubic(points, 0, last, tHat1, tHat2, error, result);

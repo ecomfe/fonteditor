@@ -16,7 +16,7 @@ define(
         // 键盘名称映射表
         var keyCodeMap = {
             37: 'left',
-            38: 'up' ,
+            38: 'up',
             39: 'right',
             40: 'down',
             13: 'enter',

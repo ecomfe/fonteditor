@@ -75,17 +75,17 @@ define(
 
 
         /**
-         * 移动路径组
+         * 路径组变换
          *
          * @param {Array} paths 路径数组
-         * @param {number} x x
-         * @param {number} y y
+         * @param {number} x x 方向缩放
+         * @param {number} y y 方向缩放
          * @return {Array} 变换后的路径
          */
-        function movePaths(paths, xScale, yScale) {
+        function movePaths(paths, x, y) {
             var bound = computeBoundingBox.computePath.apply(null, paths);
-            shapes.forEach(function (shape) {
-                pathAdjust(shape.points, 1, 1, x - bound.x, y - bound.y - bound.height);
+            paths.forEach(function (path) {
+                pathAdjust(path, 1, 1, x - bound.x, y - bound.y);
             });
 
             return paths;
@@ -94,10 +94,10 @@ define(
         return {
             rotate: rotatePaths,
             mirror: function (paths) {
-                return mirrorPaths(paths, -1, 1)
+                return mirrorPaths(paths, -1, 1);
             },
             flip: function (paths) {
-                return mirrorPaths(paths, 1, -1)
+                return mirrorPaths(paths, 1, -1);
             },
             move: movePaths
         };

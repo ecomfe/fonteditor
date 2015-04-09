@@ -62,7 +62,7 @@ define(
 
 
         /* eslint-disable max-depth */
-        function downlistener (e) {
+        function downlistener(e) {
             var me = this;
             e.ctrlKey = e.ctrlKey || e.metaKey;
             var selected;

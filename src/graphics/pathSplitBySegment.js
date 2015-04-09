@@ -20,6 +20,7 @@ define(
 
         var pathJoin = require('./pathJoin');
 
+
         /**
          * 线段切割路径
          *
@@ -30,34 +31,34 @@ define(
          */
         function pathSplitBySegment(paths, p0, p1) {
 
-            var i = 0;
-            var l = paths.length;
+            var iterSplitPath = function (p) {
+                p.index = p.index1;
+                return p;
+            };
+
             var leftSide = [];
             var rightSide = [];
             var leftPaths = [];
-            for (; i < l; i++) {
+            var result;
+
+            for (var i = 0, l = paths.length, j, jl; i < l; i++) {
                 var path = interpolate(paths[i]);
-                var result = getSegmentPathJoint(path, p0, p1);
+                result = getSegmentPathJoint(path, p0, p1);
+
                 if (result) {
-
-                    var splitedPaths = pathSplit(path, result.map(function (p) {
-                        p.index = p.index1;
-                        return p;
-                    }));
-
+                    var splitedPaths = pathSplit(path, result.map(iterSplitPath));
                     // 将分割后的路径分为左右两组
-                    splitedPaths.forEach(function (path) {
-                        var p2 = path[1];
+                    for (j = 0, jl = splitedPaths.length; j < jl; j++) {
+                        var p2 = splitedPaths[j][1];
 
                         // 根据路径矢量关系确定点在左边还是右边
-                        // http://blog.csdn.net/modiz/article/details/9928955
                         if ((p0.x - p2.x) * (p1.y - p2.y) - (p0.y - p2.y) * (p1.x - p2.x) > 0) {
-                            leftSide.push(path);
+                            leftSide.push(splitedPaths[j]);
                         }
                         else {
-                            rightSide.push(path);
+                            rightSide.push(splitedPaths[j]);
                         }
-                    });
+                    }
                 }
                 else {
                     leftPaths.push(paths[i]);
@@ -65,8 +66,9 @@ define(
             }
 
             // TODO 组合左右两侧的曲线段
-            var result = pathJoin(leftSide, relation.join).concat(pathJoin(rightSide, relation.join));
+            result = pathJoin(leftSide, relation.join).concat(pathJoin(rightSide, relation.join));
             result = leftPaths.concat(result);
+
             return result.map(function (path) {
                 return deInterpolate(path);
             });

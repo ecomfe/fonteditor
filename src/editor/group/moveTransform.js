@@ -21,7 +21,7 @@ define(
          * @param {boolean} fixY 固定Y
          * @param {boolean} enableSorption 是否吸附
          */
-        function moveTransform (camera, fixX, fixY, enableSorption) {
+        function moveTransform(camera, fixX, fixY, enableSorption) {
 
             var x = fixX ? 0 : (camera.x - camera.startX);
             var y = fixY ? 0 : (camera.y - camera.startY);

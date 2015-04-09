@@ -83,7 +83,7 @@ define(
 
             // glyf 信息
             var glyphList = '';
-            for (var i = 1, l = ttf.glyf.length; i < l ; i++) {
+            for (var i = 1, l = ttf.glyf.length; i < l; i++) {
                 var glyf = ttf.glyf[i];
 
                 // 筛选简单字形，并且有轮廓，有编码

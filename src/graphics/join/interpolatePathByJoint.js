@@ -36,7 +36,7 @@ define(
                 return a.t - b.t;
             });
 
-            while(p = points.shift()) {
+            while (p = points.shift()) {
                 bezierArray = bezierQ2Split(pp0, pp1, p2, p);
                 if (bezierArray[1]) {
                     bezierArray[0][2].onCurve = true;

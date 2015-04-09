@@ -18,7 +18,7 @@ define(
                 'Text and Display',
                 'Script',
                 'Decorative',
-                'Pictorial',
+                'Pictorial'
             ],
 
             bSerifStyle: [

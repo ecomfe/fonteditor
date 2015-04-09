@@ -11,7 +11,6 @@
 define(
     function (require) {
 
-        var lang = require('common/lang');
         var Clipper = require('./join/Clipper');
         var Relation = require('./join/relation');
         var pathUtil = require('./pathUtil');
@@ -45,10 +44,7 @@ define(
             var l;
             // 对路径进行插值，求舍入
             for (i = 0, l = paths.length; i < l; i++) {
-                paths[i].forEach(function (p) {
-                    ceilPoint(p);
-                });
-
+                paths[i].forEach(ceilPoint);
                 paths[i] = interpolate(paths[i]);
             }
 

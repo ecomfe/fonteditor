@@ -22,7 +22,7 @@ define(
             var y;
             var k;
 
-            //生成高斯矩阵
+            // 生成高斯矩阵
             for (k = 0, x = -radius; x <= radius; x++) {
                 for (y = -radius; y <= radius; y++) {
                     var g = a * Math.exp(b * (x * x + y * y));
@@ -31,7 +31,7 @@ define(
                 }
             }
 
-            //归一化, 保证高斯矩阵的值在[0,1]之间
+            // 归一化, 保证高斯矩阵的值在[0,1]之间
             for (k = 0, x = -radius; x <= radius; x++) {
                 for (y = -radius; y <= radius; y++) {
                     gaussMatrix[k++] /= gaussSum;

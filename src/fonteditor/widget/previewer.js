@@ -18,7 +18,6 @@ define(
         var woff2base64 = require('ttf/woff2base64');
         var eot2base64 = require('ttf/eot2base64');
         var svg2base64 = require('ttf/svg2base64');
-        var utpl = require('utpl');
         var extend = require('common/lang').extend;
         var ttf2icon = require('ttf/ttf2icon');
 

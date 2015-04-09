@@ -13,10 +13,12 @@ define(
 
 
         /**
-         * 检测直方图是否为双峰的
+         * 检测直方图是否为双峰
+         *
          * @param {Array} HistGram 灰度数据
+         * @return {boolean} 是否为双峰
          */
-        function IsDimodal(HistGram) {
+        function isDimodal(HistGram) {
 
             // 对直方图的峰进行计数，只有峰数位2才为双峰
             var Count = 0;
@@ -75,7 +77,7 @@ define(
 
                 // 通过三点求均值来平滑直方图
                 // 判断是否已经是双峰的图像了
-                while (IsDimodal(HistGramCC) === false) {
+                while (!isDimodal(HistGramCC)) {
 
                     // 第一点
                     HistGramCC[0] = (HistGramC[0] + HistGramC[0] + HistGramC[1]) / 3;
@@ -96,14 +98,14 @@ define(
                 }
 
                 // 阈值极为两峰之间的最小值
-                var Peakfound = false;
+                var peakfound = false;
                 for (Y = 1; Y < 255; Y++) {
                     if (HistGramCC[Y - 1] < HistGramCC[Y] && HistGramCC[Y + 1] < HistGramCC[Y]) {
-                        Peakfound = true;
+                        peakfound = true;
                     }
 
-                    if (Peakfound == true && HistGramCC[Y - 1] >= HistGramCC[Y] && HistGramCC[Y + 1] >= HistGramCC[Y]) {
-                        return 255 -(Y - 1);
+                    if (peakfound && HistGramCC[Y - 1] >= HistGramCC[Y] && HistGramCC[Y + 1] >= HistGramCC[Y]) {
+                        return 255 - (Y - 1);
                     }
                 }
 
@@ -130,7 +132,7 @@ define(
 
                 // 通过三点求均值来平滑直方图
                 // 判断是否已经是双峰的图像了
-                while (IsDimodal(HistGramCC) == false) {
+                while (!isDimodal(HistGramCC)) {
                     // 第一点
                     HistGramCC[0] = (HistGramC[0] + HistGramC[0] + HistGramC[1]) / 3;
                     // 中间的点
@@ -167,7 +169,7 @@ define(
              * @return {number}          阈值
              */
             ostu: function (HistGram) {
-                var X;
+
                 var Y;
                 var Amount = 0;
                 var PixelBack = 0;
@@ -189,10 +191,10 @@ define(
                 var Threshold = 0;
 
                 // 求最大值和最小值
-                for (MinValue = 0; MinValue < 256 && HistGram[MinValue] == 0; MinValue++) {
+                for (MinValue = 0; MinValue < 256 && HistGram[MinValue] === 0; MinValue++) {
                 }
 
-                for (MaxValue = 255; MaxValue > MinValue && HistGram[MinValue] == 0; MaxValue--) {
+                for (MaxValue = 255; MaxValue > MinValue && HistGram[MinValue] === 0; MaxValue--) {
                 }
 
                 // 图像中只有一个颜色
@@ -201,13 +203,13 @@ define(
                 }
 
                 // 图像中只有二个颜色
-                if (MinValue + 1 == MaxValue) {
+                if (MinValue + 1 === MaxValue) {
                     return MinValue;
                 }
 
                 // 像素总数
                 for (Y = MinValue; Y <= MaxValue; Y++) {
-                     Amount += HistGram[Y];
+                    Amount += HistGram[Y];
                 }
 
                 PixelIntegral = 0;
@@ -245,10 +247,6 @@ define(
              */
             isoData: function (HistGram) {
                 var i;
-                var l;
-                var toth;
-                var totl;
-                var h;
                 var g = 0;
                 var length = HistGram.length;
 
@@ -259,7 +257,12 @@ define(
                     }
                 }
 
-                while (true) {
+                var l;
+                var toth;
+                var totl;
+                var h;
+
+                for (;;) {
                     l = 0;
                     totl = 0;
                     for (i = 0; i < g; i++) {

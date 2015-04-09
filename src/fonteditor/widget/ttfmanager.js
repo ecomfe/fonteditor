@@ -126,7 +126,7 @@ define(
 
             if (!glyf.unicode || !glyf.unicode.length) {
                 // 找到unicode的最大值
-                for (var i = glyfList.length - 1; i > 0 ; i--) {
+                for (var i = glyfList.length - 1; i > 0; i--) {
                     var g = glyfList[i];
                     if (g.unicode && g.unicode.length) {
                         var u = Math.max.apply(null, g.unicode);

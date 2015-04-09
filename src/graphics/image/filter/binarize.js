@@ -15,7 +15,7 @@ define(
          */
         function binarize(imageData, threshold) {
 
-            var threshold = threshold || 200;
+            threshold = threshold || 200;
             var width = imageData.width;
             var height = imageData.height;
             var data = imageData.data;

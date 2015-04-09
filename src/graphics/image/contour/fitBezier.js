@@ -17,12 +17,13 @@ define(
          *
          * @param  {Array} points 点集合
          * @param  {number} scale  当前点的scale
-         *
+         * @param  {Object} tHat1  开始点单位向量
+         * @param  {Object} tHat2  结束点单位向量
          * @return {Array}  结果点集
          */
         function fitBezier(points, scale, tHat1, tHat2) {
             scale = scale || 1;
-            var size = points.length;
+
             var maxError = 2 * scale * scale;
 
             var cubicBezier = fitCurve(points, maxError, tHat1, tHat2);
@@ -39,8 +40,10 @@ define(
                 var theta = Math.acos(cos > 1 ? 1 : cos);
 
                 if (theta > 3) {
-                    start.onCurve = true;
-                    result.push(start);
+                    if (!i) {
+                        start.onCurve = true;
+                        result.push(start);
+                    }
                 }
                 else {
                     var quadBezier = bezierCubic2Q2(start, cubicBezier[i], cubicBezier[i + 1], cubicBezier[i + 2]);

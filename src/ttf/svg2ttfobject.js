@@ -10,11 +10,9 @@
 define(
     function (require) {
         var string = require('common/string');
-        var lang = require('common/lang');
         var DOMParser = require('common/DOMParser');
         var path2contours = require('./svg/path2contours');
         var svgnode2contours = require('./svg/svgnode2contours');
-        var contoursTransform = require('./svg/contoursTransform');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var pathsUtil = require('graphics/pathsUtil');
         var glyfAdjust = require('./util/glyfAdjust');
@@ -182,8 +180,10 @@ define(
 
                 // 解析panose, eg: 2 0 6 3 0 0 0 0 0 0
                 var panose = (fontFaceNode.getAttribute('panose-1') || '').split(' ');
-                ['bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
-                'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'].forEach(function (name, i) {
+                [
+                    'bFamilyType', 'bSerifStyle', 'bWeight', 'bProportion', 'bContrast',
+                    'bStrokeVariation', 'bArmStyle', 'bLetterform', 'bMidline', 'bXHeight'
+                ].forEach(function (name, i) {
                     OS2[name] = +(panose[i] || 0);
                 });
 

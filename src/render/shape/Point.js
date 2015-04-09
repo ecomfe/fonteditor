@@ -19,7 +19,7 @@ define(
             getRect: function (shape) {
                 var size = shape.size || POINT_SIZE;
                 return {
-                    x: shape.x - size / 2 ,
+                    x: shape.x - size / 2,
                     y: shape.y - size / 2,
                     width: size,
                     height: size

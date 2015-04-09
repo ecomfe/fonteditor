@@ -5,7 +5,7 @@
 define(
     function (require) {
 
-        var pixelRatio = (function(context) {
+        var pixelRatio = (function (context) {
             var backingStore = context.backingStorePixelRatio ||
                         context.webkitBackingStorePixelRatio ||
                         context.mozBackingStorePixelRatio ||

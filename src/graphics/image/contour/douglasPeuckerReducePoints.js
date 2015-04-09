@@ -9,9 +9,9 @@ define(
 
         var getDist = require('graphics/vector').getDist;
 
-        var TORANCE_DEFAULT = 1;
+        var THRESHOLD_DEFAULT = 1; // 默认消减点的阈值
 
-        function reduce(contour, firstIndex, lastIndex, tolerance, splitArray) {
+        function reduce(contour, firstIndex, lastIndex, threshold, splitArray) {
 
             if (lastIndex - firstIndex < 3) {
                 return;
@@ -29,10 +29,10 @@ define(
                 }
             }
 
-            if (maxDistance > tolerance) {
+            if (maxDistance > threshold) {
                 splitArray.push(splitIndex);
-                reduce(contour, firstIndex, splitIndex, tolerance, splitArray);
-                reduce(contour, splitIndex, lastIndex, tolerance, splitArray);
+                reduce(contour, firstIndex, splitIndex, threshold, splitArray);
+                reduce(contour, splitIndex, lastIndex, threshold, splitArray);
             }
         }
 
@@ -43,27 +43,27 @@ define(
          * @param  {Array} contour 轮廓点集
          * @param  {number} firstIndex   起始索引
          * @param  {number} lastIndex    结束索引
+         * @param  {number} scale    缩放级别
+         * @param  {number} threshold    消减阈值
          * @return {Array}  消减后的点集
          */
-        function reducePoint(contour, firstIndex, lastIndex, scale, tolerance) {
+        function reducePoint(contour, firstIndex, lastIndex, scale, threshold) {
             firstIndex = firstIndex || 0;
             lastIndex = lastIndex || contour.length - 1;
-            tolerance = tolerance || TORANCE_DEFAULT * (scale || 1);
+            threshold = threshold || THRESHOLD_DEFAULT * (scale || 1);
             var splitArray = [];
 
-            reduce(contour, firstIndex, lastIndex, tolerance, splitArray);
+            reduce(contour, firstIndex, lastIndex, threshold, splitArray);
 
             if (splitArray.length) {
                 splitArray.unshift(firstIndex);
                 splitArray = splitArray.map(function (index) {
-                    contour[index].index = index;
+                    contour[index].contourIndex = index;
                     return contour[index];
-                })
-
-                // 去除临近的点
+                });
 
                 splitArray.sort(function (a, b) {
-                    return a.index - b.index;
+                    return a.contourIndex - b.contourIndex;
                 });
                 return splitArray;
             }
