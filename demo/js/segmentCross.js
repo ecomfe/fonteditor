@@ -1,7 +1,7 @@
 /**
  * @file quadraticBezier.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 二次贝塞尔直线相交演示
  */
@@ -22,7 +22,7 @@ define(
                 var width = canvas.offsetWidth;
                 var height = canvas.offsetHeight;
 
-                var points = [{"x":563.5776234567902,"y":637.5320987654322,"onCurve":true},{"x":563.5776234567902,"y":433.53209876543207,"onCurve":true},{"x":543,"y":478},{"x":10000,"y":478}] ;
+                var points = [{"x":300,"y":300,"onCurve":true},{"x":350,"y":350,"onCurve":true},{"x":200,"y":200},{"x":400,"y":400}];
 
                 $('[data-index]').each(function(index, item) {
                     if(!points[index]) {
@@ -62,15 +62,15 @@ define(
                 }
 
                 function draw() {
-                    
+
 
                     ctx.clearRect(0, 0, width, height);
-                    //绘制2次贝塞尔曲线  
+                    //绘制2次贝塞尔曲线
                     ctx.beginPath();
                     ctx.strokeStyle='black';
-                    ctx.moveTo(points[0].x, points[0].y);  
+                    ctx.moveTo(points[0].x, points[0].y);
                     ctx.lineTo(points[1].x, points[1].y);
-                    
+
                     ctx.moveTo(points[2].x, points[2].y);
                     if (points[3]) {
                         ctx.lineTo(points[3].x, points[3].y);
@@ -89,7 +89,7 @@ define(
                     if(r) {
                         ctx.beginPath();
                         r.forEach(function(item) {
-                            ctx.moveTo(item.x, item.y);  
+                            ctx.moveTo(item.x, item.y);
                             ctx.arc(item.x, item.y, 4, 0, Math.PI * 2, true);
                         });
                         ctx.fill();
@@ -101,7 +101,7 @@ define(
         };
 
         entry.init();
-        
+
         return entry;
     }
 );

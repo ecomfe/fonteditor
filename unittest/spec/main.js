@@ -8,7 +8,6 @@ define(
     function (require) {
 
         // math
-        require('./math/gaussian-elimination.spec');
         require('./math/getBezierQ2T.spec');
 
         // ttf
@@ -16,5 +15,6 @@ define(
 
         // graphics
         require('./graphics/vector.spec');
+        require('./graphics/isSegmentCross.spec');
     }
 );

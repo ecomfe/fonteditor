@@ -1,6 +1,7 @@
 
 define(
     function(require) {
-        return {"xMin":-18,"yMin":109,"xMax":439,"yMax":483,"unicode":[57357],"advanceWidth":633,"leftSideBearing":-18,"name":"uniE00D","contours":[[{"x":-18,"y":382,"onCurve":true},{"x":6,"y":370},{"x":36,"y":370,"onCurve":true},{"x":68,"y":370},{"x":94,"y":385,"onCurve":true},{"x":133,"y":347},{"x":189,"y":347,"onCurve":true},{"x":245,"y":347},{"x":285,"y":385,"onCurve":true},{"x":324,"y":422},{"x":324,"y":476,"onCurve":true},{"x":324,"y":480},{"x":324,"y":483,"onCurve":true},{"x":336,"y":483,"onCurve":true},{"x":336,"y":171,"onCurve":true},{"x":-18,"y":171,"onCurve":true}],[{"x":439,"y":210,"onCurve":true},{"x":437,"y":259},{"x":400,"y":295,"onCurve":true},{"x":360,"y":332},{"x":304,"y":332,"onCurve":true},{"x":250,"y":332},{"x":212,"y":298,"onCurve":true},{"x":185,"y":314},{"x":151,"y":314,"onCurve":true},{"x":103,"y":314},{"x":37,"y":251},{"x":37,"y":160},{"x":70,"y":129,"onCurve":true},{"x":83,"y":117},{"x":97,"y":109,"onCurve":true},{"x":97,"y":210,"onCurve":true}]]}
+        return {"name":"uniE016","unicode":[57366],"xMin":146,"xMax":573,"yMin":119,"yMax":546,"leftSideBearing":146,"advanceWidth":926,"contours":[[{"x":146,"y":490,"onCurve":true},{"x":146,"y":518},{"x":165,"y":531,"onCurve":true},{"x":177,"y":543},{"x":202,"y":546,"onCurve":true},{"x":517,"y":546,"onCurve":true},{"x":542,"y":543},{"x":561,"y":531,"onCurve":true},{"x":573,"y":518},{"x":573,"y":490,"onCurve":true},{"x":573,"y":175,"onCurve":true},{"x":573,"y":153},{"x":561,"y":138,"onCurve":true},{"x":542,"y":125},{"x":517,"y":119,"onCurve":true},{"x":202,"y":119,"onCurve":true},{"x":177,"y":125},{"x":165,"y":138,"onCurve":true},{"x":146,"y":153},{"x":146,"y":175,"onCurve":true},{"x":146,"y":490,"onCurve":true}]]};
+
     }
 );
