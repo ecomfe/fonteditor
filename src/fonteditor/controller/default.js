@@ -363,6 +363,7 @@ define(
                             program.project.updateConfig(program.data.projectId, {
                                 sync: setting
                             });
+                            program.projectViewer.show(program.project.items(), program.data.projectId);
                         }
                     }).show(syncConfig);
                 }
@@ -446,6 +447,9 @@ define(
                 program.data.projectId = null;
                 actions.save();
                 program.viewer.focus();
+            })
+            .on('sync', function (e) {
+                actions.sync(e.projectId);
             })
             .on('del', function (e) {
                 program.project.remove(e.projectId).then(function () {

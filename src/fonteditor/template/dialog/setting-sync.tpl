@@ -18,9 +18,9 @@
   </div>
   <div class="form-group">
     <div class="input-group input-group-sm">
-      <span class="input-group-addon">暂停同步</span>
+      <span class="input-group-addon">自动同步</span>
       <span class="form-control">
-        <input data-field="pause" type="checkbox">
+        <input data-field="autoSync" type="checkbox" checked="checked">
       </span>
     </div>
   </div>
@@ -41,7 +41,7 @@
     <div class="input-group input-group-sm">
       <span class="input-group-addon">ttf</span>
       <span class="form-control">
-        <input data-field="ttf" type="checkbox">
+        <input data-field="ttf" type="checkbox" checked="checked">
       </span>
     </div>
   </div>
