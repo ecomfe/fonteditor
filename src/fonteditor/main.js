@@ -129,6 +129,9 @@ define(
                 // 预览器
                 program.previewer = require('./widget/previewer');
 
+                // 同步组件
+                program.sync = require('./widget/sync');
+
                 controller.init(program);
 
                 // 加载项目

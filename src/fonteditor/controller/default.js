@@ -347,6 +347,26 @@ define(
                     }
                 }).show();
             })
+            .on('setting-sync', function (e) {
+                if (program.data.projectId) {
+
+                    var syncConfig = program.project.getConfig(program.data.projectId).sync;
+                    if (!syncConfig) {
+                        syncConfig = {
+                            name: program.ttfManager.get().name.fontFamily
+                        };
+                    }
+
+                    var SettingSync = settingSupport.sync;
+                    !new SettingSync({
+                        onChange: function (setting) {
+                            program.project.updateConfig(program.data.projectId, {
+                                sync: setting
+                            });
+                        }
+                    }).show(syncConfig);
+                }
+            })
             .on('refresh', function (e) {
                 showTTF(program.ttfManager.get(), 1);
             })

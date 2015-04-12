@@ -10,6 +10,7 @@
 define(
     function (require) {
 
+        var lang = require('common/lang');
         var DataStore = require('common/DataStore');
         var Resolver = require('common/promise');
 
@@ -169,6 +170,54 @@ define(
                 }
 
                 return Resolver.rejected(id);
+            },
+
+            /**
+             * 获取项目配置
+             *
+             * @param {string} id 项目编号
+             * @return {Object} 项目配置
+             */
+            getConfig: function (id) {
+                var list = this.items();
+                var item = list.filter(function (item) {
+                    return item.id === id
+                })[0];
+
+                if (!item) {
+                    return false;
+                }
+
+                return item.config || {};
+            },
+
+            /**
+             * 更新项目配置
+             *
+             * @param {string} id 项目编号
+             * @param {Object} config 配置信息
+             * @return {boolean} 是否更新成功
+             */
+            updateConfig: function (id, config) {
+                var list = this.items();
+                var finded = false;
+                for (var i = list.length - 1; i >= 0; i--) {
+                    if (list[i].id === id) {
+                        if (list[i].config) {
+                            lang.extend(list[i].config, config);
+                        }
+                        else {
+                            list[i].config = config;
+                        }
+                        finded = true;
+                        break;
+                    }
+                }
+
+                if (finded) {
+                    storage.setItem('project-list', JSON.stringify(list));
+                }
+                return finded;
             },
 
             /**

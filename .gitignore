@@ -14,4 +14,8 @@ release
 npm-debug.log
 node_modules
 css/common/*.css
+demo/sync/*.ttf
+demo/sync/*.woff
+demo/sync/*.eot
+demo/sync/*.svg
 

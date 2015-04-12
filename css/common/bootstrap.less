@@ -32,6 +32,7 @@
 
 .modal-body {
     min-height: 100px;
+    padding-bottom: 5px;
 }
 
 .modal-content {
@@ -60,6 +61,9 @@
 
 .input-group {
     margin-bottom: 10px;
+    .input-group-addon {
+        text-align: left;
+    }
 }
 
 .list-group-item {
@@ -74,11 +78,30 @@ hr {
 }
 
 // 自定义宽度
-.form-inline {
-
+.column-2,
+.column-3,
+.column-4 {
     .form-group {
         margin-right: 10px;
+    }
+}
+
+
+.column-2 {
+    .form-group {
+        width: 45%;
+    }
+}
+
+.column-3 {
+    .form-group {
         width: 30%;
+    }
+}
+
+.column-4 {
+    .form-group {
+        width: 22%;
     }
 }
 
@@ -263,4 +286,5 @@ hr {
 
 .btn-right {
     float: right;
+    margin-left: 10px;
 }

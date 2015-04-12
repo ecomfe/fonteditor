@@ -262,6 +262,17 @@ define(
             return this;
         };
 
+        /**
+         * 关闭选项卡
+         */
+        Setting.prototype.hide = function (setting) {
+            if (undefined !== setting) {
+                this.options.onChange && this.options.onChange.call(this, setting);
+            }
+
+            $('#model-dialog').modal('hide');
+        };
+
 
         /**
          * 设置设置选项
@@ -281,7 +292,6 @@ define(
         Setting.prototype.get = function () {
             return this.setting;
         };
-
 
         /**
          * 注销

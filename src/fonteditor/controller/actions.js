@@ -57,6 +57,16 @@ define(
             program.editor.focus();
         }, 20);
 
+        // 延迟同步选项
+        var fontDelaySync = lang.debounce(function (projectId, ttf, syncConfig) {
+            program.loading.show('正在同步...', 4000);
+            program.sync.addTask(projectId, ttf, syncConfig).then(function (reason) {
+                program.loading.show('同步成功...', 400);
+            }, function (reason) {
+                program.loading.show('同步失败：' + reason.statusInfo + '...', 400);
+            });
+        }, 500);
+
         var actions = {
 
             'undo': function () {
@@ -125,6 +135,11 @@ define(
                         .then(function () {
                             program.ttfManager.setState('saved');
                             program.loading.show('保存成功...', 400);
+
+                            var syncConfig = program.project.getConfig(program.data.projectId).sync;
+                            if (syncConfig && !syncConfig.pause) {
+                                fontDelaySync(program.data.projectId, program.ttfManager.get(), syncConfig);
+                            }
                         }, function () {
                             program.loading.show('保存失败...', 1000);
                         });
@@ -142,6 +157,7 @@ define(
                                 program.ttfManager.setState('new');
                                 program.projectViewer.show(program.project.items(), id);
                                 program.loading.show('保存成功...', 400);
+
                             }, function () {
                                 program.loading.show('保存失败...', 400);
                             });

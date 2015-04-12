@@ -59,6 +59,10 @@ define(
             {
                 name: 'setting-unicode',
                 title: '设置代码点'
+            },
+            {
+                name: 'setting-sync',
+                title: '同步字体'
             }
         ];
     }
