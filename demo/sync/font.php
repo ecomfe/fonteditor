@@ -1,10 +1,4 @@
 <?php
-    header('Content-Type: application/javascript');
-
-    function callback($data) {
-        echo json_encode($data);
-    }
-
 
     function writeFile($base64Str, $outputfile) {
       $ifp = fopen($outputfile, "wb");
@@ -19,10 +13,6 @@
         $encode = $_POST['encode']; // 编码，默认base64
 
         if (empty($fontName)) {
-            callback(array(
-                status => 1,
-                statusInfo => '没有同步的字体名!'
-            ));
             return;
         }
 
@@ -35,11 +25,6 @@
                 }
             }
         }
-
-        callback(array(
-            status => 0,
-            statusInfo => 'sync '.$count.'font files.'
-        ));
     }
 
     main();
