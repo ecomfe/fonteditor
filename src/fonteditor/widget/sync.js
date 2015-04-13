@@ -100,6 +100,8 @@ define(
              * @param {Object} projectId 项目编号或者同步选项
              * @param {?Object} ttf 字体对象
              * @param {?Object} syncConfig 同步选项
+             *
+             * @return {Object} Promise对象
              */
             addTask: function (projectId, ttf, syncConfig) {
 

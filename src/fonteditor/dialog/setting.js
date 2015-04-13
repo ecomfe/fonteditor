@@ -264,6 +264,7 @@ define(
 
         /**
          * 关闭选项卡
+         * @param {?Object} setting 设置选项
          */
         Setting.prototype.hide = function (setting) {
             if (undefined !== setting) {

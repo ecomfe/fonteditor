@@ -181,7 +181,7 @@ define(
             getConfig: function (id) {
                 var list = this.items();
                 var item = list.filter(function (item) {
-                    return item.id === id
+                    return item.id === id;
                 })[0];
 
                 if (!item) {

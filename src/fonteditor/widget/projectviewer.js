@@ -70,7 +70,10 @@ define(
                 str += '<dl data-id="' + proj.id + '">'
                     +       '<dt>' + proj.name + '</dt>'
                     +       '<dd>'
-                    +           (proj.config && proj.config.sync ? '<span data-action="sync" title="同步当前字体">同步</span>' : '')
+                    +           (proj.config && proj.config.sync
+                                  ? '<span data-action="sync" title="同步当前字体">同步</span>'
+                                  : ''
+                                )
                     +           '<span data-action="saveas">另存为</span>'
                     +           '<span data-action="del">删除</span>'
                     +       '</dd>'

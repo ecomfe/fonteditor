@@ -107,9 +107,8 @@ define(
                     ) {
                         return [s0];
                     }
-                    else {
-                        return false;
-                    }
+
+                    return false;
                 }
 
                 if (seg2[0] === seg2[1] && seg2[0] === seg2[2] && seg2[0] === 0) {
@@ -119,9 +118,8 @@ define(
                     ) {
                         return [t0];
                     }
-                    else {
-                        return false;
-                    }
+
+                    return false;
                 }
 
                 // x轴重叠

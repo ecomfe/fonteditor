@@ -42,7 +42,7 @@ define(
 
                 if (condition === 'unicode') {
                     if (value.match(unicodeREG)) {
-                       value = value.split(',');
+                        value = value.split(',');
                     }
                     else {
                         value = value.split('').map(function (c) {
