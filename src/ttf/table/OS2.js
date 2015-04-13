@@ -133,7 +133,7 @@ define(
 
                     // os2 count
                     var xAvgCharWidth = 0;
-                    var usFirstCharIndex = 0xFFFF;
+                    var usFirstCharIndex = 0x10FFFF;
                     var usLastCharIndex = -1;
 
                     // maxp

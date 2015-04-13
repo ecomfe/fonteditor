@@ -14,6 +14,7 @@ define(
         function getEmpty() {
             var ttf = lang.clone(emptyttf);
             lang.extend(ttf.name, config.name);
+            ttf.head.created = Date.now();
             return ttf;
         }
 

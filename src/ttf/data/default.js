@@ -18,7 +18,7 @@ define(
                 fontFamily: 'fonteditor',
                 fontSubFamily: 'Medium',
                 uniqueSubFamily: 'FontEditor 1.0 : fonteditor',
-                version: 'Version 1.0 ; FontEditor (v0.0.1) -l 8 -r 50 -G 200 -x 14 -w \"G\" -f -s',
+                version: 'Version 1.0; FontEditor (v1.0)',
                 postScriptName: 'fonteditor'
             }
         };

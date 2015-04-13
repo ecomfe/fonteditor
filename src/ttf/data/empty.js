@@ -8,19 +8,19 @@ define(
         /* eslint-disable */
         return {
             "version": 1,
-            "numTables": 12,
+            "numTables": 10,
             "searchRenge": 128,
             "entrySelector": 3,
             "rengeShift": 64,
             "head": {
                 "version": 1,
                 "fontRevision": 1,
-                "checkSumAdjustment": 369537602,
+                "checkSumAdjustment": 0,
                 "magickNumber": 1594834165,
                 "flags": 11,
                 "unitsPerEm": 1024,
-                "created": "2014-12-06T22:05:19.000Z",
-                "modified": "2014-12-06T22:20:03.000Z",
+                "created": 1428940800000,
+                "modified": 1428940800000,
                 "xMin": 34,
                 "yMin": 0,
                 "xMax": 306,
@@ -77,7 +77,14 @@ define(
                 "name": ".notdef"
             }],
             "cmap": {},
-            "name": {},
+            "name": {
+                "fontFamily": "fonteditor",
+                "fontSubFamily": "Medium",
+                "uniqueSubFamily": "FontEditor 1.0 : fonteditor",
+                "version": "Version 1.0 ; FontEditor (v0.0.1)",
+                "postScriptName": "fonteditor",
+                "fullName": "fonteditor"
+            },
             "hhea": {
                 "version": 1,
                 "ascent": 812,
@@ -142,8 +149,8 @@ define(
                 "ulUnicodeRange4": 0,
                 "achVendID": "PfEd",
                 "fsSelection": 192,
-                "usFirstCharIndex": 0,
-                "usLastCharIndex": 0,
+                "usFirstCharIndex": 65535,
+                "usLastCharIndex": -1,
                 "sTypoAscender": 812,
                 "sTypoDescender": -212,
                 "sTypoLineGap": 92,

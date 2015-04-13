@@ -111,6 +111,7 @@ table {
 }
 .icon-list {
   overflow: hidden;
+  *zoom: 1;
 }
 .icon-list li {
   float: left;
