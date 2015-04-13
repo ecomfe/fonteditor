@@ -35,13 +35,20 @@ define(
                 var condition = $('#setting-find-condition').val();
                 var value = $('#setting-find-value').val();
 
-                if (condition === 'unicode') {
-                    if (!value.match(unicodeREG)) {
-                        alert('unicode不正确!');
-                        return false;
-                    }
+                if (!value.length) {
+                    alert('请设置unicode!');
+                    return false;
+                }
 
-                    value = value.split(',');
+                if (condition === 'unicode') {
+                    if (value.match(unicodeREG)) {
+                       value = value.split(',');
+                    }
+                    else {
+                        value = value.split('').map(function (c) {
+                            return '$' + c.charCodeAt(0).toString(16);
+                        });
+                    }
                 }
 
                 var setting = {};
