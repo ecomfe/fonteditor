@@ -84,7 +84,7 @@ define(
             return paths.filter(function (path) {
                 return path.length > 2;
             }).map(function (path) {
-                return reducePath(deInterpolate(path));
+                return reducePath(deInterpolate(path)).reverse();
             });
         }
 

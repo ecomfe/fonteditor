@@ -57,6 +57,16 @@ define(
             program.editor.focus();
         }, 20);
 
+        // 延迟同步选项
+        var fontDelaySync = lang.debounce(function (projectId, ttf, syncConfig) {
+            program.loading.show('正在同步...', 4000);
+            program.sync.addTask(projectId, ttf, syncConfig).then(function (reason) {
+                program.loading.show('同步成功...', 400);
+            }, function (reason) {
+                program.loading.show('同步失败：' + reason.statusInfo + '...', 400);
+            });
+        }, 500);
+
         var actions = {
 
             'undo': function () {
@@ -117,14 +127,25 @@ define(
                 }
             },
 
+            'sync': function (projectId, ttf, syncConfig) {
+                syncConfig = syncConfig || program.project.getConfig(projectId).sync;
+                if (syncConfig) {
+                    fontDelaySync(program.data.projectId, ttf, syncConfig);
+                }
+            },
+
             'save': function () {
                 if (program.ttfManager.get()) {
-                    if (program.data.projectId) {
-
-                        program.project.update(program.data.projectId, program.ttfManager.get())
+                    var projectId = program.data.projectId;
+                    if (projectId) {
+                        program.project.update(projectId, program.ttfManager.get())
                         .then(function () {
                             program.ttfManager.setState('saved');
                             program.loading.show('保存成功...', 400);
+                            var syncConfig = program.project.getConfig(projectId).sync;
+                            if (syncConfig && syncConfig.autoSync) {
+                                actions.sync(projectId, program.ttfManager.get(), syncConfig);
+                            }
                         }, function () {
                             program.loading.show('保存失败...', 1000);
                         });
@@ -135,13 +156,13 @@ define(
                         if ((name = window.prompt('请输入项目名称：', name))) {
 
                             name = string.encodeHTML(name);
-
                             program.project.add(name, program.ttfManager.get())
                             .then(function (id) {
                                 program.data.projectId = id;
                                 program.ttfManager.setState('new');
                                 program.projectViewer.show(program.project.items(), id);
                                 program.loading.show('保存成功...', 400);
+
                             }, function () {
                                 program.loading.show('保存失败...', 400);
                             });

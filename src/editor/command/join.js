@@ -157,6 +157,8 @@ define(
                         fontLayer.refresh();
                         this.setMode('shapes', shapesCross);
                     }
+
+                    return true;
                 }
 
                 return false;

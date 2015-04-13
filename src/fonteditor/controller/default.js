@@ -347,6 +347,27 @@ define(
                     }
                 }).show();
             })
+            .on('setting-sync', function (e) {
+                if (program.data.projectId) {
+
+                    var syncConfig = program.project.getConfig(program.data.projectId).sync;
+                    if (!syncConfig) {
+                        syncConfig = {
+                            name: program.ttfManager.get().name.fontFamily
+                        };
+                    }
+
+                    var SettingSync = settingSupport.sync;
+                    !new SettingSync({
+                        onChange: function (setting) {
+                            program.project.updateConfig(program.data.projectId, {
+                                sync: setting
+                            });
+                            program.projectViewer.show(program.project.items(), program.data.projectId);
+                        }
+                    }).show(syncConfig);
+                }
+            })
             .on('refresh', function (e) {
                 showTTF(program.ttfManager.get(), 1);
             })
@@ -426,6 +447,9 @@ define(
                 program.data.projectId = null;
                 actions.save();
                 program.viewer.focus();
+            })
+            .on('sync', function (e) {
+                actions.sync(e.projectId);
             })
             .on('del', function (e) {
                 program.project.remove(e.projectId).then(function () {

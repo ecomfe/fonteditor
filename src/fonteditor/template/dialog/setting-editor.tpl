@@ -1,4 +1,4 @@
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">字体列表颜色</span>
@@ -24,7 +24,7 @@
   </div>
 </div>
 <hr>
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">吸附到网格线</span>
@@ -48,7 +48,7 @@
     <span class="form-control"><input data-field="editor.axis.showGrid" type="checkbox"></span>
   </div>
 </div>
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">填充轮廓</span>
@@ -68,7 +68,7 @@
     </div>
   </div>
 </div>
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">网格线颜色</span>
@@ -82,7 +82,7 @@
     </div>
   </div>
 </div>
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">度量线颜色</span>
@@ -90,7 +90,7 @@
     </div>
   </div>
 </div>
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="input-group input-group-sm">
     <span class="input-group-addon">保存设置</span>
     <span class="form-control"><input data-field="saveSetting" type="checkbox"></span>

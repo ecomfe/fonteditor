@@ -20,7 +20,8 @@ define(
             'editor': require('../dialog/setting-editor'),
             'find-glyf': require('../dialog/setting-find-glyf'),
             'ie': require('../dialog/setting-ie'),
-            'import-pic': require('../dialog/setting-import-pic')
+            'import-pic': require('../dialog/setting-import-pic'),
+            'sync': require('../dialog/setting-sync')
         };
     }
 );

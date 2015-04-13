@@ -99,6 +99,31 @@ define(
                 var seg1 = [s1.y - s0.y, -(s1.x - s0.x), s0.y * (s1.x - s0.x) - s0.x * (s1.y - s0.y)];
                 var seg2 = [t1.y - t0.y, -(t1.x - t0.x), t0.y * (t1.x - t0.x) - t0.x * (t1.y - t0.y)];
 
+                // 直线退化成点
+                if (seg1[0] === seg1[1] && seg1[0] === seg1[2] && seg1[0] === 0) {
+                    if (
+                        Math.abs((t1.y - s0.y) * (t0.x - s0.x) - (t0.y - s0.y) * (t1.x - s0.x)) <= 0.001
+                        && s0.x >= t0.x && s0.x <= t1.x
+                    ) {
+                        return [s0];
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
+                if (seg2[0] === seg2[1] && seg2[0] === seg2[2] && seg2[0] === 0) {
+                    if (
+                        Math.abs((s1.y - t0.y) * (s0.x - t0.x) - (s0.y - t0.y) * (s1.x - t0.x)) <= 0.001
+                        && t0.x >= s0.x && t0.x <= s1.x
+                    ) {
+                        return [t0];
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
                 // x轴重叠
                 if (seg1[1] === seg2[1] && seg1[1] === 0) {
                     if (s1.x === t1.x) {

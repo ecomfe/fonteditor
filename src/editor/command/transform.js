@@ -31,20 +31,6 @@ define(
             pathsUtil.rotate(paths, angle);
         }
 
-        /**
-         * 翻转图形
-         *
-         * @param {Array} shapes 图形集合
-         * @param {number} xScale x翻转
-         * @param {number} yScale y翻转
-         */
-        function mirror(shapes, xScale, yScale) {
-            var paths = shapes.map(function (shape) {
-                return shape.points;
-            });
-
-            pathsUtil.mirror(paths, xScale, yScale);
-        }
 
         var support = {
 
@@ -101,7 +87,9 @@ define(
                     return false;
                 }
 
-                mirror(shapes, 1, -1);
+                pathsUtil.flip(shapes.map(function (shape) {
+                    return shape.points;
+                }));
                 this.fontLayer.refresh();
                 this.refreshSelected(shapes);
             },
@@ -118,7 +106,9 @@ define(
                     return false;
                 }
 
-                mirror(shapes, -1, 1);
+                pathsUtil.mirror(shapes.map(function (shape) {
+                    return shape.points;
+                }));
                 this.fontLayer.refresh();
                 this.refreshSelected(shapes);
             }

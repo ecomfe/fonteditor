@@ -1,4 +1,4 @@
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">上升</span>
@@ -20,7 +20,7 @@
 </div>
 
 
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">win上升</span>
@@ -58,7 +58,7 @@
 
 
 
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">x高度</span>
@@ -99,7 +99,7 @@
 <hr>
 
 
-<div class="form-inline">
+<div class="form-inline column-4">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">下标水平</span>
@@ -127,7 +127,7 @@
 </div>
 
 
-<div class="form-inline">
+<div class="form-inline column-4">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">上标水平</span>
@@ -155,7 +155,7 @@
 </div>
 <hr>
 
-<div class="form-inline">
+<div class="form-inline column-3">
   <div class="form-group">
     <div class="input-group input-group-sm">
       <span class="input-group-addon">供应商ID</span>
@@ -177,5 +177,5 @@
 </div>
 
 <label for="panose-bFamilyType">panose</label>
-<div class="form-inline panose-inline">${panoseOptions}</div>
+<div class="form-inline  column-3 panose-inline">${panoseOptions}</div>
 </div>
