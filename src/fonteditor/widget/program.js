@@ -39,8 +39,7 @@ define(
                         me.editor.blur();
                     }
                 }
-
-            }, true);
+            });
         }
 
         /**
