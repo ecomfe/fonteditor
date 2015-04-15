@@ -124,11 +124,6 @@ define(
          */
         function cleanTables(ttf) {
             //delete ttf.tables;
-            delete ttf.DSIG;
-            delete ttf.GDEF;
-            delete ttf.GPOS;
-            delete ttf.GSUB;
-            delete ttf.gasp;
             delete ttf.hmtx;
             delete ttf.loca;
             delete ttf.post.glyphNameIndex;

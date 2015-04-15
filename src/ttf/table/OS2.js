@@ -145,6 +145,7 @@ define(
                     var maxComponentElements = 0;
 
                     var glyfNotEmpty = 0; // 非空glyf
+                    var hinting = ttf.writeOptions.hinting;
 
                     ttf.glyf.forEach(function (glyf, index) {
 
@@ -176,6 +177,10 @@ define(
                                 points += contour.length;
                             });
                             maxPoints = Math.max(maxPoints, points);
+                        }
+
+                        if (hinting && glyf.instructions) {
+                            maxSizeOfInstructions = Math.max(maxSizeOfInstructions, glyf.instructions.length);
                         }
 
                         // 统计边界信息

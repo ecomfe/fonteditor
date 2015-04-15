@@ -45,7 +45,7 @@ define(
 
             // hinting tables direct copy
             if (this.options.hinting) {
-                ['cvt', 'fpgm', 'prep'].forEach(function (table) {
+                ['cvt', 'fpgm', 'prep', 'gasp'].forEach(function (table) {
                     if (ttf[table]) {
                         tables.push(table);
                     }
@@ -223,7 +223,8 @@ define(
          */
         function TTFWriter(options) {
             this.options = options || {
-                hinting: true // 不保留hints信息
+                hinting: true, // 不保留hints信息
+                hasCompositeGlyf: true // 保留复合图元
             };
         }
 

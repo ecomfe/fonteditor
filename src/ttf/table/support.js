@@ -23,7 +23,8 @@ define(
             'OS/2': require('./OS2'),
             'fpgm': require('./fpgm'),
             'cvt': require('./cvt'),
-            'prep': require('./prep')
+            'prep': require('./prep'),
+            'gasp': require('./gasp')
         };
 
         return support;
