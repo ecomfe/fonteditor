@@ -123,7 +123,7 @@ define(
          * @param {Object} ttf ttf对象
          */
         function cleanTables(ttf) {
-            delete ttf.tables;
+            //delete ttf.tables;
             delete ttf.DSIG;
             delete ttf.GDEF;
             delete ttf.GPOS;

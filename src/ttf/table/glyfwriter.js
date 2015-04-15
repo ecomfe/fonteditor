@@ -19,9 +19,10 @@ define(
          *
          * @param {Object} glyf glyf对象
          * @param {Object} glyfSupport glyf相关统计
+         * @param {boolean} hinting 是否保留hints
          * @return {number} size大小
          */
-        function sizeof(glyf, glyfSupport) {
+        function sizeof(glyf, glyfSupport, hinting) {
 
             if (!glyf.contours || 0 === glyf.contours.length) {
                 return 0;
@@ -40,16 +41,17 @@ define(
                 result += 0 <= y && y <= 0xFF ? 1 : 2;
             });
 
-            return result;
+            return result + (hinting && glyf.instructions ? glyf.instructions.length : 0);
         }
 
         /**
          * 复合图元size
          *
          * @param {Object} glyf glyf对象
+         * @param {boolean} hinting 是否保留hints, compound 图元暂时不做hinting
          * @return {number} size大小
          */
-        function sizeofCompound(glyf) {
+        function sizeofCompound(glyf, hinting) {
             var size = 10;
             var transform;
             glyf.glyfs.forEach(function (g) {
@@ -78,7 +80,6 @@ define(
                 }
 
             });
-
 
             return size;
         }
@@ -229,6 +230,9 @@ define(
 
             write: function (writer, ttf) {
 
+
+                var hinting = ttf.writeOptions.hinting;
+
                 ttf.glyf.forEach(function (glyf, index) {
 
                     // 非复合图元没有轮廓则不写
@@ -330,8 +334,18 @@ define(
                             writer.writeUint16(endPtsOfContours);
                         });
 
-                        // not support instruction
-                        writer.writeUint16(0);
+                        // instruction
+                        if (hinting && glyf.instructions) {
+                            var instructions = glyf.instructions;
+                            writer.writeUint16(instructions.length);
+                            for (i = 0, l = instructions.length; i < l; i++) {
+                                writer.writeUint8(instructions[i]);
+                            }
+                        }
+                        else {
+                            writer.writeUint16(0);
+                        }
+
 
                         // 获取暂存中的flags
                         flags = ttf.support.glyf[index].flags;
@@ -375,11 +389,12 @@ define(
 
                 ttf.support.glyf = [];
                 var tableSize = 0;
+                var hinting = ttf.writeOptions.hinting;
                 ttf.glyf.forEach(function (glyf) {
                     var glyfSupport = {};
                     glyfSupport = glyf.compound ? glyfSupport : getFlags(glyf, glyfSupport);
 
-                    var glyfSize = glyf.compound ? sizeofCompound(glyf) : sizeof(glyf, glyfSupport);
+                    var glyfSize = glyf.compound ? sizeofCompound(glyf, hinting) : sizeof(glyf, glyfSupport, hinting);
                     var size = glyfSize;
 
                     // 4字节对齐

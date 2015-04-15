@@ -23,7 +23,7 @@ define(
                     var offset = this.offset;
 
                     for (var i = offset, l = numTables * 16; i < l; i += 16) {
-                        var name = reader.readString(i, 4);
+                        var name = reader.readString(i, 4).trim();
 
                         tables[name] = {
                             name: name,
@@ -40,7 +40,7 @@ define(
 
                     var tables = ttf.support.tables;
                     for (var i = 0, l = tables.length; i < l; i++) {
-                        writer.writeString(tables[i].name);
+                        writer.writeString((tables[i].name + '    ').slice(0, 4));
                         writer.writeUint32(tables[i].checkSum);
                         writer.writeUint32(tables[i].offset);
                         writer.writeUint32(tables[i].length);

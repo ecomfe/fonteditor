@@ -92,7 +92,8 @@ define(
                     }
                 }
                 catch (exp) {
-                    alert(exp.message);
+                    throw exp;
+                    //alert(exp.message);
                 }
             }
         };
