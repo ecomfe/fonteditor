@@ -218,13 +218,15 @@ define(
 
         /**
          * TTFWriter的构造函数
-         *
+         * @param {Object} options 写入参数
+         * @param {boolean} hinting 保留hinting信息
+         * @param {boolean} removeCompositeGlyf 是否移除复合图元
          * @constructor
          */
         function TTFWriter(options) {
             this.options = options || {
-                hinting: true, // 不保留hints信息
-                hasCompositeGlyf: true // 保留复合图元
+                hinting: false, // 不保留hints信息
+                removeCompositeGlyf: false // 是否移除复合图元
             };
         }
 

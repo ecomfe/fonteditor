@@ -194,7 +194,7 @@ define(
                                 glyf.instructions = instructions;
                             }
                             else {
-                                console.log(length);
+                                console.warn(length);
                             }
                         }
 
@@ -291,7 +291,7 @@ define(
                                 glyf.instructions = instructions;
                             }
                             else {
-                                console.log(length);
+                                console.warn(length);
                             }
                         }
                     }

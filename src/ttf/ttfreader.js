@@ -123,21 +123,32 @@ define(
          * @param {Object} ttf ttf对象
          */
         function cleanTables(ttf) {
-            //delete ttf.tables;
+            delete ttf.tables;
             delete ttf.hmtx;
             delete ttf.loca;
             delete ttf.post.glyphNameIndex;
             delete ttf.post.names;
-            delete ttf.maxp;
+            if (!this.options.hinting) {
+                delete ttf.fpgm;
+                delete ttf.cvt;
+                delete ttf.prep;
+                ttf.glyf.forEach(function (glyf) {
+                    delete glyf.instructions;
+                });
+            }
         }
 
 
         /**
          * TTF的构造函数
-         *
+         * @param {Object} options 写入参数
+         * @param {boolean} hinting 保留hinting信息
          * @constructor
          */
-        function TTFReader() {
+        function TTFReader(options) {
+            this.options = options || {
+                hinting: false // 不保留hints信息
+            };
         }
 
         /**
