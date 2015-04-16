@@ -107,13 +107,13 @@ define(
 
             for (axis = x, i = 0; axis < width; i++, axis += markSize) {
                 if (0 === i % 10) {
-                    ctx.fillText(gap * i, axis * 1.25 - 3, textOffset * 1.25);
+                    ctx.fillText(Math.ceil(gap * i), axis * 1.25 - 3, textOffset * 1.25);
                 }
             }
 
             for (axis = x, i = 0; axis > thickness; i++, axis -= markSize) {
                 if (0 === i % 10) {
-                    ctx.fillText(-gap * i, axis * 1.25 - 3, textOffset * 1.25);
+                    ctx.fillText(Math.ceil(-gap * i), axis * 1.25 - 3, textOffset * 1.25);
                 }
             }
 
@@ -121,13 +121,13 @@ define(
             textOffset = 0; // 文本偏移
             for (axis = y, i = 0; axis > thickness; i++, axis -= markSize) {
                 if (0 === i % 10) {
-                    ctx.fillText(gap * i, textOffset * 1.25, axis * 1.25 + 3);
+                    ctx.fillText(Math.ceil(gap * i), textOffset * 1.25, axis * 1.25 + 3);
                 }
             }
 
             for (axis = y, i = 0; axis < height; i++, axis += markSize) {
                 if (0 === i % 10) {
-                    ctx.fillText(-gap * i, textOffset * 1.25, axis * 1.25 + 3);
+                    ctx.fillText(Math.ceil(-gap * i), textOffset * 1.25, axis * 1.25 + 3);
                 }
             }
 
