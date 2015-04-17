@@ -13,6 +13,13 @@ var REG_TOP_MODULE = /^(:?common|math|graphics|ttf)/;
 
 var REG_REQUIRE = /require\(\s*(['"])([^'"]+)\1\s*\)/g;
 
+// dep配置模块，替换成dep的地址
+var REG_DEP_MODULE = /^(:?ClipperLib)/;
+
+// 相对于lib目录的dep目录
+var DEP_PARH = '../dep/';
+
+
 /**
  * 获取ast树
  * @param  {string} code 代码片段
@@ -184,7 +191,11 @@ function replaceDefine(code) {
  */
 function replaceRequire(code, codeDepth) {
     return code.replace(REG_REQUIRE, function ($0, $1, moduleId) {
-        if (REG_TOP_MODULE.test(moduleId)) {
+
+        if (REG_DEP_MODULE.test(moduleId)) {
+            moduleId = codeDepth + DEP_PARH + moduleId;
+        }
+        else if (REG_TOP_MODULE.test(moduleId)) {
             moduleId = codeDepth + moduleId;
         }
         return 'require(\'' + moduleId + '\')';

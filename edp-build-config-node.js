@@ -38,6 +38,7 @@ exports.getProcessors = function () {
                 'common/DataStore.js',
                 'common/observable.js',
                 'common/promise.js',
+                'common/getPixelRatio.js',
                 'editor/**',
                 'fonteditor/**',
                 'render/**',
