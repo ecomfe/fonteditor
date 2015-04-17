@@ -128,6 +128,8 @@ define(
             delete ttf.loca;
             delete ttf.post.glyphNameIndex;
             delete ttf.post.names;
+            delete ttf.cmap;
+
             if (!this.options.hinting) {
                 delete ttf.fpgm;
                 delete ttf.cvt;

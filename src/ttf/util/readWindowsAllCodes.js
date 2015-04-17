@@ -104,6 +104,8 @@ define(
                         }
                     }
 
+                    delete codes[65535];
+
                 }
 
             }

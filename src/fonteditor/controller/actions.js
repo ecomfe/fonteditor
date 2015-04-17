@@ -259,6 +259,13 @@ define(
                 }
             },
 
+            'setting-glyf-clearname': function () {
+                var ttf = program.ttfManager.get();
+                if (ttf) {
+                    program.ttfManager.clearGlyfName(program.viewer.getSelected());
+                }
+            },
+
             'setting-editor': function () {
                 var SettingEditor = settingSupport.editor;
                 !new SettingEditor({

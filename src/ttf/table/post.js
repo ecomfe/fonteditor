@@ -25,8 +25,7 @@ define(
                 ['minMemType42', struct.Uint32],
                 ['maxMemType42', struct.Uint32],
                 ['minMemType1', struct.Uint32],
-                ['maxMemType1', struct.Uint32],
-                ['numberOfGlyphs', struct.Uint16]
+                ['maxMemType1', struct.Uint32]
             ]
         );
 
@@ -36,19 +35,15 @@ define(
             {
 
                 read: function (reader, ttf) {
-                    var tbl = null;
                     var format = reader.readFixed(this.offset);
+                    // 读取表头
+                    var tbl = new Posthead(this.offset).read(reader, ttf);
 
                     // format2
                     if (format === 2) {
-
-                        // 读取表头
-                        tbl = new Posthead(this.offset).read(reader, ttf);
-                        tbl.format = format;
-
-                        var numberOfGlyphs = ttf.maxp.numGlyphs;
-
+                        var numberOfGlyphs = reader.readUint16();
                         var glyphNameIndex = [];
+
                         for (var i = 0; i < numberOfGlyphs; ++i) {
                             glyphNameIndex.push(reader.readUint16());
                         }
@@ -60,10 +55,9 @@ define(
                         tbl.glyphNameIndex = glyphNameIndex;
                         tbl.names = string.readPascalString(pascalStringBytes);
                     }
-                    else {
-                        tbl = {
-                            format: format
-                        };
+                    // deprecated
+                    else if (format === 2.5) {
+                        tbl.format = 3;
                     }
 
                     return tbl;
@@ -71,11 +65,13 @@ define(
 
                 write: function (writer, ttf) {
 
-                    var numberOfGlyphs = ttf.glyf.length;
-                    var post = ttf.post || {};
+
+                    var post = ttf.post || {
+                        format: 3
+                    };
 
                     // write header
-                    writer.writeFixed(2); // format
+                    writer.writeFixed(post.format); // format
                     writer.writeFixed(post.italicAngle || 0); // italicAngle
                     writer.writeInt16(post.underlinePosition || 0); // underlinePosition
                     writer.writeInt16(post.underlineThickness || 0); // underlineThickness
@@ -84,22 +80,37 @@ define(
                     writer.writeUint32(post.maxMemType42 || 0); // maxMemType42
                     writer.writeUint32(post.minMemType1 || 0); // minMemType1
                     writer.writeUint32(post.maxMemType1 || 0); // maxMemType1
-                    writer.writeUint16(numberOfGlyphs); // numberOfGlyphs
 
-                    // write glyphNameIndex
-                    var nameIndexs = ttf.support.post.nameIndexs;
-                    for (var i = 0, l = nameIndexs.length; i < l; i++) {
-                        writer.writeUint16(nameIndexs[i]);
+                    // version 3 不设置post信息
+                    if (post.format === 2) {
+                        var numberOfGlyphs = ttf.glyf.length;
+                        writer.writeUint16(numberOfGlyphs); // numberOfGlyphs
+                        // write glyphNameIndex
+                        var nameIndexs = ttf.support.post.nameIndexs;
+                        for (var i = 0, l = nameIndexs.length; i < l; i++) {
+                            writer.writeUint16(nameIndexs[i]);
+                        }
+
+                        // write names
+                        ttf.support.post.glyphNames.forEach(function (name) {
+                            writer.writeBytes(name);
+                        });
                     }
-
-                    // write names
-                    ttf.support.post.glyphNames.forEach(function (name) {
-                        writer.writeBytes(name);
-                    });
                 },
 
                 size: function (ttf) {
+
                     var numberOfGlyphs = ttf.glyf.length;
+                    ttf.post = ttf.post || {};
+                    ttf.post.format = ttf.post.format || 3;
+                    ttf.post.maxMemType1 = numberOfGlyphs;
+
+                    // version 3 不设置post信息
+                    if (post.format === 3 || post.format === 1) {
+                        return 34;
+                    }
+
+                    // version 2
                     var glyphNames = [];
                     var nameIndexs = [];
                     var size = 34 + numberOfGlyphs * 2; // header + numberOfGlyphs * 2
@@ -122,20 +133,19 @@ define(
                                 // 这里需要注意，"" 有可能是"\3" length不为0，但是是空字符串
                                 var name = glyf.name;
                                 if (!name || name.charCodeAt(0) < 32) {
-                                    name = string.getUnicodeName(unicode);
+                                    nameIndexs.push(258 + nameIndex++);
+                                    glyphNames.push([0]);
+                                    size++;
                                 }
-
-                                nameIndexs.push(258 + nameIndex++);
-                                var bytes = string.getPascalStringBytes(name); // pascal string bytes
-                                glyphNames.push(bytes);
-                                size += bytes.length;
+                                else {
+                                    nameIndexs.push(258 + nameIndex++);
+                                    var bytes = string.getPascalStringBytes(name); // pascal string bytes
+                                    glyphNames.push(bytes);
+                                    size += bytes.length;
+                                }
                             }
                         }
                     }
-
-                    ttf.post = ttf.post || {};
-                    ttf.post.format = ttf.post.format || 0x2;
-                    ttf.post.maxMemType1 = numberOfGlyphs;
 
                     ttf.support.post = {
                         nameIndexs: nameIndexs,

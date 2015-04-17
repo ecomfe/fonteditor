@@ -236,6 +236,25 @@ define(
         };
 
         /**
+         * 清除字形名称
+         *
+         * @param {Array} indexList 索引列表
+         * @return {this}
+         */
+        Manager.prototype.clearGlyfName = function (indexList) {
+
+            var list = this.ttf.clearGlyfName(indexList);
+            if (list.length) {
+                list.forEach(function (g) {
+                    g.modify = 'edit';
+                });
+                this.fireChange(true);
+            }
+
+            return this;
+        };
+
+        /**
          * 添加并体替换指定的glyf
          *
          * @param {Array} glyfList 添加的列表

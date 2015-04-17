@@ -402,6 +402,34 @@ define(
         };
 
         /**
+         * 清除字形名称
+         *
+         * @param {Array} indexList 索引列表
+         * @return {Array} 改变的glyf
+         */
+        TTF.prototype.clearGlyfName = function (indexList) {
+            var glyf = this.ttf.glyf;
+            var list = [];
+            if (indexList && indexList.length) {
+                list = indexList.map(function (item) {
+                    return glyf[item];
+                });
+            }
+            else {
+                list = glyf;
+            }
+
+            if (list.length) {
+
+                list.forEach(function (g) {
+                    delete g.name;
+                });
+            }
+
+            return list;
+        };
+
+        /**
          * 添加并体替换指定的glyf
          *
          * @param {Array} glyfList 添加的列表

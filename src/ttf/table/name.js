@@ -54,14 +54,27 @@ define(
 
                     var names = {};
 
-                    // 读取windows下的name records
-                    var platform = platformTbl.Microsoft;
-                    var encoding = encodingTbl.win.UCS2;
+                    // mac 下的english name
+                    var platform = platformTbl.Macintosh;
+                    var encoding = encodingTbl.mac.Default;
+                    var language = 0;
+
+                    // 如果有windows 下的 english，则用windows下的 name
+                    if (nameRecordTbl.some(function (record) {
+                        return record.platform === platformTbl.Microsoft
+                            && record.encoding === encodingTbl.win.UCS2
+                            && record.language === 1033;
+                    })) {
+                        platform = platformTbl.Microsoft;
+                        encoding = encodingTbl.win.UCS2;
+                        language = 1033;
+                    }
 
                     for (i = 0; i < count; ++i) {
                         nameRecord = nameRecordTbl[i];
                         if (nameRecord.platform === platform
                             && nameRecord.encoding === encoding
+                            && nameRecord.language === language
                             && nameIdTbl[nameRecord.nameId]) {
                             names[nameIdTbl[nameRecord.nameId]] = string.stringify(nameRecord.name);
                         }
