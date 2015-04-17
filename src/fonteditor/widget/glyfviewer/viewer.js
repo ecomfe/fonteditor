@@ -223,6 +223,7 @@ define(
          */
         GLYFViewer.prototype.setEditing = function (editingIndex) {
             this.clearEditing();
+            editingIndex = +editingIndex;
             this.editingIndex = editingIndex >= 0 ? editingIndex : -1;
             if (editingIndex !== -1) {
                 this.main.find('[data-index="' + editingIndex + '"]').addClass('editing');

@@ -25,10 +25,15 @@ define(
 
                 // 被选中的情况下需要移出
                 selectedGlyf.remove();
-                var selectedIndex = this.selectedList.indexOf(selected);
+                var selectedIndex = this.getSelected().indexOf(selected);
                 if (selectedIndex >= 0) {
                     this.selectedList.splice(selectedIndex, 1);
                 }
+
+                if (selected === this.getEditing()) {
+                    this.setEditing(-1);
+                }
+
             }
             else if (action === 'edit') {
                 this.setEditing(selected);
@@ -137,13 +142,82 @@ define(
         function bindEvents() {
 
             var me = this;
-            me.main.on('click', '[data-index]', function (e) {
-                if (!e.target.getAttribute('data-action')) {
-                    $(this).toggleClass('selected');
-                    me.fire('selection:change');
+            me.main.on('click', '[data-action]', lang.bind(onItemClick, this))
+            .on('dblclick', '[data-index]', function (e) {
+                if (!e.ctrlKey && !e.shiftKey && !e.target.getAttribute('data-action')) {
+                    var selected = $(this).attr('data-index');
+                    me.setEditing(selected);
+                    me.fire('edit', {
+                        list: [selected]
+                    });
                 }
+            })
+            .on('click', '[data-index]', function (e) {
+                if (!e.target.getAttribute('data-action')) {
+                    var selectedItems = null;
+                    var element = this;
+                    var the = $(element);
 
-            }).on('click', '[data-action]', lang.bind(onItemClick, this));
+                    // 选中单个
+                    if (!e.ctrlKey && !e.shiftKey) {
+                        if (me.mode === 'editor') {
+                            var selected = the.attr('data-index');
+                            me.setEditing(selected);
+                            me.fire('edit', {
+                                list: [selected]
+                            });
+                        }
+
+                        selectedItems = me.main.find('.selected');
+                        if (the.hasClass('selected') && selectedItems.length === 1 && selectedItems[0] === element) {
+                            return;
+                        }
+
+                        selectedItems.removeClass('selected');
+                        the.addClass('selected');
+                        me.fire('selection:change');
+                        return;
+                    }
+
+                    // 增加/减少选中
+                    if (e.ctrlKey) {
+                        the.toggleClass('selected');
+                        me.fire('selection:change');
+                        return;
+                    }
+                    // 选中多个
+                    else if (e.shiftKey) {
+                        selectedItems = Array.prototype.slice.call(me.main.find('.selected'));
+                        the.addClass('selected');
+
+                        if (!selectedItems.length) {
+                            me.fire('selection:change');
+                        }
+                        else if (selectedItems.indexOf(element) === -1) {
+                            var index = +element.getAttribute('data-index');
+                            var nearest = null;
+                            var distance = 0;
+                            var minDistance = 0xFFFFFFFF;
+
+                            selectedItems.forEach(function (item) {
+                                distance = Math.abs(index - item.getAttribute('data-index'));
+                                if (distance < minDistance) {
+                                    nearest = item;
+                                    minDistance = distance;
+                                }
+                            });
+
+                            if (minDistance > 1) {
+                                nearest = index < +nearest.getAttribute('data-index') ? element : nearest;
+                                for (distance = 1; distance < minDistance; distance++) {
+                                    $(nearest = nearest.nextElementSibling).addClass('selected');
+                                }
+                            }
+                            me.fire('selection:change');
+                        }
+                    }
+                }
+            });
 
             me.downlistener = lang.bind(downlistener, this);
         }
