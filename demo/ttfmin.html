@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ttf字体缩减</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+
+    <style id="font-with-hitting" type="text/css"></style>
+    <style id="font-without-hitting" type="text/css"></style>
+
+    <style type="text/css">
+
+        body {
+            font-size: 13px;
+        }
+
+        div {
+            padding: 10px;
+        }
+
+        .ttf-text {
+            font-size: 14px;
+        }
+
+        .ttf-min-with-hitting {
+            font-family: 'font-with-hitting';
+        }
+
+        .ttf-min-without-hitting {
+            font-family: 'font-without-hitting';
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    字体文件：
+    <input id="upload-file" type="file">
+</div>
+<div>
+    相关文字：
+    <input id="text" type="text" value="ABCDEFGHIJKLMNOPQRSTUVWXYZ" style="width: 400px;line-height: 30px;">
+    字号：<input id="font-size" type="range" value="12" min="8" max="100" step="1">
+</div>
+
+<div>
+    带hinting的字体：<span class="ttf-text ttf-min-with-hitting"></span>
+</div>
+
+<div>
+    不带hinting的字体：<span class="ttf-text ttf-min-without-hitting"></span>
+</div>
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+        }
+    });
+    define('jquery', $);
+</script>
+
+<script>
+    require(['demo/ttfmin']);
+</script>
+
+</body>
+</html>
