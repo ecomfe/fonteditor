@@ -369,7 +369,9 @@ define(
                 }
             })
             .on('refresh', function (e) {
-                showTTF(program.ttfManager.get(), 1);
+                if (program.ttfManager.get()) {
+                    showTTF(program.ttfManager.get(), 1);
+                }
             })
             .on('moveleft', function (e) {
                 var editingIndex = program.viewer.getEditing();

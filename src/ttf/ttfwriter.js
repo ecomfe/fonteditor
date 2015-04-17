@@ -20,7 +20,7 @@ define(
         var pathCeil = require('graphics/pathCeil');
 
         // 支持写的表, 注意表顺序
-        var tableList = [
+        var SUPPORT_TABLES = [
             'OS/2',
             'cmap',
             'glyf',
@@ -35,6 +35,28 @@ define(
 
 
         /**
+         * 对ttf的表进行评估，标记需要处理的表
+         *
+         * @param  {Object} ttf ttf对象
+         */
+        function prepareDump(ttf) {
+            var tables = SUPPORT_TABLES.slice(0);
+            ttf.writeOptions = {};
+
+            // hinting tables direct copy
+            if (this.options.hinting) {
+                ['cvt', 'fpgm', 'prep', 'gasp'].forEach(function (table) {
+                    if (ttf[table]) {
+                        tables.push(table);
+                    }
+                });
+            }
+
+            ttf.writeOptions.hinting = !!this.options.hinting;
+            ttf.writeOptions.tables = tables.sort();
+        }
+
+        /**
          * 处理ttf结构，以便于写
          *
          * @param {ttfObject} ttf ttf数据结构
@@ -43,10 +65,10 @@ define(
 
             // 头部信息
             ttf.version = ttf.version || 0x1;
-            ttf.numTables = tableList.length;
-            ttf.entrySelector = Math.floor(Math.log(tableList.length) / Math.LN2);
+            ttf.numTables = ttf.writeOptions.tables.length;
+            ttf.entrySelector = Math.floor(Math.log(ttf.numTables) / Math.LN2);
             ttf.searchRange = Math.pow(2, ttf.entrySelector) * 16;
-            ttf.rangeShift = tableList.length * 16 - ttf.searchRange;
+            ttf.rangeShift = ttf.numTables * 16 - ttf.searchRange;
 
             // 重置校验码
             ttf.head.checkSumAdjustment = 0;
@@ -116,12 +138,12 @@ define(
             ttf.support = {};
 
             // head + directory
-            var ttfSize = 12 + tableList.length * 16;
+            var ttfSize = 12 + ttf.numTables * 16;
             var ttfHeadOffset = 0; // 记录head的偏移
 
             // 构造tables
             ttf.support.tables = [];
-            tableList.forEach(function (tableName) {
+            ttf.writeOptions.tables.forEach(function (tableName) {
                 var offset = ttfSize;
                 var tableSize = new supportTables[tableName]().size(ttf); // 原始的表大小
                 var size = tableSize; // 对齐后的表大小
@@ -184,6 +206,7 @@ define(
             var ttfCheckSum = (0xB1B0AFBA - checkSum(writer.getBuffer()) + 0x100000000) % 0x100000000;
             writer.writeUint32(ttfCheckSum, ttfHeadOffset + 8);
 
+            delete ttf.writeOptions;
             delete ttf.support;
 
             var buffer = writer.getBuffer();
@@ -195,10 +218,16 @@ define(
 
         /**
          * TTFWriter的构造函数
-         *
+         * @param {Object} options 写入参数
+         * @param {boolean} hinting 保留hinting信息
+         * @param {boolean} removeCompositeGlyf 是否移除复合图元
          * @constructor
          */
-        function TTFWriter() {
+        function TTFWriter(options) {
+            this.options = options || {
+                hinting: false, // 不保留hints信息
+                removeCompositeGlyf: false // 是否移除复合图元
+            };
         }
 
         /**
@@ -207,6 +236,7 @@ define(
          * @return {ArrayBuffer} 缓冲数组
          */
         TTFWriter.prototype.write = function (ttf) {
+            prepareDump.call(this, ttf);
             resolve.call(this, ttf);
             var buffer = write.call(this, ttf);
             return buffer;

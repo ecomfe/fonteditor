@@ -627,6 +627,7 @@ define(
                 this.ttf.name.fontFamily = this.ttf.name.fullName = name.fontFamily || config.name.fontFamily;
                 this.ttf.name.fontSubFamily = name.fontSubFamily || config.name.fontSubFamily;
                 this.ttf.name.uniqueSubFamily = name.uniqueSubFamily || '';
+                this.ttf.name.postScriptName = name.postScriptName || '';
             }
 
             return this.ttf.name;

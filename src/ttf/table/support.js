@@ -20,7 +20,11 @@ define(
             'hhea': require('./hhea'),
             'hmtx': require('./hmtx'),
             'post': require('./post'),
-            'OS/2': require('./OS2')
+            'OS/2': require('./OS2'),
+            'fpgm': require('./fpgm'),
+            'cvt': require('./cvt'),
+            'prep': require('./prep'),
+            'gasp': require('./gasp')
         };
 
         return support;

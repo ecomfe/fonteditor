@@ -16,6 +16,8 @@ define(
         var componentFlag = require('../enum/componentFlag');
         var error = require('../error');
 
+        var MAX_INSTRUCTION_LENGTH = 5000;
+
         /* eslint-disable fecs-max-statements */
         /**
          * 读取简单字形
@@ -184,14 +186,18 @@ define(
                         length = reader.readUint16();
                         if (length) {
                             // range错误
-                            if (length < 1000) {
+                            if (length < MAX_INSTRUCTION_LENGTH) {
                                 instructions = [];
                                 for (i = 0; i < length; ++i) {
                                     instructions.push(reader.readUint8());
                                 }
                                 glyf.instructions = instructions;
                             }
+                            else {
+                                console.warn(length);
+                            }
                         }
+
 
                         readSimpleGlyf.call(
                             this,
@@ -277,11 +283,16 @@ define(
 
                         if (componentFlag.WE_HAVE_INSTRUCTIONS & flags) {
                             length = reader.readUint16();
-                            instructions = [];
-                            for (i = 0; i < length; ++i) {
-                                instructions.push(reader.readUint8());
+                            if (length < MAX_INSTRUCTION_LENGTH) {
+                                instructions = [];
+                                for (i = 0; i < length; ++i) {
+                                    instructions.push(reader.readUint8());
+                                }
+                                glyf.instructions = instructions;
                             }
-                            glyf.instructions = instructions;
+                            else {
+                                console.warn(length);
+                            }
                         }
                     }
 

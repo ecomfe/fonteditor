@@ -145,6 +145,25 @@ define(
                     var maxComponentElements = 0;
 
                     var glyfNotEmpty = 0; // 非空glyf
+                    var hinting = ttf.writeOptions.hinting;
+
+                    // 计算instructions和functiondefs
+                    if (hinting) {
+
+                        if (ttf.cvt) {
+                            maxSizeOfInstructions = Math.max(maxSizeOfInstructions, ttf.cvt.length);
+                        }
+
+                        if (ttf.prep) {
+                            maxSizeOfInstructions = Math.max(maxSizeOfInstructions, ttf.prep.length);
+                        }
+
+                        if (ttf.fpgm) {
+                            maxSizeOfInstructions = Math.max(maxSizeOfInstructions, ttf.fpgm.length);
+                        }
+
+                    }
+
 
                     ttf.glyf.forEach(function (glyf, index) {
 
@@ -176,6 +195,10 @@ define(
                                 points += contour.length;
                             });
                             maxPoints = Math.max(maxPoints, points);
+                        }
+
+                        if (hinting && glyf.instructions) {
+                            maxSizeOfInstructions = Math.max(maxSizeOfInstructions, glyf.instructions.length);
                         }
 
                         // 统计边界信息
@@ -245,7 +268,8 @@ define(
                     ttf.head.yMin = yMin;
                     ttf.head.xMax = xMax;
                     ttf.head.yMax = yMax;
-
+                    // 这里根据存储的maxp来设置新的maxp，避免重复计算maxp
+                    ttf.maxp = ttf.maxp || {};
                     ttf.support.maxp = {
                         version: 1.0,
                         numGlyphs: ttf.glyf.length,
@@ -253,11 +277,11 @@ define(
                         maxContours: maxContours,
                         maxCompositePoints: maxCompositePoints,
                         maxCompositeContours: maxCompositeContours,
-                        maxZones: 2,
-                        maxTwilightPoints: 0,
-                        maxStorage: 0,
-                        maxFunctionDefs: 0,
-                        maxStackElements: 0,
+                        maxZones: ttf.maxp.maxZones || 0,
+                        maxTwilightPoints: ttf.maxp.maxTwilightPoints || 0,
+                        maxStorage: ttf.maxp.maxStorage || 0,
+                        maxFunctionDefs: ttf.maxp.maxFunctionDefs || 0,
+                        maxStackElements: ttf.maxp.maxStackElements || 0,
                         maxSizeOfInstructions: maxSizeOfInstructions,
                         maxComponentElements: maxComponentElements,
                         maxComponentDepth: maxComponentElements ? 1 : 0
