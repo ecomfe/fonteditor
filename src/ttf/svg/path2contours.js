@@ -8,6 +8,7 @@ define(function (require) {
     var bezierCubic2Q2 = require('math/bezierCubic2Q2');
     var getArc =  require('graphics/getArc');
     var parseParams = require('./parseParams');
+    var reducePath = require('graphics/reducePath');
 
     /**
      * 三次贝塞尔曲线，转二次贝塞尔曲线
@@ -56,6 +57,11 @@ define(function (require) {
                 contour.push({
                     x: q2[1].x,
                     y: q2[1].y
+                });
+                contour.push({
+                    x: q2[2].x,
+                    y: q2[2].y,
+                    onCurve: true
                 });
             }
         }
@@ -445,7 +451,9 @@ define(function (require) {
             }
         }
 
-        return contours;
+        return contours.map(function (p) {
+            return reducePath(p);
+        });
     }
 
 

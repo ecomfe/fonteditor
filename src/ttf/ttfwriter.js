@@ -16,9 +16,6 @@ define(
         var checkSum = require('./util/checkSum');
         var error = require('./error');
 
-        var reduceGlyf = require('./util/reduceGlyf');
-        var pathCeil = require('graphics/pathCeil');
-
         // 支持写的表, 注意表顺序
         var SUPPORT_TABLES = [
             'OS/2',
@@ -101,26 +98,6 @@ define(
                     });
 
                 }
-
-                if (!glyf.compound && glyf.contours) {
-
-                    // 整数化
-                    glyf.contours.forEach(function (contour) {
-                        pathCeil(contour);
-                    });
-
-                    // 缩减glyf
-                    reduceGlyf(glyf);
-                }
-
-                // 整数化
-                glyf.xMin = Math.round(glyf.xMin || 0);
-                glyf.xMax = Math.round(glyf.xMax || 0);
-                glyf.yMin = Math.round(glyf.yMin || 0);
-                glyf.yMax = Math.round(glyf.yMax || 0);
-                glyf.leftSideBearing = Math.round(glyf.leftSideBearing || 0);
-                glyf.advanceWidth = Math.round(glyf.advanceWidth || 0);
-
             });
 
         }

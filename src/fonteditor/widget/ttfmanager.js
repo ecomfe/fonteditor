@@ -430,6 +430,35 @@ define(
         };
 
         /**
+         * 优化字体
+         *
+         * @return {true|Object} 优化成功，或者错误信息
+         */
+        Manager.prototype.optimize = function () {
+
+            var result = this.ttf.optimize();
+
+            this.ttf.get().glyf.forEach(function (g) {
+                g.modify = 'edit';
+            });
+
+            this.fireChange(true);
+
+            if (true === result) {
+                return true;
+            }
+
+            var message = '';
+            if (result.repeat) {
+                message = '重复的unicode代码点，字形序号：' + result.repeat.join(',');
+            }
+
+            return {
+                message: message
+            };
+        };
+
+        /**
          * 撤销
          * @return {this}
          */

@@ -20,6 +20,10 @@ define(
                 writer.writeUint16(2442);
                 writer.writeUint32(5375673);
 
+                writer.writeUint8(55.45444444);
+                writer.writeUint16(55.45444444);
+                writer.writeUint32(55.45444444);
+
                 var reader = new Reader(buffer, 0, 100);
 
                 expect(reader.readInt8()).toBe(10);
@@ -28,6 +32,34 @@ define(
                 expect(reader.readUint8()).toBe(10);
                 expect(reader.readUint16()).toBe(2442);
                 expect(reader.readUint32()).toBe(5375673);
+
+                expect(reader.readUint8()).toBe(55);
+                expect(reader.readUint16()).toBe(55);
+                expect(reader.readUint32()).toBe(55);
+            });
+
+            it('test write decimals', function () {
+                var writer = new Writer(buffer, 0, 100);
+
+                // 基本类型
+                writer.writeInt8(-55.99999);
+                writer.writeInt16(-55.99999);
+                writer.writeInt32(-55.999999);
+
+                writer.writeUint8(55.45444444);
+                writer.writeUint16(55.45444444);
+                writer.writeUint32(55.45444444);
+
+                var reader = new Reader(buffer, 0, 100);
+
+
+                expect(reader.readInt8()).toBe(-55);
+                expect(reader.readInt16()).toBe(-55);
+                expect(reader.readInt32()).toBe(-55);
+
+                expect(reader.readUint8()).toBe(55);
+                expect(reader.readUint16()).toBe(55);
+                expect(reader.readUint32()).toBe(55);
             });
 
 

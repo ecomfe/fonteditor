@@ -28,9 +28,17 @@ define(
                 return true;
             }
 
-            // 三点同线 仅处理三个在直线上的点
+            // 三点同线 检查直线点
             if (
                 (p.onCurve && prev.onCurve && next.onCurve)
+                && Math.abs((next.y - p.y) * (prev.x - p.x) - (prev.y - p.y) * (next.x - p.x)) <= 0.001
+            ) {
+                return true;
+            }
+
+            // 三点同线 检查控制点
+            if (
+                (!p.onCurve && prev.onCurve && next.onCurve)
                 && Math.abs((next.y - p.y) * (prev.x - p.x) - (prev.y - p.y) * (next.x - p.x)) <= 0.001
             ) {
                 return true;

@@ -266,6 +266,15 @@ define(
                 }
             },
 
+            'setting-optimize': function () {
+                if (program.ttfManager.get()) {
+                    var result = program.ttfManager.optimize();
+                    if (true !== result) {
+                        alert(result.message);
+                    }
+                }
+            },
+
             'setting-editor': function () {
                 var SettingEditor = settingSupport.editor;
                 !new SettingEditor({

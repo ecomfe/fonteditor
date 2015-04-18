@@ -58,7 +58,6 @@ define(
                 }
                 catch (exp) {
                     alert(exp.message);
-                    throw exp;
                 }
 
                 loading.hide();

@@ -17,6 +17,7 @@ define(
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var glyfAdjust = require('./util/glyfAdjust');
+        var optimizettf = require('./util/optimizettf');
         var config = require('./data/default');
 
         /**
@@ -787,6 +788,19 @@ define(
                 sCapHeight: sCapHeight || 0
             };
         };
+
+
+        /**
+         * 优化ttf字形信息
+         *
+         * @param {Object} glyf glyfobject
+         * @param {string} index 需要替换的索引列表
+         * @return {Array} 改变的glyf
+         */
+        TTF.prototype.optimize = function () {
+            return optimizettf(this.ttf);
+        };
+
 
         return TTF;
     }

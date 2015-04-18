@@ -145,11 +145,11 @@ define(
                 }
                 catch (e) {
                     $(options.target).removeAttr('download');
-                    //alert(e.message);
-                    throw e;
                     if (options.error) {
                         options.error(e);
                     }
+                    alert(e.message);
+                    throw e;
                 }
             }
 
