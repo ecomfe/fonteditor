@@ -37,12 +37,6 @@ define(
             },
             validate: function () {
 
-                var unicode = $('#setting-glyf-unicode').val();
-                if (unicode && !unicode.match(unicodeREG)) {
-                    alert('unicode设置不正确!');
-                    return false;
-                }
-
                 var setting = this.getFields();
 
                 if (setting.leftSideBearing === undefined

@@ -200,40 +200,51 @@ define(
          */
         Setting.prototype.getFields = function (setting) {
             setting = setting || {};
+            var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
+
             this.getDialog().find('[data-field]').each(function (i, item) {
 
                 var field = item.getAttribute('data-field');
                 var type = item.getAttribute('data-type') || item.type;
+                var originValue = item.value.trim();
                 var val;
-                var fieldValue;
+
                 if (type === 'checkbox') {
                     val = !!item.checked;
                 }
                 else if (type === 'unicode') {
-                    val = item.value.trim() === '' ? [] : item.value.split(',').map(function (u) {
-                        return Number('0x' + u.slice(1));
-                    });
+                    if (!originValue) {
+                        val = [];
+                    }
+                    else if (unicodeREG.test(originValue)) {
+                        val = originValue.split(',').map(function (u) {
+                            return Number('0x' + u.slice(1));
+                        });
+                    }
+                    else {
+                        val = originValue.split('').map(function (u) {
+                            return u.charCodeAt(0);
+                        });
+                    }
                 }
                 else if (type === 'datetime-local') {
-                    if (item.value) {
-                        val = Date.parse(item.value.replace('T', ' '));
+                    if (originValue) {
+                        val = Date.parse(originValue.replace('T', ' '));
                     }
                 }
                 else if (type === 'number') {
-                    if (item.value) {
-                        fieldValue = +item.value;
+                    if (originValue) {
+                        originValue = +originValue;
                         if (item.getAttribute('data-ceil')) {
-                            fieldValue = Math.floor(fieldValue);
+                            originValue = Math.floor(originValue);
                         }
-                        val = fieldValue;
+                        val = originValue;
                     }
                 }
-
                 else {
                     item = $(item);
-                    fieldValue = item.val().trim();
-                    if (fieldValue) {
-                        val =  fieldValue;
+                    if (originValue) {
+                        val =  originValue;
                     }
                 }
 

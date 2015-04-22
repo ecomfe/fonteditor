@@ -182,7 +182,7 @@ define(
         /**
          * 删除指定字形
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {this}
          */
         Manager.prototype.removeGlyf = function (indexList) {
@@ -200,7 +200,7 @@ define(
          * 设置unicode代码
          *
          * @param {string} unicode unicode代码
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {this}
          */
         Manager.prototype.setUnicode = function (unicode, indexList) {
@@ -219,7 +219,7 @@ define(
         /**
          * 生成字形名称
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {this}
          */
         Manager.prototype.genGlyfName = function (indexList) {
@@ -238,7 +238,7 @@ define(
         /**
          * 清除字形名称
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {this}
          */
         Manager.prototype.clearGlyfName = function (indexList) {
@@ -258,7 +258,7 @@ define(
          * 添加并体替换指定的glyf
          *
          * @param {Array} glyfList 添加的列表
-         * @param {Array} indexList 需要替换的索引列表
+         * @param {Array=} indexList 需要替换的索引列表
          * @return {this}
          */
         Manager.prototype.appendGlyf = function (glyfList, indexList) {
@@ -293,7 +293,7 @@ define(
         /**
          * 调整glyf位置
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @param {Object} setting 选项
          * @return {boolean}
          */
@@ -314,7 +314,7 @@ define(
         /**
          * 调整glyf
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @param {Object} setting 选项
          * @return {boolean}
          */
@@ -379,7 +379,7 @@ define(
         /**
          * 获取glyfList
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {Array} glyflist
          */
         Manager.prototype.getGlyf = function (indexList) {
@@ -459,6 +459,22 @@ define(
         };
 
         /**
+         * 复合字形转简单字形
+         * @param {Array=} indexList 选中的字形索引
+         * @return {this}
+         */
+        Manager.prototype.compound2simple = function (indexList) {
+            var result = this.ttf.compound2simple(indexList);
+            if (result.length) {
+                result.forEach(function (g) {
+                    g.modify = 'edit';
+                });
+                this.fireChange(true);
+            }
+        };
+
+
+        /**
          * 撤销
          * @return {this}
          */
@@ -531,8 +547,6 @@ define(
                 return this.ttf.calcMetrics();
             }
         };
-
-
 
         /**
          * 注销

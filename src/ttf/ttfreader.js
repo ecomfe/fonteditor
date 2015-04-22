@@ -18,7 +18,7 @@ define(
         var Reader = require('./reader');
         var postName = require('./enum/postName');
         var error = require('./error');
-
+        var compound2simpleglyf = require('./util/compound2simpleglyf');
 
 
         /**
@@ -61,6 +61,8 @@ define(
             if (!ttf.tables.glyf || !ttf.tables.head || !ttf.tables.cmap || !ttf.tables.hmtx) {
                 error.raise(10204);
             }
+
+            ttf.readOptions = this.options;
 
             // 读取支持的表数据
             Object.keys(supportTables).forEach(function (tableName) {
@@ -123,6 +125,7 @@ define(
          * @param {Object} ttf ttf对象
          */
         function cleanTables(ttf) {
+            delete ttf.readOptions;
             delete ttf.tables;
             delete ttf.hmtx;
             delete ttf.loca;
@@ -137,18 +140,31 @@ define(
                     delete glyf.instructions;
                 });
             }
+
+            if (this.options.compound2simple && ttf.maxp.maxComponentElements) {
+                ttf.glyf.forEach(function (glyf) {
+                    if (glyf.compound) {
+                        compound2simpleglyf(glyf, ttf);
+                    }
+                });
+                ttf.maxp.maxComponentElements = 0;
+                ttf.maxp.maxComponentDepth = 0;
+            }
         }
 
 
         /**
          * TTF的构造函数
          * @param {Object} options 写入参数
-         * @param {boolean} hinting 保留hinting信息
+         * @param {boolean} options.hinting 保留hinting信息
+         * @param {boolean} options.compound2simple 复合字形转简单字形
          * @constructor
          */
         function TTFReader(options) {
-            this.options = options || {
-                hinting: false // 不保留hints信息
+            options = options || {};
+            this.options = {
+                hinting: options.hinting || false, // 不保留hints信息
+                compound2simple: options.compound2simple || false // 复合字形转简单字形
             };
         }
 

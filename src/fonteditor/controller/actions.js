@@ -251,8 +251,7 @@ define(
             },
 
             'setting-glyf-name': function () {
-                var ttf = program.ttfManager.get();
-                if (ttf) {
+                if (program.ttfManager.get()) {
                     if (window.confirm('生成的字形名称会覆盖原来的名称，确定生成？')) {
                         program.ttfManager.genGlyfName(program.viewer.getSelected());
                     }
@@ -260,8 +259,7 @@ define(
             },
 
             'setting-glyf-clearname': function () {
-                var ttf = program.ttfManager.get();
-                if (ttf) {
+                if (program.ttfManager.get()) {
                     program.ttfManager.clearGlyfName(program.viewer.getSelected());
                 }
             },
@@ -272,6 +270,12 @@ define(
                     if (true !== result) {
                         alert(result.message);
                     }
+                }
+            },
+
+            'setting-compound2simple': function () {
+                if (program.ttfManager.get()) {
+                    program.ttfManager.compound2simple(program.viewer.getSelected());
                 }
             },
 

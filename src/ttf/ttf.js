@@ -16,6 +16,7 @@ define(
         var pathAdjust = require('graphics/pathAdjust');
         var pathCeil = require('graphics/pathCeil');
         var computeBoundingBox = require('graphics/computeBoundingBox');
+        var compound2simpleglyf = require('./util/compound2simpleglyf');
         var glyfAdjust = require('./util/glyfAdjust');
         var optimizettf = require('./util/optimizettf');
         var config = require('./data/default');
@@ -316,7 +317,7 @@ define(
          * 设置unicode代码
          *
          * @param {string} unicode unicode代码 $E021, $22
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {Array} 改变的glyf
          */
         TTF.prototype.setUnicode = function (unicode, indexList) {
@@ -366,7 +367,7 @@ define(
         /**
          * 生成字形名称
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {Array} 改变的glyf
          */
         TTF.prototype.genGlyfName = function (indexList) {
@@ -405,7 +406,7 @@ define(
         /**
          * 清除字形名称
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {Array} 改变的glyf
          */
         TTF.prototype.clearGlyfName = function (indexList) {
@@ -434,7 +435,7 @@ define(
          * 添加并体替换指定的glyf
          *
          * @param {Array} glyfList 添加的列表
-         * @param {Array} indexList 需要替换的索引列表
+         * @param {Array=} indexList 需要替换的索引列表
          * @return {Array} 改变的glyf
          */
         TTF.prototype.appendGlyf = function (glyfList, indexList) {
@@ -460,7 +461,7 @@ define(
         /**
          * 调整glyf位置
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @param {Object} setting 选项
          * @return {Array} 改变的glyf
          */
@@ -480,7 +481,7 @@ define(
         /**
          * 调整glyf
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @param {Object} setting 选项
          * @return {boolean}
          */
@@ -534,7 +535,7 @@ define(
         /**
          * 获取glyf列表
          *
-         * @param {Array} indexList 索引列表
+         * @param {Array=} indexList 索引列表
          * @return {Array} glyflist
          */
         TTF.prototype.getGlyf = function (indexList) {
@@ -793,12 +794,32 @@ define(
         /**
          * 优化ttf字形信息
          *
-         * @param {Object} glyf glyfobject
-         * @param {string} index 需要替换的索引列表
          * @return {Array} 改变的glyf
          */
         TTF.prototype.optimize = function () {
             return optimizettf(this.ttf);
+        };
+
+        /**
+         * 复合字形转简单字形
+         * @param {Array=} indexList 索引列表
+         * @return {Array} 改变的glyf
+         */
+        TTF.prototype.compound2simple = function (indexList) {
+
+            var ttf = this.ttf;
+            if (!ttf.maxp.maxComponentElements) {
+                return [];
+            }
+
+            var list = this.getGlyf(indexList).filter(function (glyf) {
+                if (glyf.compound) {
+                    compound2simpleglyf(glyf, ttf);
+                    return true;
+                }
+            });
+
+            return list;
         };
 
 
