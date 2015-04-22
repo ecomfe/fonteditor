@@ -25,7 +25,7 @@
     <div class="input-group input-group-sm">
       <span class="input-group-addon">缩放字形到上下边界</span>
       <span class="form-control">
-        <input data-field="ajdustToEmBox" type="checkbox" onclick="$(\'#setting-ajdustToEmPadding\')[this.checked ? \'removeClass\' : \'addClass\'](\'hide\')">
+        <input data-field="ajdustToEmBox" type="checkbox" onclick="$('#setting-ajdustToEmPadding')[this.checked ? 'removeClass' : 'addClass']('hide')">
       </span>
     </div>
   </div>
