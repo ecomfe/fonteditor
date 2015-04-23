@@ -18,6 +18,7 @@ define(
         var glyfAdjust = require('./util/glyfAdjust');
         var error = require('./error');
         var getEmptyttfObject = require('./getEmptyttfObject');
+        var reduceGlyf = require('./util/reduceGlyf');
 
         /**
          * 加载xml字符串
@@ -112,9 +113,13 @@ define(
 
 
             // 如果是svg格式字体，则去小数
+            // 由于svg格式导入时候会出现字形重复问题，这里进行优化
             if (ttf.from === 'svgfont' && ttf.head.unitsPerEm > 128) {
                 ttf.glyf.forEach(function (g) {
-                    glyfAdjust(g);
+                    if (g.contours) {
+                        reduceGlyf(g);
+                        glyfAdjust(g);
+                    }
                 });
             }
             // 否则重新计算字形大小，缩放到1024的em
@@ -126,6 +131,7 @@ define(
 
                 ttf.glyf.forEach(function (g) {
                     if (g.contours) {
+                        reduceGlyf(g);
                         var bound = computeBoundingBox.computePathBox.apply(null, g.contours);
                         if (bound) {
                             xMin = Math.min(xMin, bound.x);

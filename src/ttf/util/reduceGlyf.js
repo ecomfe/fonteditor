@@ -24,12 +24,10 @@ define(
             var contour;
             var length;
             for (var j = contours.length - 1; j >= 0; j--) {
-                contour = contours[j];
-                reducePath(contour);
-                length =  contour.length;
+                contour = reducePath(contours[j]);
 
                 // 空轮廓
-                if (0 === length || 2 === length) {
+                if (contour.length <= 2) {
                     contours.splice(j, 1);
                     continue;
                 }
