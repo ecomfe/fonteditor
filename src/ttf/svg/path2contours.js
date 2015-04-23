@@ -90,6 +90,7 @@ define(function (require) {
         var prevX = 0;
         var prevY = 0;
         var segment;
+        var args;
         var cmd;
         var relative;
         var q;
@@ -107,6 +108,7 @@ define(function (require) {
             segment = segments[i];
             cmd = segment.cmd;
             relative = segment.relative;
+            args = segment.args;
 
             if (cmd === 'Z') {
                 contours.push(contour);
@@ -114,12 +116,12 @@ define(function (require) {
             }
             else if (cmd === 'M') {
                 if (relative) {
-                    prevX += segment.args[0];
-                    prevY += segment.args[1];
+                    prevX += args[0];
+                    prevY += args[1];
                 }
                 else {
-                    prevX = segment.args[0];
-                    prevY = segment.args[1];
+                    prevX = args[0];
+                    prevY = args[1];
                 }
 
                 contour.push({
@@ -131,10 +133,10 @@ define(function (require) {
             else if (cmd === 'H') {
 
                 if (relative) {
-                    prevX += segment.args[0];
+                    prevX += args[0];
                 }
                 else {
-                    prevX = segment.args[0];
+                    prevX = args[0];
                 }
 
                 contour.push({
@@ -146,10 +148,10 @@ define(function (require) {
             else if (cmd === 'V') {
 
                 if (relative) {
-                    prevY += segment.args[0];
+                    prevY += args[0];
                 }
                 else {
-                    prevY = segment.args[0];
+                    prevY = args[0];
                 }
 
                 contour.push({
@@ -170,15 +172,15 @@ define(function (require) {
                     py = 0;
                 }
 
-                for (q = 0, ql = segment.args.length; q < ql; q += 2) {
+                for (q = 0, ql = args.length; q < ql; q += 2) {
 
                     if (relative) {
-                        px += segment.args[q];
-                        py += segment.args[q + 1];
+                        px += args[q];
+                        py += args[q + 1];
                     }
                     else {
-                        px = segment.args[q];
-                        py = segment.args[q + 1];
+                        px = args[q];
+                        py = args[q + 1];
                     }
 
                     contour.push({
@@ -205,21 +207,21 @@ define(function (require) {
                     py = 0;
                 }
 
-                for (q = 0, ql = segment.args.length; q < ql; q += 4) {
+                for (q = 0, ql = args.length; q < ql; q += 4) {
 
                     contour.push({
-                        x: px + segment.args[q],
-                        y: py + segment.args[q + 1]
+                        x: px + args[q],
+                        y: py + args[q + 1]
                     });
                     contour.push({
-                        x: px + segment.args[q + 2],
-                        y: py + segment.args[q + 3],
+                        x: px + args[q + 2],
+                        y: py + args[q + 3],
                         onCurve: true
                     });
 
                     if (relative) {
-                        px += segment.args[q + 2];
-                        py += segment.args[q + 3];
+                        px += args[q + 2];
+                        py += args[q + 3];
                     }
                     else {
                         px = 0;
@@ -232,8 +234,8 @@ define(function (require) {
                     prevY = py;
                 }
                 else {
-                    prevX = segment.args[ql - 2];
-                    prevY = segment.args[ql - 1];
+                    prevX = args[ql - 2];
+                    prevY = args[ql - 1];
                 }
             }
             // 二次贝塞尔平滑
@@ -252,15 +254,15 @@ define(function (require) {
                 px = prevX;
                 py = prevY;
 
-                for (q = 0, ql = segment.args.length - 2; q < ql; q += 2) {
+                for (q = 0, ql = args.length - 2; q < ql; q += 2) {
 
                     if (relative) {
-                        px += segment.args[q];
-                        py += segment.args[q + 1];
+                        px += args[q];
+                        py += args[q + 1];
                     }
                     else {
-                        px = segment.args[q];
-                        py = segment.args[q + 1];
+                        px = args[q];
+                        py = args[q + 1];
                     }
 
                     last = {
@@ -275,12 +277,12 @@ define(function (require) {
                 }
 
                 if (relative) {
-                    prevX = px + segment.args[ql];
-                    prevY = py + segment.args[ql + 1];
+                    prevX = px + args[ql];
+                    prevY = py + args[ql + 1];
                 }
                 else {
-                    prevX = segment.args[ql];
-                    prevY = segment.args[ql + 1];
+                    prevX = args[ql];
+                    prevY = args[ql + 1];
                 }
 
                 contour.push({
@@ -310,21 +312,21 @@ define(function (require) {
                     y: prevY
                 };
 
-                for (q = 0, ql = segment.args.length; q < ql; q += 6) {
+                for (q = 0, ql = args.length; q < ql; q += 6) {
 
                     c1 = {
-                        x: px + segment.args[q],
-                        y: py + segment.args[q + 1]
+                        x: px + args[q],
+                        y: py + args[q + 1]
                     };
 
                     c2 = {
-                        x: px + segment.args[q + 2],
-                        y: py + segment.args[q + 3]
+                        x: px + args[q + 2],
+                        y: py + args[q + 3]
                     };
 
                     p2 = {
-                        x: px + segment.args[q + 4],
-                        y: py + segment.args[q + 5]
+                        x: px + args[q + 4],
+                        y: py + args[q + 5]
                     };
 
                     cubicList.push([p1, c1, c2, p2]);
@@ -332,8 +334,8 @@ define(function (require) {
                     p1 = p2;
 
                     if (relative) {
-                        px += segment.args[q + 4];
-                        py += segment.args[q + 5];
+                        px += args[q + 4];
+                        py += args[q + 5];
                     }
                     else {
                         px = 0;
@@ -346,8 +348,8 @@ define(function (require) {
                     prevY = py;
                 }
                 else {
-                    prevX = segment.args[ql - 2];
-                    prevY = segment.args[ql - 1];
+                    prevX = args[ql - 2];
+                    prevY = args[ql - 1];
                 }
 
                 cubic2Points(cubicList, contour);
@@ -375,16 +377,16 @@ define(function (require) {
                     y: 2 * p1.y - prevCubicC1.y
                 };
 
-                for (q = 0, ql = segment.args.length; q < ql; q += 4) {
+                for (q = 0, ql = args.length; q < ql; q += 4) {
 
                     c2 = {
-                        x: px + segment.args[q],
-                        y: py + segment.args[q + 1]
+                        x: px + args[q],
+                        y: py + args[q + 1]
                     };
 
                     p2 = {
-                        x: px + segment.args[q + 2],
-                        y: py + segment.args[q + 3]
+                        x: px + args[q + 2],
+                        y: py + args[q + 3]
                     };
 
                     cubicList.push([p1, c1, c2, p2]);
@@ -397,8 +399,8 @@ define(function (require) {
                     };
 
                     if (relative) {
-                        px += segment.args[q + 2];
-                        py += segment.args[q + 3];
+                        px += args[q + 2];
+                        py += args[q + 3];
                     }
                     else {
                         px = 0;
@@ -411,8 +413,8 @@ define(function (require) {
                     prevY = py;
                 }
                 else {
-                    prevX = segment.args[ql - 2];
-                    prevY = segment.args[ql - 1];
+                    prevX = args[ql - 2];
+                    prevY = args[ql - 1];
                 }
 
                 cubic2Points(cubicList, contour);
@@ -421,12 +423,12 @@ define(function (require) {
             // 求弧度, rx, ry, angle, largeArc, sweep, ex, ey
             else if (cmd === 'A') {
 
-                if (segment.args.length !== 7) {
-                    throw 'arc command params error:' + segment.args.join(',');
+                if (args.length !== 7) {
+                    throw 'arc command params error:' + args.join(',');
                 }
 
-                var ex = segment.args[5];
-                var ey = segment.args[6];
+                var ex = args[5];
+                var ey = args[6];
 
                 if (relative) {
                     ex = prevX + ex;
@@ -434,8 +436,8 @@ define(function (require) {
                 }
 
                 var path = getArc(
-                    segment.args[0], segment.args[1],
-                    segment.args[2], segment.args[3], segment.args[4],
+                    args[0], args[1],
+                    args[2], args[3], args[4],
                     {x: prevX, y: prevY},
                     {x: ex, y: ey}
                 );
