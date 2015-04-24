@@ -318,9 +318,10 @@ define(
          *
          * @param {string} unicode unicode代码 $E021, $22
          * @param {Array=} indexList 索引列表
+         * @param {boolean} isGenerateName 是否生成name
          * @return {Array} 改变的glyf
          */
-        TTF.prototype.setUnicode = function (unicode, indexList) {
+        TTF.prototype.setUnicode = function (unicode, indexList, isGenerateName) {
             var glyf = this.ttf.glyf;
             var list = [];
             if (indexList && indexList.length) {
@@ -355,8 +356,10 @@ define(
                     }
 
                     g.unicode = [unicode];
-                    g.name = string.getUnicodeName(unicode);
 
+                    if (isGenerateName) {
+                        g.name = string.getUnicodeName(unicode);
+                    }
                     unicode++;
                 });
             }

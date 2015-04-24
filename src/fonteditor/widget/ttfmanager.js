@@ -205,7 +205,7 @@ define(
          */
         Manager.prototype.setUnicode = function (unicode, indexList) {
 
-            var list = this.ttf.setUnicode(unicode, indexList);
+            var list = this.ttf.setUnicode(unicode, indexList, true);
             if (list.length) {
                 list.forEach(function (g) {
                     g.modify = 'edit';
