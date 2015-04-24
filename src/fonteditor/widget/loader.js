@@ -58,6 +58,7 @@ define(
                 }
                 catch (exp) {
                     alert(exp.message);
+                    throw exp;
                 }
 
                 loading.hide();
@@ -119,16 +120,16 @@ define(
             var fileReader = new FileReader();
 
             fileReader.onload = function (e) {
-                //try {
+                try {
                     var buffer = e.target.result;
                     var imported = svg2ttf(buffer);
                     fileReader = null;
                     options.success && options.success(imported);
-                // }
-                // catch (exp) {
-                //     alert(exp.message);
-                //     throw exp;
-                // }
+                }
+                catch (exp) {
+                    //alert(exp.message);
+                    throw exp;
+                }
 
                 loading.hide();
             };

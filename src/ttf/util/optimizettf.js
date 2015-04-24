@@ -56,6 +56,11 @@ define(
                 glyf.advanceWidth = Math.round(glyf.advanceWidth || 0);
             });
 
+            // 过滤无轮廓字体
+            ttf.glyf = ttf.glyf.filter(function (glyf) {
+                return glyf.contours && glyf.contours.length;
+            });
+
             if (!repeatList.length) {
                 return true;
             }

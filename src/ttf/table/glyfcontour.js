@@ -16,7 +16,8 @@ define(
         var componentFlag = require('../enum/componentFlag');
         var error = require('../error');
 
-        var MAX_INSTRUCTION_LENGTH = 5000;
+        var MAX_INSTRUCTION_LENGTH = 5000; // 设置instructions阈值防止读取错误
+        var MAX_NUMBER_OF_COORDINATES = 20000; // 设置坐标最大个数阈值，防止glyf读取错误
 
         /* eslint-disable fecs-max-statements */
         /**
@@ -32,10 +33,16 @@ define(
 
             reader.seek(offset);
 
-            // 轮廓个数
-            var contoursCount = glyf.endPtsOfContours[
+            // 轮廓点个数
+            var numberOfCoordinates = glyf.endPtsOfContours[
                     glyf.endPtsOfContours.length - 1
                 ] + 1;
+
+            // 判断坐标是否超过最大个数
+            if (numberOfCoordinates > MAX_NUMBER_OF_COORDINATES) {
+                console.warn('error read glyf coordinates:' + offset);
+                return glyf;
+            }
 
             // 获取flag标志
             var i;
@@ -44,13 +51,13 @@ define(
             var flag;
 
             i = 0;
-            while (i < contoursCount) {
+            while (i < numberOfCoordinates) {
                 flag = reader.readUint8();
                 flags.push(flag);
                 i++;
 
                 // 标志位3重复flag
-                if ((flag & glyFlag.REPEAT) && i < contoursCount) {
+                if ((flag & glyFlag.REPEAT) && i < numberOfCoordinates) {
                     // 重复个数
                     var repeat = reader.readUint8();
                     for (var j = 0; j < repeat; j++) {
@@ -76,15 +83,6 @@ define(
                     x = reader.readUint8();
 
                     // 标志位5
-                    // This flag has two meanings, depending on how the x-Short Vector flag is set.
-                    // If x-Short Vector is set, this
-                    // bit describes the sign of the value, with 1 equalling
-                    // positive and 0 negative. If the x-Short Vector bit is
-                    // not set and this bit is set, then the current x-coordinate is
-                    // the same as the previous x-coordinate.
-                    // If the x-Short Vector bit is not set and this bit is also
-                    // not set, the current x-coordinate is a signed 16-bit
-                    // delta vector
                     x = (flag & glyFlag.XSAME) ? x : -1 * x;
                 }
                 // 与上一值一致
@@ -172,7 +170,6 @@ define(
 
                     // 读取简单字形
                     if (numberOfContours >= 0) {
-
                         // endPtsOfConturs
                         var endPtsOfContours = [];
                         if (numberOfContours >= 0) {
@@ -197,7 +194,6 @@ define(
                                 console.warn(length);
                             }
                         }
-
 
                         readSimpleGlyf.call(
                             this,
