@@ -14,8 +14,8 @@ define(
         var ProjectViewer = require('./widget/projectviewer');
         var TTFManager = require('./widget/ttfmanager');
         var program = require('./widget/program');
-        var CommandMenu = require('./widget/CommandMenu');
-        var Pager = require('./widget/Pager');
+        var CommandMenu = require('./widget/commandmenu');
+        var Pager = require('./widget/pager');
 
         var controller = require('./controller/default');
         var actions = require('./controller/actions');
