@@ -1,11 +1,7 @@
 /**
- * @file bytes2base64.js
- * @author mengke01
- * @date
- * @description
- * 二进制byte流转base64编码
+ * @file 二进制byte流转base64编码
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -18,7 +18,9 @@ define(
             var reader = new FileReader();
             reader.onload = function(e) {
 
-                var ttfReader = new ttfreader();
+                var ttfReader = new ttfreader({
+                    hinting: true
+                });
                 var ttfData = ttfReader.read(e.target.result);
                 console.log(ttfData);
 
@@ -44,7 +46,9 @@ define(
                     type: 'binary',
                     url: './test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
-                        var ttfReader = new ttfreader();
+                        var ttfReader = new ttfreader({
+                            hinting: true
+                        });
                         var ttfData = ttfReader.read(binaryData);
 
                         console.log(ttfData);

@@ -37,9 +37,18 @@ define(
          * @param  {Object} ttf ttf对象
          */
         function prepareDump(ttf) {
+
+            if (!ttf.glyf || ttf.glyf.length === 0) {
+                error.raise(10201);
+            }
+
+            if (!ttf['OS/2'] || !ttf.head || !ttf.name) {
+                error.raise(10204);
+            }
+
+
             var tables = SUPPORT_TABLES.slice(0);
             ttf.writeOptions = {};
-
             // hinting tables direct copy
             if (this.options.hinting) {
                 ['cvt', 'fpgm', 'prep', 'gasp'].forEach(function (table) {
@@ -76,10 +85,6 @@ define(
             }
 
             ttf.head.modified = Date.now();
-
-            if (!ttf.glyf || ttf.glyf.length === 0) {
-                error.raise(10201);
-            }
 
             var checkUnicodeRepeat = {}; // 检查是否有重复代码点
 

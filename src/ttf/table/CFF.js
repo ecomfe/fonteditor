@@ -42,15 +42,15 @@ define(
          * @param  {Object} reader 读取器
          * @return {Object}        头部字段
          */
-        function parseCFFHeader(reader) {
-            var header = {};
-            header.startOffset = reader.offset;
-            header.endOffset = header.startOffset + 4;
-            header.formatMajor = reader.readUint8();
-            header.formatMinor = reader.readUint8();
-            header.size = reader.readUint8();
-            header.offsetSize = reader.readUint8();
-            return header;
+        function parseCFFHead(reader) {
+            var head = {};
+            head.startOffset = reader.offset;
+            head.endOffset = head.startOffset + 4;
+            head.formatMajor = reader.readUint8();
+            head.formatMinor = reader.readUint8();
+            head.size = reader.readUint8();
+            head.offsetSize = reader.readUint8();
+            return head;
         }
 
         /**
@@ -116,14 +116,14 @@ define(
                     var offset = this.offset;
                     reader.seek(offset);
 
-                    var header = parseCFFHeader(reader);
-                    var nameIndex = parseCFFIndex(reader, header.endOffset, string.getString);
+                    var head = parseCFFHead(reader);
+                    var nameIndex = parseCFFIndex(reader, head.endOffset, string.getString);
                     var topDictIndex = parseCFFIndex(reader, nameIndex.endOffset);
                     var stringIndex = parseCFFIndex(reader, topDictIndex.endOffset, string.getString);
                     var globalSubrIndex = parseCFFIndex(reader, stringIndex.endOffset);
 
                     var cff = {
-                        header: header
+                        head: head
                     };
 
                     // 全局子glyf数据

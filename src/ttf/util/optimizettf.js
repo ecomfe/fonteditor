@@ -57,8 +57,8 @@ define(
             });
 
             // 过滤无轮廓字体
-            ttf.glyf = ttf.glyf.filter(function (glyf) {
-                return glyf.contours && glyf.contours.length;
+            ttf.glyf = ttf.glyf.filter(function (glyf, index) {
+                return index === 0 || glyf.contours && glyf.contours.length;
             });
 
             if (!repeatList.length) {
