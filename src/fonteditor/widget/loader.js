@@ -14,6 +14,7 @@ define(
         var woff2ttf = require('ttf/woff2ttf');
         var eot2ttf = require('ttf/eot2ttf');
         var svg2ttfobject = require('ttf/svg2ttfobject');
+        var otf2ttfobject = require('ttf/otf2ttfobject');
         var inflate = require('inflate');
         var loading = require('./loading');
         var program = require('./program');
@@ -25,6 +26,29 @@ define(
         function svg2ttf(buffer) {
             var ieOpt = program.setting.get('ie');
             return svg2ttfobject(buffer, ieOpt.import);
+        }
+
+        function getttf(buffer, options) {
+            var ttf;
+            // 暂不支持otf直接编辑，这里需要将otf转换成ttf
+            if (options.type === 'otf') {
+                ttf = otf2ttfobject(buffer);
+            }
+            else {
+
+                if (options.type === 'woff') {
+                    buffer = woff2ttf(buffer, woffOptions);
+                }
+                else if (options.type === 'eot') {
+                    buffer = eot2ttf(buffer);
+                }
+
+                var ttfReader = new TTFReader();
+                ttf = ttfReader.read(buffer);
+                ttfReader.dispose();
+            }
+
+            return ttf;
         }
 
         /**
@@ -41,20 +65,8 @@ define(
             var fileReader = new FileReader();
 
             fileReader.onload = function (e) {
-
                 try {
-                    var buffer = e.target.result;
-                    if (options.type === 'woff') {
-                        buffer = woff2ttf(buffer, woffOptions);
-                    }
-                    else if (options.type === 'eot') {
-                        buffer = eot2ttf(buffer, woffOptions);
-                    }
-                    var ttfReader = new TTFReader();
-                    var ttf = ttfReader.read(buffer);
-                    ttfReader.dispose();
-                    fileReader = null;
-                    options.success && options.success(ttf);
+                    options.success && options.success(getttf(e.target.result, options));
                 }
                 catch (exp) {
                     alert(exp.message);
@@ -87,16 +99,7 @@ define(
             loading.show();
 
             try {
-                if (options.type === 'woff') {
-                    buffer = woff2ttf(buffer, woffOptions);
-                }
-                else if (options.type === 'eot') {
-                    buffer = eot2ttf(buffer, woffOptions);
-                }
-                var ttfReader = new TTFReader();
-                var ttf = ttfReader.read(buffer);
-                ttfReader.dispose();
-                options.success && options.success(ttf);
+                options.success && options.success(getttf(buffer, options));
             }
             catch (exp) {
                 alert(exp.message);
@@ -127,7 +130,7 @@ define(
                     options.success && options.success(imported);
                 }
                 catch (exp) {
-                    //alert(exp.message);
+                    alert(exp.message);
                     throw exp;
                 }
 
@@ -185,7 +188,12 @@ define(
                         loadSVGFile(file, options);
                     }
                 }
-                else if (options.type === 'ttf' || options.type === 'woff' || options.type === 'eot') {
+                else if (
+                    options.type === 'ttf'
+                    || options.type === 'woff'
+                    || options.type === 'eot'
+                    || options.type === 'otf'
+                ) {
                     if (file instanceof ArrayBuffer) {
                         loadSFNTBinary(file, options);
                     }
@@ -207,7 +215,7 @@ define(
              * @return {boolean}
              */
             supportLoad: function (fileName) {
-                return !!fileName.match(/(\.ttf|\.woff|\.eot)$/i);
+                return !!fileName.match(/(\.ttf|\.woff|\.eot|\.otf)$/i);
             },
 
             /**
@@ -217,7 +225,7 @@ define(
              * @return {boolean}
              */
             supportImport: function (fileName) {
-                return !!fileName.match(/(\.ttf|\.woff|\.svg|\.eot)$/i);
+                return !!fileName.match(/(\.ttf|\.woff|\.svg|\.eot|\.otf)$/i);
             }
         };
 

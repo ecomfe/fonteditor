@@ -268,6 +268,7 @@ define(
                     ttf.head.yMin = yMin;
                     ttf.head.xMax = xMax;
                     ttf.head.yMax = yMax;
+
                     // 这里根据存储的maxp来设置新的maxp，避免重复计算maxp
                     ttf.maxp = ttf.maxp || {};
                     ttf.support.maxp = {

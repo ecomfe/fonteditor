@@ -187,6 +187,7 @@ define(
          */
         TTFReader.prototype.dispose = function () {
             delete this.ttf;
+            delete this.options;
         };
 
         return TTFReader;

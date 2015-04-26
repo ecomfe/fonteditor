@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>读取otf字体</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/glyf.css">
+    <style id="font-face"></style>
+</head>
+<body>
+    <script>
+        require.config({
+            baseUrl: '../src',
+            paths: {
+                demo: '../demo/js',
+            }
+        });
+        define('jquery', $);
+    </script>
+
+    <form>
+        <input id="upload-file" type="file" class="upload-file">
+    </form>
+
+    <ul id="font-list" class="font-list"></ul>
+
+    <canvas id="glyf-canvas" style="background: #E0E0E0" width="600" height="600"></canvas>
+
+    <script>
+        require(['demo/otfreader']);
+    </script>
+
+</body>
+</html>

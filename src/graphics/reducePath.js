@@ -70,7 +70,6 @@ define(
                 prev = i === 0 ? contour[last] : contour[i - 1];
 
                 if (redundant(prev, p, next)) {
-                    // console.log('reduce path ...');
                     contour.splice(i, 1);
                     last--;
                     continue;

@@ -31,6 +31,19 @@ define(
             stringify: stringify,
 
             /**
+             * bytes to string
+             * @param  {Array} bytes 字节数组
+             * @return {string}       string
+             */
+            getString: function (bytes) {
+                var s = '';
+                for (var i = 0, l = bytes.length; i < l; i++) {
+                    s += String.fromCharCode(bytes[i]);
+                }
+                return s;
+            },
+
+            /**
              * 获取unicode的名字值
              *
              * @param {number} unicode unicode
