@@ -215,7 +215,7 @@ define(
                     refresh();
                 }
 
-                img.src = '../test/qg.gif';
+                img.src = './test/qg.gif';
             }
         };
 

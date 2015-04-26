@@ -1,7 +1,7 @@
 /**
  * @file svgimport.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * svg转ttfobject
  */
@@ -21,7 +21,7 @@ define(
             init: function () {
 
                 $.ajax({
-                    url: '../test/iconfont-chunvzuo.svg',
+                    url: './test/iconfont-chunvzuo.svg',
                     dataType: 'text'
                 }).done(function(data) {
 
@@ -33,7 +33,7 @@ define(
         };
 
         entry.init();
-        
+
         return entry;
     }
 );

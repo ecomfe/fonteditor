@@ -99,7 +99,7 @@ define(
 
                 ajaxFile({
                     type: 'binary',
-                    url: '../test/SourceSansPro-Regular.otf',
+                    url: './test/BalladeContour.otf',
                     onSuccess: function(binaryData) {
                         setFont(binaryData);
 

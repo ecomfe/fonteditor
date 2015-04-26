@@ -1,7 +1,7 @@
 /**
  * @file ttfparse.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * ttf解析函数入口
  */
@@ -42,13 +42,13 @@ define(
 
                 ajaxFile({
                     type: 'binary',
-                    url: '../test/baiduHealth.ttf',
+                    url: './test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
                         var ttfReader = new ttfreader();
                         var ttfData = ttfReader.read(binaryData);
 
                         console.log(ttfData);
-                        
+
                         var ttf = new TTF(ttfData);
 
                     },

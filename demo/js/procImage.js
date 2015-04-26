@@ -180,7 +180,7 @@ define(
 
                     refresh();
                 }
-                img.src = '../test/a.gif';
+                img.src = './test/a.gif';
             }
         };
 

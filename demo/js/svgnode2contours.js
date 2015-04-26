@@ -1,7 +1,7 @@
 /**
  * @file svgnode2contours.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * svg转ttfobject
  */
@@ -21,7 +21,7 @@ define(
 
                 ajaxFile({
                     type: 'xml',
-                    url: '../test/svgnodes.svg',
+                    url: './test/svgnodes.svg',
                     onSuccess: function(xml) {
 
                         var contours = svgnode2contours(xml.getElementsByTagName('*'));
@@ -37,7 +37,7 @@ define(
         };
 
         entry.init();
-        
+
         return entry;
     }
 );

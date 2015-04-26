@@ -106,7 +106,7 @@ define(
 
                 ajaxFile({
                     type: 'binary',
-                    url: '../test/baiduHealth.ttf',
+                    url: './test/baiduHealth.ttf',
                     onSuccess: function(binaryData) {
                         setFont(binaryData);
 

@@ -131,7 +131,7 @@ define(
                     curImage = img;
                     refresh();
                 };
-                img.src = '../test/qg.jpg';
+                img.src = './test/qg.jpg';
             }
         };
 
