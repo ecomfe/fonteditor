@@ -1,9 +1,6 @@
 /**
- * @file rotateTransform.js
- * @author mengke01
- * @date
- * @description
- * 旋转变换
+ * @file 旋转变换
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

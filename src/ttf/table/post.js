@@ -1,9 +1,7 @@
 /**
- * @file post.js
- * @author mengke01
- * @date
- * @description
- * post 表
+ * @file post 表
+ * @author mengke01(kekee000@gmail.com)
+ *
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6post.html
  */
 

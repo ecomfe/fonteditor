@@ -1,9 +1,6 @@
 /**
- * @file Controller.js
- * @author mengke01
- * @date
- * @description
- * 默认的渲染控制器，仅实现基本的缩放平移控制
+ * @file 默认的渲染控制器，仅实现基本的缩放平移控制
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

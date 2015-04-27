@@ -1,9 +1,6 @@
 /**
- * @file History.js
- * @author mengke01
- * @date
- * @description
- * 历史记录保持器
+ * @file 历史记录保持器
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

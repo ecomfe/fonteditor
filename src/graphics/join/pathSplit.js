@@ -1,9 +1,6 @@
 /**
- * @file pathSplit.js
- * @author mengke01
- * @date
- * @description
- * 路径分割
+ * @file 路径分割
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,9 +1,6 @@
 /**
- * @file string.js
- * @author mengke01
- * @date
- * @description
- * string 相关的函数
+ * @file 字符串相关的函数
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

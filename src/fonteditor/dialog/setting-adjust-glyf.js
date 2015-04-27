@@ -1,9 +1,6 @@
 /**
- * @file setting-adjust.js
- * @author mengke01
- * @date
- * @description
- * 设置调整字形
+ * @file 设置调整字形
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

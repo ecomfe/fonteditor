@@ -1,11 +1,7 @@
 /**
- * @file ShapesGroup.js
- * @author mengke01
- * @date
- * @description
- * 多个形状编辑组
+ * @file 形状组对象，用来管理多个形状的组合操作
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

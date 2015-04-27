@@ -1,9 +1,6 @@
 /**
- * @file hhea.js
- * @author mengke01
- * @date
- * @description
- * hhea 表
+ * @file hhea 表
+ * @author mengke01(kekee000@gmail.com)
  *
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6hhea.html
  */

@@ -1,9 +1,6 @@
 /**
- * @file struct.js
- * @author mengke01
- * @date
- * @description
- * 基本数据结构
+ * @file ttf基本数据结构
+ * @author mengke01(kekee000@gmail.com)
  *
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6.html
  */

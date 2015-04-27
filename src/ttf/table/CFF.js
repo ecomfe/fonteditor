@@ -200,6 +200,15 @@ define(
                     }
 
                     return cff;
+                },
+
+                write: function (
+                    /* writer, font */
+                ) {
+                    throw 'not support write cff table';
+                },
+                size: function (font) {
+                    throw 'not support get cff table size';
                 }
             }
         );

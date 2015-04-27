@@ -1,11 +1,7 @@
 /**
- * @file Path.js
- * @author mengke01
- * @date
- * @description
- * 绘制一段路径
+ * @file 路径绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

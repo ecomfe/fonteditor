@@ -1,9 +1,6 @@
 /**
- * @file relation.js
- * @author mengke01
- * @date
- * @description
- * 路径相交关系
+ * @file 路径相交关系
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

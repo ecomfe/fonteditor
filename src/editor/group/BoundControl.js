@@ -1,9 +1,6 @@
 /**
- * @file BoundControl.js
- * @author mengke01
- * @date
- * @description
- * 控制点管理类
+ * @file 控制点管理类
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

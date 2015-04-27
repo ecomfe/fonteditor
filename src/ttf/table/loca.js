@@ -1,9 +1,6 @@
 /**
- * @file loca.js
- * @author mengke01
- * @date
- * @description
- * loca表
+ * @file loca表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

@@ -1,9 +1,6 @@
 /**
- * @file getBezierQ2T.js
- * @author mengke01
- * @date
- * @description
- * 获取贝塞尔曲线的参数t
+ * @file 获取贝塞尔曲线的参数t
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(
@@ -13,7 +10,7 @@ define(
         var getPoint = require('./getBezierQ2Point');
 
         /**
-         * 分割贝塞尔曲线
+         * 获取贝塞尔曲线的参数t
          *
          * @param {Object} p0 p0
          * @param {Object} p1 p1

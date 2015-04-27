@@ -1,9 +1,6 @@
 /**
- * @file viewer.js
- * @author mengke01
- * @date
- * @description
- * glyf列表相关命令
+ * @file glyf列表相关命令
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

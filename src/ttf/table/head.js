@@ -1,9 +1,6 @@
 /**
- * @file head.js
- * @author mengke01
- * @date
- * @description
- * head表
+ * @file head表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

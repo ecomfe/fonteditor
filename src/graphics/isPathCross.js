@@ -1,9 +1,6 @@
 /**
- * @file isPathCross.js
- * @author mengke01
- * @date
- * @description
- * 判断路径的包含关系
+ * @file 判断路径的包含关系
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

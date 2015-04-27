@@ -1,9 +1,6 @@
 /**
- * @file getArc.js
- * @author mengke01
- * @date
- * @description
- * 使用插值法获取椭圆弧度，以支持svg arc命令
+ * @file 使用插值法获取椭圆弧度，以支持svg arc命令
+ * @author mengke01(kekee000@gmail.com)
  *
  * references:
  * http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes

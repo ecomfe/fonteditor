@@ -1,9 +1,6 @@
 /**
- * @file Circle.js
- * @author mengke01
- * @date
- * @description
- * 圆绘制
+ * @file 坐标轴绘制
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

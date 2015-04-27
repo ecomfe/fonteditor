@@ -1,11 +1,7 @@
 /**
- * @file align.js
- * @author mengke01
- * @date
- * @description
- * 轮廓对齐方式
+ * @file 轮廓对齐命令
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

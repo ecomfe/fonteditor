@@ -1,11 +1,7 @@
 /**
- * @file isOnPath.js
- * @author mengke01
- * @date
- * @description
- * 判断点是否在路径上
+ * @file 判断点是否在路径上
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

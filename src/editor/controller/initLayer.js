@@ -1,9 +1,6 @@
 /**
- * @file initLayer.js
- * @author mengke01
- * @date
- * @description
- * Editor的layer初始化
+ * @file Editor的layer初始化
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

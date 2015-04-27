@@ -1,9 +1,6 @@
 /**
- * @file unicode2xml.js
- * @author mengke01
- * @date
- * @description
- * unicode 转xml字符
+ * @file unicode字符转xml字符编码
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

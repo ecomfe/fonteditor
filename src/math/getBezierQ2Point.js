@@ -1,9 +1,6 @@
 /**
- * @file getBezierQ2Point.js
- * @author mengke01
- * @date
- * @description
- * 获取贝塞尔曲线上的点
+ * @file 获取贝塞尔曲线上的点
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

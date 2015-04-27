@@ -1,9 +1,6 @@
 /**
- * @file editor.js
- * @author mengke01
- * @date
- * @description
- * 默认的编辑器设置
+ * @file 默认的FontEditor设置
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

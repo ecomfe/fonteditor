@@ -1,11 +1,7 @@
 /**
- * @file matrix.js
- * @author mengke01
- * @date
- * @description
- * 一维矩阵操作
+ * @file 一维矩阵操作
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

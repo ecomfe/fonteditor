@@ -1,10 +1,7 @@
 /**
- * @file isInsidePath.js
- * @author mengke01
- * @date
- * @description
- * 判断点是否在path内部，射线法
- * TrueType uses the non-zero winding number rule.
+ * @file 射线法判断点是否在path内部
+ * @author mengke01(kekee000@gmail.com)
+ *
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM01/Chap1.html
  */
 

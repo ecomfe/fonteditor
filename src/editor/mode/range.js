@@ -1,9 +1,6 @@
 /**
- * @file range.js
- * @author mengke01
- * @date
- * @description
- * 多选区模式
+ * @file 多选区模式
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

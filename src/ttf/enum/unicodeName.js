@@ -1,9 +1,6 @@
 /**
- * @file unicodeName.js
- * @author mengke01
- * @date
- * @description
- * unicode 编码与postName对照表
+ * @file unicode 编码与postName对照表
+ * @author mengke01(kekee000@gmail.com)
  *
  * see:
  * http://www.microsoft.com/typography/otspec/WGL4.htm

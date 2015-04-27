@@ -1,11 +1,7 @@
 /**
- * @file Shape.js
- * @author mengke01
- * @date
- * @description
- * Shape 基础对象
+ * @file Shape 基础对象，用来绘制shape数据
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

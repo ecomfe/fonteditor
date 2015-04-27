@@ -1,9 +1,7 @@
 /**
- * @file cubeEquation.js
- * @author mengke01
- * @date
- * @description
- * 三次方程求解，仅给出实根部分
+ * @file 三次方程求解，仅给出实根部分
+ * @author mengke01(kekee000@gmail.com)
+ *
  * see:
  * http://www.99cankao.com/algebra/cubic-equation.php
  *

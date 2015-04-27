@@ -1,9 +1,6 @@
 /**
- * @file point.js
- * @author mengke01
- * @date
- * @description
- * 点编辑模式
+ * @file 点编辑模式
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

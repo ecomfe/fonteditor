@@ -1,9 +1,6 @@
 /**
- * @file support.js
- * @author mengke01
- * @date
- * @description
- * 编辑器模式集合
+ * @file 编辑器支持的模式集合
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

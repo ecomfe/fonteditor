@@ -1,9 +1,6 @@
 /**
- * @file bezierCubeEquation.js
- * @author mengke01
- * @date
- * @description
- * 求解三次方程贝塞尔根
+ * @file 求解三次方程贝塞尔根
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

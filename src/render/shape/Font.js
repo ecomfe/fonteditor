@@ -1,9 +1,6 @@
 /**
- * @file Font.js
- * @author mengke01
- * @date
- * @description
- * font字体绘制
+ * @file font格式字体绘制
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

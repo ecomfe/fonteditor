@@ -1,9 +1,6 @@
 /**
- * @file CommandMenu.js
- * @author mengke01
- * @date
- * @description
- * 命令菜单栏
+ * @file 命令菜单栏
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

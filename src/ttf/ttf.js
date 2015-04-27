@@ -1,12 +1,7 @@
 /**
- * @file ttf.js
- * @author mengke01
- * @date
- * @description
- *
- * ttf 信息读取函数
+ * @file ttf相关处理对象
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

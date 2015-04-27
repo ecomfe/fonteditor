@@ -1,9 +1,6 @@
 /**
- * @file GraduationMarker.js
- * @author mengke01
- * @date
- * @description
- * 刻度指示
+ * @file 刻度指示
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

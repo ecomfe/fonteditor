@@ -1,11 +1,7 @@
 /**
- * @file shapes.js
- * @author mengke01
- * @date
- * @description
- * 路径组command
+ * @file 形状组相关命令
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

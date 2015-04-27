@@ -1,16 +1,13 @@
 /**
- * @file quadraticEquation.js
- * @author mengke01
- * @date
- * @description
- * 求解二次方程
+ * @file 求解一元二次方程
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(
     function (require) {
 
         /**
-         * 求解二次方程
+         * 求解一元二次方程
          *
          * @param {number} a a系数
          * @param {number} b b系数

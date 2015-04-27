@@ -1,11 +1,7 @@
 /**
- * @file referenceline.js
- * @author mengke01
- * @date
- * @description
- * 参考线相关命令
+ * @file 参考线相关命令
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

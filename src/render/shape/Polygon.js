@@ -1,11 +1,7 @@
 /**
- * @file Rect.js
- * @author mengke01
- * @date
- * @description
- * 绘制多边形
+ * @file 多边形绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

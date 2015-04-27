@@ -1,11 +1,7 @@
 /**
- * @file support.js
- * @author mengke01
- * @date
- * @description
- * 列举支持的表
+ * @file ttf读取和写入支持的表
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

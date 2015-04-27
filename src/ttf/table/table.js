@@ -1,11 +1,7 @@
 /**
- * @file table.js
- * @author mengke01
- * @date
- * @description
- * ttf表操作类
+ * @file ttf表基类
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

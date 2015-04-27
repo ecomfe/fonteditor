@@ -1,11 +1,7 @@
 /**
- * @file scaleTransform.js
- * @author mengke01
- * @date
- * @description
- * 缩放变换
+ * @file 缩放变换
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

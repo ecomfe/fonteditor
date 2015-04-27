@@ -1,9 +1,6 @@
 /**
- * @file editor.js
- * @author mengke01
- * @date
- * @description
- * 编辑器相关命令
+ * @file 编辑器相关命令
+ * @author mengke01(kekee000@gmail.com)
  */
 
 
@@ -13,7 +10,7 @@ define(
         var computeBoundingBox = require('graphics/computeBoundingBox');
         var commandList = require('../menu/commandList');
         var shapesSupport = require('../shapes/support');
-        var menuUtil = require('../menu/util');
+        var setSelectedCommand = require('./setSelectedCommand');
 
         return {
 
@@ -58,7 +55,7 @@ define(
              * @param {boolean} enabled 是否
              */
             gridsorption: function (enabled) {
-                menuUtil.setSelected(commandList.editor, 'setting.gridsorption', !!enabled);
+                setSelectedCommand(commandList.editor, 'setting.gridsorption', !!enabled);
                 this.options.sorption.enableGrid = this.sorption.enableGrid = !!enabled;
             },
 
@@ -67,7 +64,7 @@ define(
              * @param {boolean} enabled 是否
              */
             shapesorption: function (enabled) {
-                menuUtil.setSelected(commandList.editor, 'setting.shapesorption', !!enabled);
+                setSelectedCommand(commandList.editor, 'setting.shapesorption', !!enabled);
                 this.options.sorption.enableShape = this.sorption.enableShape = !!enabled;
             },
 
@@ -76,7 +73,7 @@ define(
              * @param {boolean} enabled 是否
              */
             showgrid: function (enabled) {
-                menuUtil.setSelected(commandList.editor, 'setting.showgrid', !!enabled);
+                setSelectedCommand(commandList.editor, 'setting.showgrid', !!enabled);
                 this.options.axis.showGrid = this.axis.showGrid = !!enabled;
                 this.axisLayer.refresh();
             },

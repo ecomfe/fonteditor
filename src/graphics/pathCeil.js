@@ -1,11 +1,7 @@
 /**
- * @file pathCeil.js
- * @author mengke01
- * @date
- * @description
- * 对路径进行四舍五入
+ * @file 对路径进行四舍五入
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,9 +1,6 @@
 /**
- * @file computeBoundingBox.js
- * @author mengke01
- * @date
- * @description
- * 计算曲线包围盒
+ * @file 计算曲线包围盒
+ * @author mengke01(kekee000@gmail.com)
  *
  * modify from:
  * zrender

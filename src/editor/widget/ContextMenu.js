@@ -1,11 +1,7 @@
 /**
- * @file ContextMenu.js
- * @author mengke01
- * @date
- * @description
- * 右键菜单设置
+ * @file 右键菜单
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

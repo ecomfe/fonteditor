@@ -1,11 +1,7 @@
 /**
- * @file addshapes.js
- * @author mengke01
- * @date
- * @description
- * 添加轮廓模式
+ * @file 添加轮廓模式
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

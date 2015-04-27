@@ -1,9 +1,6 @@
 /**
- * @file postName.js
- * @author mengke01
- * @date
- * @description
- * Mac 编码名字表
+ * @file Mac glyf命名表
+ * @author mengke01(kekee000@gmail.com)
  *
  * see:
  * http://www.microsoft.com/typography/otspec/WGL4.htm

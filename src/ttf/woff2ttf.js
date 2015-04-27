@@ -1,11 +1,7 @@
 /**
- * @file woff2ttf.js
- * @author mengke01
- * @date
- * @description
- * woff转换ttf
+ * @file woff转换ttf
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

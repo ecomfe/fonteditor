@@ -1,9 +1,6 @@
 /**
- * @file Painter.js
- * @author mengke01
- * @date
- * @description
- * 画布对象
+ * @file 绘制对象，负责管理Layer
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

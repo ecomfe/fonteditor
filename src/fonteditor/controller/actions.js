@@ -1,9 +1,6 @@
 /**
- * @file actions.js
- * @author mengke01
- * @date
- * @description
- * 命令接口
+ * @file FontEditor 命令相关操作
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

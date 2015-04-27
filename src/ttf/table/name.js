@@ -1,9 +1,6 @@
 /**
- * @file name.js
- * @author mengke01
- * @date
- * @description
- * name表
+ * @file name表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

@@ -1,9 +1,6 @@
 /**
- * @file previewer.js
- * @author mengke01
- * @date
- * @description
- * 预览组件
+ * @file 预览组件
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

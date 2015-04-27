@@ -1,9 +1,6 @@
 /**
- * @file writer.js
- * @author mengke01
- * @date
- * @description
- * 数据写入器
+ * @file 数据写入器
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

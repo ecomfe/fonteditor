@@ -1,9 +1,6 @@
 /**
- * @file getJoint.js
- * @author mengke01
- * @date
- * @description
- * 获取曲线段和路径的交点
+ * @file 获取曲线段和路径的交点
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

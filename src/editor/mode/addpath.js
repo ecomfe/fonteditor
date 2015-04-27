@@ -1,9 +1,6 @@
 /**
- * @file addpath.js
- * @author mengke01
- * @date
- * @description
- * 添加shape模式
+ * @file 添加shape模式
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

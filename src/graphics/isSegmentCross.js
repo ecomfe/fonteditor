@@ -1,9 +1,6 @@
 /**
- * @file isSegmentCross.js
- * @author mengke01
- * @date
- * @description
- * 线段是否相交
+ * @file 线段是否相交
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

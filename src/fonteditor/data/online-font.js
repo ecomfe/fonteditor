@@ -1,9 +1,6 @@
 /**
- * @file online-font.js
- * @author mengke01
- * @date
- * @description
- * 在线字体列表
+ * @file 在线字体列表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 /* eslint-disable max-len */

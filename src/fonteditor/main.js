@@ -1,21 +1,19 @@
 /**
- * @file main.js
- * @author mengke01
- * @date
- * @description
- * ttf管理器
+ * @file FontEditor入口函数
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(
     function (require) {
 
-        var GLYFViewer = require('./widget/glyfviewer/viewer');
-        var GLYFEditor = require('./widget/glyfeditor');
-        var ProjectViewer = require('./widget/projectviewer');
-        var TTFManager = require('./widget/ttfmanager');
+        var GLYFViewer = require('./widget/glyfviewer/GLYFViewer');
+        var GLYFEditor = require('./widget/GLYFEditor');
+        var ProjectViewer = require('./widget/ProjectViewer');
+        var TTFManager = require('./widget/TTFManager');
+        var Toolbar = require('./widget/Toolbar');
+        var Pager = require('./widget/Pager');
+
         var program = require('./widget/program');
-        var CommandMenu = require('./widget/commandmenu');
-        var Pager = require('./widget/pager');
 
         var controller = require('./controller/default');
         var actions = require('./controller/actions');
@@ -94,7 +92,7 @@ define(
                 program.setting = require('./widget/settingmanager');
 
                 // glyf查看器命令组
-                var viewerCommandMenu = new CommandMenu($('#glyf-list-commandmenu'), {
+                var viewerCommandMenu = new Toolbar($('#glyf-list-commandmenu'), {
                     commands: require('./menu/viewer')
                 });
 
@@ -106,7 +104,7 @@ define(
                 });
 
                 // 字体查看器命令组
-                var editorCommandMenu = new CommandMenu($('#editor-commandmenu'), {
+                var editorCommandMenu = new Toolbar($('#editor-commandmenu'), {
                     commands: require('./menu/editor')
                 });
 
@@ -144,14 +142,6 @@ define(
                     program.viewer.setSetting(setting.viewer);
                     program.editor.setSetting(setting.editor);
                 }
-
-                // var SettingMetrics = require('./dialog/setting-metrics');
-                // !new SettingMetrics({
-                //     onChange: function (setting) {
-                //         program.ttfManager.setMetrics(setting);
-                //     }
-                // }).show($.extend({}));
-
 
             }
         };

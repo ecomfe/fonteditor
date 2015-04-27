@@ -1,11 +1,7 @@
 /**
- * @file Mouse.js
- * @author mengke01
- * @date
- * @description
- * 鼠标动作捕获器
+ * @file 鼠标捕获器
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
 
@@ -38,7 +34,7 @@ define(
          * 获取事件参数
          *
          * @param {MouseEvent} e 事件
-         * @return {Object} 参数列表
+         * @return {Object} 事件参数
          */
         function getEvent(e) {
             return {

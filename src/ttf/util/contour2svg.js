@@ -1,9 +1,6 @@
 /**
- * @file contour2svg.js
- * @author mengke01
- * @date
- * @description
- * 将路径转换为svg路径
+ * @file 将ttf路径转换为svg路径`d`
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,9 +1,6 @@
 /**
- * @file support.js
- * @author mengke01
- * @date
- * @description
- * editor 支持的命令列表
+ * @file 支持的命令列表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,9 +1,6 @@
 /**
- * @file clipboard.js
- * @author mengke01
- * @date
- * @description
- * 剪切板
+ * @file 剪切板
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

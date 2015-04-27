@@ -1,9 +1,6 @@
 /**
- * @file setting-name.js
- * @author mengke01
- * @date
- * @description
- * 设置字体命名信息
+ * @file 设置字体命名信息
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

@@ -1,9 +1,6 @@
 /**
- * @file main.js
- * @author mengke01
- * @date
- * @description
- * 图形渲染组件
+ * @file 创建图形渲染组件
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

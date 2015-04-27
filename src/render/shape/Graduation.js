@@ -1,11 +1,7 @@
 /**
- * @file Graduation.js
- * @author mengke01
- * @date
- * @description
- * 刻度线
+ * @file 刻度线绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,9 +1,6 @@
 /**
- * @file dashedLineTo.js
- * @author mengke01
- * @date
- * @description
- * 绘制虚线段
+ * @file 绘制虚线段
+ * @author mengke01(kekee000@gmail.com)
  *
  * modify from:
  * zrender/src/shape/util

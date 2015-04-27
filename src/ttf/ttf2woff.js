@@ -1,9 +1,6 @@
 /**
- * @file ttf2woff.js
- * @author mengke01
- * @date
- * @description
- * ttf转换为woff
+ * @file ttf转换为woff
+ * @author mengke01(kekee000@gmail.com)
  *
  * woff format:
  * http://www.w3.org/TR/2012/REC-WOFF-20121213/

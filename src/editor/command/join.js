@@ -1,11 +1,7 @@
 /**
- * @file join.js
- * @author mengke01
- * @date
- * @description
- * 轮廓合并操作
+ * @file 轮廓合并操作
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

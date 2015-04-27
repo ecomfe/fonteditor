@@ -1,11 +1,7 @@
 /**
- * @file Sorption.js
- * @author mengke01
- * @date
- * @description
- * 智能吸附组件
+ * @file 智能吸附组件
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,11 +1,7 @@
 /**
- * @file initFont.js
- * @author mengke01
- * @date
- * @description
- * Editor 的font相关方法
+ * @file Editor 的font相关方法
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

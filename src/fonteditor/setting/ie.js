@@ -1,9 +1,6 @@
 /**
- * @file ie.js
- * @author mengke01
- * @date
- * @description
- * 导入和导出设置
+ * @file 导入和导出设置
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

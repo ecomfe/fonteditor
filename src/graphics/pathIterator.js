@@ -1,11 +1,7 @@
 /**
- * @file pathIterator.js
- * @author mengke01
- * @date
- * @description
- * 遍历路径的路径集合，包括segment和 bezierline
+ * @file 遍历路径的路径集合，包括segment和 bezier curve
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

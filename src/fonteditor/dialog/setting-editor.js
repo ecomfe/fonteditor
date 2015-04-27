@@ -1,9 +1,6 @@
 /**
- * @file setting-editor.js
- * @author mengke01
- * @date
- * @description
- * 编辑器设置选项
+ * @file 编辑器设置选项
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

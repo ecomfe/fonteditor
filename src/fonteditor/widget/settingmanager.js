@@ -1,11 +1,7 @@
 /**
- * @file settingmanager.js
- * @author mengke01
- * @date
- * @description
- * 编辑器设置管理
+ * @file 编辑器设置管理
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,8 +1,6 @@
 /**
- * @file componentFlag.js
- * @author mengke01
- * @date
- * @description
+ * @file 复合图元标记位
+ * @author mengke01(kekee000@gmail.com)
  *
  * 复合图元标记位
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6glyf.html

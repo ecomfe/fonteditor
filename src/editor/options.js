@@ -1,11 +1,7 @@
 /**
- * @file options.js
- * @author mengke01
- * @date
- * @description
- * 编辑器选项
+ * @file 编辑器选项
+ * @author mengke01(kekee000@gmail.com)
  */
-
 define(
     function (require) {
         var options = {

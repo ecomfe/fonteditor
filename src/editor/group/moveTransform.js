@@ -1,11 +1,7 @@
 /**
- * @file moveTransform.js
- * @author mengke01
- * @date
- * @description
- * 移动对象
+ * @file 平移变换
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

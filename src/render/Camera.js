@@ -1,11 +1,7 @@
 /**
- * @file Camera.js
- * @author mengke01
- * @date
- * @description
- * 视角对象，用来控制平移和缩放
+ * @file 视角对象，用来控制平移和缩放
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

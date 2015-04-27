@@ -1,11 +1,7 @@
 /**
- * @file CirclePoint.js
- * @author mengke01
- * @date
- * @description
- * 绘制控制圆
+ * @file 圆形点绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

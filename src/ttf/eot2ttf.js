@@ -1,11 +1,7 @@
 /**
- * @file eot2ttf.js
- * @author mengke01
- * @date
- * @description
- * eot转ttf
+ * @file eot转ttf
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,9 +1,6 @@
 /**
- * @file supportHistory.js
- * @author mengke01
- * @date
- * @description
- *  命令相关配置
+ * @file 命令相关配置项目，用来配置命令执行前或者执行后的动作
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

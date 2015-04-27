@@ -1,9 +1,6 @@
 /**
- * @file transform.js
- * @author mengke01
- * @date
- * @description
- * 对轮廓进行transform变换
+ * @file 对轮廓进行transform变换
+ * @author mengke01(kekee000@gmail.com)
  *
  * 参考资料：
  * http://blog.csdn.net/henren555/article/details/9699449

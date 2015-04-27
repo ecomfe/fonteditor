@@ -1,9 +1,6 @@
 /**
- * @file project.js
- * @author mengke01
- * @date
- * @description
- * 项目管理方法，使用localStorage存储
+ * @file 项目管理，使用localStorage存储
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

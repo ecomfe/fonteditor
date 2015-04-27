@@ -1,9 +1,6 @@
 /**
- * @file setting.js
- * @author mengke01
- * @date
- * @description
- * 设置项目
+ * @file 支持的设置项目
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

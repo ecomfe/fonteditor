@@ -1,5 +1,5 @@
 /**
- * @file 绘制bezier曲线
+ * @file bezier曲线绘制
  * @author mengke01(kekee000@gmail.com)
  */
 

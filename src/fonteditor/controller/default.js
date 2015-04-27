@@ -1,11 +1,7 @@
 /**
- * @file default.js
- * @author mengke01
- * @date
- * @description
- * 默认的页面控制器
+ * @file 默认的页面控制器
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

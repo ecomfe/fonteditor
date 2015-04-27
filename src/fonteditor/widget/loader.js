@@ -1,9 +1,6 @@
 /**
- * @file loader.js
- * @author mengke01
- * @date
- * @description
- * 加载器
+ * @file 字体读取器
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,9 +1,6 @@
 /**
- * @file ttfreader.js
- * @author mengke01
- * @date
- * @description
- * ttf定义
+ * @file ttf读取器
+ * @author mengke01(kekee000@gmail.com)
  *
  * thanks to：
  * ynakajima/ttf.js
@@ -155,7 +152,8 @@ define(
 
 
         /**
-         * TTF的构造函数
+         * ttf读取器的构造函数
+         *
          * @param {Object} options 写入参数
          * @param {boolean} options.hinting 保留hinting信息
          * @param {boolean} options.compound2simple 复合字形转简单字形

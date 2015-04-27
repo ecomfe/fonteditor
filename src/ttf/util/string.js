@@ -1,9 +1,6 @@
 /**
- * @file string.js
- * @author mengke01
- * @date
- * @description
- * string 工具箱
+ * @file ttf字符串相关函数
+ * @author mengke01(kekee000@gmail.com)
  *
  * references:
  * 1. svg2ttf @ github

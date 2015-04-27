@@ -1,10 +1,6 @@
 /**
- * @file setting-find-glyf.js
- * @author mengke01
- * @date
- * @description
- * 按unicode查找字形
- *
+ * @file 按unicode查找字形
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

@@ -1,9 +1,7 @@
 /**
- * @file ttf2icon.js
- * @author junmer
- * @description ttf转icon
+ * @file ttf转icon
+ * @author mengke01(kekee000@gmail.com)
  */
-
 define(
     function (require) {
 

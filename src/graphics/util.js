@@ -1,9 +1,6 @@
 /**
- * @file matrix.js
- * @author mengke01
- * @date
- * @description
- * 相关工具箱
+ * @file grahpics点相关工具箱
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

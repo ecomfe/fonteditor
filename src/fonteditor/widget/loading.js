@@ -1,11 +1,7 @@
 /**
- * @file loading.js
- * @author mengke01
- * @date
- * @description
- * loading 对象
+ * @file 加载提示组件
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

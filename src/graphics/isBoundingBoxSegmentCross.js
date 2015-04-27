@@ -1,11 +1,7 @@
 /**
- * @file isBoundingBoxSegmentCross.js
- * @author mengke01
- * @date
- * @description
- * boundingbox和线段的关系
+ * @file 求boundingbox和线段的关系
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {
@@ -13,7 +9,7 @@ define(
         var isSegmentCross = require('./isSegmentCross');
 
         /**
-         * boundingbox和线段的关系
+         * 求boundingbox和线段的关系
          *
          * @param {Object} bound bounding box
          * @param {Object} s0 线段点1

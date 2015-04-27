@@ -1,11 +1,7 @@
 /**
- * @file isBezierRayCross.js
- * @author mengke01
- * @date
- * @description
- * 判断x轴射线是否与贝塞尔曲线相交
+ * @file 判断x轴射线是否与贝塞尔曲线相交
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

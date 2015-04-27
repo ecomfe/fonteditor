@@ -1,9 +1,6 @@
 /**
- * @file ttf2eot.js
- * @author mengke01
- * @date
- * @description
- * ttf转eot
+ * @file ttf转eot
+ * @author mengke01(kekee000@gmail.com)
  *
  * reference:
  * http://www.w3.org/Submission/EOT/

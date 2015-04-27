@@ -1,11 +1,7 @@
 /**
- * @file svg2ttfObject.js
- * @author mengke01
- * @date
- * @description
- * svg格式转ttfObject格式
+ * @file svg格式转ttfObject格式
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

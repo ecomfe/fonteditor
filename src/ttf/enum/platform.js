@@ -1,9 +1,6 @@
 /**
- * @file platform.js
- * @author mengke01
- * @date
- * @description
- * 字体所属平台
+ * @file 字体所属平台
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

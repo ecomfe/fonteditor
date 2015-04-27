@@ -1,9 +1,6 @@
 /**
- * @file weightClass.js
- * @author mengke01
- * @date
- * @description
- * 字体宽度度量
+ * @file 字体宽度度量
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

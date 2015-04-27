@@ -1,9 +1,6 @@
 /**
- * @file editor.js
- * @author mengke01
- * @date
- * @description
- * 编辑器
+ * @file 编辑器相关命令
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

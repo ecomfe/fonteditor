@@ -1,9 +1,6 @@
 /**
- * @file support.js
- * @author mengke01
- * @date
- * @description
- * 支持的shape集合
+ * @file 支持的shape集合
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

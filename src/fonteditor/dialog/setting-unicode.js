@@ -1,9 +1,6 @@
 /**
- * @file setting-unicode.js
- * @author mengke01
- * @date
- * @description
- * 设置代码点
+ * @file 设置代码点
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

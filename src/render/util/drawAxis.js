@@ -1,9 +1,6 @@
 /**
- * @file drawAxis.js
- * @author mengke01
- * @date
- * @description
- * 绘制辅助线
+ * @file 绘制辅助线
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,11 +1,7 @@
 /**
- * @file ajaxFile.js
- * @author mengke01
- * @date
- * @description
- * ajax获取文本数据
+ * @file ajax获取文本数据
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

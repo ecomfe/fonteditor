@@ -1,11 +1,7 @@
 /**
- * @file pathSplitBySegment.js
- * @author mengke01
- * @date
- * @description
- * 线段切割路径
+ * @file 线段切割路径
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

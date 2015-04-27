@@ -1,11 +1,7 @@
 /**
- * @file Resize.js
- * @author mengke01
- * @date
- * @description
- * resize捕获器
+ * @file 窗口大小改变捕获器
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {
@@ -14,10 +10,10 @@ define(
         var observable = require('common/observable');
 
         /**
-         * 键盘按键
+         * 获取事件参数
          *
          * @param {MouseEvent} e 事件
-         * @return {Object} 按键列表
+         * @return {Object} 事件参数
          */
         function getEvent(e) {
             return {
@@ -26,7 +22,7 @@ define(
         }
 
         /**
-         * 按下弹起事件
+         * 窗口大小改变处理
          *
          * @param {Object} e 事件参数
          */
@@ -41,7 +37,7 @@ define(
         }
 
         /**
-         * 鼠标动作捕获器
+         * 窗口大小改变捕获器
          *
          * @constructor
          * @param {HTMLElement} main 控制元素

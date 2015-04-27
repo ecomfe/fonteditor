@@ -1,11 +1,7 @@
 /**
- * @file getAngle.js
- * @author mengke01
- * @date
- * @description
- * 获取向量夹角，带方向
+ * @file 获取向量夹角，带方向
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

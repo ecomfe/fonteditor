@@ -1,10 +1,7 @@
 /**
- * @file pathJoin.js
- * @author mengke01
- * @date
- * @description
- * 求路径的合并
+ * @file 求路径的合并
  * 利用插值将曲线转换成直线，求解后再转换成曲线
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

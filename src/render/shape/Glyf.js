@@ -1,11 +1,7 @@
 /**
- * @file Glyf.js
- * @author mengke01
- * @date
- * @description
- * 简单字形，多个path组合成一个简单字形
+ * @file 简单字形绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 
 define(

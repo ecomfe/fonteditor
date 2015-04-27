@@ -1,9 +1,6 @@
 /**
- * @file setting-adjust-pos.js
- * @author mengke01
- * @date
- * @description
- * 设置自动调整字形位置
+ * @file 设置自动调整字形位置
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

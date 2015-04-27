@@ -1,11 +1,8 @@
 /**
- * @file observable.js
- * @author mengke01
- * @date
- * @description
- * 事件观察器
+ * @file 事件观察器
+ * @author mengke01(kekee000@gmail.com)
  *
- * copy from :
+ * modify from :
  * https://github.com/ecomfe/moye/blob/master/src/ui/lib.js
  */
 

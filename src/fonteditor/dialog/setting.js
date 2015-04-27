@@ -1,11 +1,7 @@
 /**
- * @file setting.js
- * @author mengke01
- * @date
- * @description
- * 设置框
+ * @file 弹出框基类，用来生成相关的设置对话框
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

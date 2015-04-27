@@ -1,11 +1,7 @@
 /**
- * @file Point.js
- * @author mengke01
- * @date
- * @description
- * 绘制控制点
+ * @file 点绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

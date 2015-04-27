@@ -1,9 +1,6 @@
 /**
- * @file cursor.js
- * @author mengke01
- * @date
- * @description
- * 光标集合
+ * @file 光标集合
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

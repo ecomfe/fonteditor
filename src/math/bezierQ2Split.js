@@ -1,9 +1,6 @@
 /**
- * @file bezierQ2Split.js
- * @author mengke01
- * @date
- * @description
- * 分割二次贝塞尔曲线
+ * @file 分割二次贝塞尔曲线
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

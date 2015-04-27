@@ -1,11 +1,7 @@
 /**
- * @file initRender.js
- * @author mengke01
- * @date
- * @description
- * Editor 的render初始化
+ * @file Editor 的render初始化
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

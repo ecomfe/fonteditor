@@ -1,11 +1,7 @@
 /**
- * @file checkSum.js
- * @author mengke01
- * @date
- * @description
- * table校验函数
+ * @file ttf table校验函数
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

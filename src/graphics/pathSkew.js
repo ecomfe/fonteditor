@@ -1,11 +1,7 @@
 /**
- * @file pathSkew.js
- * @author mengke01
- * @date
- * @description
- *  path倾斜变换
+ * @file path倾斜变换
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,11 +1,7 @@
 /**
- * @file ttfwriter.js
- * @author mengke01
- * @date
- * @description
- * 写ttf文件
+ * @file ttf写入器
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {
@@ -199,7 +195,8 @@ define(
 
 
         /**
-         * TTFWriter的构造函数
+         * ttf写入器的构造函数
+         *
          * @param {Object} options 写入参数
          * @param {boolean} options.hinting 保留hinting信息
          * @constructor

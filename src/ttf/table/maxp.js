@@ -1,9 +1,6 @@
 /**
- * @file maxp.js
- * @author mengke01
- * @date
- * @description
- * maxp 表
+ * @file maxp 表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

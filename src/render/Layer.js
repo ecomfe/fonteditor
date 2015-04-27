@@ -1,9 +1,6 @@
 /**
- * @file Layer.js
- * @author mengke01
- * @date
- * @description
- * 层级基础对象
+ * @file 层级基础对象
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

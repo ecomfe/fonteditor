@@ -1,10 +1,6 @@
 /**
- * @file transform.js
- * @author mengke01
- * @date
- * @description
- *
- * shape变换
+ * @file shape变换相关命令
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,11 +1,7 @@
 /**
- * @file shapes.js
- * @author mengke01
- * @date
- * @description
- * 轮廓模式处理事件
+ * @file 轮廓操作模式
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,9 +1,6 @@
 /**
- * @file drawPath.js
- * @author mengke01
- * @date
- * @description
- * 绘制contour曲线
+ * @file 绘制contour曲线
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,9 +1,6 @@
 /**
- * @file drawGraduation.js
- * @author mengke01
- * @date
- * @description
- * 绘制刻度信息
+ * @file 绘制刻度信息
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

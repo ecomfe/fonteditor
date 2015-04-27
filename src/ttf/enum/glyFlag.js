@@ -1,10 +1,8 @@
 /**
- * @file glyFlag.js
- * @author mengke01
- * @date
- * @description
+ * @file 轮廓标记位
+ * @author mengke01(kekee000@gmail.com)
  *
- * 轮廓标记位
+ * see:
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6glyf.html
  */
 

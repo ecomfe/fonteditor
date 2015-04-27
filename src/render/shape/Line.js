@@ -1,11 +1,7 @@
 /**
- * @file Line.js
- * @author mengke01
- * @date
- * @description
- * 绘制直线
+ * @file 直线绘制
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

@@ -1,9 +1,6 @@
 /**
- * @file nameId.js
- * @author mengke01
- * @date
- * @description
- * 名字编码表
+ * @file ttf `name`编码表
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

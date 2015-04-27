@@ -1,9 +1,6 @@
 /**
- * @file reduceGlyf.js
- * @author mengke01
- * @date
- * @description
- * 缩减glyf大小，去除冗余节点
+ * @file 缩减glyf大小，去除冗余节点
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

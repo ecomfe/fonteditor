@@ -1,9 +1,6 @@
 /**
- * @file program.js
- * @author mengke01
- * @date
- * @description
- * 程序运行时组件
+ * @file 程序运行时组件
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

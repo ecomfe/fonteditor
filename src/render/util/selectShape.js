@@ -1,12 +1,7 @@
 /**
- * @file selectShape.js
- * @author mengke01
- * @date
- * @description
- *
- * 从待选的shape中选择一个，作为选中的shape
+ * @file 从待选的shape中选择一个，作为选中的shape
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

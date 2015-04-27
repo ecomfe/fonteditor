@@ -1,9 +1,7 @@
 /**
- * @file readWindowsAllCodes.js
- * @author mengke01
- * @date
- * @description
- * 读取windows支持的字符集
+ * @file 读取windows支持的字符集
+ * @author mengke01(kekee000@gmail.com)
+ *
  * @see
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6cmap.html
  */

@@ -1,9 +1,6 @@
 /**
- * @file isBezierLineCross.js
- * @author mengke01
- * @date
- * @description
- * 判断贝塞尔曲线与直线相交
+ * @file 判断贝塞尔曲线与直线相交
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

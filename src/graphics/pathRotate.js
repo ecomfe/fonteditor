@@ -1,9 +1,6 @@
 /**
- * @file pathRotate.js
- * @author mengke01
- * @date
- * @description
- * 路径旋转
+ * @file 路径旋转
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

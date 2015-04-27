@@ -1,9 +1,6 @@
 /**
- * @file glyf2svg.js
- * @author mengke01
- * @date
- * @description
- * glyf转换svg
+ * @file glyf转换svg
+ * @author mengke01(kekee000@gmail.com)
  *
  * thanks to：
  * ynakajima/ttf.js

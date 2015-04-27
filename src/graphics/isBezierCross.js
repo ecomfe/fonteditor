@@ -1,9 +1,6 @@
 /**
- * @file isBezierCross.js
- * @author mengke01
- * @date
- * @description
- * 求两个bezier曲线的交点
+ * @file 求两个bezier曲线的交点
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

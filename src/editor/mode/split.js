@@ -1,11 +1,7 @@
 /**
- * @file range.js
- * @author mengke01
- * @date
- * @description
- * 切割模式
+ * @file 轮廓切割模式
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

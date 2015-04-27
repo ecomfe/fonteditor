@@ -1,11 +1,7 @@
 /**
- * @file isBoundingBoxCross.js
- * @author mengke01
- * @date
- * @description
- * 两个boundingbox的关系
+ * @file 求两个boundingbox的关系
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {
@@ -14,7 +10,7 @@ define(
 
 
         /**
-         * 两个boundingbox的关系
+         * 求两个boundingbox的关系
          *
          * @param {Object} b1 bounding 1
          * @param {Object} b2 bounding 2

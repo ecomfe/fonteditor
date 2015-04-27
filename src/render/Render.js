@@ -1,9 +1,6 @@
 /**
- * @file Render.js
- * @author mengke01
- * @date
- * @description
- * 渲染器对象
+ * @file 渲染器对象
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

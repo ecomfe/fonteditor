@@ -1,9 +1,6 @@
 /**
- * @file encoding.js
- * @author mengke01
- * @date
- * @description
- * Unicode Platform-specific Encoding Identifiers
+ * @file Unicode Platform-specific Encoding Identifiers
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

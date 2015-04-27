@@ -1,9 +1,6 @@
 /**
- * @file exporter.js
- * @author mengke01
- * @date
- * @description
- * 导出器
+ * @file 导出器
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

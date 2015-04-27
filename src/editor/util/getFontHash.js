@@ -1,9 +1,6 @@
 /**
- * @file getFontHash.js
- * @author mengke01
- * @date
- * @description
- * 获取font的hashcode
+ * @file 获取font的hashcode
+ * @author mengke01(kekee000@gmail.com)
  */
 
 
@@ -11,7 +8,7 @@ define(
     function (require) {
 
         /**
-         * 获取glyf的hashcode
+         * 获取font的hashcode用于比较font是否被编辑过
          *
          * @param {Object} font font结构
          * @param {Array} font.contours 轮廓数组

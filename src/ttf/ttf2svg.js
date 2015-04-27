@@ -1,9 +1,6 @@
 /**
- * @file ttf2svg.js
- * @author mengke01
- * @date
- * @description
- * ttf转svg
+ * @file ttf转svg
+ * @author mengke01(kekee000@gmail.com)
  *
  * references:
  * http://www.w3.org/TR/SVG11/fonts.html

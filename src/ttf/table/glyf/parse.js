@@ -1,13 +1,7 @@
 /**
- * @file glyfcontour.js
- * @author mengke01
- * @date
- * @description
- *
- * ttf的glyf轮廓，用来解析单个路径
- * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6glyf.html
+ * @file 解析glyf轮廓
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

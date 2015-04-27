@@ -1,9 +1,6 @@
 /**
- * @file Editor.js
- * @author mengke01
- * @date
- * @description
- * 字体编辑控制器
+ * @file 字体编辑控制器
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

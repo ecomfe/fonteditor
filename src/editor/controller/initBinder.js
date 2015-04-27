@@ -1,11 +1,7 @@
 /**
- * @file initBinder.js
- * @author mengke01
- * @date
- * @description
- * 初始化绑定器
+ * @file 初始化绑定器
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

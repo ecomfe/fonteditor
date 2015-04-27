@@ -1,8 +1,6 @@
 /**
- * @file support.js
- * @author mengke01
- * @description
- * 支持的setting集合
+ * @file 支持的setting集合
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

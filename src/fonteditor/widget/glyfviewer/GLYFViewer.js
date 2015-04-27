@@ -1,9 +1,6 @@
 /**
- * @file GLYFViewer.js
- * @author mengke01
- * @date
- * @description
- * glyf 查看器
+ * @file 字形查看器
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

@@ -1,9 +1,6 @@
 /**
- * @file main.js
- * @author mengke01
- * @date
- * @description
- * 编辑器主函数
+ * @file 编辑器主函数
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,10 +1,7 @@
 /**
- * @file OS2.js
- * @author mengke01
- * @date
- * @description
- * OS/2表
- * 字体的发行商，上标，下标，删除线位置
+ * @file OS/2表
+ * @author mengke01(kekee000@gmail.com)
+ *
  * http://www.microsoft.com/typography/otspec/os2.htm
  */
 

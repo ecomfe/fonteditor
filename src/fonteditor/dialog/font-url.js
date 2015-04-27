@@ -1,9 +1,6 @@
 /**
- * @file font-url.js
- * @author mengke01
- * @date
- * @description
- * 读取线上字体
+ * @file 读取线上字体
+ * @author mengke01(kekee000@gmail.com)
  */
 
 define(

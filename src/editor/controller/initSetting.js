@@ -1,16 +1,13 @@
 /**
- * @file initSetting.js
- * @author mengke01
- * @date
- * @description
- * 初始化设置
+ * @file 初始化Editor设置
+ * @author mengke01(kekee000@gmail.com)
  */
 
 
 define(
     function (require) {
 
-        var menuUtil = require('../menu/util');
+        var setSelectedCommand = require('../command/setSelectedCommand');
         var commandList = require('../menu/commandList');
         var lang = require('common/lang');
 
@@ -18,17 +15,17 @@ define(
 
             // 设置菜单选中状态
 
-            menuUtil.setSelected(
+            setSelectedCommand(
                 commandList.editor, 'setting.gridsorption',
                 !!options.sorption.enableGrid
             );
 
-            menuUtil.setSelected(
+            setSelectedCommand(
                 commandList.editor, 'setting.shapesorption',
                 !!options.sorption.enableShape
             );
 
-            menuUtil.setSelected(
+            setSelectedCommand(
                 commandList.editor, 'setting.showgrid',
                 !!options.axis.showGrid
             );

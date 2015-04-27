@@ -1,9 +1,6 @@
 /**
- * @file guid.js
- * @author mengke01
- * @date
- * @description
- * 产生唯一的guid
+ * @file 产生唯一的guid
+ * @author mengke01(kekee000@gmail.com)
  */
 
 

@@ -1,11 +1,7 @@
 /**
- * @file boundAdjust.js
- * @author mengke01
- * @date
- * @description
- * 边界缩放
+ * @file 对bound对象进行缩放和平移
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {
@@ -13,7 +9,7 @@ define(
         /**
          * 对bound坐标进行调整
          *
-         * @param {Object} bound bound数据结构
+         * @param {Object} bound bound数据结构 {x,y,width,height}
          * @param {number} scaleX x缩放比例
          * @param {number} scaleY y缩放比例
          * @param {number} offsetX x偏移

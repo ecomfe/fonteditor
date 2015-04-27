@@ -1,11 +1,7 @@
 /**
- * @file contours2svg.js
- * @author mengke01
- * @date
- * @description
- * contours  转 svg path
+ * @file 将ttf字形转换为svg路径`d`
+ * @author mengke01(kekee000@gmail.com)
  */
-
 
 define(
     function (require) {

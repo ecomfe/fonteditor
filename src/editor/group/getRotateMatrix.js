@@ -1,9 +1,6 @@
 /**
- * @file getRotateMatrix.js
- * @author mengke01
- * @date
- * @description
- * 获得变换的矩阵
+ * @file 获得旋转变换的矩阵
+ * @author mengke01(kekee000@gmail.com)
  */
 
 
