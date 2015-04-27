@@ -6,6 +6,7 @@
 
 define(
     function (require) {
+        /* eslint-disable no-console */
 
         var readWindowsAllCodes = require('../../util/readWindowsAllCodes');
 

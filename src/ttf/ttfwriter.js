@@ -70,7 +70,7 @@ define(
         function resolve(ttf) {
 
             // 头部信息
-            ttf.version = 0x1;
+            ttf.version = ttf.version || 0x1;
             ttf.numTables = ttf.writeOptions.tables.length;
             ttf.entrySelector = Math.floor(Math.log(ttf.numTables) / Math.LN2);
             ttf.searchRange = Math.pow(2, ttf.entrySelector) * 16;

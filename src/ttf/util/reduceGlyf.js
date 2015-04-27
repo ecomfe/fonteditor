@@ -22,7 +22,6 @@ define(
 
             var contours = glyf.contours;
             var contour;
-            var length;
             for (var j = contours.length - 1; j >= 0; j--) {
                 contour = reducePath(contours[j]);
 

@@ -16,7 +16,7 @@ define(
             {
 
                 read: function (reader, ttf) {
-                    var length = ttf.tables['fpgm'].length;
+                    var length = ttf.tables.fpgm.length;
                     return reader.readBytes(this.offset, length);
                 },
 

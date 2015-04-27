@@ -6,9 +6,9 @@
 
 define(
     function (require) {
-
         var componentFlag = require('../../enum/componentFlag');
 
+        /* eslint-disable fecs-max-statements */
         /**
          * 写glyf
          * @param  {Object} writer 写入器

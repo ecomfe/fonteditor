@@ -67,10 +67,7 @@ define(
             for (var i = 0, l = otfContours.length; i < l; i++) {
 
                 // 这里可能由于转换错误导致空轮廓，需要去除
-                if (!otfContours[i][0]) {
-                    console.warn(otfContours);
-                }
-                else {
+                if (otfContours[i][0]) {
                     contours.push(transformContour(otfContours[i]));
                 }
             }

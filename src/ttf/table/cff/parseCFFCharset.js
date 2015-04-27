@@ -8,9 +8,17 @@ define(
     function (require) {
         var getCFFString = require('./getCFFString');
 
-        // Parse the CFF charset table, which contains internal names for all the glyphs.
-        // This function will return a list of glyph names.
-        // See Adobe TN #5176 chapter 13, "Charsets".
+
+        /**
+         * 解析cff字形名称
+         * See Adobe TN #5176 chapter 13, "Charsets".
+         *
+         * @param  {Reader} reader  读取器
+         * @param  {number} start   起始偏移
+         * @param  {number} nGlyphs 字形个数
+         * @param  {Object} strings cff字符串字典
+         * @return {Array}         字符集
+         */
         function parseCFFCharset(reader, start, nGlyphs, strings) {
             if (start) {
                 reader.seek(start);

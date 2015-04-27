@@ -11,6 +11,8 @@
 
 define(
     function (require) {
+        /* eslint-disable no-console */
+
         var glyFlag = require('../../enum/glyFlag');
         var componentFlag = require('../../enum/componentFlag');
         var error = require('../../error');
@@ -147,8 +149,8 @@ define(
          * 读取复合字形
          *
          * @param {Reader} reader Reader对象
-         * @param {Object} ttf ttf对象
-         * @return {Object} 解析后的glyf
+         * @param {Object} glyf glyf对象
+         * @return {Object} glyf对象
          */
         function parseCompoundGlyf(reader, glyf) {
             glyf.compound = true;
@@ -223,10 +225,10 @@ define(
             } while (componentFlag.MORE_COMPONENTS & flags);
 
             if (componentFlag.WE_HAVE_INSTRUCTIONS & flags) {
-                length = reader.readUint16();
+                var length = reader.readUint16();
                 if (length < MAX_INSTRUCTION_LENGTH) {
-                    instructions = [];
-                    for (i = 0; i < length; ++i) {
+                    var instructions = [];
+                    for (var i = 0; i < length; ++i) {
                         instructions.push(reader.readUint8());
                     }
                     glyf.instructions = instructions;
@@ -235,13 +237,16 @@ define(
                     console.warn(length);
                 }
             }
+
+            return glyf;
         }
 
 
 
         /**
          * 解析glyf轮廓
-         * @param  {Object} reader 读取器
+         *
+         * @param  {Reader} reader 读取器
          * @param  {Object} ttf    ttf对象
          * @param  {number=} offset 偏移
          * @return {Object}        glyf对象

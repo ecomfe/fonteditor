@@ -471,6 +471,7 @@ define(
                 });
                 this.fireChange(true);
             }
+            return this;
         };
 
 

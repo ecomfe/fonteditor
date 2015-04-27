@@ -8,7 +8,6 @@ define(
     function (require) {
 
         var glyFlag = require('../../enum/glyFlag');
-        var componentFlag = require('../../enum/componentFlag');
 
         /* eslint-disable fecs-max-statements */
         /**

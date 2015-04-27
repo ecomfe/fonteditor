@@ -23,7 +23,7 @@ define(
 
         /**
          * 获取cff偏移
-         * @param  {Object} reader  读取器
+         * @param  {Reader} reader  读取器
          * @param  {number} offSize 偏移大小
          * @param  {number} offset  起始偏移
          * @return {number}         偏移
@@ -39,7 +39,7 @@ define(
 
         /**
          * 解析cff表头部
-         * @param  {Object} reader 读取器
+         * @param  {Reader} reader 读取器
          * @return {Object}        头部字段
          */
         function parseCFFHead(reader) {
@@ -55,7 +55,7 @@ define(
 
         /**
          * 解析`CFF`表索引
-         * @param  {Object} reader       读取器
+         * @param  {Reader} reader       读取器
          * @param  {number} offset       偏移
          * @param  {Funciton} conversionFn 转换函数
          * @return {Object}              表对象
@@ -98,9 +98,11 @@ define(
             var bias;
             if (subrs.length < 1240) {
                 bias = 107;
-            } else if (subrs.length < 33900) {
+            }
+            else if (subrs.length < 33900) {
                 bias = 1131;
-            } else {
+            }
+            else {
                 bias = 32768;
             }
 
@@ -146,7 +148,7 @@ define(
 
                     if (privateDictLength) {
                         var privateDictOffset = offset + topDict['private'][1];
-                        var privateDict = parseCFFDict.parsePrivateDict(
+                        privateDict = parseCFFDict.parsePrivateDict(
                             reader,
                             privateDictOffset,
                             privateDictLength,
@@ -154,6 +156,10 @@ define(
                         );
                         cff.defaultWidthX = privateDict.defaultWidthX;
                         cff.nominalWidthX = privateDict.nominalWidthX;
+                    }
+                    else {
+                        cff.defaultWidthX = 0;
+                        cff.nominalWidthX = 0;
                     }
 
                     // 私有子glyf数据

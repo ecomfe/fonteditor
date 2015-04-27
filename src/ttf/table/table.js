@@ -16,7 +16,7 @@ define(
         /**
          * 读取表结构
          *
-         * @param {Object} reader reader对象
+         * @param {Reader} reader reader对象
          * @return {Object} 当前对象
          */
         function read(reader) {
