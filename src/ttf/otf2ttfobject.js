@@ -53,7 +53,10 @@ define(
 
             otfObject.version = 0x1;
 
-            delete otfObject.maxp;
+            // 修改maxp相关配置
+            otfObject.maxp.version = 1.0;
+            otfObject.maxp.maxZones = otfObject.maxp.maxTwilightPoints ? 2 : 1;
+
             delete otfObject.CFF;
             delete otfObject.VORG;
 
