@@ -7,7 +7,6 @@
 define(
     function (require) {
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 绘制刻度信息
          *
@@ -131,7 +130,6 @@ define(
             ctx.restore();
             ctx.stroke();
         }
-        /* eslint-enable fecs-max-statements */
 
 
         return drawGraduation;

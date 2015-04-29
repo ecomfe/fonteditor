@@ -39,14 +39,16 @@ define(function (require) {
 
         // 判断极端情况，控制点和起止点一样
         if (p1.x === c1.x && p1.y === c1.y && c2.x === p2.x && c2.y === p2.y) {
-            return [[
-                p1,
-                {
-                    x: (p1.x + p2.x) / 2,
-                    y: (p1.y + p2.y) / 2
-                },
-                p2
-            ]];
+            return [
+                [
+                    p1,
+                    {
+                        x: (p1.x + p2.x) / 2,
+                        y: (p1.y + p2.y) / 2
+                    },
+                    p2
+                ]
+            ];
         }
 
 

@@ -12,7 +12,6 @@ define(
 
         var cubeEquation = require('./cubeEquation');
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 求解四次方程
          *

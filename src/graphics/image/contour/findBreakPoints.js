@@ -21,7 +21,7 @@ define(
             return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
         }
 
-        /* eslint-disable fecs-max-statements */
+
         /* 查找轮廓中的关键点
          *
          * @param  {Array} contour 轮廓点集合

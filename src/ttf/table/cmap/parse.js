@@ -6,11 +6,9 @@
 
 define(
     function (require) {
-        /* eslint-disable no-console */
 
         var readWindowsAllCodes = require('../../util/readWindowsAllCodes');
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 读取cmap子表
          *

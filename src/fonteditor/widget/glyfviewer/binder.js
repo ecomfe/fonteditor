@@ -66,7 +66,6 @@ define(
         }
 
 
-        /* eslint-disable max-depth */
         function downlistener(e) {
             var me = this;
             e.ctrlKey = e.ctrlKey || e.metaKey;
@@ -134,7 +133,6 @@ define(
             }
 
         }
-        /* eslint-disable max-depth */
 
         /**
          * 绑定dom事件

@@ -6,7 +6,6 @@
 
 define(
     function (require) {
-        /* eslint-disable no-console */
 
         /**
          * 解析cff encoding数据

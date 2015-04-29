@@ -48,7 +48,6 @@ define(
         }
 
 
-        /* eslint-disable max-depth */
         /**
          * 初始化渲染器
          */
@@ -257,7 +256,6 @@ define(
                 me.render.refresh();
             });
         }
-        /* eslint-enable max-depth */
 
         return initRender;
     }

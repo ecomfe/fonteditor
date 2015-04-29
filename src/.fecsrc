@@ -1,0 +1,15 @@
+{
+    "eslint": {
+        "env": {
+            "node": true,
+            "browser": true
+        },
+
+        "rules": {
+            "no-console": 0,
+            "fecs-max-statements": 0,
+            "max-params": 0,
+            "max-depth": 0
+        }
+    }
+}

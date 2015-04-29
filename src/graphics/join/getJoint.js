@@ -16,7 +16,7 @@ define(
             return (p.x * 31 + p.y) * 31;
         }
 
-        /* eslint-disable max-params */
+
         /**
          * 求路径和曲线段的交点集合
          * @param {Array} path 路径
@@ -74,7 +74,7 @@ define(
 
             return joint.length ? joint : false;
         }
-        /* eslint-enable max-params */
+
 
         return getJoint;
     }

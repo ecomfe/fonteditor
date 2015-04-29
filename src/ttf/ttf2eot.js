@@ -39,7 +39,6 @@ define(
             ]
         );
 
-        /* eslint-disable fecs-max-statements */
         /**
          * ttf格式转换成eot字体格式
          *
@@ -161,7 +160,6 @@ define(
 
             return eotWriter.getBuffer();
         }
-        /* eslint-enable fecs-max-statements */
 
         return ttf2eot;
     }

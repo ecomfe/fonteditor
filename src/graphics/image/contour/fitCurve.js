@@ -417,7 +417,6 @@ define(
         }
 
 
-        /* eslint-disable max-params */
         /**
          * 三次bezier曲线拟合
          *
@@ -505,7 +504,6 @@ define(
             tHatCenter.y = -tHatCenter.y;
             fitCubic(points, splitPoint, last, tHatCenter, tHat2, error, result);
         }
-        /* eslint-enable max-params */
 
 
         /**

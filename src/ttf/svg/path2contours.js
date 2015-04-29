@@ -75,7 +75,7 @@ define(function (require) {
         return contour;
     }
 
-    /* eslint-disable fecs-max-statements, max-depth */
+
     /**
      * svg 命令数组转轮廓
      *
@@ -458,8 +458,6 @@ define(function (require) {
         });
     }
 
-
-    /* eslint-enable fecs-max-statements, max-depth */
     /**
      * svg path转轮廓
      *

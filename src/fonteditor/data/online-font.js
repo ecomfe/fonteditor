@@ -3,7 +3,6 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-/* eslint-disable max-len */
 define(
     function (require) {
         return [
@@ -34,12 +33,14 @@ define(
             },
             {
                 name: 'baiduHealth.woff',
-                url: 'http://vs-static.baidu.com/m-health/new-composite/20141223/asset/common/css/font/baiduHealth.woff',
+                url: 'http://vs-static.baidu.com'
+                    + '/m-health/new-composite/20141223/asset/common/css/font/baiduHealth.woff',
                 from: '百度健康图标'
             },
             {
                 name: 'fonteditor.woff',
-                url: 'http://vs-static.baidu.com/m-health/med-detail/201412301413/asset/common/css/fonts/fonteditor.woff',
+                url: 'http://vs-static.baidu.com'
+                    + '/m-health/med-detail/201412301413/asset/common/css/fonts/fonteditor.woff',
                 from: '百度健康医药馆图标'
             },
             {

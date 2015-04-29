@@ -17,7 +17,7 @@
 define(
     function (require) {
 
-        /* eslint-disable max-params */
+
         /**
          * 图形仿射矩阵变换
          *
@@ -43,7 +43,7 @@ define(
             }
             return contour;
         }
-        /* eslint-enable max-params */
+
 
         return transform;
     }

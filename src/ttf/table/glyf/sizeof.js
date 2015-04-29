@@ -9,7 +9,6 @@ define(
 
         var glyFlag = require('../../enum/glyFlag');
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 获取glyf的大小
          *

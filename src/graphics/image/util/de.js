@@ -90,7 +90,6 @@ define(
             return offsetArray;
         }
 
-        /* eslint-disable max-params */
 
         /**
          * 在结构数组内赋值
@@ -120,7 +119,6 @@ define(
             return false;
         }
 
-        /* eslint-enable max-params */
 
         /**
          * 是否临近指定的点

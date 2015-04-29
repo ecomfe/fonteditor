@@ -6,7 +6,6 @@
 
 define(
     function (require) {
-        /* eslint-disable no-console */
 
         var getCFFString = require('./getCFFString');
 

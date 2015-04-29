@@ -143,11 +143,11 @@ define(
                     cff.topDict = topDict;
 
                     // 私有字典数据
-                    var privateDictLength = topDict['private'][0];
+                    var privateDictLength = topDict.private[0];
                     var privateDict = {};
 
                     if (privateDictLength) {
-                        var privateDictOffset = offset + topDict['private'][1];
+                        var privateDictOffset = offset + topDict.private[1];
                         privateDict = parseCFFDict.parsePrivateDict(
                             reader,
                             privateDictOffset,

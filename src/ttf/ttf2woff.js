@@ -113,7 +113,7 @@ define(
             return xml;
         }
 
-        /* eslint-disable fecs-max-statements */
+
         /**
          * ttf格式转换成woff字体格式
          *
@@ -301,7 +301,6 @@ define(
 
             return woffWriter.getBuffer();
         }
-        /* eslint-enable fecs-max-statements */
 
         return ttf2woff;
     }

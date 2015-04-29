@@ -53,7 +53,6 @@ define(
             return newContour;
         }
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 查找轮廓集合
          * @param  {Object} imageData 二值图像数据

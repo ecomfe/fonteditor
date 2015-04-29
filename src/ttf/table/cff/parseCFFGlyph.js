@@ -6,9 +6,7 @@
 
 define(
     function (require) {
-        /* eslint-disable no-console */
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 解析cff字形，返回直线和三次bezier曲线点数组
          * @param  {Array} code  操作码

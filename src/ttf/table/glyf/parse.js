@@ -5,7 +5,6 @@
 
 define(
     function (require) {
-        /* eslint-disable no-console */
 
         var glyFlag = require('../../enum/glyFlag');
         var componentFlag = require('../../enum/componentFlag');
@@ -14,7 +13,6 @@ define(
         var MAX_INSTRUCTION_LENGTH = 5000; // 设置instructions阈值防止读取错误
         var MAX_NUMBER_OF_COORDINATES = 20000; // 设置坐标最大个数阈值，防止glyf读取错误
 
-        /* eslint-disable fecs-max-statements */
         /**
          * 读取简单字形
          *

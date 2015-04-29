@@ -5,7 +5,6 @@
 define(
     function (require) {
 
-        /* eslint-disable */
         return {
             "version": 1,
             "numTables": 10,

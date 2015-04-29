@@ -9,7 +9,7 @@ define(function (require) {
     var pathCeil = require('graphics/pathCeil');
     var computeBoundingBox = require('graphics/computeBoundingBox');
 
-    /* eslint-disable max-params */
+
     /**
      * 简单字形的缩放和平移调整
      *
@@ -97,7 +97,7 @@ define(function (require) {
 
         return g;
     }
-    /* eslint-enable max-params */
+
 
     return glyfAdjust;
 });

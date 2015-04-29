@@ -48,7 +48,6 @@ define(
             return path;
         }
 
-        /* eslint-disable fecs-max-statements, max-params */
         /**
          * 获取椭圆弧度
          *
@@ -183,8 +182,6 @@ define(
 
             return [p0, p1];
         }
-        /* eslint-enable fecs-max-statements, max-params */
-
 
         return getArc;
     }

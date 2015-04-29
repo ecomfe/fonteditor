@@ -16,7 +16,6 @@ define(
         var minus = matrix.minus;
         var plus = matrix.plus;
 
-        /* eslint-disable fecs-max-statements, max-params */
         /**
          * 求两个bezier曲线的交点
          *
@@ -210,7 +209,7 @@ define(
 
             return false;
         }
-        /* eslint-enable fecs-max-statements, max-params */
+
 
         return isBezierCross;
     }
