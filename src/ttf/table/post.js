@@ -50,8 +50,8 @@ define(
                         var pascalStringLength = ttf.tables.post.length - (pascalStringOffset - this.offset);
                         var pascalStringBytes = reader.readBytes(reader.offset, pascalStringLength);
 
-                        tbl.glyphNameIndex = glyphNameIndex;
-                        tbl.names = string.readPascalString(pascalStringBytes);
+                        tbl.nameIndex = glyphNameIndex; // 设置glyf名字索引
+                        tbl.names = string.getPascalString(pascalStringBytes); // glyf名字数组
                     }
                     // deprecated
                     else if (format === 2.5) {
@@ -84,13 +84,13 @@ define(
                         var numberOfGlyphs = ttf.glyf.length;
                         writer.writeUint16(numberOfGlyphs); // numberOfGlyphs
                         // write glyphNameIndex
-                        var nameIndexs = ttf.support.post.nameIndexs;
-                        for (var i = 0, l = nameIndexs.length; i < l; i++) {
-                            writer.writeUint16(nameIndexs[i]);
+                        var nameIndex = ttf.support.post.nameIndex;
+                        for (var i = 0, l = nameIndex.length; i < l; i++) {
+                            writer.writeUint16(nameIndex[i]);
                         }
 
                         // write names
-                        ttf.support.post.glyphNames.forEach(function (name) {
+                        ttf.support.post.names.forEach(function (name) {
                             writer.writeBytes(name);
                         });
                     }
@@ -109,35 +109,35 @@ define(
                     }
 
                     // version 2
-                    var glyphNames = [];
-                    var nameIndexs = [];
                     var size = 34 + numberOfGlyphs * 2; // header + numberOfGlyphs * 2
+                    var glyphNames = [];
+                    var nameIndexArr = [];
                     var nameIndex = 0;
 
                     // 获取 name的大小
                     for (var i = 0; i < numberOfGlyphs; i++) {
                         // .notdef
                         if (i === 0) {
-                            nameIndexs.push(0);
+                            nameIndexArr.push(0);
                         }
                         else {
                             var glyf = ttf.glyf[i];
                             var unicode = glyf.unicode ? glyf.unicode[0] : 0;
                             var unicodeNameIndex = unicodeName[unicode];
                             if (undefined !== unicodeNameIndex) {
-                                nameIndexs.push(unicodeNameIndex);
+                                nameIndexArr.push(unicodeNameIndex);
                             }
                             else {
                                 // 这里需要注意，"" 有可能是"\3" length不为0，但是是空字符串
                                 var name = glyf.name;
                                 if (!name || name.charCodeAt(0) < 32) {
-                                    nameIndexs.push(258 + nameIndex++);
+                                    nameIndexArr.push(258 + nameIndex++);
                                     glyphNames.push([0]);
                                     size++;
                                 }
                                 else {
-                                    nameIndexs.push(258 + nameIndex++);
-                                    var bytes = string.getPascalStringBytes(name); // pascal string bytes
+                                    nameIndexArr.push(258 + nameIndex++);
+                                    var bytes = string.toPascalStringBytes(name); // pascal string bytes
                                     glyphNames.push(bytes);
                                     size += bytes.length;
                                 }
@@ -146,8 +146,8 @@ define(
                     }
 
                     ttf.support.post = {
-                        nameIndexs: nameIndexs,
-                        glyphNames: glyphNames
+                        nameIndex: nameIndexArr,
+                        names: glyphNames
                     };
 
                     return size;

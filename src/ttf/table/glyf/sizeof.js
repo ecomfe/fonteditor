@@ -234,7 +234,9 @@ define(
                 var glyfSupport = {};
                 glyfSupport = glyf.compound ? glyfSupport : getFlags(glyf, glyfSupport);
 
-                var glyfSize = glyf.compound ? sizeofCompound(glyf, hinting) : sizeofSimple(glyf, glyfSupport, hinting);
+                var glyfSize = glyf.compound
+                    ? sizeofCompound(glyf, hinting)
+                    : sizeofSimple(glyf, glyfSupport, hinting);
                 var size = glyfSize;
 
                 // 4字节对齐

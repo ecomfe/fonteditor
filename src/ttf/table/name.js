@@ -46,7 +46,7 @@ define(
                     // 读取字符名字
                     for (i = 0; i < count; ++i) {
                         nameRecord = nameRecordTbl[i];
-                        nameRecord.name = reader.readString(offset + nameRecord.offset, nameRecord.length);
+                        nameRecord.name = reader.readBytes(offset + nameRecord.offset, nameRecord.length);
                     }
 
                     var names = {};
@@ -73,7 +73,9 @@ define(
                             && nameRecord.encoding === encoding
                             && nameRecord.language === language
                             && nameIdTbl[nameRecord.nameId]) {
-                            names[nameIdTbl[nameRecord.nameId]] = string.stringify(nameRecord.name);
+                            names[nameIdTbl[nameRecord.nameId]] = language === 0
+                                ? string.getUTF8String(nameRecord.name)
+                                : string.getUCS2String(nameRecord.name);
                         }
                     }
 

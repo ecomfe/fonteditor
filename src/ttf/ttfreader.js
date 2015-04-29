@@ -103,9 +103,9 @@ define(
                 glyf[i].leftSideBearing = item.leftSideBearing;
             });
 
-            // name
+            // format = 2 的post表会携带glyf name信息
             if (ttf.post && 2 === ttf.post.format) {
-                var nameIndex = ttf.post.glyphNameIndex;
+                var nameIndex = ttf.post.nameIndex;
                 var names = ttf.post.names;
                 nameIndex.forEach(function (nameIndex, i) {
                     if (nameIndex <= 257) {
@@ -127,18 +127,21 @@ define(
             delete ttf.tables;
             delete ttf.hmtx;
             delete ttf.loca;
-            delete ttf.post.glyphNameIndex;
+            delete ttf.post.nameIndex;
             delete ttf.post.names;
 
+            // 不携带hinting信息则删除hint相关表
             if (!this.options.hinting) {
                 delete ttf.fpgm;
                 delete ttf.cvt;
                 delete ttf.prep;
+
                 ttf.glyf.forEach(function (glyf) {
                     delete glyf.instructions;
                 });
             }
 
+            // 复合字形转简单字形
             if (this.options.compound2simple && ttf.maxp.maxComponentElements) {
                 ttf.glyf.forEach(function (glyf) {
                     if (glyf.compound) {
