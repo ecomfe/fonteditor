@@ -41,7 +41,7 @@ define(
          * @return {this}
          */
         Manager.prototype.pushHistory = function () {
-            this.history.add(lang.clone(this.ttf.getGlyf()));
+            this.history.add(lang.clone(this.ttf.get()));
             return this;
         };
 
@@ -76,7 +76,7 @@ define(
                 clearGlyfTag(this.ttf.getGlyf());
 
                 this.history.reset();
-                this.history.add(lang.clone(this.ttf.getGlyf()));
+                this.pushHistory();
 
                 this.changed = false;
 
@@ -389,17 +389,9 @@ define(
          * @return {this}
          */
         Manager.prototype.setInfo = function (info) {
-            var changed = false;
-            if (this.ttf.get().head.unitsPerEm !== info.unitsPerEm) {
-                changed = true;
-            }
             this.ttf.setName(info);
             this.ttf.setHead(info);
-
-            if (changed) {
-                this.fireChange(false);
-            }
-
+            this.fireChange(true);
             return this;
         };
 
@@ -410,18 +402,10 @@ define(
          * @return {this}
          */
         Manager.prototype.setMetrics = function (info) {
-            var changed = false;
-            if (this.ttf.get().hhea.descent !== info.descent) {
-                changed = true;
-            }
             this.ttf.setHhea(info);
             this.ttf.setOS2(info);
             this.ttf.setPost(info);
-
-            if (changed) {
-                this.fireChange(false);
-            }
-
+            this.fireChange(true);
             return this;
         };
 
@@ -477,7 +461,7 @@ define(
          */
         Manager.prototype.undo = function () {
             if (!this.history.atFirst()) {
-                this.ttf.setGlyf(this.history.back());
+                this.ttf.set(this.history.back());
                 this.fireChange(false);
             }
 
@@ -491,7 +475,7 @@ define(
          */
         Manager.prototype.redo = function () {
             if (!this.history.atLast()) {
-                this.ttf.setGlyf(this.history.forward());
+                this.ttf.set(this.history.forward());
                 this.fireChange(false);
             }
 

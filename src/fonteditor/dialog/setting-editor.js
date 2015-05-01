@@ -27,14 +27,14 @@ define(
                     e.preventDefault();
                     me.setting = program.setting.getDefault('editor');
                     me.setFields(me.setting);
+                    me.oldSetting = null;
                 });
             },
             onDispose: function () {
                 $('#setting-editor-default').off('click');
             },
             validate: function () {
-                var setting = this.getFields(this.setting);
-                return setting;
+                return this.getFields(lang.clone(this.setting));
             }
 
         });

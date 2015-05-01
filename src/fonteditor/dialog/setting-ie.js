@@ -26,13 +26,14 @@ define(
                     e.preventDefault();
                     me.setting = program.setting.getDefault('ie');
                     me.setFields(me.setting);
+                    me.oldSetting = null;
                 });
             },
             onDispose: function () {
                 $('#setting-ie-default').off('click');
             },
             validate: function () {
-                var setting = this.getFields(this.setting);
+                var setting = this.getFields(lang.clone(this.setting));
                 return setting;
             }
 

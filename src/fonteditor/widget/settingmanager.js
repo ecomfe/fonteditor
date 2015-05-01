@@ -64,13 +64,9 @@ define(
 
                 if (store) {
 
-                    // 如果和默认的配置相同则不需要保存配置，
-                    // TODO 这里忽略了类型判断，和对象属性顺序问题，仅能做严格匹配
-                    var stringified = JSON.stringify(setting);
-                    var stringifiedDefault = JSON.stringify(this.getDefault(name));
-
-                    if (string.hashcode(stringified) !== string.hashcode(stringifiedDefault)) {
-                        storage.setItem('setting.' + name, stringified);
+                    // 如果和默认的配置相同则不需要保存配置
+                    if (!lang.equals(setting, this.getDefault(name))) {
+                        storage.setItem('setting.' + name, JSON.stringify(setting));
                     }
                     else {
                         storage.removeItem('setting.' + name);

@@ -94,7 +94,11 @@ define(
                     dlg.off('hidden.bs.modal');
                     dlg.find('.btn-confirm').off('click');
                     dlg.find('.modal-body').html('');
+
                     delete this.options;
+                    delete this.setting;
+                    delete this.oldSetting;
+
                     dlg = null;
                 }
             }, this));
@@ -102,7 +106,11 @@ define(
             dlg.find('.btn-confirm').on('click', lang.bind(function () {
                 var setting = this.validate();
                 if (false !== setting) {
-                    this.options.onChange && this.options.onChange.call(this, setting);
+
+                    if (!lang.equals(setting, this.oldSetting)) {
+                        this.options.onChange && this.options.onChange.call(this, setting);
+                    }
+
                     dlg.modal('hide');
                 }
             }, this));
@@ -185,6 +193,8 @@ define(
 
             });
 
+            this.oldSetting = setting;
+
             return this;
         };
 
@@ -227,6 +237,9 @@ define(
                     if (originValue) {
                         val = Date.parse(originValue.replace('T', ' '));
                     }
+                    else {
+                        val = 0;
+                    }
                 }
                 else if (type === 'number') {
                     if (originValue) {
@@ -236,12 +249,12 @@ define(
                         }
                         val = originValue;
                     }
+                    else {
+                        val = 0;
+                    }
                 }
                 else {
-                    item = $(item);
-                    if (originValue) {
-                        val =  originValue;
-                    }
+                    val =  originValue;
                 }
 
                 if (undefined !== val) {

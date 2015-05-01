@@ -130,20 +130,18 @@ define(
                 return thisObj;
             }
 
+            // 这里`fields`未指定则仅overwrite自身可枚举的字段，指定`fields`则不做限制
             fields = fields || Object.keys(thatObj);
             fields.forEach(function (field) {
-                if (thisObj.hasOwnProperty(field)) {
-
-                    // 拷贝对象
-                    if (
-                        thisObj[field] && typeof thisObj[field] === 'object'
-                        && thatObj[field] && typeof thatObj[field] === 'object'
-                    ) {
-                        overwrite(thisObj[field], thatObj[field]);
-                    }
-                    else {
-                        thisObj[field] = thatObj[field];
-                    }
+                // 拷贝对象
+                if (
+                    thisObj[field] && typeof thisObj[field] === 'object'
+                    && thatObj[field] && typeof thatObj[field] === 'object'
+                ) {
+                    overwrite(thisObj[field], thatObj[field]);
+                }
+                else {
+                    thisObj[field] = thatObj[field];
                 }
             });
 
@@ -248,10 +246,48 @@ define(
             };
         }
 
+        /**
+         * 判断两个对象的字段是否相等
+         *
+         * @param  {Object} thisObj 要比较的对象
+         * @param  {Object} thatObj 参考对象
+         * @param  {Array} fields 指定字段
+         * @return {boolean}  是否相等
+         */
+        function equals(thisObj, thatObj, fields) {
+
+            if (thisObj === thatObj) {
+                return true;
+            }
+
+            if (thisObj == null && thatObj != null || thisObj != null && thatObj == null) {
+                return false;
+            }
+
+            // 这里`fields`未指定则仅overwrite自身可枚举的字段，指定`fields`则不做限制
+            fields = fields || Object.keys(thisObj);
+            var equal = true;
+            for (var i = 0, l = fields.length, field; equal && i < l; i++) {
+                field = fields[i];
+
+                if (
+                    thisObj[field] && typeof thisObj[field] === 'object'
+                    && thatObj[field] && typeof thatObj[field] === 'object'
+                ) {
+                    equal = equal && equals(thisObj[field], thatObj[field]);
+                }
+                else {
+                    equal = equal && (thisObj[field] === thatObj[field]);
+                }
+            }
+
+            return equal;
+        }
 
         var exports = {
             extend: extend,
             overwrite: overwrite,
+            equals: equals,
             bind: bind,
             inherits: inherits,
             curry: curry,
