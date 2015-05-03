@@ -113,8 +113,8 @@ define(
             if (ttf.from === 'svgfont' && ttf.head.unitsPerEm > 128) {
                 ttf.glyf.forEach(function (g) {
                     if (g.contours) {
-                        reduceGlyf(g);
                         glyfAdjust(g);
+                        reduceGlyf(g);
                     }
                 });
             }
@@ -127,7 +127,6 @@ define(
 
                 ttf.glyf.forEach(function (g) {
                     if (g.contours) {
-                        reduceGlyf(g);
                         var bound = computeBoundingBox.computePathBox.apply(null, g.contours);
                         if (bound) {
                             xMin = Math.min(xMin, bound.x);
@@ -143,6 +142,7 @@ define(
 
                 ttf.glyf.forEach(function (g) {
                     glyfAdjust(g, scale, scale);
+                    reduceGlyf(g);
                 });
                 ttf.head.unitsPerEm = 1024;
             }

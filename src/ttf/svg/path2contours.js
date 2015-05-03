@@ -453,9 +453,7 @@ define(function (require) {
             }
         }
 
-        return contours.map(function (p) {
-            return reducePath(p);
-        });
+        return contours;
     }
 
     /**
