@@ -20,16 +20,14 @@ define(
                 return false;
             },
 
-            draw: function (ctx, shape) {
+            draw: function (ctx, shape, camera) {
 
+                shape.scale = camera.scale;
                 ctx.save();
-
                 // 绘制刻度线
                 drawGraduation(ctx, shape.config);
-
                 ctx.restore();
                 ctx.beginPath();
-
             }
         };
 

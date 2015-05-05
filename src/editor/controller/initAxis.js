@@ -55,7 +55,7 @@ define(
 
 
         /**
-         * 设置坐标信参数
+         * 设置坐标参数
          *
          * @param {Object} options 坐标选项
          * @see editor/options
@@ -68,9 +68,9 @@ define(
             lang.overwrite(this.options.axis, options);
 
             // 设置gap
-            this.options.axis.graduation.gap = options.graduation && options.graduation.gap
-                ? options.graduation.gap
-                : this.options.unitsPerEm / 512 * 100;
+            if (options.graduation && options.graduation.gap) {
+                this.options.axis.graduation.gap = options.graduation.gap
+            }
 
             // 设置当前的axis
             var axisOpt = lang.clone(this.options.axis);

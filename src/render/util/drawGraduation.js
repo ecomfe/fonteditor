@@ -43,20 +43,21 @@ define(
 
 
             var originGap = config.graduation.gap;
+            var curGap = config.graduation.gap * config.scale;
             var scale;
             var gap;
             var markSize;
             var axis;
             var i;
 
-            if (originGap >= config.gap) {
-                scale = originGap / config.gap;
+            if (originGap >= curGap) {
+                scale = originGap / curGap;
                 gap = Math.floor(scale) * originGap / 20; // 每个格子大小
                 markSize = originGap / 20 * Math.floor(scale) /  scale;
             }
             else {
 
-                scale = config.gap / originGap;
+                scale = curGap / originGap;
                 gap = Math.floor(originGap / 20 / scale); // 每个格子大小, 5的倍数
 
                 if (gap >= 2) {

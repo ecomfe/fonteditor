@@ -192,9 +192,8 @@ define(
 
         /**
          * 显示
-         * @param {Object} font font对象
          */
-        GLYFEditor.prototype.show = function (font) {
+        GLYFEditor.prototype.show = function () {
             // 这里注意显示顺序，否则editor创建的时候计算宽度会错误
             this.main.show();
 
@@ -203,11 +202,6 @@ define(
                 bindEditor.call(this);
             }
 
-            if (font) {
-                this.editor.setFont(font);
-            }
-
-            this.editor.refresh();
             this.editing = true;
         };
 

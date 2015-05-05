@@ -45,12 +45,9 @@ define(
 
             draw: function (ctx, shape, camera) {
 
-                shape.gap = (shape.graduation.gap || 100) * camera.scale;
-
+                shape.scale = camera.scale;
                 ctx.save();
-
                 drawAxis(ctx, shape);
-
                 ctx.restore();
                 ctx.beginPath();
             }
