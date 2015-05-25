@@ -7,6 +7,9 @@
 define(
     function (require) {
 
+        // common
+        require('./common/lang.spec');
+
         // math
         require('./math/getBezierQ2T.spec');
 

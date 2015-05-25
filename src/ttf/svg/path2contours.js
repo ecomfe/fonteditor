@@ -8,7 +8,6 @@ define(function (require) {
     var bezierCubic2Q2 = require('math/bezierCubic2Q2');
     var getArc =  require('graphics/getArc');
     var parseParams = require('./parseParams');
-    var reducePath = require('graphics/reducePath');
 
     /**
      * 三次贝塞尔曲线，转二次贝塞尔曲线

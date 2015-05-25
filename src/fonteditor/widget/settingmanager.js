@@ -7,7 +7,6 @@ define(
     function (require) {
 
         var lang = require('common/lang');
-        var string = require('common/string');
         var settingDefault = require('../setting/support');
 
         var storage = window.localStorage;

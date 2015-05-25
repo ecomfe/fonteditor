@@ -69,7 +69,7 @@ define(
 
             // 设置gap
             if (options.graduation && options.graduation.gap) {
-                this.options.axis.graduation.gap = options.graduation.gap
+                this.options.axis.graduation.gap = options.graduation.gap;
             }
 
             // 设置当前的axis

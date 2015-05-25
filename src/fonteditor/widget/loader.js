@@ -62,13 +62,13 @@ define(
             var fileReader = new FileReader();
 
             fileReader.onload = function (e) {
-                //try {
+                try {
                     options.success && options.success(getttf(e.target.result, options));
-                // }
-                // catch (exp) {
-                //     alert(exp.message);
-                //     throw exp;
-                // }
+                }
+                catch (exp) {
+                    alert(exp.message);
+                    throw exp;
+                }
 
                 loading.hide();
             };
