@@ -95,7 +95,7 @@ define(
             },
             {
                 name: 'verticalalignshapes',
-                title: '居中对齐',
+                title: '垂直居中对齐',
                 ico: 'alignmiddle',
                 align: 'middle',
                 disabled: true
