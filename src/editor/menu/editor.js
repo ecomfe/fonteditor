@@ -6,124 +6,125 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         return [
             {
                 name: 'addpath',
-                title: '添加路径'
+                title: i18n.lang.addpath
             },
             {
                 name: 'add_shapes',
-                title: '添加形状',
+                title: i18n.lang.addshapes,
                 items: [
                     {
                         name: 'addsupportshapes',
                         type: 'circle',
-                        title: '圆'
+                        title: i18n.lang.circle
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'rect',
-                        title: '矩形'
+                        title: i18n.lang.rect
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'roundrect',
-                        title: '圆角矩形'
+                        title: i18n.lang.roundrect
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'star',
-                        title: '五角星'
+                        title: i18n.lang.star
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'arrow',
-                        title: '箭头'
+                        title: i18n.lang.arrow
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'triangle',
-                        title: '三角形'
+                        title: i18n.lang.triangle
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'heart',
-                        title: '心形'
+                        title: i18n.lang.heart
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'tel',
-                        title: '电话'
+                        title: i18n.lang.tel
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'drop',
-                        title: '水滴'
+                        title: i18n.lang.drop
                     },
                     {
                         name: 'addsupportshapes',
                         type: 'du',
-                        title: '度图标'
+                        title: i18n.lang.du
                     }
                 ]
             },
             {
                 name: 'undo',
-                title: '撤销'
+                title: i18n.lang.undo
             },
             {
                 name: 'redo',
-                title: '恢复'
+                title: i18n.lang.redo
             },
             {
                 name: 'paste',
-                title: '粘贴'
+                title: i18n.lang.paste
             },
             {
                 name: 'split',
-                title: '切割轮廓'
+                title: i18n.lang.splitshapes
             },
             {
                 name: 'setting',
-                title: '设置',
+                title: i18n.lang.setting,
                 items: [
                     {
                         name: 'gridsorption',
-                        title: '吸附到网格线'
+                        title: i18n.lang.gridsorption
                     },
                     {
                         name: 'shapesorption',
-                        title: '吸附到轮廓'
+                        title: i18n.lang.shapesorption
                     },
                     {
                         name: 'showgrid',
-                        title: '显示网格'
+                        title: i18n.lang.showgrid
                     },
                     {
                         name: 'moresetting',
-                        title: '更多..'
+                        title: i18n.lang.moresetting
                     }
                 ]
             },
             {
                 name: 'addreferenceline',
-                title: '添加参考线'
+                title: i18n.lang.addreferenceline
             },
             {
                 name: 'clearreferenceline',
-                title: '清除参考线'
+                title: i18n.lang.clearreferenceline
             },
             {
                 name: 'rescale',
-                title: '重置缩放'
+                title: i18n.lang.rescale
             },
             {
                 name: 'fontsetting',
-                title: '字形信息'
+                title: i18n.lang.fontsetting
             },
             {
                 name: 'save',
-                title: '保存'
+                title: i18n.lang.save
             }
         ];
     }

@@ -5,27 +5,29 @@
 
 define(
     function (require) {
+        var ei18n = require('editor/i18n/i18n');
+
         return [
             {
                 name: 'copyshapes',
-                title: '复制',
+                title: ei18n.lang.copy,
                 quickKey: 'C',
                 disabled: true
             },
             {
                 name: 'pasteshapes',
-                title: '粘贴',
+                title: ei18n.lang.paste,
                 quickKey: 'V'
             },
             {
                 name: 'removeshapes',
-                title: '删除',
+                title: ei18n.lang.del,
                 quickKey: 'D',
                 disabled: true
             },
             {
                 name: 'save',
-                title: '保存',
+                title: ei18n.lang.save,
                 quickKey: 'S'
             },
             {
@@ -33,12 +35,12 @@ define(
             },
             {
                 name: 'rangemode',
-                title: '轮廓模式',
+                title: ei18n.lang.rangemode,
                 ico: 'rangemode'
             },
             {
                 name: 'pointmode',
-                title: '点模式',
+                title: ei18n.lang.pointmode,
                 ico: 'pointmode'
             },
             {
@@ -46,19 +48,19 @@ define(
             },
             {
                 name: 'upshape',
-                title: '上移一层',
+                title: ei18n.lang.upshape,
                 ico: 'upshape',
                 disabled: true
             },
             {
                 name: 'downshape',
-                title: '下移一层',
+                title: ei18n.lang.downshape,
                 ico: 'downshape',
                 disabled: true
             },
             {
                 name: 'reversepoints',
-                title: '改变方向',
+                title: ei18n.lang.reversepoints,
                 ico: 'reversepoints',
                 disabled: true
             },
@@ -67,49 +69,49 @@ define(
             },
             {
                 name: 'horizontalalignshapes',
-                title: '左对齐',
+                title: ei18n.lang.alignleft,
                 ico: 'alignleft',
                 align: 'left',
                 disabled: true
             },
             {
                 name: 'horizontalalignshapes',
-                title: '居中对齐',
+                title: ei18n.lang.aligncenter,
                 ico: 'aligncenter',
                 align: 'center',
                 disabled: true
             },
             {
                 name: 'horizontalalignshapes',
-                title: '右对齐',
+                title: ei18n.lang.alignright,
                 ico: 'alignright',
                 align: 'right',
                 disabled: true
             },
             {
                 name: 'verticalalignshapes',
-                title: '顶端对齐',
+                title: ei18n.lang.aligntop,
                 ico: 'aligntop',
                 align: 'ascent',
                 disabled: true
             },
             {
                 name: 'verticalalignshapes',
-                title: '垂直居中对齐',
+                title: ei18n.lang.alignmiddle,
                 ico: 'alignmiddle',
                 align: 'middle',
                 disabled: true
             },
             {
                 name: 'verticalalignshapes',
-                title: '底端对齐',
+                title: ei18n.lang.aligndescent,
                 ico: 'aligndescent',
                 align: 'descent',
                 disabled: true
             },
             {
                 name: 'verticalalignshapes',
-                title: '基线对齐',
+                title: ei18n.lang.alignbaseline,
                 ico: 'alignbaseline',
                 align: 'baseline',
                 disabled: true
@@ -119,25 +121,25 @@ define(
             },
             {
                 name: 'rotateleft',
-                title: '向左旋转',
+                title: ei18n.lang.rotateleft,
                 ico: 'rotateleft',
                 disabled: true
             },
             {
                 name: 'rotateright',
-                title: '向右旋转',
+                title: ei18n.lang.rotateright,
                 ico: 'rotateright',
                 disabled: true
             },
             {
                 name: 'flipshapes',
-                title: '翻转',
+                title: ei18n.lang.flip,
                 ico: 'flip',
                 disabled: true
             },
             {
                 name: 'mirrorshapes',
-                title: '镜像',
+                title: ei18n.lang.mirror,
                 ico: 'mirror',
                 disabled: true
             },
@@ -146,24 +148,24 @@ define(
             },
             {
                 name: 'splitshapes',
-                title: '切割轮廓',
+                title: ei18n.lang.splitshapes,
                 ico: 'splitshapes'
             },
             {
                 name: 'joinshapes',
-                title: '合并轮廓',
+                title: ei18n.lang.joinshapes,
                 ico: 'joinshapes',
                 disabled: true
             },
             {
                 name: 'intersectshapes',
-                title: '相交轮廓',
+                title: ei18n.lang.intersectshapes,
                 ico: 'intersectshapes',
                 disabled: true
             },
             {
                 name: 'tangencyshapes',
-                title: '相切轮廓',
+                title: ei18n.lang.tangencyshapes,
                 ico: 'tangencyshapes',
                 disabled: true
             }

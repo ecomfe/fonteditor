@@ -5,150 +5,151 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         return [
             {
                 name: 'reversepoints',
-                title: '改变方向'
+                title: i18n.lang.reversepoints
             },
             {
                 name: 'removeshapes',
-                title: '删除轮廓'
+                title: i18n.lang.removeshapes
             },
             {
                 name: 'cutshapes',
-                title: '剪切'
+                title: i18n.lang.cut
             },
             {
                 name: 'copyshapes',
-                title: '复制'
+                title: i18n.lang.copy
             },
             {
                 name: 'join',
-                title: '连接轮廓',
+                title: i18n.lang.joinshapes,
                 items: [
                     {
                         name: 'joinshapes',
-                        title: '结合'
+                        title: i18n.lang.joinshapes
                     },
                     {
                         name: 'intersectshapes',
-                        title: '相交'
+                        title: i18n.lang.intersectshapes
                     },
                     {
                         name: 'tangencyshapes',
-                        title: '相切'
+                        title: i18n.lang.tangencyshapes
                     }
                 ]
             },
             {
                 name: 'transform',
-                title: '变换',
+                title: i18n.lang.transform,
                 items: [
                     {
                         name: 'rotateleft',
-                        title: '向左旋转'
+                        title: i18n.lang.rotateleft
                     },
                     {
                         name: 'rotateright',
-                        title: '向右旋转'
+                        title: i18n.lang.rotateright
                     },
                     {
                         name: 'flipshapes',
-                        title: '翻转'
+                        title: i18n.lang.flip
                     },
                     {
                         name: 'mirrorshapes',
-                        title: '镜像'
+                        title: i18n.lang.mirror
                     }
                 ]
             },
 
             {
                 name: 'alignshapes_',
-                title: '对齐形状',
+                title: i18n.lang.alignshapes,
                 items: [
                     {
                         name: 'alignshapes',
                         align: 'left',
-                        title: '左对齐'
+                        title: i18n.lang.alignleft
                     },
                     {
                         name: 'alignshapes',
                         align: 'center',
-                        title: '居中对齐'
+                        title: i18n.lang.aligncenter
                     },
                     {
                         name: 'alignshapes',
                         align: 'right',
-                        title: '右对齐'
+                        title: i18n.lang.alignright
                     },
                     {
                         name: 'alignshapes',
                         align: 'top',
-                        title: '顶部对齐'
+                        title: i18n.lang.aligntop
                     },
                     {
                         name: 'alignshapes',
                         align: 'middle',
-                        title: '中间对齐'
+                        title: i18n.lang.alignmiddle
                     },
                     {
                         name: 'alignshapes',
                         align: 'bottom',
-                        title: '底部对齐'
+                        title: i18n.lang.aligndescent
                     }
                 ]
             },
             {
                 name: 'horizontalalignshapes_',
-                title: '水平方向',
+                title: i18n.lang.align,
                 items: [
                     {
                         name: 'horizontalalignshapes',
                         align: 'left',
-                        title: '左对齐'
+                        title: i18n.lang.alignleft
                     },
                     {
                         name: 'horizontalalignshapes',
                         align: 'center',
-                        title: '居中对齐'
+                        title: i18n.lang.aligncenter
                     },
                     {
                         name: 'horizontalalignshapes',
                         align: 'right',
-                        title: '右对齐'
+                        title: i18n.lang.alignright
                     }
                 ]
             },
             {
                 name: 'verticalalignshapes_',
-                title: '垂直方向',
+                title: i18n.lang.verticalalign,
                 items: [
                     {
                         name: 'verticalalignshapes',
                         align: 'ascent',
-                        title: '顶端对齐'
+                        title: i18n.lang.aligntop
                     },
                     {
                         name: 'verticalalignshapes',
                         align: 'middle',
-                        title: '居中对齐'
+                        title: i18n.lang.alignmiddle
                     },
                     {
                         name: 'verticalalignshapes',
                         align: 'descent',
-                        title: '底端对齐'
+                        title: i18n.lang.aligndescent
                     },
                     {
                         name: 'verticalalignshapes',
                         align: 'baseline',
-                        title: '基线对齐'
+                        title: i18n.lang.alignbaseline
                     }
                 ]
             },
             {
                 name: 'addreferenceline',
-                title: '添加边界参考线'
+                title: i18n.lang.addboundreferenceline
             }
         ];
     }

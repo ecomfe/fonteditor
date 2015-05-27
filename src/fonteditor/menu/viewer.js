@@ -6,27 +6,28 @@
 
 define(
     function (require) {
-
+        var ei18n = require('editor/i18n/i18n');
+        var i18n = require('../i18n/i18n');
         return [
             {
                 name: 'copy',
-                title: '复制',
+                title: ei18n.lang.copy,
                 quickKey: 'C',
                 disabled: true
             },
             {
                 name: 'cut',
-                title: '剪切',
+                title: ei18n.lang.cut,
                 quickKey: 'X'
             },
             {
                 name: 'paste',
-                title: '粘贴',
+                title: ei18n.lang.paste,
                 quickKey: 'V'
             },
             {
                 name: 'del',
-                title: '删除',
+                title: ei18n.lang.del,
                 quickKey: 'D',
                 disabled: true
             },
@@ -35,15 +36,15 @@ define(
             },
             {
                 name: 'adjust-pos',
-                title: '调整位置'
+                title: ei18n.lang.adjustpos,
             },
             {
                 name: 'adjust-glyf',
-                title: '调整字形'
+                title: ei18n.lang.adjustglyf,
             },
             {
                 name: 'setting-font',
-                title: '字形信息',
+                title: ei18n.lang.fontsetting,
                 disabled: true
             },
             {
@@ -51,15 +52,15 @@ define(
             },
             {
                 name: 'find-glyf',
-                title: '查找字形'
+                title: i18n.lang.findglyf,
             },
             {
                 name: 'setting-unicode',
-                title: '设置代码点'
+                title: i18n.lang.setunicode,
             },
             {
                 name: 'setting-sync',
-                title: '同步字体'
+                title: i18n.lang.syncfont,
             }
         ];
     }

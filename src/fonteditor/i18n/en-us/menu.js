@@ -6,9 +6,9 @@
 define(
     function (require) {
         return {
-            findglyf: '查找字形',
-            setunicode: '设置代码点',
-            syncfont: '同步字体',
+            findglyf: 'Find Glyph',
+            setunicode: 'Set Unicode',
+            syncfont: 'Sync Font',
         };
     }
 );

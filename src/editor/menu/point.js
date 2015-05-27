@@ -5,26 +5,27 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         return [
             {
                 name: 'add',
-                title: '添加点'
+                title: i18n.lang.addpoint
             },
             {
                 name: 'remove',
-                title: '删除点'
+                title: i18n.lang.removepoint
             },
             {
                 name: 'onCurve',
-                title: '在曲线上'
+                title: i18n.lang.oncurve
             },
             {
                 name: 'offCurve',
-                title: '远离曲线'
+                title: i18n.lang.offcurve
             },
             {
                 name: 'asStart',
-                title: '作为开始点'
+                title: i18n.lang.asstart
             }
         ];
     }
