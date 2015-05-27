@@ -5,6 +5,7 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
 
         /**
          * 项目列表查看器
@@ -67,11 +68,13 @@ define(
                     +       '<dt>' + proj.name + '</dt>'
                     +       '<dd>'
                     +           (proj.config && proj.config.sync
-                                  ? '<span data-action="sync" title="同步当前字体">同步</span>'
+                                  ? ('<span data-action="sync" title="'
+                                    + i18n.lang.syncfont + '">'
+                                    + i18n.lang.sync + '</span>')
                                   : ''
                                 )
-                    +           '<span data-action="saveas">另存为</span>'
-                    +           '<span data-action="del">删除</span>'
+                    +           '<span data-action="saveas">' + i18n.lang.saveas + '</span>'
+                    +           '<span data-action="del">' + i18n.lang.del + '</span>'
                     +       '</dd>'
                     +   '</dl>';
             });

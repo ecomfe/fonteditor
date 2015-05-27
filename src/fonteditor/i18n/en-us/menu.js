@@ -8,7 +8,14 @@ define(
         return {
             findglyf: 'Find Glyph',
             setunicode: 'Set Unicode',
-            syncfont: 'Sync Font',
+            saveas: 'Save As',
+            del: 'Delete',
+            edit: 'Edit',
+            prevpage: 'Prev Page',
+            nextpage: 'Next Page',
+            gotopage: 'Go To',
+            sync: 'Sync',
+            syncfont: 'Sync Current Font'
         };
     }
 );

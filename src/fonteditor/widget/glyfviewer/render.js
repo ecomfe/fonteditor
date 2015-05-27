@@ -9,11 +9,11 @@ define(
 
         var glyf2svg = require('ttf/util/glyf2svg');
         var string = require('common/string');
-
+        var i18n = require('../../i18n/i18n');
         var GLYF_ITEM_TPL = ''
             + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected} ${editing}">'
-            +   '<i data-action="edit" class="ico i-edit" title="编辑"></i>'
-            +   '<i data-action="del" class="ico i-del" title="删除"></i>'
+            +   '<i data-action="edit" class="ico i-edit" title="' + i18n.lang.edit + '"></i>'
+            +   '<i data-action="del" class="ico i-del" title="' + i18n.lang.del + '"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
             +           '<path class="path" ${fillColor} ${d}/></g>'
