@@ -5,12 +5,13 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = ''
             +   '<div class="input-group">'
             +     '<div class="input-group-btn">'
             +       '<button type="button" class="btn btn-default dropdown-toggle"'
-            +           ' data-toggle="dropdown">起始代码点 <span class="caret"></span></button>'
+            +           ' data-toggle="dropdown">'
+            +           i18n.lang.dialog_unicode_start + ' <span class="caret"></span></button>'
             +       '<ul class="dropdown-menu" role="menu">'
             +         '<li><a href="javascript:$(\'#setting-text-unicode\').val(\'$21\')">ascii</a></li>'
             +         '<li><a href="javascript:$(\'#setting-text-unicode\').val(\'$E001\')">'
@@ -22,7 +23,7 @@ define(
 
         return require('./setting').derive({
 
-            title: '设置代码点',
+            title: i18n.lang.dialog_unicode_set,
 
             getTpl: function () {
                 return tpl;

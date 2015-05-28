@@ -5,12 +5,12 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-name.tpl');
 
         return require('./setting').derive({
 
-            title: '字体信息',
+            title: i18n.lang.fontinfo,
 
             getTpl: function () {
                 return tpl;

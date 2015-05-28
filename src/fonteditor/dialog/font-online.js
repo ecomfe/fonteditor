@@ -5,12 +5,13 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         var string = require('common/string');
         var onlineList = require('../data/online-font');
 
         return require('./setting').derive({
 
-            title: '在线字体',
+            title: i18n.lang.dialog_onlinefont,
             nofooter: true,
 
             getTpl: function () {

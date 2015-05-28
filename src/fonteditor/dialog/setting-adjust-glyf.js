@@ -5,12 +5,12 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-adjust-glyf.tpl');
 
         return require('./setting').derive({
 
-            title: '调整字形',
+            title: i18n.lang.dialog_adjust_glyph,
 
             getTpl: function () {
                 return tpl;
@@ -28,7 +28,7 @@ define(
                     && setting.scale === undefined
                     && setting.ajdustToEmBox === undefined
                 ) {
-                    alert('没有设置项目!');
+                    alert(i18n.lang.dialog_no_input);
                     return false;
                 }
 

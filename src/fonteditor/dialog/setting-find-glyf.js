@@ -5,23 +5,23 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
 
         var tpl = ''
             + '<div class="form-inline">'
             +   '<select id="setting-find-condition" class="form-control">'
-            +       '<option value="unicode" selected>按代码点查找字形</option>'
-            +       '<option value="name">按名字查找字形</option>'
+            +       '<option value="unicode" selected>' + i18n.lang.dialog_find_glyf_by_unicode + '</option>'
+            +       '<option value="name">' + i18n.lang.dialog_find_glyf_by_name + '</option>'
             +   '</select> '
             +   '<input value="" id="setting-find-value" class="form-control">'
-            +   '<p class="form-line">例如：代码点："$21"，名字： "uniE001"</p>'
+            +   '<p class="form-line">' + i18n.lang.dialog_find_glyf_example + '</p>'
             + '</div>';
 
 
         return require('./setting').derive({
 
-            title: '查找字形',
+            title: i18n.lang.findglyf,
 
             getTpl: function () {
                 return tpl;
@@ -32,7 +32,7 @@ define(
                 var value = $('#setting-find-value').val();
 
                 if (!value.length) {
-                    alert('请设置unicode!');
+                    alert(i18n.lang.dialog_set_unicode);
                     return false;
                 }
 

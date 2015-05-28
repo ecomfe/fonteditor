@@ -6,7 +6,7 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-import-pic.tpl');
 
         var string = require('common/string');
@@ -188,12 +188,12 @@ define(
                 }
 
                 if (!/\.(?:jpg|gif|png|jpeg|bmp|svg)$/i.test(file.name)) {
-                    alert('不支持的文件类型！');
+                    alert(i18n.lang.msg_not_support_file_type);
                     return;
                 }
 
                 var reader = new FileReader();
-                program.loading.show('正在加载图片...', 10000);
+                program.loading.show(i18n.lang.msg_loading_pic, 10000);
 
                 reader.onload = function (loadEvent) {
                     var image = new Image();
@@ -201,14 +201,14 @@ define(
                         updateImage(image);
                     };
                     image.onerror = function () {
-                        program.loading.warn('读取图片失败...', 2000);
+                        program.loading.warn(i18n.lang.msg_read_pic_error, 2000);
                     };
                     image.src = loadEvent.target.result;
                     loadEvent.target.value = '';
                 };
 
                 reader.onerror = function () {
-                    program.loading.warn('读取图片失败...', 2000);
+                    program.loading.warn(i18n.lang.msg_read_pic_error, 2000);
                 };
 
                 reader.readAsDataURL(file);
@@ -290,7 +290,7 @@ define(
                 }
 
                 var action = $(this).data('filter');
-                program.loading.show('正在处理...', 10000);
+                program.loading.show(i18n.lang.msg_processing, 10000);
                 throttleAction(action);
             });
 
@@ -298,7 +298,7 @@ define(
                 if (!program.data.imageProcessor.grayData) {
                     return;
                 }
-                program.loading.show('正在处理...', 10000);
+                program.loading.show(i18n.lang.msg_processing, 10000);
                 throttleAction('threshold-pre');
             });
 
@@ -311,18 +311,18 @@ define(
                 if (/^https?:\/\//i.test(val)) {
                     this.value = '';
                     $('#import-pic-dialog').find('.import-pic-url').removeClass('show-url');
-                    program.loading.show('正在加载图片...', 10000);
+                    program.loading.show(i18n.lang.msg_loading_pic, 10000);
                     var image = new Image();
                     image.onload = function () {
                         updateImage(image);
                     };
                     image.onerror = function () {
-                        program.loading.warn('读取图片失败...', 2000);
+                        program.loading.warn(i18n.lang.msg_read_pic_error, 2000);
                     };
                     image.src = string.format(program.readOnline, ['image', val]);
                 }
                 else {
-                    alert('请输入图片URL!');
+                    alert(i18n.lang.msg_input_pic_url);
                 }
             });
         }
@@ -336,7 +336,7 @@ define(
 
         return require('./setting').derive({
 
-            title: '导入字形图片',
+            title: i18n.lang.dialog_import_pic,
 
             style: 'import-pic-dialog',
 
@@ -360,7 +360,7 @@ define(
                 var contours = program.data.imageProcessor.resultContours;
                 if (contours) {
                     if (!contours || !contours.length) {
-                        alert('没有找到可导入的字形！');
+                        alert(i18n.lang.msg_no_glyph_to_import);
                     }
                     else {
                         return {

@@ -10,8 +10,14 @@ define(
 
         return new I18n(
             [
-                ['zh-cn', require('./zh-cn/menu')],
-                ['en-us', require('./en-us/menu')]
+                ['zh-cn', require('./zh-cn/editor')],
+                ['en-us', require('./en-us/editor')],
+
+                ['zh-cn', require('./zh-cn/message')],
+                ['en-us', require('./en-us/message')],
+
+                ['zh-cn', require('./zh-cn/dialog')],
+                ['en-us', require('./en-us/dialog')]
             ]
         );
     }

@@ -806,7 +806,7 @@ define(
         TTF.prototype.compound2simple = function (indexList) {
 
             var ttf = this.ttf;
-            if (!ttf.maxp.maxComponentElements) {
+            if (ttf.maxp && !ttf.maxp.maxComponentElements) {
                 return [];
             }
 

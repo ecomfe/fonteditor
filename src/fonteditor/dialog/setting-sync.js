@@ -6,12 +6,12 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-sync.tpl');
 
         return require('./setting').derive({
 
-            title: '同步字体',
+            title: i18n.lang.syncfont,
 
             getTpl: function () {
                 return tpl;

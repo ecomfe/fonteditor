@@ -5,6 +5,8 @@
 
 define(
     function (require) {
+        var string = require('common/string');
+        var i18n = require('../i18n/i18n');
         var lang = require('common/lang');
         var pad = require('common/string').pad;
         var program = require('../widget/program');
@@ -76,8 +78,9 @@ define(
             this.options = options || {};
 
             var dlg = $('#model-dialog');
-            dlg.find('.modal-title').html(this.title || '设置');
-            dlg.find('.modal-body').html(this.getTpl());
+            dlg.find('.modal-title').html(this.title || '');
+            var tpl = string.format(this.getTpl(), i18n);
+            dlg.find('.modal-body').html(tpl);
 
             if (this.nofooter) {
                 dlg.find('.modal-footer').hide();

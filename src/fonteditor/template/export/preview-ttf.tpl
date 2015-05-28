@@ -15,7 +15,7 @@
     }
 </style>
 <div class="main">
-    <h1>预览{%=fontFormat%}格式字体</h1>
+    <h1>${lang.preview_title}</h1>
     <ul class="icon-list">
         {%glyfList.forEach(function(glyf) {%}
         <li>
@@ -25,7 +25,7 @@
         </li>
         {%});%}
     </ul>
-    <div class="helps">第一步：使用font-face声明字体
+    <div class="helps">${lang.preview_first_step}
 <pre>
 @font-face {
     font-family: '{%=fontFamily%}';
@@ -36,7 +36,7 @@
     url('{%=fontFamily%}.svg#ux{%=fontFamily%}') format('svg'); /* iOS 4.1- */
 }
 </pre>
-第二步：定义使用{%=fontFamily%}的样式
+${lang.preview_second_step}
 <pre>
 .{%=fontFamily%} {
     font-family:"{%=fontFamily%}" !important;
@@ -46,7 +46,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 </pre>
-第三步：挑选相应图标并获取字体编码，应用于页面
+${lang.preview_third_step}
 <pre>
     &lt;i class="{%=fontFamily%}"&gt;&amp;#x33&lt;/i&gt;
 </pre>

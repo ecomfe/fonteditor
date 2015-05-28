@@ -5,7 +5,7 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-metrics.tpl');
         var string = require('common/string');
         var program = require('../widget/program');
@@ -16,13 +16,15 @@ define(
 
         return require('./setting').derive({
 
-            title: '字体度量',
+            title: i18n.lang.dialog_metrics,
 
             style: 'setting-metrics',
 
             getTpl: function () {
                 // width and weight
-                var optionsHolder = {};
+                var optionsHolder = {
+                    lang: i18n.lang
+                };
 
                 optionsHolder.weightOptions = Object.keys(weightClass).map(function (key) {
                     return '<option value="' + key + '">' + weightClass[key] + '</option>';

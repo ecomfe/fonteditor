@@ -5,13 +5,12 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-adjust-pos.tpl');
-
 
         return require('./setting').derive({
 
-            title: '调整字形位置',
+            title: i18n.lang.dialog_adjust_pos,
 
             getTpl: function () {
                 return tpl;
@@ -28,7 +27,7 @@ define(
                     && setting.rightSideBearing === undefined
                     && setting.verticalAlign === undefined
                 ) {
-                    alert('没有设置项目!');
+                    alert(i18n.lang.dialog_no_input);
                     return false;
                 }
 

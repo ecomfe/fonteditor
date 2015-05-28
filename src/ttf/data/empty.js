@@ -115,6 +115,22 @@ define(
                 "maxMemType1": 1,
                 "format": 3
             },
+            "maxp": {
+                "version": 1.0,
+                "numGlyphs": 0,
+                "maxPoints": 0,
+                "maxContours": 0,
+                "maxCompositePoints": 0,
+                "maxCompositeContours": 0,
+                "maxZones": 0,
+                "maxTwilightPoints": 0,
+                "maxStorage": 0,
+                "maxFunctionDefs": 0,
+                "maxStackElements": 0,
+                "maxSizeOfInstructions": 0,
+                "maxComponentElements": 0,
+                "maxComponentDepth": 0
+            },
             "OS/2": {
                 "version": 4,
                 "xAvgCharWidth": 1031,

@@ -6,13 +6,14 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-ie.tpl');
         var lang = require('common/lang');
         var program = require('../widget/program');
 
         return require('./setting').derive({
 
-            title: '导入和导出',
+            title: i18n.lang.dialog_import_and_export,
 
             getTpl: function () {
                 return tpl;

@@ -6,7 +6,8 @@
 
 define(
     function (require) {
-
+        var string = require('common/string');
+        var i18n = require('../i18n/i18n');
         var utpl = require('utpl');
         var exportRender = require('./export-render');
         var previewRender = null; // 预览渲染器
@@ -24,7 +25,8 @@ define(
              */
             renderPreview: function (data) {
                 data.previewCss = exportRender.renderPreviewCss();
-                previewRender = previewRender || utpl.template(require('./export/preview-ttf.tpl'));
+                var tpl = string.format(require('./export/preview-ttf.tpl'), i18n);
+                previewRender = previewRender || utpl.template(tpl);
                 return previewRender(data);
             }
         };
