@@ -32,7 +32,7 @@ function format(source, data) {
 function main(version) {
     var baseDir = path.dirname(__dirname);
     var tpl = String(fs.readFileSync(baseDir + '/index.tpl'));
-    tpl = tpl.replace(/\s+/g, ' ').replace('./src', './' + version);
+    tpl = tpl.replace(/\s+/g, ' ');
 
 
 

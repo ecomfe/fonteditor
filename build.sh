@@ -18,7 +18,10 @@ build_asset() {
 # 移动文件到指定目录
 move_asset() {
     mv ./release/src ./release/$version
-    cp ./*.html ./release/
+    cat ./release/index.html | sed -e "s#'\.\/src'#'./$version'#g" > ./release/index.html.tmp
+    cat ./release/index-en.html | sed -e "s#'\.\/src'#'./$version'#g" > ./release/index-en.html.tmp
+    mv ./release/index.html.tmp ./release/index.html
+    mv ./release/index-en.html.tmp ./release/index.html
 }
 
 build_index

@@ -88,7 +88,7 @@ define(
             },
 
             'new': function () {
-                if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑的项目?')) {
+                if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
                     return;
                 }
                 program.ttfManager.set(getEmptyttfObject());
