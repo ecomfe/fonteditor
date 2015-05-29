@@ -5,6 +5,7 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         var lang = require('common/lang');
         var settingSupport = require('../dialog/support');
         var clipboard = require('editor/widget/clipboard');
@@ -55,7 +56,7 @@ define(
                 var font = ttf.glyf[glyfIndex];
                 if (font) {
                     if (font.compond) {
-                        alert('暂不支持复合字形!');
+                        alert(i18n.lang.msg_not_support_compound_glyf);
                     }
                     else {
                         program.editor.setFont(lang.clone(font));
@@ -205,7 +206,7 @@ define(
             })
             .on('edit', function (e) {
 
-                if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
+                if (program.editor.isChanged() && !confirm(i18n.lang.msg_confirm_save_glyph)) {
                     return;
                 }
 
@@ -323,7 +324,7 @@ define(
                             showTTF(program.ttfManager.get(), page, glyfList);
                         }
                         else {
-                            program.loading.warn('未找到相关字形!', 1000);
+                            program.loading.warn(i18n.lang.msg_no_related_glhph, 1000);
                         }
                     }
                 }).show();
@@ -376,7 +377,7 @@ define(
                         editingIndex = program.ttfManager.get().glyf.length;
                     }
 
-                    if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
+                    if (program.editor.isChanged() && !confirm(i18n.lang.msg_confirm_save_glyph)) {
                         return;
                     }
                     program.viewer.setEditing(--editingIndex);
@@ -398,7 +399,7 @@ define(
                         editingIndex = -1;
                     }
 
-                    if (program.editor.isChanged() && !confirm('是否放弃保存当前编辑的字形?')) {
+                    if (program.editor.isChanged() && !confirm(i18n.lang.msg_confirm_save_glyph)) {
                         return;
                     }
                     program.viewer.setEditing(++editingIndex);
@@ -428,7 +429,7 @@ define(
                 var oldProjectId = program.data.projectId;
                 program.project.get(e.projectId).then(function (imported) {
                     if (imported) {
-                        if (program.ttfManager.isChanged() && !window.confirm('是否放弃保存当前编辑项目?')) {
+                        if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
                             return;
                         }
                         program.ttfManager.set(imported);
@@ -437,7 +438,7 @@ define(
                         program.viewer.focus();
                     }
                 }, function () {
-                    if (window.confirm('打开项目失败，是否删除项目?')) {
+                    if (window.confirm(i18n.lang.msg_error_open_proj)) {
                         var fnRemoveProject = function () {
                             program.projectViewer.show(program.project.items(), oldProjectId);
                         };
@@ -460,7 +461,7 @@ define(
                         program.data.projectId = null;
                     }
                 }, function () {
-                    program.loading.warn('删除项目失败!', 1000);
+                    program.loading.warn(i18n.lang.msg_error_del_proj, 1000);
                 });
 
                 program.viewer.focus();
@@ -594,7 +595,7 @@ define(
 
                 window.onbeforeunload = function () {
                     if (program.ttfManager.isChanged()) {
-                        return '是否放弃保存当前编辑的项目?';
+                        return i18n.lang.msg_confirm_save_proj;
                     }
                 };
             }

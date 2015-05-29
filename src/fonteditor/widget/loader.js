@@ -6,7 +6,7 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var TTFReader = require('ttf/ttfreader');
         var woff2ttf = require('ttf/woff2ttf');
         var eot2ttf = require('ttf/eot2ttf');
@@ -76,7 +76,7 @@ define(
             fileReader.onerror = function (e) {
                 loading.hide();
                 fileReader = null;
-                alert('读取文件出错!');
+                alert(i18n.lang.msg_error_read_file);
                 options.error && options.error(e);
             };
             fileReader.readAsArrayBuffer(file);
@@ -137,7 +137,7 @@ define(
             fileReader.onerror = function (e) {
                 loading.hide();
                 fileReader = null;
-                alert('读取文件出错!');
+                alert(i18n.lang.msg_error_read_file);
                 options.error && options.error(e);
             };
             fileReader.readAsText(file);
@@ -200,7 +200,7 @@ define(
                 }
                 else {
                     options.error && options.error({
-                        message: '不支持的文件类型'
+                        message: i18n.lang.msg_not_support_file_type
                     });
                 }
             },

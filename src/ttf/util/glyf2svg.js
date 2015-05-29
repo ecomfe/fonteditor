@@ -42,7 +42,7 @@ define(
                 glyfs.forEach(function (g) {
                     var glyph = ttf.glyf[g.glyphIndex];
 
-                    if (!glyph) {
+                    if (!glyph || !glyph.contours || !glyph.contours.length) {
                         return;
                     }
 

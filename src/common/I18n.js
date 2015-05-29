@@ -28,7 +28,11 @@ define(
          */
         function I18n(languageList, defaultLanguage) {
             this.store = appendLanguage({}, languageList);
-            this.setLanguage('en-us' || defaultLanguage || navigator.language.toLowerCase());
+            this.setLanguage(
+                defaultLanguage
+                || navigator && navigator.language.toLowerCase()
+                || 'en-us'
+            );
         }
 
 
@@ -49,7 +53,6 @@ define(
         /**
          * 添加一个语言字符串
          *
-         * @param  {string} path 语言路径
          * @param {string} language 语言
          * @param {Object} langObject 语言对象
          * @return {this}
@@ -62,7 +65,7 @@ define(
         /**
          * 获取当前语言字符串
          * @param  {string} path 语言路径
-         * @return {string=}      语言字符串
+         * @return {string}      语言字符串
          */
         I18n.prototype.get = function (path) {
             var ref = path.split('.');

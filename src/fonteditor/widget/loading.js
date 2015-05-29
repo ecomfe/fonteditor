@@ -5,6 +5,7 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
 
         /**
          * 提示
@@ -27,7 +28,7 @@ define(
                 var loading = $('#loading');
                 loading.attr('data-status', status || '')
                     .find('span')
-                    .html(text || '正在加载...');
+                    .html(text || i18n.lang.msg_loading);
                 loading.show();
 
                 if (duration) {

@@ -5,7 +5,7 @@
 
 define(
     function (require) {
-
+        var i18n = require('./i18n/i18n');
         var GLYFViewer = require('./widget/glyfviewer/GLYFViewer');
         var GLYFEditor = require('./widget/GLYFEditor');
         var ProjectViewer = require('./widget/ProjectViewer');
@@ -56,12 +56,11 @@ define(
                 }
             }
             else {
-                alert('无法识别文件类型!');
+                alert(i18n.lang.msg_not_support_file_type);
             }
 
             e.target.value = '';
         }
-
 
         function bindEvent() {
             $('.action-groups').delegate('[data-action]', 'click',  function (e) {
@@ -87,6 +86,7 @@ define(
              * 初始化
              */
             init: function () {
+
                 bindEvent();
 
                 program.setting = require('./widget/settingmanager');

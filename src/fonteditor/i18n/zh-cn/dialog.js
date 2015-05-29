@@ -80,7 +80,7 @@ define(
             dialog_pic_open: '消除杂点',
             dialog_pic_close: '消除孔洞',
             dialog_pic_dilate: '膨胀',
-            dialog_pic_enrode: '腐蚀',
+            dialog_pic_enrode: '腐蚀'
         };
     }
 );

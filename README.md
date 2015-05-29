@@ -3,6 +3,7 @@ fonteditor 在线ttf字体编辑器
 
 [线上地址](http://font.baidu.com)
 
+[English Version](http://font.baidu.com/index-en.html)
 
 ## release log:
 
@@ -42,3 +43,5 @@ fonteditor 在线ttf字体编辑器
 17. 2015-4-12 增加同步字体功能.
 
 18. 2015-4-27 增加otf字体读取和转换ttf功能.
+
+19. 2015-5-29 增加英文版本.

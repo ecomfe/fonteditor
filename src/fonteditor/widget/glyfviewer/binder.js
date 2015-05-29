@@ -7,6 +7,7 @@
 
 define(
     function (require) {
+        var i18n = require('../../i18n/i18n');
         var lang = require('common/lang');
         var DragSelector = require('../DragSelector');
 
@@ -19,7 +20,7 @@ define(
             var selected = +selectedGlyf.attr('data-index');
 
             if (action === 'del') {
-                if (!window.confirm('确定删除字形么？')) {
+                if (!window.confirm(i18n.lang.msg_confirm_del_glyph)) {
                     return;
                 }
 

@@ -18,7 +18,8 @@ define(
 
                 ['zh-cn', require('./zh-cn/dialog')],
                 ['en-us', require('./en-us/dialog')]
-            ]
+            ],
+            window.language
         );
     }
 );

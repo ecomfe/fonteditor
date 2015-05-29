@@ -6,6 +6,7 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         var settingSupport = require('../dialog/support');
         var program = require('../widget/program');
         var ajaxFile = require('common/ajaxFile');
@@ -44,7 +45,7 @@ define(
                     });
                 },
                 onError: function () {
-                    alert('加载文件错误!');
+                    alert(i18n.lang.msg_read_file_error);
                 }
             });
         }
@@ -56,11 +57,11 @@ define(
 
         // 延迟同步选项
         var fontDelaySync = lang.debounce(function (projectId, ttf, syncConfig) {
-            program.loading.show('正在同步...', 4000);
+            program.loading.show(i18n.lang.msg_syncing, 4000);
             program.sync.addTask(projectId, ttf, syncConfig).then(function (reason) {
-                program.loading.show('同步成功...', 400);
+                program.loading.show(i18n.lang.msg_sync_success, 400);
             }, function (reason) {
-                program.loading.show('同步失败：' + reason.statusInfo + '...', 400);
+                program.loading.show(i18n.lang.msg_sync_failed + reason.statusInfo + '...', 400);
             });
         }, 500);
 
@@ -138,19 +139,19 @@ define(
                         program.project.update(projectId, program.ttfManager.get())
                         .then(function () {
                             program.ttfManager.setState('saved');
-                            program.loading.show('保存成功...', 400);
+                            program.loading.show(i18n.lang.msg_save_success, 400);
                             var syncConfig = program.project.getConfig(projectId).sync;
                             if (syncConfig && syncConfig.autoSync) {
                                 actions.sync(projectId, program.ttfManager.get(), syncConfig);
                             }
                         }, function () {
-                            program.loading.show('保存失败...', 1000);
+                            program.loading.show(i18n.lang.msg_save_failed, 1000);
                         });
 
                     }
                     else {
                         var name = program.ttfManager.get().name.fontFamily || '';
-                        if ((name = window.prompt('请输入项目名称：', name))) {
+                        if ((name = window.prompt(i18n.lang.msg_input_proj_name, name))) {
 
                             name = string.encodeHTML(name);
                             program.project.add(name, program.ttfManager.get())
@@ -158,10 +159,10 @@ define(
                                 program.data.projectId = id;
                                 program.ttfManager.setState('new');
                                 program.projectViewer.show(program.project.items(), id);
-                                program.loading.show('保存成功...', 400);
+                                program.loading.show(i18n.lang.msg_save_success, 400);
 
                             }, function () {
-                                program.loading.show('保存失败...', 400);
+                                program.loading.show(i18n.lang.msg_save_failed, 400);
                             });
                         }
                     }
@@ -184,7 +185,7 @@ define(
                 !new SettingOnline({
                     onChange: function (url) {
 
-                        program.loading.show('正在加载..', 1000);
+                        program.loading.show(i18n.lang.msg_loading, 1000);
                         // 此处延迟处理
                         setTimeout(function () {
                             var type = url.slice(url.lastIndexOf('.') + 1);
@@ -205,7 +206,7 @@ define(
                 var SettingUrl = settingSupport.url;
                 !new SettingUrl({
                     onChange: function (url) {
-                        program.loading.show('正在加载..', 1000);
+                        program.loading.show(i18n.lang.msg_loading, 1000);
                         // 此处延迟处理
                         setTimeout(function () {
                             var fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
@@ -249,7 +250,7 @@ define(
 
             'setting-glyf-name': function () {
                 if (program.ttfManager.get()) {
-                    if (window.confirm('生成的字形名称会覆盖原来的名称，确定生成？')) {
+                    if (window.confirm(i18n.lang.msg_confirm_gen_names)) {
                         program.ttfManager.genGlyfName(program.viewer.getSelected());
                     }
                 }

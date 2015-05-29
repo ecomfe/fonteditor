@@ -36,11 +36,11 @@ define(
             },
             {
                 name: 'adjust-pos',
-                title: ei18n.lang.adjustpos,
+                title: ei18n.lang.adjustpos
             },
             {
                 name: 'adjust-glyf',
-                title: ei18n.lang.adjustglyf,
+                title: ei18n.lang.adjustglyf
             },
             {
                 name: 'setting-font',
@@ -52,15 +52,15 @@ define(
             },
             {
                 name: 'find-glyf',
-                title: i18n.lang.findglyf,
+                title: i18n.lang.findglyf
             },
             {
                 name: 'setting-unicode',
-                title: i18n.lang.setunicode,
+                title: i18n.lang.setunicode
             },
             {
                 name: 'setting-sync',
-                title: i18n.lang.syncfont,
+                title: i18n.lang.syncfont
             }
         ];
     }

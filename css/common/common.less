@@ -49,11 +49,10 @@ body, html {
     top: 0;
 
     >.logo {
-        loat: left;
+        float: left;
         width: 180px;
         height: 50px;
         background: url(./img/logo.png) no-repeat;
-        float: left;
         background-color: #fff;
         background-position: center;
         background-image: url(./img/logo@1x.png);
@@ -222,22 +221,31 @@ body, html {
     pointer-events: none;
 }
 
-.forkme {
+.forkme,
+.userguide,
+.switch-lang {
     position: absolute;
     color: #FFF;
-    right: 2px;
-    top: 2px;
-    color: #333
-}
-
-.userguide {
-    position: absolute;
-    color: #FFF;
-    right: 2px;
-    top: 24px;
     color: #333;
 }
 
+.forkme {
+    right: 2px;
+    top: 2px;
+}
+
+.userguide {
+    right: 2px;
+    top: 24px;
+}
+
+.switch-lang {
+    right: 140px;
+    top: 2px;
+    a {
+        color: #666;
+    }
+}
 
 // modal
 

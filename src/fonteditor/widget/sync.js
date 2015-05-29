@@ -6,7 +6,7 @@
 
 define(
     function (require) {
-
+        var i18n = require('../i18n/i18n');
         var Resolver = require('common/promise');
         var project = require('./project');
         var TTFWriter = require('ttf/ttfwriter');
@@ -112,7 +112,7 @@ define(
                 if (!syncConfig || !syncConfig.url) {
                     return Resolver.rejected({
                         status: 2,
-                        statusInfo: '没有同步设置!'
+                        statusInfo: i18n.lang.msg_not_set_sync_info
                     });
                 }
 
@@ -124,7 +124,7 @@ define(
                     }, function () {
                         resolver.reject({
                             status: 2,
-                            statusInfo: '没有要同步的字体!'
+                            statusInfo: i18n.lang.msg_no_sync_font
                         });
                     });
                 }

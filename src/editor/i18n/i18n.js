@@ -12,7 +12,8 @@ define(
             [
                 ['zh-cn', require('./zh-cn')],
                 ['en-us', require('./en-us')]
-            ]
+            ],
+            window.language
         );
     }
 );

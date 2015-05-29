@@ -45,8 +45,8 @@ define(
             sCapHeight: '`H` Height',
             yStrikeoutPosition: 'Strikeout Position',
             yStrikeoutSize: 'Strikeout Size',
-            underlinePosition: '下划线位置',
-            underlineThickness: '下划线厚度',
+            underlinePosition: 'Underline Position',
+            underlineThickness: 'Underline Thickness',
             ySubscriptXSize: 'Subscript x Size',
             ySubscriptYSize: 'Subscript y Size',
             ySubscriptXOffset: 'Subscript x Offset',
@@ -68,7 +68,11 @@ define(
             postScriptName: 'PostScript Name',
             unitsPerEm: 'EM Size',
             lowestRecPPEM: 'Lowest Recognized PPEM',
-            created: 'Created Time'
+            created: 'Created Time',
+            setting: 'Setting',
+            help: 'Help',
+            confirm: 'Confirm',
+            cancel: 'Cancel'
 
         };
     }

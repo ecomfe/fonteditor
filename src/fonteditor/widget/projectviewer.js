@@ -26,7 +26,7 @@ define(
                 var action = target.attr('data-action');
                 var id = target.parents('[data-id]').attr('data-id');
                 if ('del' === action) {
-                    if (!window.confirm('是否删除项目?')) {
+                    if (!window.confirm(i18n.lang.msg_confirm_del_proj)) {
                         return;
                     }
                     me.current && me.current.remove();

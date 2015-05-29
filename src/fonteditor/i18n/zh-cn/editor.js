@@ -68,8 +68,11 @@ define(
             postScriptName: 'PostScript名称',
             unitsPerEm: 'em框大小',
             lowestRecPPEM: '最小可读尺寸',
-            created: '创建日期'
-
+            created: '创建日期',
+            setting: '设置',
+            help: '帮助',
+            confirm: '确定',
+            cancel: '取消'
         };
     }
 );

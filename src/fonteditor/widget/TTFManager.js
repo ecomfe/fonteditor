@@ -5,6 +5,7 @@
 
 define(
     function (require) {
+        var i18n = require('../i18n/i18n');
         var lang = require('common/lang');
         var History = require('editor/widget/History');
         var TTF = require('ttf/ttf');
@@ -430,7 +431,7 @@ define(
 
             var message = '';
             if (result.repeat) {
-                message = '重复的unicode代码点，字形序号：' + result.repeat.join(',');
+                message = i18n.lang.msg_repeat_unicode + result.repeat.join(',');
             }
 
             return {

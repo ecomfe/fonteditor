@@ -58,6 +58,7 @@ exports.getProcessors = function () {
                 'src/render/**',
                 'src/ttf/**',
                 'src/fonteditor/*/**',
+                '*.tpl'
             ]
         })
     ];
@@ -80,7 +81,8 @@ exports.exclude = [
     ".gitignore",
     "package.json",
     "node",
-    "node_modules"
+    "node_modules",
+    "build"
 ];
 
 exports.injectProcessor = function ( processors ) {

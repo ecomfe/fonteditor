@@ -170,13 +170,15 @@ define(
                             var compositePoints = 0;
                             glyf.glyfs.forEach(function (g) {
                                 var cglyf = ttf.glyf[g.glyphIndex];
+                                if (!cglyf) {
+                                    return;
+                                }
                                 compositeContours += cglyf.contours ? cglyf.contours.length : 0;
                                 if (cglyf.contours && cglyf.contours.length) {
                                     cglyf.contours.forEach(function (contour) {
                                         compositePoints += contour.length;
                                     });
                                 }
-
                             });
 
                             maxComponentElements++;

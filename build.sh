@@ -3,25 +3,24 @@
 # 时间戳
 version=`date "+%Y%m%d"`
 
+# build首页版本
+build_index() {
+    node "./build/build-index.js" $version
+}
+
 # build静态资源
 build_asset() {
     edp build --stage=release --force
     echo "asset path：./release"
 }
 
-# build模板文件
-build_tpl() {
 
+# 移动文件到指定目录
+move_asset() {
     mv ./release/src ./release/$version
-
-    cat ./release/index.html |
-        sed -e "s#'\.\/src'#'./$version'#g" |
-        tr -s "\n" " " |
-        sed 's#[[:space:]]\+# #g' > ./release/index.tmp
-
-    mv ./release/index.tmp ./release/index.html
+    cp ./*.html ./release/
 }
 
-
+build_index
 build_asset
-build_tpl
+move_asset
