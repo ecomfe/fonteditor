@@ -18,7 +18,7 @@ define(
 
             var selectedGlyf = target.parent('[data-index]');
             var selected = +selectedGlyf.attr('data-index');
-
+            var lastEditing = this.getEditing();
             if (action === 'del') {
                 if (!window.confirm(i18n.lang.msg_confirm_del_glyph)) {
                     return;
@@ -31,18 +31,19 @@ define(
                     this.selectedList.splice(selectedIndex, 1);
                 }
 
-                if (selected === this.getEditing()) {
+                if (selected === lastEditing) {
                     this.setEditing(-1);
                 }
-
+                this.fire('del', {
+                    list: [selected]
+                });
             }
             else if (action === 'edit') {
-                this.setEditing(selected);
+                this.fire('edit', {
+                    lastEditing: lastEditing,
+                    list: [selected]
+                });
             }
-
-            this.fire(action, {
-                list: [selected]
-            });
         }
 
         function onDragSelected(e) {
@@ -143,10 +144,10 @@ define(
             var me = this;
             me.main.on('click', '[data-action]', lang.bind(onItemClick, this))
             .on('dblclick', '[data-index]', function (e) {
-                if (!e.ctrlKey && !e.shiftKey && !e.target.getAttribute('data-action')) {
+                if (!e.ctrlKey && !e.shiftKey && !e.target.getAttribute('data-action') && me.mode === 'list') {
                     var selected = $(this).attr('data-index');
-                    me.setEditing(selected);
                     me.fire('edit', {
+                        lastEditing: me.getEditing(),
                         list: [selected]
                     });
                 }
@@ -161,8 +162,8 @@ define(
                     if (!e.ctrlKey && !e.shiftKey) {
                         if (me.mode === 'editor') {
                             var selected = the.attr('data-index');
-                            me.setEditing(selected);
                             me.fire('edit', {
+                                lastEditing: me.getEditing(),
                                 list: [selected]
                             });
                         }

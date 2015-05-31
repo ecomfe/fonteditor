@@ -74,7 +74,6 @@ define(
 
             program.editor && program.editor.hide();
 
-            program.viewer.clearEditing();
             program.viewer.setMode('list');
             program.viewer.focus();
         }
@@ -206,14 +205,19 @@ define(
             })
             .on('edit', function (e) {
 
+                if (e.lastEditing === e.list[0]) {
+                    showEditor();
+                    return;
+                }
+
                 if (program.editor.isChanged() && !confirm(i18n.lang.msg_confirm_save_glyph)) {
                     return;
                 }
 
                 $('.main').addClass('editing');
                 $('.editor').addClass('editing');
+                program.viewer.setEditing(e.list[0]);
                 showEditor(e.list[0]);
-
             })
             .on('copy', function (e) {
 
