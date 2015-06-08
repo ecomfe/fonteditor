@@ -51,6 +51,7 @@ define(
             dialog_import_and_export: '导入和导出',
 
             dialog_combine_svg_single_glyph: '导入svg文件时合并成单个字形',
+            dialog_save_with_glyf_name: '保存字体时同时保存字形命名',
 
             dialog_onlinefont: '在线字体',
 

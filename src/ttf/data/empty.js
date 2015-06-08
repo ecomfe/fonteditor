@@ -113,7 +113,7 @@ define(
                 "maxMemType42": 0,
                 "minMemType1": 0,
                 "maxMemType1": 1,
-                "format": 3
+                "format": 2
             },
             "maxp": {
                 "version": 1.0,

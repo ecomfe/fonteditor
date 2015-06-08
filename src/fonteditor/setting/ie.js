@@ -17,6 +17,7 @@ define(
 
             // 导出
             'export': {
+                saveWithGlyfName: true // 导出字体时保存字形的名字
             }
         };
 

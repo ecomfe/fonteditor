@@ -51,6 +51,7 @@ define(
             dialog_import_and_export: 'Import and Export',
 
             dialog_combine_svg_single_glyph: 'Combine svg to Single Glyph',
+            dialog_save_with_glyf_name: 'save glyph name when exporting font',
 
             dialog_onlinefont: 'Online Font',
 

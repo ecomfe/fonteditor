@@ -7,7 +7,7 @@
 define(
     function (require) {
 
-        var TTFWriter = require('ttf/ttfwriter');
+        var writettf = require('./util/writettf');
         var ttf2woff = require('ttf/ttf2woff');
         var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
@@ -43,7 +43,7 @@ define(
                 buffer = ttf2svg(ttf);
             }
             else {
-                buffer = new TTFWriter().write(ttf);
+                buffer = writettf(ttf);
                 options.type = 'ttf';
             }
 

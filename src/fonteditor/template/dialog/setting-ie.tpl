@@ -8,6 +8,18 @@
         </div>
     </div>
 </div>
+
+<div class="form-inline">
+    <div class="form-group">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon">${lang.dialog_save_with_glyf_name}</span>
+            <span class="form-control">
+                <input data-field="export.saveWithGlyfName" type="checkbox">
+            </span>
+        </div>
+    </div>
+</div>
+
 <div class="form-inline">
     <div class="input-group input-group-sm">
         <span class="input-group-addon">${lang.dialog_savesetting}</span>
