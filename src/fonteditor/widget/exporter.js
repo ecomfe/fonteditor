@@ -34,10 +34,10 @@ define(
 
                 // 这里没有用deflate压缩函数，是因为在一些安卓手机上, MI 4.4
                 // 不能识别压缩字体
-                buffer = ttf2woff(new TTFWriter().write(ttf));
+                buffer = ttf2woff(writettf(ttf));
             }
             else if (options.type === 'eot') {
-                buffer = ttf2eot(new TTFWriter().write(ttf));
+                buffer = ttf2eot(writettf(ttf));
             }
             else if (options.type === 'svg') {
                 buffer = ttf2svg(ttf);

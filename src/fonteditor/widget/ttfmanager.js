@@ -198,11 +198,12 @@ define(
          *
          * @param {string} unicode unicode代码
          * @param {Array=} indexList 索引列表
+         * @param {boolean} isGenerateName 是否生成name
          * @return {this}
          */
-        Manager.prototype.setUnicode = function (unicode, indexList) {
+        Manager.prototype.setUnicode = function (unicode, indexList, isGenerateName) {
 
-            var list = this.ttf.setUnicode(unicode, indexList, true);
+            var list = this.ttf.setUnicode(unicode, indexList, isGenerateName);
             if (list.length) {
                 list.forEach(function (g) {
                     g.modify = 'edit';

@@ -109,16 +109,16 @@ table {
   background-color: #fffdef;
   overflow: auto;
 }
-.icon-list {
+.iconfont-list {
   overflow: hidden;
 }
-.icon-list li {
+.iconfont-list li {
   float: left;
   width: 100px;
   height: 150px;
   text-align: center;
 }
-.icon-list .icon {
+.iconfont-list .icon {
   font-size: 42px;
   line-height: 100px;
   margin: 10px 0;
@@ -128,10 +128,10 @@ table {
   -moz-transition: font-size 0.25s ease-out 0s;
   transition: font-size 0.25s ease-out 0s;
 }
-.icon-list .icon:hover {
+.iconfont-list .icon:hover {
   font-size: 100px;
 }
-.icon-list .code {
+.iconfont-list .code {
   color: green;
   font-weight: bold;
 }

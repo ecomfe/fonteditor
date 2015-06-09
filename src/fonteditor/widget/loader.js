@@ -118,11 +118,15 @@ define(
 
             loading.show();
             var fileReader = new FileReader();
-
+            var fName = file.name.replace(/\.\w+$/, '');
             fileReader.onload = function (e) {
                 try {
                     var buffer = e.target.result;
                     var imported = svg2ttf(buffer);
+                    // 设置单个字形名字
+                    if (imported.glyf && imported.glyf.length == 1) {
+                        imported.glyf[0].name = fName;
+                    }
                     fileReader = null;
                     options.success && options.success(imported);
                 }

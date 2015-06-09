@@ -337,12 +337,12 @@ define(
             .on('setting-unicode', function (e) {
                 var SettingUnicode = settingSupport.unicode;
                 !new SettingUnicode({
-                    onChange: function (unicode) {
+                    onChange: function (setting) {
                         // 此处延迟处理
                         setTimeout(function () {
                             if (program.ttfManager.get()) {
                                 var glyfList = program.viewer.getSelected();
-                                program.ttfManager.setUnicode(unicode, glyfList);
+                                program.ttfManager.setUnicode(setting.unicode, glyfList, setting.isGenerateName);
                             }
                         }, 20);
                     }

@@ -9,7 +9,7 @@
 <body>
     <div class="main">
         <h1>{%=fontFamily%} example</h1>
-        <ul class="icon-list">
+        <ul class="iconfont-list">
             {%_.each(glyfList, function(glyf) {%}
             <li>
             <i class="icon icon-{%=glyf.name%}"></i>

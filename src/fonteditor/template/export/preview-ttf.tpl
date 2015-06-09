@@ -16,7 +16,7 @@
 </style>
 <div class="main">
     <h1>${lang.preview_title}</h1>
-    <ul class="icon-list">
+    <ul class="iconfont-list">
         {%glyfList.forEach(function(glyf) {%}
         <li>
             <i class="icon">{%=glyf.code%}</i>

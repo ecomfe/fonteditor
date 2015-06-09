@@ -19,6 +19,14 @@ define(
             +       '</ul>'
             +     '</div>'
             +     '<input id="setting-text-unicode" type="text" class="form-control" value="$E001">'
+            +   '</div>'
+            +   '<div class="form-inline">'
+            +     '<div class="input-group input-group-sm">'
+            +         '<span class="input-group-addon">${lang.dialog_generage_name}</span>'
+            +         '<span class="form-control">'
+            +             '<input id="setting-text-unicode-name" type="checkbox">'
+            +         '</span>'
+            +     '</div>'
             +   '</div>';
 
         return require('./setting').derive({
@@ -32,7 +40,10 @@ define(
             validate: function () {
                 var unicode = $('#setting-text-unicode').val();
                 if (unicode.match(/^\$[A-F0-9]+$/i)) {
-                    return (this.setting = unicode);
+                    return (this.setting = {
+                        unicode: unicode,
+                        isGenerateName: $('#setting-text-unicode-name').is(':checked')
+                    });
                 }
 
                 alert('代码点设置不正确');

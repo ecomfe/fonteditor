@@ -45,6 +45,7 @@ define(
 
             dialog_unicode_set: '设置代码点',
             dialog_unicode_start: '起始代码点',
+            dialog_generage_name: '是否生成字形名称',
 
             dialog_metrics: '字体度量',
 

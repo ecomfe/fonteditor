@@ -45,6 +45,7 @@ define(
 
             dialog_unicode_set: 'Set Unicode',
             dialog_unicode_start: 'Start Unicode Code',
+            dialog_generage_name: 'Generate Glyph Name',
 
             dialog_metrics: 'Metrics',
 

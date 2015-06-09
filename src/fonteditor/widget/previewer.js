@@ -36,11 +36,11 @@ define(
             var buffer;
 
             if (fontFormat === 'woff') {
-                buffer = new TTFWriter().write(ttf);
+                buffer = writettf(ttf);
                 fontData = woff2base64(ttf2woff(buffer));
             }
             else if (fontFormat === 'eot') {
-                buffer = new TTFWriter().write(ttf);
+                buffer = writettf(ttf);
                 fontData = eot2base64(ttf2eot(buffer));
             }
             else  if (fontFormat === 'svg') {

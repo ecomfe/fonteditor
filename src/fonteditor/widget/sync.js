@@ -9,7 +9,7 @@ define(
         var i18n = require('../i18n/i18n');
         var Resolver = require('common/promise');
         var project = require('./project');
-        var TTFWriter = require('ttf/ttfwriter');
+        var writettf = require('./util/writettf');
         var ttf2woff = require('ttf/ttf2woff');
         var ttf2eot = require('ttf/ttf2eot');
         var ttf2svg = require('ttf/ttf2svg');
@@ -56,7 +56,7 @@ define(
             var syncData = {};
 
             if (syncConfig.woff || syncConfig.ttf || syncConfig.eot) {
-                var buffer = new TTFWriter().write(ttf);
+                var buffer = writettf(ttf);
 
                 if (syncConfig.ttf) {
                     fontType.push('ttf');
