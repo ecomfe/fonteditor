@@ -22,8 +22,13 @@ define(
                 $('#setting-glyf-unicode').on('blur', function (e) {
                     var val = $(this).val();
                     var ctlGlyfName = $('#setting-glyf-name');
-                    if (!ctlGlyfName.val() && val.match(unicodeREG)) {
-                        val = Number('0x' + val.split(',')[0].slice(1));
+                    if (!ctlGlyfName.val()) {
+                        if (val.match(unicodeREG)) {
+                            val = Number('0x' + val.split(',')[0].slice(1));
+                        }
+                        else if (val) {
+                            val = val.charCodeAt(0);
+                        }
                         ctlGlyfName.val(string.getUnicodeName(val));
                     }
                 });

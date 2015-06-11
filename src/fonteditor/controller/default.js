@@ -73,7 +73,7 @@ define(
             $('.editor').removeClass('editing');
 
             program.editor && program.editor.hide();
-
+            program.viewer.clearEditing();
             program.viewer.setMode('list');
             program.viewer.focus();
         }
