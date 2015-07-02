@@ -28,7 +28,7 @@ define(
             glyfs.forEach(function (g) {
                 var glyph = ttf.glyf[g.glyphIndex];
 
-                if (!glyph) {
+                if (!glyph && !glyph.length) {
                     return;
                 }
 

@@ -73,7 +73,7 @@ define(
                             flags += componentFlag.WE_HAVE_A_TWO_BY_TWO;
                         }
                         else {
-                            if (a !== 1 || d !== 1 && a === d) {
+                            if ((a !== 1 || d !== 1) && a === d) {
                                 flags += componentFlag.WE_HAVE_A_SCALE;
                             }
                             else if (a !== 1 || d !== 1) {

@@ -104,12 +104,12 @@ define(
                     ttf.post.maxMemType1 = numberOfGlyphs;
 
                     // version 3 不设置post信息
-                    if (post.format === 3 || post.format === 1) {
-                        return 34;
+                    if (ttf.post.format === 3 || ttf.post.format === 1) {
+                        return 32;
                     }
 
                     // version 2
-                    var size = 34 + numberOfGlyphs * 2; // header + numberOfGlyphs * 2
+                    var size = 34 + numberOfGlyphs * 2; // header + numberOfGlyphs + numberOfGlyphs * 2
                     var glyphNames = [];
                     var nameIndexArr = [];
                     var nameIndex = 0;
