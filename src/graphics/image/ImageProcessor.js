@@ -276,7 +276,7 @@ define(
          * 注销
          */
         ImageProcessor.prototype.dispose = function () {
-            this.imageData = this.originData;
+            this.imageData = this.originData = null;
         };
 
         return ImageProcessor;

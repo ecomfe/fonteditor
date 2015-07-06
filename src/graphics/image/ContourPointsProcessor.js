@@ -66,7 +66,7 @@ define(
         /**
          * 获取关键点数组
          *
-         * @param {number} index 指定轮廓的关键点数组
+         * @param {number} index 指定轮廓的关键点数组索引号
          * @return {Array} 关键点数组
          */
         Processor.prototype.getBreakPoints = function (index) {
