@@ -4,8 +4,9 @@
  */
 
 var esprima = require('esprima');
-var estraverse = require( 'estraverse' );
-var escodegen = require('escodegen');
+var estraverse = require('estraverse');
+
+
 var SYNTAX = estraverse.Syntax;
 
 // 顶级模块，用来生成相对位置
@@ -32,7 +33,8 @@ function getAst(code) {
         ast = esprima.parse(code, {
             range: true
         });
-    } catch (ex) {
+    }
+    catch (e) {
         throw 'can\'t parse amd code';
     }
 
@@ -41,12 +43,12 @@ function getAst(code) {
 
 /**
  * 获取define的factory
- *
+ * @param {Object} defineExpr define表达式
  * @return {astNode}
  */
 function getDefineFactory(defineExpr) {
 
-    var args = defineExpr['arguments'];
+    var args = defineExpr.arguments;
     var factoryAst;
 
     // 解析参数
@@ -74,9 +76,9 @@ function getDefineBlock(code) {
     // require('fs').writeFileSync('ast.json', JSON.stringify(ast));
     estraverse.traverse(ast, {
         enter: function (node, parent) {
-            if ( node.type == SYNTAX.ExpressionStatement
-                && node.expression.type == SYNTAX.CallExpression
-                && node.expression.callee.name == 'define'
+            if (node.type === SYNTAX.ExpressionStatement
+                && node.expression.type === SYNTAX.CallExpression
+                && node.expression.callee.name === 'define'
             ) {
 
                 var factory = getDefineFactory(node.expression);
@@ -91,7 +93,7 @@ function getDefineBlock(code) {
                 }
 
                 // define(function() {})
-                else if (factory.type === SYNTAX.FunctionExpression){
+                else if (factory.type === SYNTAX.FunctionExpression) {
                     defineBlock = {
                         type: 'function',
                         defineRange: node.range,
@@ -101,6 +103,18 @@ function getDefineBlock(code) {
                     var body = factory.body.body;
                     var returnRange = defineBlock.returnRange = [];
 
+                    var enterHandler = function (returnNode) {
+                        if (
+                            returnNode.type === SYNTAX.FunctionExpression
+                            || returnNode.type === SYNTAX.FunctionDeclaration
+                        ) {
+                            this.skip();
+                        }
+                        else if (returnNode.type === SYNTAX.ReturnStatement) {
+                            returnRange.push(returnNode.range);
+                        }
+                    };
+
                     // 替换return
                     for (var i = 0, l = body.length; i < l; i++) {
                         // 直接在函数体里的return
@@ -109,19 +123,9 @@ function getDefineBlock(code) {
                         }
                         // 在函数内部块里的return
                         else if (body[i].type !== SYNTAX.FunctionExpression) {
-                            var functionEnter = 0;
+
                             estraverse.traverse(body[i], {
-                                enter: function (returnNode) {
-                                    if (
-                                        returnNode.type === SYNTAX.FunctionExpression
-                                        || returnNode.type === SYNTAX.FunctionDeclaration
-                                    ) {
-                                        this.skip();
-                                    }
-                                    else if (returnNode.type === SYNTAX.ReturnStatement){
-                                        returnRange.push(returnNode.range);
-                                    }
-                                }
+                                enter: enterHandler
                             });
                         }
                     }
@@ -166,7 +170,7 @@ function replaceDefine(code) {
 
             index = block.defineRange[1];
         }
-        else if (block.type === 'object'){
+        else if (block.type === 'object') {
             segments.push(code.slice(index, block.defineRange[0]));
             segments.push('module.exports =');
             segments.push(code.slice(block.factoryRange[0], block.factoryRange[1]) + ';');
@@ -200,16 +204,6 @@ function replaceRequire(code, codeDepth) {
         }
         return 'require(\'' + moduleId + '\')';
     });
-}
-
-
-/**
- * 生成commonjs代码
- * @param  {Object} ast ast树
- * @return {string}     生成后的代码
- */
-function genCommonJS(ast) {
-    return escodegen.generate(ast);
 }
 
 module.exports = function (code, codeDepth) {

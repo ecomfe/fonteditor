@@ -3,10 +3,11 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+/* eslint-disable*/
 
 // 测试define函数
 define(
-    function(require) {
+    function (require) {
 
         return require('common/test').test({
             test1: 'test1',
@@ -19,7 +20,7 @@ define(
 // 测试 string
 
 define(
-    function(require) {
+    function (require) {
         return 'test string';
     }
 );
@@ -28,7 +29,7 @@ define(
 // 测试commonjs wrapper
 
 define('test-module', ['test-module'],
-    function(require) {
+    function (require) {
         return {
             test1: 'test1',
             test2: 'test2'
@@ -49,7 +50,7 @@ define('test-module', {
 
 // 测试多return
 define(
-    function(require) {
+    function (require) {
 
         var string = require('common/string');
 
