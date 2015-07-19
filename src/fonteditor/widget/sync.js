@@ -10,10 +10,10 @@ define(
         var Resolver = require('common/promise');
         var project = require('./project');
         var writettf = require('./util/writettf');
-        var ttf2woff = require('ttf/ttf2woff');
-        var ttf2eot = require('ttf/ttf2eot');
-        var ttf2svg = require('ttf/ttf2svg');
-        var bytes2base64 = require('ttf/util/bytes2base64');
+        var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
+        var ttf2eot = require('fonteditor-core/ttf/ttf2eot');
+        var ttf2svg = require('fonteditor-core/ttf/ttf2svg');
+        var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
 
         var formSubmitId = 0;
 

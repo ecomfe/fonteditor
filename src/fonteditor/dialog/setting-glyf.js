@@ -7,7 +7,7 @@ define(
     function (require) {
         var i18n = require('../i18n/i18n');
         var tpl = require('../template/dialog/setting-glyf.tpl');
-        var string = require('ttf/util/string');
+        var string = require('fonteditor-core/ttf/util/string');
         var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
 
         return require('./setting').derive({

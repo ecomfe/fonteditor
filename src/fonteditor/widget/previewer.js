@@ -8,15 +8,15 @@ define(
     function (require) {
 
         var writettf = require('./util/writettf');
-        var ttf2woff = require('ttf/ttf2woff');
-        var ttf2eot = require('ttf/ttf2eot');
-        var ttf2svg = require('ttf/ttf2svg');
-        var ttf2base64 = require('ttf/ttf2base64');
-        var woff2base64 = require('ttf/woff2base64');
-        var eot2base64 = require('ttf/eot2base64');
-        var svg2base64 = require('ttf/svg2base64');
+        var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
+        var ttf2eot = require('fonteditor-core/ttf/ttf2eot');
+        var ttf2svg = require('fonteditor-core/ttf/ttf2svg');
+        var ttf2base64 = require('fonteditor-core/ttf/ttf2base64');
+        var woff2base64 = require('fonteditor-core/ttf/woff2base64');
+        var eot2base64 = require('fonteditor-core/ttf/eot2base64');
+        var svg2base64 = require('fonteditor-core/ttf/svg2base64');
         var extend = require('common/lang').extend;
-        var ttf2icon = require('ttf/ttf2icon');
+        var ttf2icon = require('fonteditor-core/ttf/ttf2icon');
 
         var previewRender = require('../template/preview-render'); // 模板渲染函数
 

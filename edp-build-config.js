@@ -33,12 +33,11 @@ exports.getProcessors = function () {
             configFile: './module.conf'
         }),
 
-        // new Html2JsCompiler({
-        //     mode: 'default',
-        //     files: ['src/fonteditor/template/**/*.tpl'],
-        //     extnames: ['tpl'],
-        //     clean: true
-        // }),
+        new Html2JsCompiler({
+            mode: 'default',
+            files: ['src/fonteditor/template/**/*.tpl'],
+            extnames: ['tpl']
+        }),
 
         new JsCompressor({
             files: [
@@ -56,8 +55,8 @@ exports.getProcessors = function () {
                 'src/graphics/**',
                 'src/math/**',
                 'src/render/**',
-                'src/ttf/**',
                 'src/fonteditor/*/**',
+                'dep/fonteditor-core/**',
                 '*.tpl'
             ]
         })

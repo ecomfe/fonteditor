@@ -8,12 +8,12 @@ define(
     function (require) {
 
         var writettf = require('./util/writettf');
-        var ttf2woff = require('ttf/ttf2woff');
-        var ttf2eot = require('ttf/ttf2eot');
-        var ttf2svg = require('ttf/ttf2svg');
-        var ttf2icon = require('ttf/ttf2icon');
-        var bytes2base64 = require('ttf/util/bytes2base64');
-        var config = require('ttf/data/default');
+        var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
+        var ttf2eot = require('fonteditor-core/ttf/ttf2eot');
+        var ttf2svg = require('fonteditor-core/ttf/ttf2svg');
+        var ttf2icon = require('fonteditor-core/ttf/ttf2icon');
+        var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
+        var config = require('fonteditor-core/ttf/data/default');
         var exportRender = require('../template/export-render');
         var JSZip = require('JSZip');
 

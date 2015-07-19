@@ -37,6 +37,12 @@
 <script>
     require.config({
         baseUrl: '../src',
+        packages: [
+            {
+                name: 'fonteditor-core',
+                location: '../dep/fonteditor-core/src'
+            }
+        ],
         paths: {
             demo: '../demo/js',
         }

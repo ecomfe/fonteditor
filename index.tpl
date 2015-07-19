@@ -150,8 +150,13 @@
         window.language = '${lang.lang}';
         require.config({
             baseUrl: './src',
+            packages: [
+                {
+                    name: 'fonteditor-core',
+                    location: '../dep/fonteditor-core/src'
+                }
+            ],
             paths: {
-                text: '../dep/requirejs-text',
                 utpl: '../dep/utpl.min',
                 JSZip: '../dep/jszip/jszip.min',
                 inflate: '../dep/pako_inflate.min',

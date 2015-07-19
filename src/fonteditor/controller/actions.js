@@ -12,8 +12,8 @@ define(
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
         var lang = require('common/lang');
-        var glyfAdjust = require('ttf/util/glyfAdjust');
-        var getEmptyttfObject = require('ttf/getEmptyttfObject');
+        var glyfAdjust = require('fonteditor-core/ttf/util/glyfAdjust');
+        var getEmptyttfObject = require('fonteditor-core/ttf/getEmptyttfObject');
 
         /**
          * 读取在线字体

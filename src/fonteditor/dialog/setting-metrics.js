@@ -9,9 +9,9 @@ define(
         var tpl = require('../template/dialog/setting-metrics.tpl');
         var string = require('common/string');
         var program = require('../widget/program');
-        var weightClass = require('ttf/enum/weightClass');
-        var widthClass = require('ttf/enum/widthClass');
-        var panose = require('ttf/enum/panose');
+        var weightClass = require('fonteditor-core/ttf/enum/weightClass');
+        var widthClass = require('fonteditor-core/ttf/enum/widthClass');
+        var panose = require('fonteditor-core/ttf/enum/panose');
 
 
         return require('./setting').derive({

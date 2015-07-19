@@ -6,7 +6,7 @@
 
 define(
     function (require) {
-        var TTFWriter = require('ttf/ttfwriter');
+        var TTFWriter = require('fonteditor-core/ttf/ttfwriter');
         var program = require('../program');
 
         /**

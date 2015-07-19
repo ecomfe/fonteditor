@@ -19,3 +19,4 @@ demo/sync/*.woff
 demo/sync/*.eot
 demo/sync/*.svg
 
+dep/fonteditor-core

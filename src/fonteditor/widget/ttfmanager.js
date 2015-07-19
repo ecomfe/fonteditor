@@ -8,8 +8,8 @@ define(
         var i18n = require('../i18n/i18n');
         var lang = require('common/lang');
         var History = require('editor/widget/History');
-        var TTF = require('ttf/ttf');
-        var string = require('ttf/util/string');
+        var TTF = require('fonteditor-core/ttf/ttf');
+        var string = require('fonteditor-core/ttf/util/string');
 
         /**
          * 清除glyf编辑状态

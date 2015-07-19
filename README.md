@@ -3,7 +3,44 @@ fonteditor 在线ttf字体编辑器
 
 [线上地址](http://font.baidu.com)
 
-[English Version](http://font.baidu.com/index-en.html)
+[English Version](http://font.baidu.com/editor/index-en.html)
+
+
+### 开发:
+
+1. fonteditor依赖[fonteditor-core](https://github.com/kekee000/fonteditor-core)项目，需要在dep目录引入`fonteditor-core`。
+
+```
+cd ./dep
+git clone https://github.com/kekee000/fonteditor-core
+```
+
+2. `index.tpl`为入口模板文件，若要修改`index.tpl`需要执行以下命令来生成`index.html`和`index-en.html`入口文件。
+
+```
+node ./build/build-index.js
+```
+
+3. 使用`edp`对fonteditor进行调试
+
+
+```
+edp webserver start
+```
+
+### 编译:
+
+```
+sh build.sh
+```
+
+### 相关项目
+
+
+在线编辑器核心: [fonteditor-core](https://github.com/kekee000/fonteditor-core)
+
+在线编辑器node版: [fonteditor-ttf](https://github.com/kekee000/fonteditor-ttf)
+
 
 ## release log:
 
@@ -45,3 +82,5 @@ fonteditor 在线ttf字体编辑器
 18. 2015-4-27 增加otf字体读取和转换ttf功能.
 
 19. 2015-5-29 增加英文版本.
+
+20. 2015-7-19 拆分fonteditor-core模块，以便于开发和维护.

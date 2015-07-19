@@ -7,11 +7,11 @@
 define(
     function (require) {
         var i18n = require('../i18n/i18n');
-        var TTFReader = require('ttf/ttfreader');
-        var woff2ttf = require('ttf/woff2ttf');
-        var eot2ttf = require('ttf/eot2ttf');
-        var svg2ttfobject = require('ttf/svg2ttfobject');
-        var otf2ttfobject = require('ttf/otf2ttfobject');
+        var TTFReader = require('fonteditor-core/ttf/ttfreader');
+        var woff2ttf = require('fonteditor-core/ttf/woff2ttf');
+        var eot2ttf = require('fonteditor-core/ttf/eot2ttf');
+        var svg2ttfobject = require('fonteditor-core/ttf/svg2ttfobject');
+        var otf2ttfobject = require('fonteditor-core/ttf/otf2ttfobject');
         var inflate = require('inflate');
         var loading = require('./loading');
         var program = require('./program');

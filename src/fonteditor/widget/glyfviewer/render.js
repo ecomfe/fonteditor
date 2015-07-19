@@ -7,7 +7,7 @@
 define(
     function (require) {
 
-        var glyf2svg = require('ttf/util/glyf2svg');
+        var glyf2svg = require('fonteditor-core/ttf/util/glyf2svg');
         var string = require('common/string');
         var i18n = require('../../i18n/i18n');
         var GLYF_ITEM_TPL = ''

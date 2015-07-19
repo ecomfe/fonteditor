@@ -6,7 +6,7 @@
 define(
     function (require) {
 
-        var bezierQ2Equation = require('math/bezierQ2Equation');
+        var bezierQ2Equation = require('./bezierQ2Equation');
         var getPoint = require('./getBezierQ2Point');
 
         /**

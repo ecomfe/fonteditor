@@ -24,7 +24,7 @@ define(
             +     '<div class="input-group input-group-sm">'
             +         '<span class="input-group-addon">${lang.dialog_generage_name}</span>'
             +         '<span class="form-control">'
-            +             '<input id="setting-text-unicode-name" type="checkbox">'
+            +             '<input id="setting-text-unicode-name" type="checkbox" checked="checked">'
             +         '</span>'
             +     '</div>'
             +   '</div>';

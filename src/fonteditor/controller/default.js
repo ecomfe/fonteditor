@@ -10,7 +10,7 @@ define(
         var settingSupport = require('../dialog/support');
         var clipboard = require('editor/widget/clipboard');
         var actions = require('./actions');
-        var glyfAdjust = require('ttf/util/glyfAdjust');
+        var glyfAdjust = require('fonteditor-core/ttf/util/glyfAdjust');
         var program;
 
         /**
