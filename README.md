@@ -8,20 +8,20 @@ fonteditor 在线ttf字体编辑器
 
 ### 开发:
 
-1. fonteditor依赖[fonteditor-core](https://github.com/kekee000/fonteditor-core)项目，需要在dep目录引入`fonteditor-core`。
+* fonteditor依赖[fonteditor-core](https://github.com/kekee000/fonteditor-core)项目，需要在dep目录引入`fonteditor-core`。
 
 ```
 cd ./dep
 git clone https://github.com/kekee000/fonteditor-core
 ```
 
-2. `index.tpl`为入口模板文件，若要修改`index.tpl`需要执行以下命令来生成`index.html`和`index-en.html`入口文件。
+* `index.tpl`为入口模板文件，若要修改`index.tpl`需要执行以下命令来生成`index.html`和`index-en.html`入口文件。
 
 ```
 node ./build/build-index.js
 ```
 
-3. 使用`edp`对fonteditor进行调试
+* 使用`edp`对fonteditor进行调试
 
 
 ```
