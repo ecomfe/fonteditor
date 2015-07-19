@@ -19,7 +19,6 @@ define(function (require) {
             {
                 x: x,
                 y: y
-
             },
             p2
         ];
