@@ -30,17 +30,8 @@ define(
                         type: type || 'ttf',
                         success: function (imported) {
                             program.loading.hide();
-                            if (program.ttfManager.get()) {
-                                program.ttfManager.merge(imported, {
-                                    scale: true,
-                                    adjustGlyf: imported.from === 'svg' ? true : false
-                                });
-                            }
-                            else {
-                                program.ttfManager.set(imported);
-                                program.data.projectId = null;
-                            }
-
+                            program.ttfManager.set(imported);
+                            program.data.projectId = null;
                         }
                     });
                 },
@@ -184,7 +175,9 @@ define(
                 var SettingOnline = settingSupport.online;
                 !new SettingOnline({
                     onChange: function (url) {
-
+                        if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
+                            return;
+                        }
                         program.loading.show(i18n.lang.msg_loading, 1000);
                         // 此处延迟处理
                         setTimeout(function () {
@@ -206,6 +199,10 @@ define(
                 var SettingUrl = settingSupport.url;
                 !new SettingUrl({
                     onChange: function (url) {
+                        if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
+                            return;
+                        }
+
                         program.loading.show(i18n.lang.msg_loading, 1000);
                         // 此处延迟处理
                         setTimeout(function () {

@@ -926,6 +926,10 @@ html {
 .setting-metrics .panose-inline .input-group {
   width: 100%;
 }
+.list-font-online {
+  max-height: 400px;
+  overflow: auto;
+}
 .import-pic-dialog .modal-dialog {
   width: 960px;
 }

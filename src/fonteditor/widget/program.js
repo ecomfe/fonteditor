@@ -70,7 +70,14 @@ define(
                 else if (83 === e.keyCode && e.ctrlKey) {
                     e.preventDefault();
                     e.stopPropagation();
-                    me.fire('save');
+                    if (e.shiftKey) {
+                        me.fire('save', {
+                            saveType: 'force'
+                        });
+                    }
+                    else {
+                        me.fire('save');
+                    }
                 }
                 // 粘贴
                 else if ((86 === e.keyCode && e.ctrlKey)) {

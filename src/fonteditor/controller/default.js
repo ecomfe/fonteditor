@@ -508,24 +508,33 @@ define(
          */
         function bindProgram(program) {
 
-            program.on('save', function (e) {
+            // 保存正在编辑的glyf
+            var saveEditingGlyf = function () {
+                // 如果是正在编辑的
+                var editingIndex = program.viewer.getEditing();
+                if (editingIndex !== -1) {
+                    program.ttfManager.replaceGlyf(program.editor.getFont(), editingIndex);
+                }
+                // 否则新建font
+                else {
+                    program.ttfManager.insertGlyf(program.editor.getFont());
+                }
 
-                // 保存项目
+                program.editor.setChanged(false);
+            };
+
+            program.on('save', function (e) {
                 if (program.ttfManager.get()) {
                     var saveType = e.saveType;
-                    if (saveType === 'editor' || program.editor.isEditing()) {
-
-                        // 如果是正在编辑的
-                        var editingIndex = program.viewer.getEditing();
-                        if (editingIndex !== -1) {
-                            program.ttfManager.replaceGlyf(program.editor.getFont(), editingIndex);
+                    // 如果是强制save则直接保存正在编辑的glyf和项目
+                    if (saveType === 'force') {
+                        if (program.editor.isEditing()) {
+                            saveEditingGlyf();
                         }
-                        // 否则新建font
-                        else {
-                            program.ttfManager.insertGlyf(program.editor.getFont());
-                        }
-
-                        program.editor.setChanged(false);
+                        actions.save();
+                    }
+                    else if (saveType === 'editor' || program.editor.isEditing()) {
+                        saveEditingGlyf();
                         program.viewer.blur();
                         program.editor.focus();
                     }

@@ -16,7 +16,7 @@ define(
 
             getTpl: function () {
 
-                var str = '<div class="list-group">';
+                var str = '<div class="list-group list-font-online">';
                 onlineList.forEach(function (item, index) {
                     str += '<a data-url="' + item.url + '" href="'
                         +       item.url + '" class="list-group-item">'
@@ -38,7 +38,7 @@ define(
                     e.preventDefault();
                     e.stopPropagation();
                     var url = $(this).attr('data-url');
-                    dialog.find('.list-group').off('click', '.list-group-item').remove();
+                    dialog.find('.list-group').off('click', '.list-group-item');
                     me.options.onChange && me.options.onChange.call(this, decodeURIComponent(url));
                     $('#model-dialog').modal('hide');
                 });
