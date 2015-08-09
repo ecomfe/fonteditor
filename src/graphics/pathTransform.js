@@ -15,6 +15,6 @@
 
 define(
     function (require) {
-        return require('fonteditor-core/graphics/pathTransform');;
+        return require('fonteditor-core/graphics/pathTransform');
     }
 );

@@ -33,6 +33,8 @@ define(
             msg_no_related_glhph: '未找到相关字形!',
             msg_error_open_proj: '打开项目失败，是否删除项目?',
             msg_error_del_proj: '删除项目失败，请刷新页面后删除!',
+            msg_no_sort_glyf: '没有要排序的字形!',
+            msg_has_compound_glyf_sort: '包含复合字形,无法进行排序',
 
 
             preview_title: '预览{%=fontFormat%}格式字体',

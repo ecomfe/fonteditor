@@ -441,6 +441,35 @@ define(
         };
 
         /**
+         * 对字形按照unicode编码排序
+         *
+         * @return {true|Object} 优化成功，或者错误信息
+         */
+        Manager.prototype.sortGlyf = function () {
+
+            var result = this.ttf.sortGlyf();
+
+            if (result === -1) {
+                return {
+                    message: i18n.lang.msg_no_sort_glyf
+                };
+            }
+            else if (result === -2) {
+                return {
+                    message: i18n.lang.msg_has_compound_glyf_sort
+                };
+            }
+
+            if (result.length) {
+                result.forEach(function (g) {
+                    g.modify = 'edit';
+                });
+                this.fireChange(true);
+            }
+            return true;
+        };
+
+        /**
          * 复合字形转简单字形
          * @param {Array=} indexList 选中的字形索引
          * @return {this}

@@ -5,6 +5,6 @@
 
 define(
     function (require) {
-        return require('fonteditor-core/math/bezierCubic2Q2');;
+        return require('fonteditor-core/math/bezierCubic2Q2');
     }
 );

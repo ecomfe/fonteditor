@@ -268,6 +268,15 @@ define(
                 }
             },
 
+            'setting-sort': function () {
+                if (program.ttfManager.get()) {
+                    var result = program.ttfManager.sortGlyf();
+                    if (true !== result) {
+                        alert(result.message);
+                    }
+                }
+            },
+
             'setting-compound2simple': function () {
                 if (program.ttfManager.get()) {
                     program.ttfManager.compound2simple(program.viewer.getSelected());

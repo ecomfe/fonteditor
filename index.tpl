@@ -50,6 +50,7 @@
                     <li><a data-action="setting-glyf-name">${lang.gen_glyph_name}</a></li>
                     <li><a data-action="setting-glyf-clearname">${lang.clear_glyph_name}</a></li>
                     <li><a data-action="setting-optimize">${lang.optimize_glyph}</a></li>
+                    <li><a data-action="setting-sort">${lang.sort_glyf}</a></li>
                     <li><a data-action="setting-compound2simple">${lang.compound2simple}</a></li>
                 </ul>
             </div>

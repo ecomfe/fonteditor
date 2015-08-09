@@ -5,6 +5,6 @@
 
 define(
     function (require) {
-        return require('fonteditor-core/graphics/pathIterator');;
+        return require('fonteditor-core/graphics/pathIterator');
     }
 );

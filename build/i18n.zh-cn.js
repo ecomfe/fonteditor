@@ -20,6 +20,7 @@ module.exports = exports = {
     gen_glyph_name: '生成字形名称',
     clear_glyph_name: '清除字形名称',
     optimize_glyph: '优化字体',
+    sort_glyf: '按代码点进行排序',
     compound2simple: '复合字形转简单字形',
     preview: '预览',
     preview_ttf: 'ttf字体',

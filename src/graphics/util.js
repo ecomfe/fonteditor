@@ -5,6 +5,6 @@
 
 define(
     function (require) {
-        return require('fonteditor-core/graphics/util');;
+        return require('fonteditor-core/graphics/util');
     }
 );

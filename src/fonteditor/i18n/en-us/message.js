@@ -33,7 +33,8 @@ define(
             msg_no_related_glhph: 'Find no related glyph!',
             msg_error_open_proj: 'Open project error, do you want to delete this project?',
             msg_error_del_proj: 'Delete project error, please refresh this page and try delete again!',
-
+            msg_no_sort_glyf: 'No glyph to sort!',
+            msg_has_compound_glyf_sort: 'Can\'t sort glyphs while contains compound glyph.',
 
             preview_title: 'Preview {%=fontFormat%} Format Font',
             preview_first_step: 'Step 1: Use `{%=fontFamily%}` as font-face.',
