@@ -52,7 +52,16 @@ define(
          */
         ProjectViewer.prototype.select = function (id) {
             this.current && this.current.removeClass('selected');
-            this.current = $('[data-id="' + id + '"]').addClass('selected');
+            this.current = $('[data-id="' + id + '"]', this.main).addClass('selected');
+        };
+
+
+        /**
+         * 取消项目选中状态
+         */
+        ProjectViewer.prototype.unSelect = function () {
+            this.current && this.current.removeClass('selected');
+            this.current = null;
         };
 
         /**

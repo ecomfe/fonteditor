@@ -497,6 +497,12 @@ define(
                     program.viewer.inited = true;
                 }
 
+                // 初始化之后，启用菜单
+                if (!program.menuInited) {
+                    $('.action-groups [data-disabled="1"]').removeAttr('data-disabled');
+                    program.menuInited = true;
+                }
+
                 showTTF(e.ttf, 1, []);
             });
         }

@@ -63,6 +63,16 @@ body, html {
     >.action-groups {
         margin-left: 180px;
         padding-left: 8px;
+
+        [data-disabled="1"] {
+            color: #ccc;
+            cursor: not-allowed;
+
+            a {
+                color: #ccc;
+                cursor: not-allowed;
+            }
+        }
     }
 }
 

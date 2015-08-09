@@ -64,8 +64,8 @@ define(
 
         function bindEvent() {
             $('.action-groups').delegate('[data-action]', 'click',  function (e) {
-                var action = $(this).attr('data-action');
-                if (actions[action]) {
+                var action = this.getAttribute('data-action');
+                if ('1' !== this.getAttribute('data-disabled') && actions[action]) {
                     program.data.action = action;
                     actions[action].call(this, e);
                 }

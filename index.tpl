@@ -15,8 +15,8 @@
             <button data-action="add-new" type="button" class="btn btn-flat btn-new btn-sm"><i class="ico ico-left i-add"></i>${lang.newglyph}</button>
             <i class="split"></i>
 
-            <button data-action="undo" type="button" class="btn btn-flat btn-ico" title="${lang.undo}"><i class="ico i-undo"></i></button>
-            <button data-action="redo" type="button" class="btn btn-flat btn-ico" title="${lang.redo}"><i class="ico i-redo"></i></button>
+            <button data-disabled="1" data-action="undo" type="button" class="btn btn-flat btn-ico" title="${lang.undo}"><i class="ico i-undo"></i></button>
+            <button data-disabled="1" data-action="redo" type="button" class="btn btn-flat btn-ico" title="${lang.redo}"><i class="ico i-redo"></i></button>
             <i class="split"></i>
 
             <div class="btn-group">
@@ -25,21 +25,21 @@
                     <span class="ico i-down"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li data-action="import"  title="${lang.import_svg_title}"><a>${lang.import_svg}</a></li>
-                    <li data-action="import-pic"  title="${lang.import_pic_title}"><a>${lang.import_pic}</a></li>
-                    <li data-action="import"  title="${lang.import_font_title}"><a>${lang.import_font}</a></li>
+                    <li data-disabled="1" data-action="import"  title="${lang.import_svg_title}"><a>${lang.import_svg}</a></li>
+                    <li data-disabled="1" data-action="import-pic"  title="${lang.import_pic_title}"><a>${lang.import_pic}</a></li>
+                    <li data-disabled="1" data-action="import"  title="${lang.import_font_title}"><a>${lang.import_font}</a></li>
                     <li data-action="add-online"><a>${lang.onlinefont}</a></li>
                     <li data-action="add-url"><a>${lang.fonturl}</a></li>
                 </ul>
             </div>
             <i class="split"></i>
 
-            <a id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-flat btn-ico" title="${lang.export_ttf}"><i class="ico i-ttf"></i></a>
-            <a id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-flat btn-ico" title="${lang.export_woff}"><i class="ico i-woff"></i></a>
-            <a id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico" title="${lang.export_zip}"><i class="ico i-zip"></i></a>
+            <a data-disabled="1" id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-flat btn-ico" title="${lang.export_ttf}"><i class="ico i-ttf"></i></a>
+            <a data-disabled="1" id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-flat btn-ico" title="${lang.export_woff}"><i class="ico i-woff"></i></a>
+            <a data-disabled="1" id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico" title="${lang.export_zip}"><i class="ico i-zip"></i></a>
             <i class="split"></i>
 
-            <button data-action="save" type="button" class="btn btn-flat btn-sm"><i class="ico ico-left i-save"></i>${lang.save_proj}</button>
+            <button data-disabled="1" data-action="save" type="button" class="btn btn-flat btn-sm"><i class="ico ico-left i-save"></i>${lang.save_proj}</button>
 
             <div class="btn-group">
                 <button type="button" class="btn btn-flat btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -47,11 +47,11 @@
                     <span class="drop ico i-down"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a data-action="setting-glyf-name">${lang.gen_glyph_name}</a></li>
-                    <li><a data-action="setting-glyf-clearname">${lang.clear_glyph_name}</a></li>
-                    <li><a data-action="setting-optimize">${lang.optimize_glyph}</a></li>
-                    <li><a data-action="setting-sort">${lang.sort_glyf}</a></li>
-                    <li><a data-action="setting-compound2simple">${lang.compound2simple}</a></li>
+                    <li><a data-disabled="1" data-action="setting-glyf-name">${lang.gen_glyph_name}</a></li>
+                    <li><a data-disabled="1" data-action="setting-glyf-clearname">${lang.clear_glyph_name}</a></li>
+                    <li><a data-disabled="1" data-action="setting-optimize">${lang.optimize_glyph}</a></li>
+                    <li><a data-disabled="1" data-action="setting-sort">${lang.sort_glyf}</a></li>
+                    <li><a data-disabled="1" data-action="setting-compound2simple">${lang.compound2simple}</a></li>
                 </ul>
             </div>
 
@@ -63,8 +63,8 @@
                 </button>
 
                 <ul class="dropdown-menu" role="menu">
-                    <li><a data-action="setting-name">${lang.fontinfo}</a></li>
-                    <li><a data-action="setting-metrics">${lang.metrics}</a></li>
+                    <li><a data-disabled="1" data-action="setting-name">${lang.fontinfo}</a></li>
+                    <li><a data-disabled="1" data-action="setting-metrics">${lang.metrics}</a></li>
                     <li><a data-action="setting-editor">${lang.editor_setting}</a></li>
                     <li><a data-action="setting-import-and-export">${lang.import_and_export}</a></li>
                 </ul>
@@ -80,10 +80,10 @@
                 </button>
 
                 <ul class="dropdown-menu" role="menu">
-                    <li><a data-format="ttf" data-action="preview">${lang.preview_ttf}</a></li>
-                    <li><a data-format="woff" data-action="preview">${lang.preview_woff}</a></li>
-                    <li><a data-format="svg" data-action="preview">${lang.preview_svg}</a></li>
-                    <li><a data-format="eot" data-action="preview">${lang.preview_eot}</a></li>
+                    <li><a data-disabled="1" data-format="ttf" data-action="preview">${lang.preview_ttf}</a></li>
+                    <li><a data-disabled="1" data-format="woff" data-action="preview">${lang.preview_woff}</a></li>
+                    <li><a data-disabled="1" data-format="svg" data-action="preview">${lang.preview_svg}</a></li>
+                    <li><a data-disabled="1" data-format="eot" data-action="preview">${lang.preview_eot}</a></li>
                 </ul>
             </div>
         </div>

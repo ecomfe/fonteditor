@@ -32,6 +32,7 @@ define(
                             program.loading.hide();
                             program.ttfManager.set(imported);
                             program.data.projectId = null;
+                            program.projectViewer.unSelect();
                         }
                     });
                 },
@@ -93,7 +94,9 @@ define(
             },
 
             'import': function () {
-                $('#font-import').click();
+                if (program.ttfManager.get()) {
+                    $('#font-import').click();
+                }
             },
 
             'export': function (e) {
@@ -179,6 +182,7 @@ define(
                             return;
                         }
                         program.loading.show(i18n.lang.msg_loading, 1000);
+
                         // 此处延迟处理
                         setTimeout(function () {
                             var type = url.slice(url.lastIndexOf('.') + 1);
@@ -187,9 +191,7 @@ define(
                             if (/^https?:\/\//i.test(url)) {
                                 fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
                             }
-
                             readOnlineFont(type, fontUrl);
-
                         }, 20);
                     }
                 }).show();

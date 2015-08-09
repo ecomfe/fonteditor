@@ -364,6 +364,14 @@ html {
   margin-left: 180px;
   padding-left: 8px;
 }
+.navbar > .action-groups [data-disabled="1"] {
+  color: #ccc;
+  cursor: not-allowed;
+}
+.navbar > .action-groups [data-disabled="1"] a {
+  color: #ccc;
+  cursor: not-allowed;
+}
 .container {
   display: flex;
   flex: 1;
