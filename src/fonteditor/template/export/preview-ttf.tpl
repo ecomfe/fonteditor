@@ -39,16 +39,26 @@
 ${lang.preview_second_step}
 <pre>
 .{%=fontFamily%} {
-    font-family:"{%=fontFamily%}" !important;
-    font-size:16px;font-style:normal;
+    font-family: "{%=fontFamily%}" !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
     -webkit-font-smoothing: antialiased;
-    -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
 }
+
+.icon-tree:after {content: '\33';}
 </pre>
 ${lang.preview_third_step}
 <pre>
     &lt;i class="{%=fontFamily%}"&gt;&amp;#x33&lt;/i&gt;
+
+or
+
+    &lt;i class="{%=fontFamily%} icon-three"&gt;&lt;/i&gt;
 </pre>
 </div>
 </div>

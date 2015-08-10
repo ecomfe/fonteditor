@@ -11,9 +11,9 @@
     url("{%=fontFamily%}.svg#uxfonteditor") format("svg"); /* iOS 4.1- */
 }
 
-[class*="{%=iconPrefix%}-"],
-[class*="{%=iconPrefix%}-"]:after {
-    font-family: "{%=fontFamily%}";
+
+.{%=iconPrefix%} {
+    font-family: "{%=fontFamily%}" !important;
     speak: none;
     font-style: normal;
     font-weight: normal;

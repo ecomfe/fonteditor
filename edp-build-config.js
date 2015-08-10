@@ -23,7 +23,11 @@ exports.getProcessors = function () {
             mode: 'default',
             files: ['src/fonteditor/template/**/*.tpl'],
             extnames: ['tpl'],
-            combine: true
+            afterAll: function (context) {
+                this.processFiles.forEach(function (file) {
+                    require('fs').writeFileSync(file.path + '.js', file.data);
+                });
+            }
         }),
 
         new ModuleCompiler( {
@@ -33,11 +37,6 @@ exports.getProcessors = function () {
             configFile: './module.conf'
         }),
 
-        new Html2JsCompiler({
-            mode: 'default',
-            files: ['src/fonteditor/template/**/*.tpl'],
-            extnames: ['tpl']
-        }),
 
         new JsCompressor({
             files: [
@@ -78,6 +77,7 @@ exports.exclude = [
     "output",
     ".DS_Store",
     ".gitignore",
+    ".fecs*",
     "package.json",
     "node",
     "node_modules",
