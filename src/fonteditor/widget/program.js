@@ -51,10 +51,10 @@ define(
                     return;
                 }
 
-                e.ctrlKey = e.ctrlKey || e.metaKey;
+                e.ctrl = e.ctrlKey || e.metaKey;
 
                 // 全选
-                if (65 === e.keyCode && e.ctrlKey) {
+                if (65 === e.keyCode && e.ctrl) {
                     e.preventDefault();
                     e.stopPropagation();
                 }
@@ -67,7 +67,7 @@ define(
                     });
                 }
                 // 保存
-                else if (83 === e.keyCode && e.ctrlKey) {
+                else if (83 === e.keyCode && e.ctrl) {
                     e.preventDefault();
                     e.stopPropagation();
                     if (e.shiftKey) {
@@ -80,7 +80,7 @@ define(
                     }
                 }
                 // 粘贴
-                else if ((86 === e.keyCode && e.ctrlKey)) {
+                else if ((86 === e.keyCode && e.ctrl)) {
                     e.preventDefault();
                     e.stopPropagation();
                     me.fire('paste');

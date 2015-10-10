@@ -48,7 +48,7 @@ define(
 
         function onDragSelected(e) {
             var elements = e.items;
-            var toggle = e.ctrlKey; // 是否toggle
+            var toggle = e.ctrl; // 是否toggle
             var append = e.shiftKey; // 是否append
 
             if (!toggle && !append) {
@@ -67,26 +67,31 @@ define(
             this.fire('selection:change');
         }
 
+        function preventEvent(e) {
+            console.log('prevent');
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
         function downlistener(e) {
             var me = this;
-            e.ctrlKey = e.ctrlKey || e.metaKey;
+            e.ctrl = e.ctrl || e.metaKey;
             var selected;
-
             if (me.listening) {
                 // 阻止ctrl+A默认事件
-                if (65 === e.keyCode && e.ctrlKey) {
+                if (65 === e.keyCode && e.ctrl) {
+                    preventEvent(e);
                     me.main.children().addClass('selected');
                     me.fire('selection:change');
                 }
                 // 撤销
-                else if (90 === e.keyCode && e.ctrlKey) {
-                    e.stopPropagation();
+                else if (90 === e.keyCode && e.ctrl) {
+                    preventEvent(e);
                     me.fire('undo');
                 }
                 // 重做
-                else if (89 === e.keyCode && e.ctrlKey) {
-                    e.stopPropagation();
+                else if (89 === e.keyCode && e.ctrl) {
+                    preventEvent(e);
                     me.fire('redo');
                 }
                 // 取消选中
@@ -105,8 +110,8 @@ define(
                     me.fire('moveright');
                 }
                 // del, cut
-                else if (46 === e.keyCode || (88 === e.keyCode && e.ctrlKey)) {
-                    e.stopPropagation();
+                else if (46 === e.keyCode || (88 === e.keyCode && e.ctrl)) {
+                    preventEvent(e);
                     selected = me.getSelected();
                     if (selected.length) {
                         // del, cut 取消选中的glyf
@@ -124,7 +129,8 @@ define(
                     }
                 }
                 // copy
-                else if (67 === e.keyCode && e.ctrlKey) {
+                else if (67 === e.keyCode && e.ctrl) {
+                    preventEvent(e);
                     selected = me.getSelected();
                     if (selected.length) {
                         me.fire('copy', {
@@ -144,7 +150,8 @@ define(
             var me = this;
             me.main.on('click', '[data-action]', lang.bind(onItemClick, this))
             .on('dblclick', '[data-index]', function (e) {
-                if (!e.ctrlKey && !e.shiftKey && !e.target.getAttribute('data-action') && me.mode === 'list') {
+                e.ctrl = e.ctrlKey || e.metaKey;
+                if (!e.ctrl && !e.shiftKey && !e.target.getAttribute('data-action') && me.mode === 'list') {
                     var selected = $(this).attr('data-index');
                     me.fire('edit', {
                         lastEditing: me.getEditing(),
@@ -153,13 +160,14 @@ define(
                 }
             })
             .on('click', '[data-index]', function (e) {
+                e.ctrl = e.ctrlKey || e.metaKey;
                 if (!e.target.getAttribute('data-action')) {
                     var selectedItems = null;
                     var element = this;
                     var the = $(element);
 
                     // 选中单个
-                    if (!e.ctrlKey && !e.shiftKey) {
+                    if (!e.ctrl && !e.shiftKey) {
                         if (me.mode === 'editor') {
                             var selected = the.attr('data-index');
                             me.fire('edit', {
@@ -180,7 +188,7 @@ define(
                     }
 
                     // 增加/减少选中
-                    if (e.ctrlKey) {
+                    if (e.ctrl) {
                         the.toggleClass('selected');
                         me.fire('selection:change');
                         return;

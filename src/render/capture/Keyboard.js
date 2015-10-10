@@ -70,7 +70,7 @@ define(
         }
 
         /**
-         * 鼠标动作捕获器
+         *  键盘动作捕获器
          *
          * @constructor
          * @param {HTMLElement} main 控制元素

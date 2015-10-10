@@ -81,6 +81,7 @@ exports.exclude = [
     "package.json",
     "node",
     "node_modules",
+    "release",
     "build"
 ];
 
