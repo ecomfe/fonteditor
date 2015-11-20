@@ -21,7 +21,8 @@ define(
 
             dialog_find_glyf_by_unicode: '按代码点查找字形',
             dialog_find_glyf_by_name: '按名字查找字形',
-            dialog_find_glyf_example: '例如：代码点："$21"，名字： "uniE001"',
+            dialog_find_glyf_by_index: '按字形序号查找字形',
+            dialog_find_glyf_example: '例如：代码点："$21"，名字： "uniE001"，序号："5"',
 
             dialog_editor_setting: '编辑器设置',
             dialog_editor_viewercolor: '字体列表颜色',

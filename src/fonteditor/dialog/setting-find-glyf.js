@@ -13,6 +13,7 @@ define(
             +   '<select id="setting-find-condition" class="form-control">'
             +       '<option value="unicode" selected>' + i18n.lang.dialog_find_glyf_by_unicode + '</option>'
             +       '<option value="name">' + i18n.lang.dialog_find_glyf_by_name + '</option>'
+            +       '<option value="index">' + i18n.lang.dialog_find_glyf_by_index + '</option>'
             +   '</select> '
             +   '<input value="" id="setting-find-value" class="form-control">'
             +   '<p class="form-line">' + i18n.lang.dialog_find_glyf_example + '</p>'
@@ -44,6 +45,15 @@ define(
                         value = value.split('').map(function (c) {
                             return '$' + c.charCodeAt(0).toString(16);
                         });
+                    }
+                }
+                else if (condition === 'index') {
+                    if (value.match(/^\d+(,\d+)?$/)) {
+                        value = value.split(',');
+                    }
+                    else {
+                        $('#setting-find-value').val('');
+                        return false;
                     }
                 }
 

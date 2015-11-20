@@ -20,7 +20,8 @@ define(
 
             dialog_find_glyf_by_unicode: 'Find Glyph by Unicode',
             dialog_find_glyf_by_name: 'Find Glyph by Name',
-            dialog_find_glyf_example: 'example：Unicode："$21"，Glyph Name： "uniE001"',
+            dialog_find_glyf_by_index: 'Find Glyph by Index',
+            dialog_find_glyf_example: 'example: Unicode："$21", Glyph Name： "uniE001", Index："5"',
 
 
             dialog_editor_setting: 'Editor Setting',
@@ -41,7 +42,7 @@ define(
             dialog_editor_gap: 'Gap Size',
             dialog_editor_metricscolor: 'Metrics Color',
 
-            dialog_glyf_unicode_example: ' &nbsp;&nbsp; Support Multi Unicodes，Example："$21,$22,$23"',
+            dialog_glyf_unicode_example: ' &nbsp;&nbsp; Support Multi Unicodes, Example："$21,$22,$23"',
 
             dialog_unicode_set: 'Set Unicode',
             dialog_unicode_start: 'Start Unicode Code',
