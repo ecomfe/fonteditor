@@ -12,7 +12,6 @@ define(
         var string = require('fonteditor-core/ttf/util/string');
         var transformGlyfContours = require('fonteditor-core/ttf/util/transformGlyfContours');
         var compound2simple = require('fonteditor-core/ttf/util/compound2simple');
-
         /**
          * 清除glyf编辑状态
          *
@@ -108,6 +107,13 @@ define(
          * @return {Array} 找到返回glyf列表
          */
         Manager.prototype.findGlyf = function (condition) {
+            if (null != condition.index) {
+                var size = this.ttf.getGlyf().length;
+                return condition.index.filter(function (index) {
+                    return index >= 0 && index < size;
+                });
+            }
+
             return this.ttf.findGlyf(condition);
         };
 
@@ -550,8 +556,6 @@ define(
             return this;
         };
 
-
-
         /**
          * 获取复制的glyf对象，这里会将复合字形转换成简单字形，以便于粘贴到其他地方
          *
@@ -571,8 +575,6 @@ define(
             }
             return list;
         };
-
-
 
         Manager.prototype.clearGlyfTag = clearGlyfTag;
 

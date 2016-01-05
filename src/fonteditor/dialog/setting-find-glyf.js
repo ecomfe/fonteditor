@@ -9,14 +9,23 @@ define(
         var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
 
         var tpl = ''
-            + '<div class="form-inline">'
-            +   '<select id="setting-find-condition" class="form-control">'
-            +       '<option value="unicode" selected>' + i18n.lang.dialog_find_glyf_by_unicode + '</option>'
-            +       '<option value="name">' + i18n.lang.dialog_find_glyf_by_name + '</option>'
-            +       '<option value="index">' + i18n.lang.dialog_find_glyf_by_index + '</option>'
-            +   '</select> '
+            + '<div id="setting-find-condition">'
+            +   '<label class="radio-inline">'
+            +       '<input type="radio" name="setting-find-condition" value="unicode" checked="checked">'
+            +       i18n.lang.dialog_find_glyf_by_unicode
+            +   '</label>'
+            +   '<label class="radio-inline">'
+            +       '<input type="radio" name="setting-find-condition" value="name">'
+            +       i18n.lang.dialog_find_glyf_by_name
+            +   '</label>'
+            +   '<label class="radio-inline">'
+            +       '<input type="radio" name="setting-find-condition" value="index">'
+            +       i18n.lang.dialog_find_glyf_by_index
+            +   '</label>'
+            + '</div>'
+            + '<p class="form-line">' + i18n.lang.dialog_find_glyf_example + '</p>'
+            + '<div>'
             +   '<input value="" id="setting-find-value" class="form-control">'
-            +   '<p class="form-line">' + i18n.lang.dialog_find_glyf_example + '</p>'
             + '</div>';
 
 
@@ -27,9 +36,16 @@ define(
             getTpl: function () {
                 return tpl;
             },
-
+            set: function (setting) {
+                $('#setting-find-condition').on('click', 'input[type="radio"]', function () {
+                    $('#setting-find-value').focus();
+                });
+            },
+            onDispose: function () {
+                $('#setting-find-condition').off('click', 'input[type="radio"]');
+            },
             validate: function () {
-                var condition = $('#setting-find-condition').val();
+                var condition = $('#setting-find-condition').find('input[type="radio"]:checked').val();
                 var value = $('#setting-find-value').val();
 
                 if (!value.length) {
@@ -48,11 +64,11 @@ define(
                     }
                 }
                 else if (condition === 'index') {
-                    if (value.match(/^\d+(,\d+)?$/)) {
+                    if (value.match(/^\d+(,\d+)*$/)) {
                         value = value.split(',');
                     }
                     else {
-                        $('#setting-find-value').val('');
+                        alert(i18n.lang.dialog_set_unicode);
                         return false;
                     }
                 }
