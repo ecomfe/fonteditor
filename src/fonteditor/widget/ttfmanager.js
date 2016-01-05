@@ -10,6 +10,8 @@ define(
         var History = require('editor/widget/History');
         var TTF = require('fonteditor-core/ttf/ttf');
         var string = require('fonteditor-core/ttf/util/string');
+        var transformGlyfContours = require('fonteditor-core/ttf/util/transformGlyfContours');
+        var compound2simple = require('fonteditor-core/ttf/util/compound2simple');
 
         /**
          * 清除glyf编辑状态
@@ -547,6 +549,30 @@ define(
 
             return this;
         };
+
+
+
+        /**
+         * 获取复制的glyf对象，这里会将复合字形转换成简单字形，以便于粘贴到其他地方
+         *
+         * @param {Array=} indexList 索引列表
+         * @return {Array} glyflist
+         */
+        Manager.prototype.getCopiedGlyf = function (indexList) {
+            var list = [];
+            var ttf = this.ttf.get();
+            for (var i = 0, l = indexList.length; i < l; ++i) {
+                var index = indexList[i];
+                var cloned = lang.clone(ttf.glyf[index]);
+                if (ttf.glyf[index].compound) {
+                    compound2simple(cloned, transformGlyfContours(ttf.glyf[index], ttf));
+                }
+                list.push(cloned);
+            }
+            return list;
+        };
+
+
 
         Manager.prototype.clearGlyfTag = clearGlyfTag;
 
