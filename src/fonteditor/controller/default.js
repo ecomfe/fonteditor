@@ -10,7 +10,6 @@ define(
         var settingSupport = require('../dialog/support');
         var clipboard = require('editor/widget/clipboard');
         var actions = require('./actions');
-        var glyfAdjust = require('fonteditor-core/ttf/util/glyfAdjust');
         var program;
 
         /**
@@ -53,14 +52,25 @@ define(
                 // 调整显示级别
                 program.editor.setAxis(getEditingOpt(ttf));
 
+                if (null == glyfIndex) {
+                    return;
+                }
+                glyfIndex = +glyfIndex;
                 var font = ttf.glyf[glyfIndex];
                 if (font) {
-                    if (font.compond) {
-                        alert(i18n.lang.msg_not_support_compound_glyf);
+                    var clonedFont = lang.clone(font);
+                    if (clonedFont.compound) {
+                        if (!confirm(i18n.lang.msg_transform_compound_glyf)) {
+                            return;
+                        }
+
+                        // 转换复合字形为简单字形，原始字形不变
+                        var transformGlyfContours = require('fonteditor-core/ttf/util/transformGlyfContours');
+                        var compound2simple = require('fonteditor-core/ttf/util/compound2simple');
+                        clonedFont = compound2simple(clonedFont, transformGlyfContours(font, ttf));
                     }
-                    else {
-                        program.editor.setFont(lang.clone(font));
-                    }
+
+                    program.editor.setFont(clonedFont);
                 }
             }
         }
@@ -221,7 +231,7 @@ define(
             })
             .on('copy', function (e) {
 
-                var list = program.ttfManager.getGlyf(e.list);
+                var list = program.ttfManager.getCopiedGlyf(e.list);
                 var clip = {
                     unitsPerEm: program.ttfManager.get().head.unitsPerEm,
                     glyf: list
@@ -245,6 +255,7 @@ define(
                     // 根据 unitsPerEm 调整形状
                     if (program.ttfManager.get().head.unitsPerEm !== clip.unitsPerEm) {
                         var scale = program.ttfManager.get().head.unitsPerEm / (clip.unitsPerEm || 1024);
+                        var glyfAdjust = require('fonteditor-core/ttf/util/glyfAdjust');
                         clip.glyf.forEach(function (g) {
                             glyfAdjust(g, scale, scale);
                         });

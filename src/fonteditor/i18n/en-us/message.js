@@ -29,6 +29,7 @@ define(
             msg_input_proj_name: 'Please input project name：',
             msg_confirm_gen_names: 'Glyph name will be rewrite by generated name, do you really want to regenerate?',
             msg_not_support_compound_glyf: 'Not support compound glyph currently!',
+            msg_transform_compound_glyf: 'Do you want to transform compound glyf to simple glyf?',
             msg_confirm_save_glyph: 'Do you want to cancel save current editing glyph?',
             msg_no_related_glhph: 'Find no related glyph!',
             msg_error_open_proj: 'Open project error, do you want to delete this project?',

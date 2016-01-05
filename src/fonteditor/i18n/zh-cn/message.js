@@ -29,6 +29,7 @@ define(
             msg_input_proj_name: '请输入项目名称：',
             msg_confirm_gen_names: '生成的字形名称会覆盖原来的名称，确定生成？',
             msg_not_support_compound_glyf: '暂不支持复合字形!',
+            msg_transform_compound_glyf: '是否转换复合字形为简单字形？',
             msg_confirm_save_glyph: '是否放弃保存当前编辑的字形?',
             msg_no_related_glhph: '未找到相关字形!',
             msg_error_open_proj: '打开项目失败，是否删除项目?',
