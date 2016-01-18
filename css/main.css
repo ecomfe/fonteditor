@@ -541,6 +541,9 @@ html {
   border-radius: 0;
   background: #4A90E2;
 }
+html .hm-t-feedback-trigger {
+  bottom: 80px!important;
+}
 @font-face {
   font-family: 'fonteditor';
   src: url('../font/fonteditor.ttf') format('truetype');
