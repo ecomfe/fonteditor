@@ -15,13 +15,15 @@ define(
         var Sorption = require('./widget/Sorption');
         var getFontHash = require('./util/getFontHash');
 
-        // editor 的控制器
-        var initLayer = require('./controller/initLayer');
-        var initRender = require('./controller/initRender');
-        var initBinder = require('./controller/initBinder');
-        var initAxis = require('./controller/initAxis');
-        var initFont = require('./controller/initFont');
-        var initSetting = require('./controller/initSetting');
+        // 默认editor的初始化函数列表，这里应该是按照特定顺序执行的函数集合
+        var DEFAULT_INITERS = [
+            require('./controller/initSetting'),
+            require('./controller/initFont'),
+            require('./controller/initRender'),
+            require('./controller/initLayer'),
+            require('./controller/initAxis'),
+            require('./controller/initBinder')
+        ];
 
         /**
          * Render控制器
@@ -35,6 +37,7 @@ define(
             this.contextMenu = new ContextMenu(main, this.options.contextMenu);
             this.sorption = new Sorption(this.options.sorption);
             this.history = new History();
+            this.initers = DEFAULT_INITERS.concat(options.initers || []);
         }
 
         /**
@@ -44,20 +47,16 @@ define(
          * @return {this}
          */
         Editor.prototype.setRender = function (render) {
-
             this.render = render;
-            initSetting.call(this);
-            initFont.call(this);
-            initRender.call(this);
-            initLayer.call(this);
-            initAxis.call(this);
-            initBinder.call(this);
+
+            // 按顺序执行editor的控制器
+            for (var i = 0, l = this.initers.length; i < l; i++) {
+                this.initers[i].call(this);
+            }
 
             this.axisLayer.refresh();
             this.graduationLayer.refresh();
-
             this.setMode();
-
             return this;
         };
 
