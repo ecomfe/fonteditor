@@ -10,6 +10,7 @@ define(
         var i18n = require('../../i18n/i18n');
         var lang = require('common/lang');
         var DragSelector = require('../DragSelector');
+        var program = require('../program');
 
         function onItemClick(e) {
 
@@ -68,12 +69,16 @@ define(
         }
 
         function preventEvent(e) {
-            console.log('prevent');
             e.preventDefault();
             e.stopPropagation();
         }
 
         function downlistener(e) {
+            // 如果主程序停止监听key事件，则此处也不处理事件
+            if (!program.listening) {
+                return;
+            }
+
             var me = this;
             e.ctrl = e.ctrl || e.metaKey;
             var selected;
