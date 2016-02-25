@@ -8,7 +8,7 @@ exports.getProcessors = function () {
 
 
     return [
-        // new LessCompiler( {
+        // new LessCompiler({
         //     files: [
         //         'css/main.less',
         //         'css/preview.less'
