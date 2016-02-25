@@ -145,6 +145,7 @@
     <iframe id="sync-frame" name="sync-frame" width="0" height="0" frameborder="0" style="display:none;"></iframe>
     <script src="./dep/esl.js"></script>
     <script src="./dep/jquery.min.js"></script>
+    <script src="./dep/jqColorPicker.min.js"></script>
     <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
     <script src="./dep/clipper.js"></script>
     <script src="./dep/hidpi-canvas.js"></script>

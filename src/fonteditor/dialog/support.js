@@ -18,7 +18,8 @@ define(
             'find-glyf': require('../dialog/setting-find-glyf'),
             'ie': require('../dialog/setting-ie'),
             'import-pic': require('../dialog/setting-import-pic'),
-            'sync': require('../dialog/setting-sync')
+            'sync': require('../dialog/setting-sync'),
+            'glyf-download': require('../dialog/glyf-download')
         };
     }
 );

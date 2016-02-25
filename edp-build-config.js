@@ -8,15 +8,15 @@ exports.getProcessors = function () {
 
 
     return [
-        new LessCompiler( {
-            files: [
-                'css/main.less',
-                'css/preview.less'
-            ],
-            compileOptions: {
-                relativeUrls: false
-            }
-        }),
+        // new LessCompiler( {
+        //     files: [
+        //         'css/main.less',
+        //         'css/preview.less'
+        //     ],
+        //     compileOptions: {
+        //         relativeUrls: false
+        //     }
+        // }),
 
 
         new Html2JsCompiler({

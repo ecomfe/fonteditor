@@ -55,6 +55,13 @@ define(
                 title: i18n.lang.findglyf
             },
             {
+                name: 'download-glyf',
+                title: i18n.lang.downloadglyf
+            },
+            {
+                type: 'split'
+            },
+            {
                 name: 'setting-unicode',
                 title: i18n.lang.setunicode
             },

@@ -266,10 +266,10 @@ define(
                         selected.length === 1
                         ? 'enableCommands'
                         : 'disableCommands'
-                    ](['setting-font']);
+                    ](['setting-font', 'download-glyf']);
                 }
                 else {
-                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font']);
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font', 'download-glyf']);
                 }
 
             }, 100));

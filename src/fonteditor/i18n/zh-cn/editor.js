@@ -15,6 +15,7 @@ define(
 
             scale: '按比例缩放',
             findglyf: '查找字形',
+            downloadglyf: '导出字形',
             setunicode: '设置代码点',
             del: '删除',
             edit: '编辑',

@@ -345,6 +345,16 @@ define(
                 }).show();
 
             })
+            .on('download-glyf', function (e) {
+                var SettingGlyfDownload = settingSupport['glyf-download'];
+                // 获取需要下载的图标，转换成简单字形
+                var list = program.ttfManager.getCopiedGlyf(e.list);
+                !new SettingGlyfDownload().show({
+                    ttf: program.ttfManager.get(),
+                    glyf: list[0]
+                });
+
+            })
             .on('setting-unicode', function (e) {
                 var SettingUnicode = settingSupport.unicode;
                 !new SettingUnicode({

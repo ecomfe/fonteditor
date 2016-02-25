@@ -1,0 +1,43 @@
+// 字形下载对话框
+.glyf-download-dialog {
+
+    .field-margin {
+        margin-left: 15px;
+    }
+
+    .color-picker {
+        width: 25px;
+        height: 25px;
+    }
+
+    .preview-panel {
+        height: 360px;
+        text-align: center;
+        overflow: auto;
+        position: relative;
+
+        >canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    .glyf-download-btn {
+        text-align: center;
+
+        .btn-flat {
+            padding: 10px 15px;
+        }
+
+        .field-margin {
+            margin-left: 30px;
+        }
+    }
+}
+
+// color picker 样式
+.cp-color-picker {
+    z-index: 10000;
+}
