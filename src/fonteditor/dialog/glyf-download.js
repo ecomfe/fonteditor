@@ -45,7 +45,7 @@ define(
         }
 
         return require('./setting').derive({
-            title: '导出字形',
+            title: i18n.lang.dialog_export_glyf,
             nofooter: true,
             getTpl: function () {
                 return require('../template/dialog/glyf-download.tpl');

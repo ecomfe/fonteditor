@@ -83,7 +83,14 @@ define(
             dialog_pic_open: 'Open',
             dialog_pic_close: 'Close',
             dialog_pic_dilate: 'Dilate',
-            dialog_pic_enrode: 'Enrode'
+            dialog_pic_enrode: 'Enrode',
+
+            dialog_export_glyf: 'Export Glyf',
+            dialog_glyf_name: 'Glyf Name',
+            dialog_color: 'Color',
+            dialog_size: 'Size',
+            dialog_download_svg: 'Download SVG',
+            dialog_download_png: 'Download PNG'
         };
     }
 );

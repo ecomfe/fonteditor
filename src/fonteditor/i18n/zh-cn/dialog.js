@@ -83,7 +83,14 @@ define(
             dialog_pic_open: '消除杂点',
             dialog_pic_close: '消除孔洞',
             dialog_pic_dilate: '膨胀',
-            dialog_pic_enrode: '腐蚀'
+            dialog_pic_enrode: '腐蚀',
+
+            dialog_export_glyf: '导出字形',
+            dialog_glyf_name: '图标名称',
+            dialog_color: '颜色',
+            dialog_size: '大小',
+            dialog_download_svg: '下载SVG',
+            dialog_download_png: '下载PNG'
         };
     }
 );
