@@ -1,0 +1,39 @@
+// 页面背景样式定义
+@import './reset.less';
+@import './bootstrap-overwrite.less';
+@import './def.less';
+@import './ico.less';
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    height: 100%;
+}
+
+// scroll bar
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 1px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;
+}
+
+::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-clip: content-box;
+    box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}

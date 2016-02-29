@@ -11,6 +11,10 @@ build_index() {
 # build静态资源
 build_asset() {
     edp build --stage=release --force
+    if [ $? != 0 ]; then
+        echo "edp build failed!"
+        exit 1
+    fi
     echo "asset path：./release"
 }
 

@@ -1,3 +1,4 @@
+// glyf列表样式
 .glyf-list {
     height: 100%;
     overflow: auto;
@@ -21,7 +22,7 @@
             color: #45283F;
             .ellipsis();
         }
-        
+
         .unicode {
             color: #70A9D6;
         }
@@ -138,4 +139,14 @@
   .glyf-item {
     pointer-events: none;
   }
+}
+
+// 选择范围矩形
+.selection-range {
+    position: absolute;
+    z-index: 6;
+    display: none;
+    border: 1px solid #CCC;
+    background: rgba(222, 222, 222, 0.5);
+    pointer-events: none;
 }

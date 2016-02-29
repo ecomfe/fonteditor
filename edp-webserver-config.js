@@ -11,11 +11,7 @@ exports.getLocations = function () {
         {
             location: /\.css($|\?)/,
             handler: [
-                autocss({
-                    less: {
-                        relativeUrls: false
-                    }
-                })
+                autocss()
             ]
         },
 

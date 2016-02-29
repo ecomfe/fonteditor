@@ -1,0 +1,91 @@
+// glyf编辑器样式
+.glyf-editor {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    display: none;
+
+    .marker-x,
+    .marker-y {
+        position: absolute;
+        width: 0;
+        height: 0;
+        z-index: 60;
+        pointer-events: none;
+    }
+
+    .marker-x {
+        width: 20px;
+        border-top: 1px dashed #000;
+    }
+
+    .marker-y {
+        height: 20px;
+        border-left: 1px dashed #000;
+    }
+}
+
+.editor-contextmenu {
+    color: #333;
+    width: 150px;
+    border: 1px solid #999;
+    background: #FEFEFE;
+    line-height: 24px;
+    padding: 0 4px;
+    box-shadow: 1px 1px 1px #CCC;
+    position: absolute;
+
+    li {
+        padding-left: 4px;
+        cursor: pointer;
+        border-bottom: 1px solid #CCC;
+        >ul {
+            display: none;
+            color: #333;
+            width: 150px;
+            border: 1px solid #999;
+            background: #FEFEFE;
+            line-height: 24px;
+            padding: 0 4px;
+            box-shadow: 1px 1px 1px #CCC;
+            position: absolute;
+            margin-left: 130px;
+        }
+    }
+
+    >li[data-sub] {
+        color: #4A90E2;
+        &:after {
+            content:'>';
+            margin-right: 10px;
+            float: right;
+            font-family: 'Simsun';
+        }
+    }
+
+    li[data-tag="selected"] {
+        .icon();
+        .i-ico('\e01f', 'after');
+        display: block;
+        &:after {
+            float: right;
+            margin-right: 4px;
+            color: #4A90E2;
+        }
+    }
+
+    li:hover {
+        background: #EEE;
+        >ul {
+            display: block;
+        }
+    }
+
+    li:last-child {
+        border-bottom: none;
+    }
+}
+

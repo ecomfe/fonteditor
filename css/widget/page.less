@@ -1,0 +1,121 @@
+// 页面元素相关
+// 菜单
+.navbar {
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    height: 51px;
+    min-width: 1024px;
+    top: 0;
+
+    >.logo {
+        float: left;
+        width: 180px;
+        height: 50px;
+        background: url(../img/logo.png) no-repeat;
+        background-color: #fff;
+        background-position: center;
+        background-image: url(../img/logo@1x.png);
+        background-image: -webkit-image-set(url(../img/logo@1x.png) 1x, url(../img/logo@2x.png) 2x);
+        background-repeat: no-repeat;
+    }
+
+    >.action-groups {
+        margin-left: 180px;
+        padding-left: 8px;
+
+        [data-disabled="1"] {
+            color: #ccc;
+            cursor: not-allowed;
+
+            a {
+                color: #ccc;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.container {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    position: fixed;
+    width: 180px;
+    top: @top-height;
+    bottom: 0;
+    background: #232830;
+}
+
+.main {
+    margin-left: 180px;
+    padding-top: @top-height + @command-groups-height;
+    height: 100%;
+    background: #BCC5CD;
+
+    .glyf-list {
+        padding: 10px 0 0 10px;
+    }
+
+    .command-groups {
+        margin-top: -40px;
+        display: none;
+    }
+
+    .pager {
+        position: absolute;
+        z-index: 10;
+        padding: 5px;
+        right: 0;
+        bottom: 0;
+        background: #707780;
+        display: none;
+    }
+}
+
+
+
+.main.editing {
+    margin-left: 70%;
+    padding-top: @top-height;
+
+    .command-groups {
+        display: none;
+    }
+}
+
+.forkme,
+.userguide,
+.switch-lang {
+    position: absolute;
+    color: #FFF;
+    color: #333;
+}
+
+.forkme {
+    right: 2px;
+    top: 2px;
+}
+
+.userguide {
+    right: 2px;
+    top: 24px;
+}
+
+.switch-lang {
+    right: 140px;
+    top: 2px;
+    a {
+        color: #666;
+    }
+}
+
+// 百度统计反馈样式
+html .hm-t-feedback-trigger {
+    bottom: 90px!important;
+}
