@@ -6,7 +6,7 @@
 define(
     function (require) {
 
-        var pathJoin = require('graphics/pathJoin');
+        var pathBoolean = require('graphics/pathBoolean');
         var lang = require('common/lang');
         var pathSplitBySegment = require('graphics/pathSplitBySegment');
         var computeBoundingBox = require('graphics/computeBoundingBox');
@@ -18,7 +18,7 @@ define(
                 return path.points;
             });
 
-            var result = pathJoin(pathList, relation);
+            var result = pathBoolean(pathList, relation);
             var i;
             var l;
 
@@ -82,7 +82,7 @@ define(
              * @param {Array} shapes 路径对象数组
              */
             joinshapes: function (shapes) {
-                combineShape.call(this, shapes, pathJoin.Relation.join);
+                combineShape.call(this, shapes, pathBoolean.Relation.join);
                 this.refreshSelected(shapes);
             },
 
@@ -92,7 +92,7 @@ define(
              * @param {Array} shapes 路径对象数组
              */
             intersectshapes: function (shapes) {
-                combineShape.call(this, shapes, pathJoin.Relation.intersect);
+                combineShape.call(this, shapes, pathBoolean.Relation.intersect);
                 this.refreshSelected(shapes);
             },
 
@@ -102,7 +102,7 @@ define(
              * @param {Array} shapes 路径对象数组
              */
             tangencyshapes: function (shapes) {
-                combineShape.call(this, shapes, pathJoin.Relation.tangency);
+                combineShape.call(this, shapes, pathBoolean.Relation.tangency);
                 this.refreshSelected(shapes);
             },
 

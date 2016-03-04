@@ -1,7 +1,7 @@
 /**
  * @file contoursCombine.js
  * @author mengke01
- * @date 
+ * @date
  * @description
  * 路径合并，求交
  */
@@ -13,9 +13,8 @@ define(
         var editor = require('editor/main');
         var shape_baidu = require('demo/../data/contours-2');
         var isPathCross = require('graphics/isPathCross');
-        var pathJoin = require('graphics/pathJoin');
         var util = require('graphics/util');
-        
+
         var currentEditor;
 
         var entry = {
@@ -38,7 +37,7 @@ define(
         };
 
         entry.init();
-        
+
         return entry;
     }
 );

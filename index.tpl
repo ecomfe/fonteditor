@@ -147,7 +147,7 @@
     <script src="./dep/jquery.min.js"></script>
     <script src="./dep/jqColorPicker.min.js"></script>
     <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
-    <script src="./dep/clipper.js"></script>
+    <script src="./dep/paper-full.js"></script>
     <script src="./dep/hidpi-canvas.js"></script>
     <script>
         window.language = '${lang.lang}';
@@ -167,7 +167,8 @@
             }
         });
         define('jquery', window.jQuery);
-        define('ClipperLib', window.ClipperLib);
+        paper.install(window);
+        define('paper', window.paper);
         require(['fonteditor/main'])
     </script>
 

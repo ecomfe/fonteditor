@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>paperjs path boolean操作</title>
+    <script src="../dep/esl.js"></script>
+    <script src="../dep/jquery.min.js"></script>
+    <script src="../dep/paper-full.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        path {
+            stroke-width: 2;
+            stroke: red;
+            fill: #666;
+        }
+
+    </style>
+</head>
+<body>
+    <svg width="800" height="800" viewBox="-50 -50 800 800">
+        <path id="path1"></path>
+        <path id="path2"></path>
+    </svg>
+    <svg width="800" height="800" viewBox="-50 -50 800 800">
+        <path id="pathresult"></path>
+    </svg>
+    <canvas id="canvas" width="800" height="800"></canvas>
+<script>
+    require.config({
+        baseUrl: '../src',
+        paths: {
+            demo: '../demo/js',
+            'fonteditor-core': '../dep/fonteditor-core/src'
+        }
+    });
+    define('jquery', $);
+
+    paper.install(window);
+    define('paper', paper);
+</script>
+
+<script>require(['demo/paper-boolean'])</script>
+</body>
+</html>
