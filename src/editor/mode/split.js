@@ -31,6 +31,14 @@ define(
                     if (this.splitLine) {
                         this.splitLine.p1.x = e.x;
                         this.splitLine.p1.y = e.y;
+                        if (e.shiftKey) {
+                            this.splitLine.p1.y = this.splitLine.p0.y;
+                        }
+
+                        if (e.altKey) {
+                            this.splitLine.p1.x = this.splitLine.p0.x;
+                        }
+
                         this.coverLayer.refresh();
                     }
                 }

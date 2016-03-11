@@ -11,6 +11,7 @@ define(
 
             dialog_no_input: 'No Input!',
             dialog_adjust_glyph: 'Adjust Glyph',
+            dialog_glyph_info: 'Glyph Info',
             dialog_adjust_pos: 'Adjust Glyph Position',
 
             dialog_scale_to_bound: 'Scale to Ascent and Descent',

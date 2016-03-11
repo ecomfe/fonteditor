@@ -10,8 +10,8 @@ define(
             dialog_resetsetting: '重置为默认设置',
 
             dialog_no_input: '没有设置项目!',
-
             dialog_adjust_glyph: '调整字形',
+            dialog_glyph_info: '字形信息',
             dialog_adjust_pos: '调整字形位置',
 
             dialog_scale_to_bound: '缩放字形到上下边界',

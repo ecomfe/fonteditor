@@ -7,8 +7,8 @@ define(
     function (require) {
         return {
             glyph_name: '命名',
-            left_side_bearing: '左边轴',
-            right_side_bearing: '右边轴',
+            left_side_bearing: '左边距',
+            right_side_bearing: '右边距',
             baseline_offset: '基线偏移',
             flip: '翻转',
             mirror: '镜像',

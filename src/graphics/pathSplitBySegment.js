@@ -7,7 +7,7 @@ define(
     function (require) {
         var path2contours = require('fonteditor-core/ttf/svg/path2contours');
         var contours2svg = require('fonteditor-core/ttf/util/contours2svg');
-
+        var pathUtil = require('./pathUtil');
         var reducePath = require('./reducePath');
         var paper = require('paper');
 
@@ -68,6 +68,11 @@ define(
             var contours = getContours(subject) ;
             paper.clear();
 
+            // 清除重复的冗余节点
+            for (var i = 0, l = contours.length; i < l; i++) {
+                contours[i] = pathUtil.deInterpolate(contours[i]);
+                contours[i] = reducePath(contours[i]);
+            }
             return contours;
         }
 

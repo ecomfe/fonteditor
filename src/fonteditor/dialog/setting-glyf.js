@@ -12,7 +12,7 @@ define(
 
         return require('./setting').derive({
 
-            title: i18n.lang.dialog_adjust_glyph,
+            title: i18n.lang.dialog_glyph_info,
 
             getTpl: function () {
                 return tpl;
