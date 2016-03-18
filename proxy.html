@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>proxy</title>
+    <script>
+        function getQuery(name) {
+            var regex = new RegExp(
+                '[?&]' + name.replace(/[\-\/\\\^$*+?.()|\[\]{}]/g, '\\$&') + '=([^&]*)(?:$|&)',
+                'i'
+            );
+            var m = location.search.match(regex);
+            return m ? decodeURIComponent(m[1]) : '';
+        }
+        var callback = getQuery('callback');
+        if (callback && parent.window[callback]) {
+            parent.window[callback](JSON.parse(getQuery('data')));
+        }
+    </script>
+</head>
+</html>

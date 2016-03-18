@@ -47,13 +47,18 @@ define(
             program.editor.focus();
         }, 20);
 
-        // 延迟同步选项
+        // 延迟同步函数
         var fontDelaySync = lang.debounce(function (projectId, ttf, syncConfig) {
             program.loading.show(i18n.lang.msg_syncing, 4000);
-            program.sync.addTask(projectId, ttf, syncConfig).then(function (reason) {
+            program.sync.addTask(projectId, ttf, syncConfig).then(function (data) {
+                if (data.newData) {
+                    program.ttfManager.ttf.set(data.newData);
+                    program.ttfManager.fireChange(true);
+                }
+
                 program.loading.show(i18n.lang.msg_sync_success, 400);
-            }, function (reason) {
-                program.loading.show(i18n.lang.msg_sync_failed + reason.statusInfo + '...', 400);
+            }, function (data) {
+                console.warn(data.reason);
             });
         }, 500);
 
@@ -120,10 +125,7 @@ define(
             },
 
             'sync': function (projectId, ttf, syncConfig) {
-                syncConfig = syncConfig || program.project.getConfig(projectId).sync;
-                if (syncConfig) {
-                    fontDelaySync(program.data.projectId, ttf, syncConfig);
-                }
+                fontDelaySync(program.data.projectId, ttf, syncConfig);
             },
 
             'save': function () {
@@ -146,7 +148,6 @@ define(
                     else {
                         var name = program.ttfManager.get().name.fontFamily || '';
                         if ((name = window.prompt(i18n.lang.msg_input_proj_name, name))) {
-
                             name = string.encodeHTML(name);
                             program.project.add(name, program.ttfManager.get())
                             .then(function (id) {
@@ -181,8 +182,8 @@ define(
                         if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
                             return;
                         }
-                        program.loading.show(i18n.lang.msg_loading, 1000);
 
+                        program.loading.show(i18n.lang.msg_loading, 1000);
                         // 此处延迟处理
                         setTimeout(function () {
                             var type = url.slice(url.lastIndexOf('.') + 1);

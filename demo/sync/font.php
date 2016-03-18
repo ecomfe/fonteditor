@@ -1,30 +1,235 @@
 <?php
+/**
+ * @file 字体同步示例
+ * 分为GET和POST两种方式：
+ * GET使用JSONP，检查是否有更新，有的话则返回同步数据
+ * POST使用跳转指定页面进行通知
+ *
+ * method: GET
+ * GET参数:
+ *     action: 当前动作，默认为`pull`拉取新数据
+ *     callback: jsonp回调函数名
+ *     fontName: fonteditor, 字体名称
+ *     fontType: ttf, 字体类型
+ *     timestamp: 上次更新的timestamp， -1 则为强制更新
+ *     encode: 编码格式，默认`base64`
+ *
+ * 响应: {
+ *     "status": 0
+ *     "data": {
+ *         "fontName": "fonteditor", // 字体名称
+ *         "hasNew": 1, // 如果有新数据则标记为true, 同时设置fontType, timestamp, ttf字段
+ *         "timestamp": 12345678, // 新纪录时间戳，unix timestamp 精确到毫秒
+ *         "fontType": "ttf", // 新纪录类型
+ *         "ttf": base64str // 新纪录的base64字体数据
+ *     }
+ * }
+ *
+ * method: POST
+ * GET参数:
+ *     action: 当前动作，默认为`push`推送数据
+ * POST参数:
+ *     callbackUrl: post回调函数地址，通过302调转到回调地址，通知编辑器
+ *     fontName: 字体名称
+ *     fontType: 字体类型，多个类型用`,`隔开
+ *     encode: 编码格式，默认`base64`
+ *     ttf: 如果fontType包含`ttf`则为ttf格式字体base64数据
+ *     woff: 如果fontType包含`woff`则为woff格式字体base64数据
+ *     svg: 如果fontType包含`svg`则为svg格式字体base64数据
+ *     eot: 如果fontType包含`eot`则为eot格式字体base64数据
+ *
+ * 响应: {
+ *     "status": 0
+ *     "data": {
+ *         "fontName": "fonteditor", // 字体名称
+ *         "timestamp": 12345678, // 新纪录时间戳
+ *         "fontType": "ttf" // 新纪录类型
+ *     }
+ * }
+ *
+ * 回调地址调用方式：
+ * callbackUrl + &data= urlencode( json_encode(data) )
+ * 例如回调地址：`proxy.html?callback=xxxxxx`
+ * 则回调的数据为：`proxy.html?callback=xxxxxx&data={"status":0,"data":{}}`
+ *
+ * @author mengke01(kekee000@gmail.com)
+ */
 
-    function writeFile($base64Str, $outputfile) {
-      $ifp = fopen($outputfile, "wb");
-      fwrite($ifp, base64_decode( $base64Str));
-      fclose($ifp);
-      return($outputfile);
+define('SYNC_FILE', __DIR__ . '/list.md');
+
+
+/**
+ * 发送jsonp数据
+ *
+ * @param  number $status     当前状态，0为处理成功
+ * @param  array $data       发送的数据
+ * @param  string $statusInfo 状态描述
+ */
+function jsonp($status, $data = null, $statusInfo = null) {
+    $callback = $_GET['callback'];
+    $json = array(
+        'status' => $status,
+        'data' => $data,
+    );
+    if (!empty($statusInfo)) {
+        $json['statusInfo'] = $statusInfo;
+    }
+    $json = json_encode($json);
+    echo "$callback($json)";
+}
+
+
+/**
+ * base64字符串转字节后写入到文件
+ *
+ * @param  string $base64Str  base64字符串
+ * @param  string $outputfile 输出文件地址
+ * @return 写入的字节数或者false
+ */
+function writeFile($base64Str, $outputfile) {
+  $ifp = fopen($outputfile, "wb");
+  $ret = fwrite($ifp, base64_decode( $base64Str));
+  fclose($ifp);
+  return $ret;
+}
+
+/**
+ * 获取毫秒计数的unix 时间戳
+ *
+ * @return number
+ */
+function getTimestamp() {
+    return intval(microtime(true) * 1000);
+}
+
+/**
+ * 获取同步的记录
+ *
+ * @return array
+ */
+function getSyncRecord() {
+    if (file_exists(SYNC_FILE)) {
+        $text = file_get_contents(SYNC_FILE);
+        $json = json_decode($text, true);
+        return empty($json) ? array() : $json;
+    }
+    return array();
+}
+
+
+/**
+ * 保存同步的记录
+ *
+ * @return array
+ */
+function saveSyncRecord($data) {
+    file_put_contents(SYNC_FILE, json_encode($data));
+}
+
+/**
+ * 处理push方法
+ */
+function doPush() {
+    $fontName = $_POST['fontName']; // 字体名字
+    $fontType = $_POST['fontType']; // 字体类型，多个类型用`,`隔开
+
+    if (empty($fontName)) {
+        return;
     }
 
-    function main() {
-        $fontName = $_POST['fontName']; // 字体名字
-        $fontType = $_POST['fontType']; // 字体类型，多个类型用`,`隔开
-        $encode = $_POST['encode']; // 编码，默认base64
+    $ret = array(); // 记录成功的类型
 
-        if (empty($fontName)) {
-            return;
+    foreach (explode(',', $fontType) as $type) {
+        if (!empty($_POST[$type])) {
+            writeFile($_POST[$type], "${fontName}.${type}");
+            $ret[] = $type;
         }
+    }
 
-        $count = 0;
-        if (empty($encode) || $encode === 'base64') {
-            foreach (explode(',', $fontType) as $type) {
-                if (!empty($_POST[$type])) {
-                    writeFile($_POST[$type], $fontName.'.'.$type);
-                    $count++;
-                }
+    // 保存同步记录
+    $timestamp = getTimestamp();
+    $recordList = getSyncRecord();
+    $recordList[$fontName] = array(
+        'user' => $_COOKIE['FONT_USER'],
+        'timestamp' => $timestamp,
+        'fontType' => $ret[0],
+    );
+    saveSyncRecord($recordList);
+
+    // 回调地址
+    if (!empty($_POST['callbackUrl'])) {
+        $data = array(
+            'status' => 0,
+            'data' => array(
+                'fontName' => $fontName,
+                'fontType' => implode(',', $ret),
+                'timestamp' => $timestamp
+            )
+        );
+        $url = $_POST['callbackUrl'] . '&data=' . urlencode(json_encode($data));
+        echo $url;
+        header('Location: ' . $url);
+    }
+}
+
+/**
+ * 处理拉取方法
+ */
+function doPull() {
+    $fontName = $_GET['fontName'];
+    $fontType = $_GET['fontType'];
+    $timestamp = empty($_GET['timestamp']) ? 0 : intval($_GET['timestamp']);
+    if (empty($fontName)) {
+        return;
+    }
+
+    $recordList = getSyncRecord();
+    if (!empty($recordList[$fontName])) {
+        $record = $recordList[$fontName];
+        //var_dump($record);
+        // 最后一次提交不是当前用户，或者强制拉取
+        if (
+            ($record['user'] != $_COOKIE['FONT_USER'] && $record['timestamp'] > $timestamp)
+            || -1 === $timestamp
+        ) {
+
+            $fontFile = "${fontName}.${fontType}";
+            if (file_exists($fontFile)) {
+                $data = array(
+                    'fontName' => $fontName,
+                    'hasNew' => 1,
+                    'timestamp' => $record['timestamp'],
+                    'fontType' => $fontType,
+                );
+                $fileHandle = fopen($fontFile, 'r');
+                $fontBuffer = fread($fileHandle, filesize($fontFile));
+                fclose($fileHandle);
+                $data[$fontType] = base64_encode($fontBuffer);
+                jsonp(0, $data);
+                return;
             }
         }
     }
 
-    main();
+    $data = array(
+        'fontName' => $fontName
+    );
+    jsonp(0, $data);
+}
+
+// 设置当前操作的帐号
+if (empty($_COOKIE['FONT_USER'])) {
+    $user = md5($_SERVER["REMOTE_ADDR"] . 'FONT_USER');
+    $_COOKIE['FONT_USER'] = $user;
+    setcookie('FONT_USER', $user, time() + 315360000); // 10年不过期
+}
+
+
+// 入口
+$action = $_GET['action'];
+if ($action == 'pull') {
+    doPull();
+}
+else {
+    doPush();
+}
