@@ -130,6 +130,7 @@ define(
 
             'save': function () {
                 if (program.ttfManager.get()) {
+                    // 已经保存过的项目
                     var projectId = program.data.projectId;
                     if (projectId) {
                         program.project.update(projectId, program.ttfManager.get())
@@ -145,6 +146,7 @@ define(
                         });
 
                     }
+                    // 未保存的项目
                     else {
                         var name = program.ttfManager.get().name.fontFamily || '';
                         if ((name = window.prompt(i18n.lang.msg_input_proj_name, name))) {

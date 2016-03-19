@@ -81,7 +81,6 @@ define(
                 setSyncStatus(syncConfig.url, 0x2);
                 // 不支持拉取，但有可能支持推送，这里也处理为成功
                 if (reason.status === 200) {
-
                     resolver.resolve({});
                 }
                 else {
@@ -165,6 +164,13 @@ define(
             });
         }
 
+        /**
+         * 更新推送时间戳，在下一次推送的时候发送时间戳
+         *
+         * @param  {string} projectId  项目编号
+         * @param  {number} timestamp  当前记录时间戳
+         * @param  {Object} syncConfig 同步配置
+         */
         function updateSyncTimestamp(projectId, timestamp, syncConfig) {
             if (!syncConfig) {
                 syncConfig = project.getConfig(projectId).sync;
@@ -196,7 +202,7 @@ define(
 
             var resolver = new Resolver();
             checkSync(syncConfig).then(function (data) {
-                if (data.hasNew && confirm('字体`' + data.fontName + '`有新版本，是否同步新版本？')) {
+                if (data.hasNew && window.confirm('字体`' + data.fontName + '`有新版本，是否同步新版本？')) {
                     if (data.fontType === DEFAULT_FONTTYPE && data[data.fontType]) {
                         // 解析后台传送过来的ttf字形
                         var ttfBuffer = new Int8Array(base642bytes(data[data.fontType])).buffer;
@@ -218,7 +224,7 @@ define(
                     }
                     return;
                 }
-
+                // 获取当前推送的ttf，如果没有，则从本地存储中获取
                 if (!ttf) {
                     project.get(projectId).then(function (data) {
                         doSync(syncConfig, data, resolver);
@@ -237,7 +243,7 @@ define(
             });
 
             var promise = resolver.promise();
-            // 更新当前的时间戳
+            // 更新当前的时间戳，这里包含两个来源，拉取新纪录的时间戳和推送成功后的时间戳
             promise.then(function (data) {
                 if (data.timestamp) {
                     updateSyncTimestamp(projectId, data.timestamp, syncConfig);

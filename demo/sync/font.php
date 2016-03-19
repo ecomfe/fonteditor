@@ -18,7 +18,7 @@
  *     "status": 0
  *     "data": {
  *         "fontName": "fonteditor", // 字体名称
- *         "hasNew": 1, // 如果有新数据则标记为true, 同时设置fontType, timestamp, ttf字段
+ *         "hasNew": 1, // 如果有新数据则标记为1, 同时设置fontType, timestamp, ttf字段
  *         "timestamp": 12345678, // 新纪录时间戳，unix timestamp 精确到毫秒
  *         "fontType": "ttf", // 新纪录类型
  *         "ttf": base64str // 新纪录的base64字体数据
@@ -29,7 +29,7 @@
  * GET参数:
  *     action: 当前动作，默认为`push`推送数据
  * POST参数:
- *     callbackUrl: post回调函数地址，通过302调转到回调地址，通知编辑器
+ *     callbackUrl: post回调函数地址，通过302跳转到回调地址，通知编辑器
  *     fontName: 字体名称
  *     fontType: 字体类型，多个类型用`,`隔开
  *     encode: 编码格式，默认`base64`
@@ -55,7 +55,8 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define('SYNC_FILE', __DIR__ . '/list.md');
+define('SYNC_FILE', __DIR__ . '/list.md'); // 同步的文件
+
 
 
 /**
@@ -78,21 +79,6 @@ function jsonp($status, $data = null, $statusInfo = null) {
     echo "$callback($json)";
 }
 
-
-/**
- * base64字符串转字节后写入到文件
- *
- * @param  string $base64Str  base64字符串
- * @param  string $outputfile 输出文件地址
- * @return 写入的字节数或者false
- */
-function writeFile($base64Str, $outputfile) {
-  $ifp = fopen($outputfile, "wb");
-  $ret = fwrite($ifp, base64_decode( $base64Str));
-  fclose($ifp);
-  return $ret;
-}
-
 /**
  * 获取毫秒计数的unix 时间戳
  *
@@ -100,6 +86,33 @@ function writeFile($base64Str, $outputfile) {
  */
 function getTimestamp() {
     return intval(microtime(true) * 1000);
+}
+
+/**
+ * base64字符串转字节后写入到文件
+ *
+ * @param  string $base64Str  base64字符串
+ * @param  string $file 输出文件地址
+ * @return 写入的字节数或者false
+ */
+function writeBase64File($base64Str, $file) {
+  $fileHandle = fopen($file, "wb");
+  $ret = fwrite($fileHandle, base64_decode($base64Str));
+  fclose($fileHandle);
+  return $ret;
+}
+
+/**
+ * 读取文件到base64字符串
+ *
+ * @param  string $file 输出文件地址
+ * @return base64字符串
+ */
+function readBase64File($file) {
+    $fileHandle = fopen($file, 'rb');
+    $fontBuffer = fread($fileHandle, filesize($file));
+    fclose($fileHandle);
+    return base64_encode($fontBuffer);
 }
 
 /**
@@ -111,7 +124,9 @@ function getSyncRecord() {
     if (file_exists(SYNC_FILE)) {
         $text = file_get_contents(SYNC_FILE);
         $json = json_decode($text, true);
-        return empty($json) ? array() : $json;
+        if(!empty($json)) {
+            return $json;
+        }
     }
     return array();
 }
@@ -119,8 +134,6 @@ function getSyncRecord() {
 
 /**
  * 保存同步的记录
- *
- * @return array
  */
 function saveSyncRecord($data) {
     file_put_contents(SYNC_FILE, json_encode($data));
@@ -141,7 +154,7 @@ function doPush() {
 
     foreach (explode(',', $fontType) as $type) {
         if (!empty($_POST[$type])) {
-            writeFile($_POST[$type], "${fontName}.${type}");
+            writeBase64File($_POST[$type], "${fontName}.${type}");
             $ret[] = $type;
         }
     }
@@ -156,7 +169,7 @@ function doPush() {
     );
     saveSyncRecord($recordList);
 
-    // 回调地址
+    // 根据回调地址进行返回结果
     if (!empty($_POST['callbackUrl'])) {
         $data = array(
             'status' => 0,
@@ -167,7 +180,6 @@ function doPush() {
             )
         );
         $url = $_POST['callbackUrl'] . '&data=' . urlencode(json_encode($data));
-        echo $url;
         header('Location: ' . $url);
     }
 }
@@ -201,10 +213,7 @@ function doPull() {
                     'timestamp' => $record['timestamp'],
                     'fontType' => $fontType,
                 );
-                $fileHandle = fopen($fontFile, 'r');
-                $fontBuffer = fread($fileHandle, filesize($fontFile));
-                fclose($fileHandle);
-                $data[$fontType] = base64_encode($fontBuffer);
+                $data[$fontType] = readBase64File($fontFile);
                 jsonp(0, $data);
                 return;
             }
@@ -217,13 +226,13 @@ function doPull() {
     jsonp(0, $data);
 }
 
+
 // 设置当前操作的帐号
 if (empty($_COOKIE['FONT_USER'])) {
     $user = md5($_SERVER["REMOTE_ADDR"] . 'FONT_USER');
     $_COOKIE['FONT_USER'] = $user;
     setcookie('FONT_USER', $user, time() + 315360000); // 10年不过期
 }
-
 
 // 入口
 $action = $_GET['action'];
