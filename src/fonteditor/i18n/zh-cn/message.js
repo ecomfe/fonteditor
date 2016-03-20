@@ -41,7 +41,12 @@ define(
             preview_title: '预览{%=fontFormat%}格式字体',
             preview_first_step: '第一步：使用font-face声明字体',
             preview_second_step: '第二步：定义使用{%=fontFamily%}的样式',
-            preview_third_step: '第三步：挑选相应图标并获取字体编码，应用于页面'
+            preview_third_step: '第三步：挑选相应图标并获取字体编码，应用于页面',
+
+            msg_error_sync_font: '无法获取同步字体！',
+            msg_error_sync_font_address: '字体同步地址不可用！',
+            msg_has_new_font_version: '字体`${fontName}`有新版本，是否同步新版本？',
+            msg_error_sync_font_version: '同步新版本出错！'
         };
     }
 );

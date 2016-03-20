@@ -31,6 +31,7 @@
                     <li data-disabled="1" data-action="import"  title="${lang.import_font_title}"><a>${lang.import_font}</a></li>
                     <li data-action="add-online"><a>${lang.onlinefont}</a></li>
                     <li data-action="add-url"><a>${lang.fonturl}</a></li>
+                    <li data-action="sync-from-server"><a>${lang.syncfromserver}</a></li>
                 </ul>
             </div>
             <i class="split"></i>

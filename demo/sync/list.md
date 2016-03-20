@@ -1,1 +1,1 @@
-{"cicons":{"user":"3e60a8b0712c80d976fb3e917c658d4f","timestamp":1458308845195,"fontType":"ttf"}}
+{"D:\\fonteditor\\demo\\sync\/fonteditor":{"user":"3e60a8b0712c80d976fb3e917c658d4f","timestamp":1458479047942,"fontType":"ttf"}}

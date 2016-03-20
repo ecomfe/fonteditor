@@ -8,6 +8,7 @@ define(
     function (require) {
         var i18n = require('../i18n/i18n');
         var Resolver = require('common/promise');
+        var string = require('common/string');
         var project = require('./project');
         var writettf = require('./util/writettf');
         var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
@@ -16,7 +17,6 @@ define(
         var loader = require('./loader');
         var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
         var base642bytes = require('fonteditor-core/ttf/util/base642bytes');
-
         var SyncForm = require('./SyncForm');
 
         var DEFAULT_FONTTYPE = 'ttf'; // 同步默认的字体类型
@@ -58,9 +58,10 @@ define(
         function checkSync(syncConfig) {
             var data = {
                 action: 'pull',
+                encode: 'base64',
                 fontName: syncConfig.name,
                 fontType: DEFAULT_FONTTYPE, // 暂时只接收ttf类型的字体
-                timestamp: syncConfig.timestamp || '',
+                timestamp: syncConfig.timestamp || 0
             };
 
             var resolver = new Resolver();
@@ -84,7 +85,7 @@ define(
                     resolver.resolve({});
                 }
                 else {
-                    alert('同步地址不可用!');
+                    alert(i18n.lang.msg_error_sync_font_address);
                     setSyncStatus(syncConfig.url, 0x1);
                     resolver.reject({
                         status: 404,
@@ -183,13 +184,22 @@ define(
 
         /**
          * 添加一个任务
-         * @param {Object} projectId 项目编号或者同步选项
-         * @param {?Object} ttf 字体对象
-         * @param {?Object} syncConfig 同步选项
+         *
+         * @param {Object} options 任务参数
+         * @param {string} options.type 同步类型，push or pull
+         * @param {string} options.projectId 项目编号或者同步选项
+         * @param {?Object} options.ttf 字体对象
+         * @param {?Object} options.config 同步选项
          *
          * @return {Object} Promise对象
          */
-        exports.addTask = function (projectId, ttf, syncConfig) {
+        exports.addTask = function (options) {
+            var syncType = options.type || 'push';
+            var projectId = options.projectId;
+            var ttf = options.ttf;
+            var syncConfig = options.config;
+            options = null;
+
             if (!syncConfig) {
                 syncConfig = project.getConfig(projectId).sync;
             }
@@ -202,28 +212,38 @@ define(
 
             var resolver = new Resolver();
             checkSync(syncConfig).then(function (data) {
-                if (data.hasNew && window.confirm('字体`' + data.fontName + '`有新版本，是否同步新版本？')) {
+                if (data.hasNew && window.confirm(string.format(i18n.lang.msg_has_new_font_version, data.fontName))) {
                     if (data.fontType === DEFAULT_FONTTYPE && data[data.fontType]) {
                         // 解析后台传送过来的ttf字形
                         var ttfBuffer = new Int8Array(base642bytes(data[data.fontType])).buffer;
                         loader.load(ttfBuffer, {
                             type: 'ttf',
                             success: function (ttfObject) {
+                                syncConfig.timestamp = data.timestamp || 0;
                                 resolver.resolve({
                                     timestamp: data.timestamp,
                                     newData: ttfObject
                                 });
                             },
                             error: function () {
-                                alert('同步新版本出错!');
+                                alert(i18n.lang.msg_error_sync_font_version);
                             }
                         });
                     }
                     else {
-                        alert('同步新版本出错!');
+                        alert(i18n.lang.msg_error_sync_font_version);
                     }
                     return;
                 }
+
+                // 拉取模式下用户取消或者没有新数据，则返回
+                if (syncType === 'pull') {
+                    resolver.reject({
+                        status: data.hasNew ? 200 : 500
+                    });
+                    return;
+                }
+
                 // 获取当前推送的ttf，如果没有，则从本地存储中获取
                 if (!ttf) {
                     project.get(projectId).then(function (data) {

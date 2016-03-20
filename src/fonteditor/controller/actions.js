@@ -48,17 +48,31 @@ define(
         }, 20);
 
         // 延迟同步函数
-        var fontDelaySync = lang.debounce(function (projectId, ttf, syncConfig) {
+        var fontDelaySync = lang.debounce(function (options) {
             program.loading.show(i18n.lang.msg_syncing, 4000);
-            program.sync.addTask(projectId, ttf, syncConfig).then(function (data) {
-                if (data.newData) {
+            program.sync.addTask(options).then(function (data) {
+                if (options.newProject && data.newData) {
+                    actions['new']({
+                        ttf: data.newData,
+                        config: {
+                            sync: options.config
+                        }
+                    });
+                }
+                else if (options.type === 'push' && data.newData) {
                     program.ttfManager.ttf.set(data.newData);
                     program.ttfManager.fireChange(true);
+                    program.project.update(options.projectId, data.newData).then(function () {
+                        program.ttfManager.setState('saved');
+                    });
                 }
-
                 program.loading.show(i18n.lang.msg_sync_success, 400);
             }, function (data) {
-                console.warn(data.reason);
+                if (options.newProject && data.status === 500) {
+                    alert(i18n.lang.msg_error_sync_font);
+                }
+
+                data.reason && console.warn(data.reason);
             });
         }, 500);
 
@@ -84,14 +98,15 @@ define(
                 }
             },
 
-            'new': function () {
+            'new': function (options) {
                 if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
                     return;
                 }
-                program.ttfManager.set(getEmptyttfObject());
+                program.ttfManager.set((options && options.ttf) || getEmptyttfObject());
                 program.data.projectId = null;
+
                 // 建立项目 提示保存
-                actions.save();
+                actions.save(options);
             },
 
             'open': function () {
@@ -124,11 +139,32 @@ define(
                 }
             },
 
-            'sync': function (projectId, ttf, syncConfig) {
-                fontDelaySync(program.data.projectId, ttf, syncConfig);
+            'sync-from-server': function () {
+                var SettingSync = settingSupport.sync;
+                // 从服务器同步字体
+                !new SettingSync({
+                    onChange: function (setting) {
+                        setting.timestamp = -1; // 配置强制拉取
+                        fontDelaySync({
+                            type: 'pull',
+                            newProject: true,
+                            config: setting
+                        });
+                    }
+                }).show({});
             },
 
-            'save': function () {
+            'sync': function (projectId, ttf, config) {
+                // 推送字体
+                fontDelaySync({
+                    type: 'push',
+                    projectId: projectId,
+                    ttf: ttf,
+                    config: config
+                });
+            },
+
+            'save': function (options) {
                 if (program.ttfManager.get()) {
                     // 已经保存过的项目
                     var projectId = program.data.projectId;
@@ -151,8 +187,12 @@ define(
                         var name = program.ttfManager.get().name.fontFamily || '';
                         if ((name = window.prompt(i18n.lang.msg_input_proj_name, name))) {
                             name = string.encodeHTML(name);
-                            program.project.add(name, program.ttfManager.get())
-                            .then(function (id) {
+                            options = options || {};
+                            program.project.add(
+                                name,
+                                options.ttf || program.ttfManager.get(),
+                                options.config
+                            ).then(function (id) {
                                 program.data.projectId = id;
                                 program.ttfManager.setState('new');
                                 program.projectViewer.show(program.project.items(), id);

@@ -30,6 +30,15 @@ define(
         var project = {
 
             /**
+             * 获取新项目的编号
+             *
+             * @return {string} 编号
+             */
+            getId: function () {
+                return ('' + Date.now());
+            },
+
+            /**
              * 获取现有项目列表
              *
              * @return {Array} 现有项目列表
@@ -47,17 +56,23 @@ define(
              *
              * @param {string} name 项目名称
              * @param {Object} ttf ttfObject
+             * @param {Object} config 当前的项目配置
+             *
              * @return {Array} 现有项目列表
              */
-            add: function (name, ttf) {
+            add: function (name, ttf, config) {
                 var list = this.items();
-
-                var id = '' + Date.now();
-                list.push({
+                var id = (config && config.id) || this.getId();
+                var item = {
                     name: name,
                     id: id
-                });
+                };
+                // 设置当前项目的配置
+                if (config) {
+                    item.config = config;
+                }
 
+                list.push(item);
                 storage.setItem('project-list', JSON.stringify(list));
 
                 if (projectDataStore) {
@@ -71,7 +86,7 @@ define(
 
                     return resolver.promise();
                 }
-
+                // 不支持 datastore 则使用localstorate存储
                 storage.setItem(id, JSON.stringify(ttf));
                 return Resolver.resolved(id);
             },
@@ -81,9 +96,15 @@ define(
              *
              * @param {string} id 编号
              * @param {Object} ttf ttf对象
+             * @param {Object} config 当前的项目配置
+             *
              * @return {string} 项目编号
              */
-            update: function (id, ttf) {
+            update: function (id, ttf, config) {
+                // 设置当前项目的配置
+                if (config) {
+                    this.updateConfig(id, config);
+                }
 
                 if (projectDataStore) {
                     var resolver = new Resolver();
@@ -97,6 +118,7 @@ define(
                     return resolver.promise();
                 }
 
+                // 不支持 datastore 则使用localstorate存储
                 storage.setItem(id, JSON.stringify(ttf));
                 return Resolver.resolved(id);
             },

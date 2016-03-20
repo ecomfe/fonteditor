@@ -40,7 +40,12 @@ define(
             preview_title: 'Preview {%=fontFormat%} Format Font',
             preview_first_step: 'Step 1: Use `{%=fontFamily%}` as font-face.',
             preview_second_step: 'Step 2：Define css styles with `{%=fontFamily%}`.',
-            preview_third_step: 'Step 3：Set font unicode to icons on web page.'
+            preview_third_step: 'Step 3：Set font unicode to icons on web page.',
+
+            msg_error_sync_font: 'Get sync font error!',
+            msg_error_sync_font_address: 'Font sync address not available!',
+            msg_has_new_font_version: 'Font `${fontName}` has new version, update now?',
+            msg_error_sync_font_version: 'Sync new font version error!'
         };
     }
 );

@@ -40,5 +40,6 @@ module.exports = exports = {
     help: '帮助',
     confirm: '确定',
     cancel: '取消',
-    fontinfo: '字体信息'
+    fontinfo: '字体信息',
+    syncfromserver: '从服务器同步字体'
 };

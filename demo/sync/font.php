@@ -20,7 +20,7 @@
  *         "fontName": "fonteditor", // 字体名称
  *         "hasNew": 1, // 如果有新数据则标记为1, 同时设置fontType, timestamp, ttf字段
  *         "timestamp": 12345678, // 新纪录时间戳，unix timestamp 精确到毫秒
- *         "fontType": "ttf", // 新纪录类型
+ *         "fontType": "ttf", // 新纪录类型，默认为ttf字体
  *         "ttf": base64str // 新纪录的base64字体数据
  *     }
  * }
@@ -54,8 +54,10 @@
  *
  * @author mengke01(kekee000@gmail.com)
  */
+error_reporting(E_ALL ^ E_NOTICE);
 
-define('SYNC_FILE', __DIR__ . '/list.md'); // 同步的文件
+define('FONT_ROOT', __DIR__); // 同步字体的基础目录
+define('SYNC_FILE', FONT_ROOT . '/list.md'); // 同步的文件
 
 
 
@@ -69,9 +71,13 @@ define('SYNC_FILE', __DIR__ . '/list.md'); // 同步的文件
 function jsonp($status, $data = null, $statusInfo = null) {
     $callback = $_GET['callback'];
     $json = array(
-        'status' => $status,
-        'data' => $data,
+        'status' => $status
     );
+
+    if (!empty($data)) {
+        $json['data'] = $data;
+    }
+
     if (!empty($statusInfo)) {
         $json['statusInfo'] = $statusInfo;
     }
@@ -85,7 +91,14 @@ function jsonp($status, $data = null, $statusInfo = null) {
  * @return number
  */
 function getTimestamp() {
-    return intval(microtime(true) * 1000);
+    return floor(microtime(true) * 1000);
+}
+
+function getFontPath() {
+    // 根据具体情况设置fontpath
+    // $fontpath = FONT_ROOT . dirname($_SERVER["REQUEST_URI"]);
+    // return preg_replace('/\\\+/', '/', $fontpath);
+    return FONT_ROOT;
 }
 
 /**
@@ -134,6 +147,8 @@ function getSyncRecord() {
 
 /**
  * 保存同步的记录
+ *
+ * @param array $data 同步的记录列表
  */
 function saveSyncRecord($data) {
     file_put_contents(SYNC_FILE, json_encode($data));
@@ -152,9 +167,10 @@ function doPush() {
 
     $ret = array(); // 记录成功的类型
 
+    $fontPath = getFontPath();
     foreach (explode(',', $fontType) as $type) {
         if (!empty($_POST[$type])) {
-            writeBase64File($_POST[$type], "${fontName}.${type}");
+            writeBase64File($_POST[$type], "${fontPath}/${fontName}.${type}");
             $ret[] = $type;
         }
     }
@@ -162,7 +178,7 @@ function doPush() {
     // 保存同步记录
     $timestamp = getTimestamp();
     $recordList = getSyncRecord();
-    $recordList[$fontName] = array(
+    $recordList["${fontPath}/${fontName}"] = array(
         'user' => $_COOKIE['FONT_USER'],
         'timestamp' => $timestamp,
         'fontType' => $ret[0],
@@ -189,34 +205,35 @@ function doPush() {
  */
 function doPull() {
     $fontName = $_GET['fontName'];
-    $fontType = $_GET['fontType'];
-    $timestamp = empty($_GET['timestamp']) ? 0 : intval($_GET['timestamp']);
+    $fontType = $_GET['fontType']; // 默认拉取的为ttf字体
+    $timestamp = empty($_GET['timestamp']) ? 0 : floor($_GET['timestamp']);
     if (empty($fontName)) {
+        jsonp(1, null, 'missing font field fontName!');
         return;
     }
 
+    $fontPath = getFontPath();
     $recordList = getSyncRecord();
-    if (!empty($recordList[$fontName])) {
-        $record = $recordList[$fontName];
-        //var_dump($record);
-        // 最后一次提交不是当前用户，或者强制拉取
-        if (
-            ($record['user'] != $_COOKIE['FONT_USER'] && $record['timestamp'] > $timestamp)
-            || -1 === $timestamp
-        ) {
+    if (!empty($recordList["${fontPath}/${fontName}"])) {
+        $record = $recordList["${fontPath}/${fontName}"];
+    }
+    else {
+        $record = array();
+    }
 
-            $fontFile = "${fontName}.${fontType}";
-            if (file_exists($fontFile)) {
-                $data = array(
-                    'fontName' => $fontName,
-                    'hasNew' => 1,
-                    'timestamp' => $record['timestamp'],
-                    'fontType' => $fontType,
-                );
-                $data[$fontType] = readBase64File($fontFile);
-                jsonp(0, $data);
-                return;
-            }
+    // 最后一次提交大于当前记录时间
+    if (-1 == $timestamp || $record['timestamp'] > $timestamp) {
+        $fontFile = "${fontPath}/${fontName}.${fontType}";
+        if (file_exists($fontFile)) {
+            $data = array(
+                'fontName' => $fontName,
+                'hasNew' => 1,
+                'timestamp' => empty($record['timestamp']) ? getTimestamp() : $record['timestamp'],
+                'fontType' => $fontType,
+            );
+            $data[$fontType] = readBase64File($fontFile);
+            jsonp(0, $data);
+            return;
         }
     }
 
