@@ -73,7 +73,8 @@ define(
             setting: 'Setting',
             help: 'Help',
             confirm: 'Confirm',
-            cancel: 'Cancel'
+            cancel: 'Cancel',
+            pushurl: 'Push Url'
 
         };
     }

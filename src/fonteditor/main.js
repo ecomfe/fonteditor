@@ -91,6 +91,8 @@ define(
 
                 program.setting = require('./widget/settingmanager');
 
+                program.config = require('./config');
+
                 // glyf查看器命令组
                 var viewerCommandMenu = new Toolbar($('#glyf-list-commandmenu'), {
                     commands: require('./menu/viewer')

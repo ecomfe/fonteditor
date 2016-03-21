@@ -51,7 +51,7 @@ define(
         var fontDelaySync = lang.debounce(function (options) {
             program.loading.show(i18n.lang.msg_syncing, 4000);
             program.sync.addTask(options).then(function (data) {
-                if (options.newProject && data.newData) {
+                if (options.newProject && data && data.newData) {
                     actions['new']({
                         ttf: data.newData,
                         config: {
@@ -59,7 +59,7 @@ define(
                         }
                     });
                 }
-                else if (options.type === 'push' && data.newData) {
+                else if (options.type === 'push' && data && data.newData) {
                     program.ttfManager.ttf.set(data.newData);
                     program.ttfManager.fireChange(true);
                     program.project.update(options.projectId, data.newData).then(function () {
@@ -147,11 +147,13 @@ define(
                         setting.timestamp = -1; // 配置强制拉取
                         fontDelaySync({
                             type: 'pull',
-                            newProject: true,
+                            newProject: 1,
                             config: setting
                         });
                     }
-                }).show({});
+                }).show({
+                    newProject: 1
+                });
             },
 
             'sync': function (projectId, ttf, config) {
@@ -232,7 +234,7 @@ define(
                             var fontUrl = url;
 
                             if (/^https?:\/\//i.test(url)) {
-                                fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
+                                fontUrl = string.format(program.config.readOnline, ['font', encodeURIComponent(url)]);
                             }
                             readOnlineFont(type, fontUrl);
                         }, 20);
@@ -251,7 +253,7 @@ define(
                         program.loading.show(i18n.lang.msg_loading, 1000);
                         // 此处延迟处理
                         setTimeout(function () {
-                            var fontUrl = string.format(program.readOnline, ['font', encodeURIComponent(url)]);
+                            var fontUrl = string.format(program.config.readOnline, ['font', encodeURIComponent(url)]);
                             readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
                         }, 20);
                     }

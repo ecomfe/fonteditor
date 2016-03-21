@@ -90,7 +90,12 @@ define(
             dialog_color: '颜色',
             dialog_size: '大小',
             dialog_download_svg: '下载SVG',
-            dialog_download_png: '下载PNG'
+            dialog_download_png: '下载PNG',
+
+            dialog_alert_set_sync_name: '请设置同步文件名称!',
+            dialog_alert_set_url_or_syncurl: '需要设置远程地址或者推送地址至少一项!',
+            dialog_alert_set_sync_url: '需要设置远程同步地址!',
+            dialog_alert_set_filetype: '请设置文件类型!'
         };
     }
 );

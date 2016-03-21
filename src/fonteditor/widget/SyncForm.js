@@ -8,6 +8,7 @@ define(function (require) {
     var lang = require('common/lang');
     var Resolver = require('common/promise');
     var program = require('./program');
+    var syncStatus = require('./sync-status');
 
     var PUSH_TIME_OUT = 10000; // 同步超时时间;
     var formSubmitId = 0;
@@ -21,7 +22,7 @@ define(function (require) {
         // 默认为push操作
         form.action = this.url + (~this.url.indexOf('?') ? '&' : '?') + 'action=push';
         // 设置成功回调地址
-        data.callbackUrl = program.proxyUrl + '?callback=' + this.callback;
+        data.callbackUrl = program.config.proxyUrl + '?callback=' + this.callback;
 
         Object.keys(data).forEach(function (key) {
             var element = document.createElement('input');
@@ -41,7 +42,7 @@ define(function (require) {
 
     function onSubmitTimeout() {
         this.resolver && this.resolver.reject({
-            status: 0x4,
+            status: syncStatus.pushNoResponse,
             reason: 'sync time out!'
         });
         this.dispose();
@@ -73,7 +74,8 @@ define(function (require) {
         form.submit();
         document.body.removeChild(form);
         // 如果推送服务无响应，则直接返回成功
-        if (this.serviceStatus & 0x4) {
+        if (this.serviceStatus & syncStatus.pushNoResponse) {
+            delete window[this.callback];
             return Resolver.resolved({
                 status: 0
             });

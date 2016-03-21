@@ -91,7 +91,12 @@ define(
             dialog_color: 'Color',
             dialog_size: 'Size',
             dialog_download_svg: 'Download SVG',
-            dialog_download_png: 'Download PNG'
+            dialog_download_png: 'Download PNG',
+
+            dialog_alert_set_sync_name: 'Please set sync name!',
+            dialog_alert_set_url_or_syncurl: 'Please set sync url or pushurl!',
+            dialog_alert_set_sync_url: 'Please set sync url!',
+            dialog_alert_set_filetype: 'Please set at lease one fonttype!'
         };
     }
 );

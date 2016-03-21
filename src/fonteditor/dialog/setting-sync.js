@@ -19,6 +19,7 @@ define(
 
             set: function (setting) {
                 this.setFields(setting || {});
+                this.newProject = setting.newProject;
                 var me = this;
                 $('#setting-sync-cancel').on('click', function () {
                     me.hide(0);
@@ -32,13 +33,23 @@ define(
             validate: function () {
                 var setting = this.getFields();
 
-                if (!setting.url || !setting.name) {
-                    alert('请设置同步URL和文件名称!');
+                if (!setting.name) {
+                    alert(i18n.lang.dialog_alert_set_sync_name);
+                    return false;
+                }
+
+                if (!setting.url && !setting.pushUrl) {
+                    alert(i18n.lang.dialog_alert_set_url_or_syncurl);
+                    return false;
+                }
+
+                if (this.newProject && !setting.url) {
+                    alert(i18n.lang.dialog_alert_set_sync_url);
                     return false;
                 }
 
                 if (!setting.woff && !setting.ttf && !setting.svg && !setting.eot) {
-                    alert('请设置文件类型!');
+                    alert(i18n.lang.dialog_alert_set_filetype);
                     return false;
                 }
 

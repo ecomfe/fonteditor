@@ -7,6 +7,15 @@
   </div>
 </div>
 
+<div class="form-group">
+  <span class="btn-right" style="width: 70px;line-height: 30px">
+    <a href="./doc/index.html#font-sync" target="_blank">帮助</a>
+  </span>
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon">${lang.pushurl}</span>
+    <input data-field="pushUrl" type="text" class="form-control">
+  </div>
+</div>
 
 <div class="form-inline column-2">
 

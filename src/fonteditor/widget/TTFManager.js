@@ -12,6 +12,7 @@ define(
         var string = require('fonteditor-core/ttf/util/string');
         var transformGlyfContours = require('fonteditor-core/ttf/util/transformGlyfContours');
         var compound2simple = require('fonteditor-core/ttf/util/compound2simple');
+
         /**
          * 清除glyf编辑状态
          *

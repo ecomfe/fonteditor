@@ -55,6 +55,7 @@
  * @author mengke01(kekee000@gmail.com)
  */
 error_reporting(E_ALL ^ E_NOTICE);
+header('Content-Type: application/javascript');
 
 define('FONT_ROOT', __DIR__); // 同步字体的基础目录
 define('SYNC_FILE', FONT_ROOT . '/list.md'); // 同步的文件
@@ -184,7 +185,6 @@ function doPush() {
         'fontType' => $ret[0],
     );
     saveSyncRecord($recordList);
-
     // 根据回调地址进行返回结果
     if (!empty($_POST['callbackUrl'])) {
         $data = array(

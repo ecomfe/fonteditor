@@ -319,7 +319,7 @@ define(
                     image.onerror = function () {
                         program.loading.warn(i18n.lang.msg_read_pic_error, 2000);
                     };
-                    image.src = string.format(program.readOnline, ['image', val]);
+                    image.src = string.format(program.config.readOnline, ['image', val]);
                 }
                 else {
                     alert(i18n.lang.msg_input_pic_url);

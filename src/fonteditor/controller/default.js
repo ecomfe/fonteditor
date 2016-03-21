@@ -383,7 +383,7 @@ define(
                     !new SettingSync({
                         onChange: function (setting) {
                             program.project.updateConfig(program.data.projectId, {
-                                sync: setting
+                                sync: $.extend(syncConfig, setting)
                             });
                             program.projectViewer.show(program.project.items(), program.data.projectId);
                         }
