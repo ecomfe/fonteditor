@@ -31,12 +31,18 @@ define(
             }));
 
             // 右支撑
-            this.rightSideBearing = this.referenceLineLayer.addShape('line', {
+            this.rightSideBearing = this.referenceLineLayer.addShape('gridarrow', {
                 id: 'rightSideBearing',
-                p0: {
+                p0 : {
                     x: options.unitsPerEm / 2
                 },
+                arrow: {
+                    y: 22
+                },
                 style: {
+                    fill: true,
+                    stroke: true,
+                    fillColor: 'blue',
                     strokeColor: 'blue'
                 }
             });

@@ -30,7 +30,7 @@ define(
                     else if (this._dragMode === mode.newLine) {
 
                         if (e.startX <= 20 && e.x > 20) {
-                            this.currentLine = this.referenceLineLayer.addShape('line', {
+                            this.currentLine = this.referenceLineLayer.addShape('gridarrow', {
                                 p0: {
                                     x: e.x
                                 },
@@ -40,7 +40,7 @@ define(
                             this.render.setCursor('col-resize');
                         }
                         else if (e.startY <= 20 && e.y > 20) {
-                            this.currentLine = this.referenceLineLayer.addShape('line', {
+                            this.currentLine = this.referenceLineLayer.addShape('gridarrow', {
                                 p0: {
                                     y: e.y
                                 },

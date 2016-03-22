@@ -17,7 +17,8 @@ define(
             axis: require('./Axis'),
             graduation: require('./Graduation'),
             line: require('./Line'),
-            beziercurve: require('./BezierCurve')
+            beziercurve: require('./BezierCurve'),
+            gridarrow: require('./GridArrow')
         };
 
         return support;

@@ -68,7 +68,7 @@ define(
                 }
                 program.loading.show(i18n.lang.msg_sync_success, 400);
             }, function (data) {
-                if (options.newProject && data.status === 500) {
+                if (options.newProject && data.status === 0x1) {
                     alert(i18n.lang.msg_error_sync_font);
                 }
 

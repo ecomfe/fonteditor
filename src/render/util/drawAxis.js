@@ -55,14 +55,9 @@ define(
                 ctx.stroke();
             }
 
+            // metrics
             ctx.beginPath();
-            ctx.strokeStyle = config.metricsColor || 'red';
-
-            ctx.moveTo(0, y);
-            ctx.lineTo(xMax, y);
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, yMax);
-
+            ctx.strokeStyle = config.metricsColor || '#FF6E67';
             // 绘制辅助线
             var metrics = config.metrics;
             var thickness = config.graduation.thickness || 22;
@@ -72,21 +67,25 @@ define(
                 var lineY = y - Math.round(metrics[line]);
                 dashedLineTo(ctx, 0, lineY, xMax, lineY, 4);
             });
+            ctx.stroke();
 
+            // axis
+            ctx.beginPath();
+            ctx.strokeStyle = config.axisColor || 'red';
+            ctx.moveTo(0, y);
+            ctx.lineTo(xMax, y);
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, yMax);
+            ctx.stroke();
+
+            // text
             ctx.save();
             ctx.scale(0.8, 0.8);
-
             metricsLines.forEach(function (line) {
                 ctx.fillText(line, thickness * 1.25, (y - metrics[line]) * 1.25 - 2);
             });
-
             ctx.fillText('Baseline', thickness * 1.25, y * 1.25 - 2);
             ctx.restore();
-
-            ctx.stroke();
-
-            ctx.stroke();
-
         }
 
         return drawAxis;

@@ -23,7 +23,7 @@ define(
                 // 辅助线
                 referenceline: {
                     style: {
-                        strokeColor: '#0FF'
+                        strokeColor: '#746AFE'
                     }
                 },
 
@@ -44,8 +44,9 @@ define(
                 // 轴线
                 axis: {
                     showGrid: true, // 显示网格
-                    gapColor: '#A6A6FF', // 网格线颜色
-                    metricsColor: 'red', // 测量辅助线颜色
+                    gapColor: '#DEDCFE', // 网格线颜色
+                    axisColor: 'red',
+                    metricsColor: '#FF9592', // 测量辅助线颜色
                     emColor: 'red', // em框颜色
 
                     // 字体测量规格
