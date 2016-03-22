@@ -76,12 +76,13 @@ define(
             var last = shape.points.length - 1;
             var clonedShape = lang.clone(shape);
 
+            var style = this.options.coverLayer;
+
             clonedShape.id = 'cover-' + shape.id;
             clonedShape.selectable = false;
             clonedShape.style = {
-                strokeColor: 'red'
+                strokeColor: style.outlineColor
             };
-
             clonedShape.points.forEach(function (p, index) {
                 var cpoint = {
                     type: p.onCurve ? 'point' : 'cpoint',
@@ -92,8 +93,8 @@ define(
                     style: {
                         fill: true,
                         stroke: true,
-                        strokeColor: 'green',
-                        fillColor: 'white'
+                        strokeColor: style.strokeColor,
+                        fillColor: style.fillColor
                     }
                 };
 
@@ -146,7 +147,7 @@ define(
                 if (result) {
                     this.curPoint = result[0];
                     this.curPoint._style = lang.clone(this.curPoint.style);
-                    this.curPoint.style.fillColor = 'green';
+                    this.curPoint.style.fillColor = this.options.coverLayer.outlineColor;
 
                     // 设置吸附选项
                     if (this.sorption.isEnable()) {

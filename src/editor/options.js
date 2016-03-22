@@ -17,7 +17,7 @@ define(
                     enableShape: true, // 吸附到对象
                     gridDelta: 5, // 网格delta
                     delta: 5, // 对象delta
-                    sorptionColor: '#4AFF4A'
+                    sorptionColor: '#F0913A'
                 },
 
                 // 辅助线
@@ -29,16 +29,18 @@ define(
 
                 // 覆盖层
                 coverLayer: {
-                    strokeColor: 'green',
+                    lineColor: '#4780FF',
+                    outlineColor: '#3372FF',
+                    strokeColor: '#4780FF',
                     fillColor: 'white'
                 },
 
                 // 字体层
                 fontLayer: {
                     lineWidth: 1,
-                    strokeColor: '#999',
+                    strokeColor: '#888',
                     fill: true,
-                    fillColor: '#555'
+                    fillColor: '#999'
                 },
 
                 // 轴线

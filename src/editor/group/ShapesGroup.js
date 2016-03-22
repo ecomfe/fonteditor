@@ -178,13 +178,13 @@ define(
             }
 
             this.shapes = shapes;
-
             this.coverShapes = lang.clone(this.shapes);
+            var outlineColor = this.editor.options.coverLayer.outlineColor;
             this.coverShapes.forEach(function (shape) {
                 shape.id = 'cover-' + shape.id;
                 shape.selectable = false;
                 shape.style = {
-                    strokeColor: 'red'
+                    strokeColor: outlineColor
                 };
                 coverLayer.addShape(shape);
             });

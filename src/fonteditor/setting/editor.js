@@ -5,6 +5,7 @@
 
 define(
     function (require) {
+        var editorDefault = require('editor/options').editor;
 
         var setting = {
 
@@ -25,21 +26,21 @@ define(
                     enableShape: true
                 },
                 fontLayer: {
-                    strokeColor: '#999',
+                    strokeColor: editorDefault.fontLayer.strokeColor,
                     fill: true,
-                    fillColor: '#555'
+                    fillColor: editorDefault.fontLayer.fillColor
                 },
                 referenceline: {
                     style: {
-                        strokeColor: '#0FF'
+                        strokeColor: editorDefault.referenceline.style.strokeColor
                     }
                 },
                 axis: {
                     showGrid: true,
-                    gapColor: '#A6A6FF',
-                    metricsColor: 'red',
+                    gapColor: editorDefault.axis.gapColor,
+                    metricsColor: editorDefault.axis.metricsColor,
                     graduation: {
-                        gap: 100
+                        gap: editorDefault.axis.graduation.gap
                     }
                 }
             }

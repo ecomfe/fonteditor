@@ -29,8 +29,8 @@ define(
             this.coverLayer = this.render.addLayer('cover', lang.extend({
                 level: 30,
                 fill: false,
-                strokeColor: 'green',
-                fillColor: 'white'
+                strokeColor: this.options.coverLayer.strokeColor,
+                fillColor: this.options.coverLayer.fillColor
             }, this.options.coverLayer));
 
             this.referenceLineLayer = this.render.addLayer('referenceline', {

@@ -7,8 +7,19 @@
 define(
     function (require) {
 
+        var AUTO_SORP_ANGLE = 3; // 4度以内自动吸附到八个方向角度
         var getAngle = require('math/getAngle');
 
+
+        function getRotateAngle(x1, y1, x2, y2) {
+            var radian = getAngle(x1, y1, x2, y2);
+            var angle = (radian * 180 / Math.PI + 360) % 45;
+            // 在45度角倍数方向进行吸附
+            if (Math.min(angle, 45 - angle) < AUTO_SORP_ANGLE) {
+                radian = Math.round(radian * 180 / Math.PI / 45) * 45 * Math.PI / 180;
+            }
+            return radian;
+        }
 
         /**
          * 获得变换矩阵
@@ -32,7 +43,7 @@ define(
                 case 2:
                 case 3:
                 case 4:
-                    matrix[2] = getAngle(
+                    matrix[2] = getRotateAngle(
                         camera.startX - matrix[0], camera.startY - matrix[1],
                         camera.x - matrix[0], camera.y - matrix[1]
                     );
@@ -41,7 +52,7 @@ define(
                 case 5:
                     matrix[0] = 0;
                     matrix[1] = bound.y + bound.height;
-                    matrix[2] = getAngle(
+                    matrix[2] = getRotateAngle(
                         0, bound.height,
                         camera.x - camera.startX, bound.height
                     );
@@ -50,7 +61,7 @@ define(
                 case 7:
                     matrix[0] = 0;
                     matrix[1] = bound.y;
-                    matrix[2] = getAngle(
+                    matrix[2] = getRotateAngle(
                         0, -bound.height,
                         camera.x - camera.startX, -bound.height
                     );
@@ -59,7 +70,7 @@ define(
                 case 6:
                     matrix[0] = bound.x;
                     matrix[1] = 0;
-                    matrix[2] = getAngle(
+                    matrix[2] = getRotateAngle(
                         bound.width, 0,
                         bound.width, camera.y - camera.startY
                     );
@@ -68,7 +79,7 @@ define(
                 case 8:
                     matrix[0] = bound.x + bound.width;
                     matrix[1] = 0;
-                    matrix[2] = getAngle(
+                    matrix[2] = getRotateAngle(
                         -bound.width, 0,
                         -bound.width, camera.y - camera.startY
                     );
