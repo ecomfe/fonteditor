@@ -16,7 +16,7 @@ define(
              */
             addreferenceline: function (x, y) {
                 if (x > 20) {
-                    this.referenceLineLayer.addShape('line', {
+                    this.referenceLineLayer.addShape('gridarrow', {
                         p0: {
                             x: x
                         }
@@ -24,7 +24,7 @@ define(
                 }
 
                 if (y > 20) {
-                    this.referenceLineLayer.addShape('line', {
+                    this.referenceLineLayer.addShape('gridarrow', {
                         p0: {
                             y: y
                         }
@@ -74,7 +74,7 @@ define(
                 var referenceLineLayer = this.referenceLineLayer;
                 var rightSideBearing = this.rightSideBearing;
                 var lines = referenceLineLayer.shapes.filter(function (line) {
-                    return line.type === 'line' && line !== rightSideBearing;
+                    return line.type === 'gridarrow' && line !== rightSideBearing;
                 });
 
                 lines.forEach(function (l) {
