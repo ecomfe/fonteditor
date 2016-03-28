@@ -145,9 +145,15 @@ define(
         function getSyncData(syncConfig, ttf) {
             var fontType = [];
             var syncData = {};
-            if (syncConfig.woff || syncConfig.ttf || syncConfig.eot) {
-                var buffer = writettf(ttf);
 
+            if (syncConfig.woff || syncConfig.ttf || syncConfig.eot) {
+                try {
+                    var buffer = writettf(ttf);
+                }
+                catch (e) {
+                    alert(e.message);
+                    throw e;
+                }
                 if (syncConfig.ttf) {
                     fontType.push('ttf');
                     syncData.ttf = bytes2base64(buffer);
