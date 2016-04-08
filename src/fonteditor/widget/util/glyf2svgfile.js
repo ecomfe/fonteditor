@@ -41,11 +41,12 @@ define(function (require) {
         if (glyf.contours && glyf.contours.length) {
             var contours = lang.clone(glyf.contours);
             var bound = computeBoundingBox.computePath.apply(null, contours);
-            var scale = opt.unitsPerEm / Math.max(bound.width, bound.height);
+            var originSize = Math.max(bound.width, bound.height);
+            var scale = opt.unitsPerEm / originSize;
             contours.forEach(function (contour) {
                 pathAdjust(contour, 1, 1, -bound.x, -bound.y - bound.height / 2);
                 pathAdjust(contour, 1, -1, 0, 0);
-                pathAdjust(contour, scale, scale, 0, bound.height / 2);
+                pathAdjust(contour, scale, scale, (originSize - bound.width) / 2, bound.height / 2);
                 pathCeil(contour, 2);
             });
             g.d = 'd="' + contours2svg(contours) + '"';
