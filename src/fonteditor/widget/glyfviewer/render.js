@@ -15,7 +15,7 @@ define(
             +   '<i data-action="edit" class="ico i-edit" title="' + i18n.lang.edit + '"></i>'
             +   '<i data-action="del" class="ico i-del" title="' + i18n.lang.del + '"></i>'
             +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
-            +       '<g transform="scale(1, -1) translate(0, -${descent}) scale(0.95, 0.95) ">'
+            +       '<g transform="scale(1, -1) translate(0, -${translateY}) scale(0.95, 0.95) ">'
             +           '<path class="path" ${fillColor} ${d}/></g>'
             +   '</svg>'
             +   '<div data-field="unicode" class="unicode" title="${unicode}">${unicode}</div>'
@@ -41,7 +41,7 @@ define(
                     editing: opt.editing ? 'editing' : '',
                     modify: glyf.modify,
                     unitsPerEm: opt.unitsPerEm,
-                    descent: opt.descent,
+                    translateY: opt.unitsPerEm + opt.descent,
                     unicode: (glyf.unicode || []).map(function (u) {
                         return '$' + u.toString(16).toUpperCase();
                     }).join(','),

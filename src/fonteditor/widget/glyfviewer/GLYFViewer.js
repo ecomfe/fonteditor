@@ -15,7 +15,7 @@ define(
 
         function showGLYF(ttf) {
             var unitsPerEm = ttf.head.unitsPerEm;
-            var descent = unitsPerEm + ttf.hhea.descent;
+            var descent = ttf.hhea.descent;
             var selectedHash = {};
             var selectedList = this.selectedList || [];
             selectedList.forEach(function (i) {
@@ -48,7 +48,7 @@ define(
 
         function refreshGLYF(ttf, refreshList) {
             var unitsPerEm = ttf.head.unitsPerEm;
-            var descent = unitsPerEm + ttf.hhea.descent;
+            var descent = ttf.hhea.descent;
             var selectedHash = {};
             var selectedList = this.selectedList || [];
 
