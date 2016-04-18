@@ -401,7 +401,7 @@ define(
                     !new SettingSync({
                         onChange: function (setting) {
                             program.project.updateConfig(program.data.projectId, {
-                                sync: $.extend(syncConfig, setting)
+                                sync: setting ? $.extend(syncConfig, setting) : null
                             });
                             program.projectViewer.show(program.project.items(), program.data.projectId);
                         }
