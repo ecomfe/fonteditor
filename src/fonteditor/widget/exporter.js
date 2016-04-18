@@ -6,13 +6,9 @@
 
 define(
     function (require) {
-
-        var writettf = require('./util/writettf');
-        var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
-        var ttf2eot = require('fonteditor-core/ttf/ttf2eot');
-        var ttf2svg = require('fonteditor-core/ttf/ttf2svg');
+        var font = require('fonteditor-core/ttf/font');
+        var resolvettf = require('./util/resolvettf');
         var ttf2icon = require('fonteditor-core/ttf/ttf2icon');
-        var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
         var config = require('fonteditor-core/ttf/data/default');
         var exportRender = require('../template/export-render');
         var JSZip = require('JSZip');
@@ -28,26 +24,10 @@ define(
          *
          * @return {Binary} base64 font file
          */
-        function font2buffer(ttf, options) {
-            var buffer = null;
-            if (options.type === 'woff') {
-
-                // 这里没有用deflate压缩函数，是因为在一些安卓手机上, MI 4.4
-                // 不能识别压缩字体
-                buffer = ttf2woff(writettf(ttf));
-            }
-            else if (options.type === 'eot') {
-                buffer = ttf2eot(writettf(ttf));
-            }
-            else if (options.type === 'svg') {
-                buffer = ttf2svg(ttf);
-            }
-            else {
-                buffer = writettf(ttf);
-                options.type = 'ttf';
-            }
-
-            return buffer;
+        function writefont(ttf, options) {
+            options.type = options.type || 'ttf';
+            ttf = resolvettf(ttf, options);
+            return font.create(ttf).write(options);
         }
 
         /**
@@ -82,7 +62,7 @@ define(
 
                             fontzip.file(
                                 fileName + '.' + fileType,
-                                font2buffer(ttf, {
+                                writefont(ttf, {
                                     type: fileType
                                 })
                             );
@@ -117,13 +97,8 @@ define(
 
                     }
                     else {
-                        var buffer = font2buffer(ttf, options);
-                        if (options.type === 'svg') {
-                            base64Str = btoa(buffer);
-                        }
-                        else {
-                            base64Str = bytes2base64(buffer);
-                        }
+                        var buffer = writefont(ttf, options);
+                        base64Str = font.toBase64(buffer);
 
                         base64Str = 'data:font/'
                             + options.type
@@ -138,7 +113,6 @@ define(
                     if (options.success) {
                         options.success(base64Str);
                     }
-
                 }
                 catch (e) {
                     $(options.target).removeAttr('download');

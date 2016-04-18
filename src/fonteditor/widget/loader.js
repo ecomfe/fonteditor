@@ -7,43 +7,24 @@
 define(
     function (require) {
         var i18n = require('../i18n/i18n');
-        var TTFReader = require('fonteditor-core/ttf/ttfreader');
-        var woff2ttf = require('fonteditor-core/ttf/woff2ttf');
-        var eot2ttf = require('fonteditor-core/ttf/eot2ttf');
-        var svg2ttfobject = require('fonteditor-core/ttf/svg2ttfobject');
-        var otf2ttfobject = require('fonteditor-core/ttf/otf2ttfobject');
+        var font = require('fonteditor-core/ttf/font');
         var inflate = require('inflate');
         var loading = require('./loading');
         var program = require('./program');
 
-        var woffOptions = {
-            inflate: inflate.inflate
-        };
-
         function svg2ttf(buffer) {
-            var ieOpt = program.setting.get('ie');
-            return svg2ttfobject(buffer, ieOpt.import);
+            var options = program.setting.get('ie').import;
+            options.type = 'svg';
+            return font.create(buffer, options).data;
         }
 
-        function getttf(buffer, options) {
-            var ttf;
+        function readttf(buffer, options) {
             // 暂不支持otf直接编辑，这里需要将otf转换成ttf
-            if (options.type === 'otf') {
-                ttf = otf2ttfobject(buffer);
+            if (options.type === 'woff') {
+                options.inflate = inflate.inflate;
             }
-            else {
-
-                if (options.type === 'woff') {
-                    buffer = woff2ttf(buffer, woffOptions);
-                }
-                else if (options.type === 'eot') {
-                    buffer = eot2ttf(buffer);
-                }
-
-                var ttfReader = new TTFReader();
-                ttf = ttfReader.read(buffer);
-                ttfReader.dispose();
-            }
+            var ttf =  font.create(buffer, options).data;
+            delete options.inflate;
 
             return ttf;
         }
@@ -63,7 +44,7 @@ define(
 
             fileReader.onload = function (e) {
                 try {
-                    options.success && options.success(getttf(e.target.result, options));
+                    options.success && options.success(readttf(e.target.result, options));
                 }
                 catch (exp) {
                     alert(exp.message);
@@ -96,7 +77,7 @@ define(
             loading.show();
 
             try {
-                options.success && options.success(getttf(buffer, options));
+                options.success && options.success(readttf(buffer, options));
             }
             catch (exp) {
                 alert(exp.message);

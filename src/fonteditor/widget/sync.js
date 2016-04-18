@@ -10,13 +10,13 @@ define(
         var Resolver = require('common/promise');
         var string = require('common/string');
         var project = require('./project');
-        var writettf = require('./util/writettf');
+
+        var resolvettf = require('./util/resolvettf');
+        var font = require('fonteditor-core/ttf/font');
         var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
         var ttf2eot = require('fonteditor-core/ttf/ttf2eot');
-        var ttf2svg = require('fonteditor-core/ttf/ttf2svg');
-        var loader = require('./loader');
-        var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
         var base642bytes = require('fonteditor-core/ttf/util/base642bytes');
+        var loader = require('./loader');
         var SyncForm = require('./SyncForm');
         var syncStatus = require('./sync-status');
         var curSyncStatus = {};
@@ -147,26 +147,30 @@ define(
             var syncData = {};
 
             if (syncConfig.woff || syncConfig.ttf || syncConfig.eot) {
+                ttf = resolvettf(ttf);
                 try {
-                    var buffer = writettf(ttf);
+                    var buffer = font.create(ttf).write({
+                        type: 'ttf'
+                    });
                 }
                 catch (e) {
                     alert(e.message);
                     throw e;
                 }
+
                 if (syncConfig.ttf) {
                     fontType.push('ttf');
-                    syncData.ttf = bytes2base64(buffer);
+                    syncData.ttf = font.toBase64(buffer);
                 }
 
                 if (syncConfig.woff) {
                     fontType.push('woff');
-                    syncData.woff = bytes2base64(ttf2woff(buffer));
+                    syncData.woff = font.toBase64(ttf2woff(buffer));
                 }
 
                 if (syncConfig.eot) {
                     fontType.push('eot');
-                    syncData.eot = bytes2base64(ttf2eot(buffer));
+                    syncData.eot = font.toBase64(ttf2eot(buffer));
                 }
 
                 buffer = null;
@@ -174,7 +178,10 @@ define(
 
             if (syncConfig.svg) {
                 fontType.push('svg');
-                syncData.svg = btoa(ttf2svg(ttf));
+                var svg = font.create(ttf).write({
+                    type: 'svg'
+                });
+                syncData.svg = font.toBase64(svg);
             }
 
             syncData.encode = 'base64';

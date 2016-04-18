@@ -7,19 +7,12 @@
 define(
     function (require) {
 
-        var writettf = require('./util/writettf');
-        var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
-        var ttf2eot = require('fonteditor-core/ttf/ttf2eot');
-        var ttf2svg = require('fonteditor-core/ttf/ttf2svg');
-        var ttf2base64 = require('fonteditor-core/ttf/ttf2base64');
-        var woff2base64 = require('fonteditor-core/ttf/woff2base64');
-        var eot2base64 = require('fonteditor-core/ttf/eot2base64');
-        var svg2base64 = require('fonteditor-core/ttf/svg2base64');
-        var extend = require('common/lang').extend;
+        var resolvettf = require('./util/resolvettf');
         var ttf2icon = require('fonteditor-core/ttf/ttf2icon');
+        var font = require('fonteditor-core/ttf/font');
 
         var previewRender = require('../template/preview-render'); // 模板渲染函数
-
+        var extend = require('common/lang').extend;
         var isIE = !!window.ActiveXObject || 'ActiveXObject' in window;
 
         /**
@@ -30,31 +23,16 @@ define(
          * @return {string} html字符串
          */
         function generatePreviewHTML(ttf, fontFormat) {
-            fontFormat = fontFormat || ttf;
+            var options = {
+                type: fontFormat || 'ttf'
+            };
 
-            var fontData = '';
-            var buffer;
-
-            if (fontFormat === 'woff') {
-                buffer = writettf(ttf);
-                fontData = woff2base64(ttf2woff(buffer));
-            }
-            else if (fontFormat === 'eot') {
-                buffer = writettf(ttf);
-                fontData = eot2base64(ttf2eot(buffer));
-            }
-            else  if (fontFormat === 'svg') {
-                fontData = svg2base64(ttf2svg(ttf));
-            }
-            else {
-                buffer = writettf(ttf);
-                fontData = ttf2base64(buffer);
-            }
-
+            ttf = resolvettf(ttf);
+            var fontData = font.create(ttf).toBase64(options);
             var data = extend(
                 {
                     fontData: fontData,
-                    fontFormat: fontFormat
+                    fontFormat: options.type
                 },
                 ttf2icon(ttf)
             );
