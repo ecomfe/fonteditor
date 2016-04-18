@@ -11,6 +11,7 @@ define(
         var ttf2icon = require('fonteditor-core/ttf/ttf2icon');
         var config = require('fonteditor-core/ttf/data/default');
         var exportRender = require('../template/export-render');
+        var download = require('./util/download');
         var JSZip = require('JSZip');
 
         /**
@@ -106,16 +107,12 @@ define(
                             + base64Str;
                     }
 
-                    var target = $(options.target);
-                    target.attr('download', fileName + '.' + options.type);
-
-                    target.attr('href', base64Str);
+                    download(fileName + '.' + options.type, base64Str);
                     if (options.success) {
                         options.success(base64Str);
                     }
                 }
                 catch (e) {
-                    $(options.target).removeAttr('download');
                     if (options.error) {
                         options.error(e);
                     }
@@ -123,8 +120,6 @@ define(
                     throw e;
                 }
             }
-
-            return options.target;
         }
 
 

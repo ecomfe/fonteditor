@@ -13,6 +13,24 @@ define(
         var program;
 
         /**
+         * 通知错误信息
+         *
+         * @param  {Object} options 参数
+         * @param  {number} options.number 错误号
+         * @param  {Object} options.data 错误数据
+         */
+        function notifyError(options) {
+            // 重复的代码点
+            if (options.number === 10200 && options.data) {
+                var glyfList = Array.isArray(options.data) ? options.data : [options.data];
+                var pageSize = program.setting.get('editor').viewer.pageSize;
+                var page = Math.ceil(glyfList[0] / pageSize);
+                showTTF(program.ttfManager.get(), page, glyfList);
+            }
+        }
+
+
+        /**
          * 获取ttf的编辑选项
          *
          * @param {Object} ttf ttf对象
@@ -602,6 +620,9 @@ define(
                         program.previewer.load(ttf, e.keyCode === 114 ? 'ttf' : 'woff');
                     }
                 }
+            })
+            .on('font-error', function (e) {
+                notifyError(e);
             });
         }
 

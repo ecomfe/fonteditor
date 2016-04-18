@@ -10,7 +10,7 @@ define(
         var resolvettf = require('./util/resolvettf');
         var ttf2icon = require('fonteditor-core/ttf/ttf2icon');
         var font = require('fonteditor-core/ttf/font');
-
+        var program = require('./program');
         var previewRender = require('../template/preview-render'); // 模板渲染函数
         var extend = require('common/lang').extend;
         var isIE = !!window.ActiveXObject || 'ActiveXObject' in window;
@@ -28,7 +28,14 @@ define(
             };
 
             ttf = resolvettf(ttf);
-            var fontData = font.create(ttf).toBase64(options);
+            try {
+                var fontData = font.create(ttf).toBase64(options);
+            }
+            catch(e) {
+                program.fire('font-error', e);
+                throw e;
+            }
+
             var data = extend(
                 {
                     fontData: fontData,

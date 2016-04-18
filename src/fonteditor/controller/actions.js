@@ -50,6 +50,7 @@ define(
         // 延迟同步函数
         var fontDelaySync = lang.debounce(function (options) {
             program.loading.show(i18n.lang.msg_syncing, 4000);
+
             program.sync.addTask(options).then(function (data) {
                 if (options.newProject && data && data.newData) {
                     actions['new']({
@@ -120,20 +121,12 @@ define(
             },
 
             'export': function (e) {
-                if (!e.target.getAttribute('download')) {
-                    e.preventDefault();
-                }
-            },
-
-            'export-file': function (e) {
                 if (program.ttfManager.get()) {
                     var target = $(e.target);
                     program.exporter.export(program.ttfManager.get(), {
                         type: target.attr('data-type'),
-                        target: target,
-                        originEvent: e,
-                        error: function () {
-                            e.preventDefault();
+                        error: function (ev) {
+                            program.fire('font-error', ev);
                         }
                     });
                 }
@@ -310,6 +303,12 @@ define(
                 if (program.ttfManager.get()) {
                     var result = program.ttfManager.optimize();
                     if (true !== result) {
+                        if (result.repeat) {
+                            program.fire('font-error', {
+                                number: 10200,
+                                data: result.repeat
+                            });
+                        }
                         alert(result.message);
                     }
                 }

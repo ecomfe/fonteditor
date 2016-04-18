@@ -10,7 +10,7 @@ define(
         var Resolver = require('common/promise');
         var string = require('common/string');
         var project = require('./project');
-
+        var program = require('./program');
         var resolvettf = require('./util/resolvettf');
         var font = require('fonteditor-core/ttf/font');
         var ttf2woff = require('fonteditor-core/ttf/ttf2woff');
@@ -154,6 +154,7 @@ define(
                     });
                 }
                 catch (e) {
+                    program.fire('font-error', e);
                     alert(e.message);
                     throw e;
                 }

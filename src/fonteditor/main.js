@@ -71,12 +71,6 @@ define(
                 }
             });
 
-            $('#export-btn').on('mouseup', actions['export-file']);
-            $('#export-btn-woff').on('mouseup', actions['export-file']);
-            $('#export-btn-svg').on('mouseup', actions['export-file']);
-            $('#export-btn-eot').on('mouseup', actions['export-file']);
-            $('#export-btn-zip').on('mouseup', actions['export-file']);
-
             document.getElementById('font-import').addEventListener('change', onUpFile);
         }
 

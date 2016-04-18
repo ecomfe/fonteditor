@@ -445,6 +445,7 @@ define(
             }
 
             return {
+                repeat: result.repeat,
                 message: message
             };
         };

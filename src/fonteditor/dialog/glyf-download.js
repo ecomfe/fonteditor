@@ -5,12 +5,13 @@
 
 define(
     function (require) {
+        var pixelRatio = require('common/getPixelRatio');
         var i18n = require('../i18n/i18n');
         var glyf2svgfile = require('../widget/util/glyf2svgfile');
+        var download = require('../widget/util/download');
         var svg2base64 = require('fonteditor-core/ttf/svg2base64');
         var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
         var colorpicker = require('./colorpicker');
-        var pixelRatio = require('common/getPixelRatio');
 
         function getSvg(setting) {
             var opt = {
@@ -55,19 +56,17 @@ define(
                 $('#glyf-download-color').on('change', onChange);
                 $('#glyf-download-size').on('change', onChange);
                 colorpicker.show('#glyf-download-color');
-                $('#glyf-download-svg').on('mousedown', $.proxy(function (e) {
+                $('#glyf-download-svg').on('click', $.proxy(function (e) {
                     var svgText = getSvg(this.setting);
                     var target = $(e.target);
-                    target.attr('download', (this.setting.glyf.name || 'svg')+ '.svg');
-                    target.attr('href', svg2base64(svgText));
+                    download((this.setting.glyf.name || 'svg') + '.svg', svg2base64(svgText));
                 }, this));
 
-                $('#glyf-download-png').on('mousedown', $.proxy(function (e) {
+                $('#glyf-download-png').on('click', $.proxy(function (e) {
                     var canvas = $('#glyf-download-preview canvas').get(0);
                     var imgData = canvas.toDataURL();
                     var target = $(e.target);
-                    target.attr('download', (this.setting.glyf.name || 'png')+ '.png');
-                    target.attr('href', imgData);
+                    download((this.setting.glyf.name || 'png') + '.png', imgData);
                 }, this));
 
                 $('#glyf-download-name').html(setting.glyf.name);
@@ -77,8 +76,8 @@ define(
             onDispose: function () {
                 $('#glyf-download-color').off('change');
                 $('#glyf-download-size').off('change');
-                $('#glyf-download-svg').off('mousedown');
-                $('#glyf-download-png').off('mousedown');
+                $('#glyf-download-svg').off('click');
+                $('#glyf-download-png').off('click');
                 this.setting = null;
             }
         });
