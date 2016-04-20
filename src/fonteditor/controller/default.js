@@ -68,7 +68,6 @@ define(
 
                 if (!isEditorVisible) {
                     program.editor.show();
-                    program.spliter.enable();
                     program.fire('editor-show');
                 }
 
@@ -106,7 +105,6 @@ define(
             $('.editor').removeClass('editing');
 
             program.editor && program.editor.hide();
-            program.spliter.disable();
             program.fire('editor-hide');
             program.viewer.clearEditing();
             program.viewer.setMode('list');
@@ -483,10 +481,12 @@ define(
                     program.editor.editor.render.resizeCapture.un('resize', adjustEditor);
                     program.editor.editor.render.resizeCapture.on('resize', adjustEditor);
                     adjustEditor();
+                    program.spliter.enable();
                 })
                 .on('editor-hide', function () {
                     program.editor.editor.render.resizeCapture.un('resize', adjustEditor);
                     $('.main').css('margin-left', '');
+                    program.spliter.disable();
                 });
 
             program.spliter.disable()
