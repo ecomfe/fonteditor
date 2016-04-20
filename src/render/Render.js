@@ -84,12 +84,10 @@ define(
                     me.painter.resetSize();
                     var size = me.painter.getSize();
 
-                    if (size.width !== prevSize.width || size.height !== prevSize.height) {
-                        me.fire('resize', {
-                            size: size,
-                            prevSize: prevSize
-                        });
-                    }
+                    me.fire('resize', {
+                        size: size,
+                        prevSize: prevSize
+                    });
                 });
             }
         }

@@ -109,6 +109,7 @@
     </section>
 
     <section class="main">
+        <div id="glyf-list-spliter" class="spliter"></div>
         <ul id="glyf-list-commandmenu" class="command-groups"></ul>
         <div id="glyf-list-pager" class="pager"></div>
         <div id="glyf-list" class="glyf-list"></div>

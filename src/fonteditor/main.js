@@ -9,6 +9,7 @@ define(
         var GLYFViewer = require('./widget/glyfviewer/GLYFViewer');
         var GLYFEditor = require('./widget/GLYFEditor');
         var ProjectViewer = require('./widget/ProjectViewer');
+        var Spliter = require('./widget/Spliter');
         var TTFManager = require('./widget/TTFManager');
         var Toolbar = require('./widget/Toolbar');
         var Pager = require('./widget/Pager');
@@ -86,6 +87,8 @@ define(
                 program.setting = require('./widget/settingmanager');
 
                 program.config = require('./config');
+
+                program.spliter = new Spliter($('#glyf-list-spliter'));
 
                 // glyf查看器命令组
                 var viewerCommandMenu = new Toolbar($('#glyf-list-commandmenu'), {

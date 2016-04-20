@@ -21,6 +21,12 @@ git clone https://github.com/kekee000/fonteditor-core
 node ./build/build-index.js
 ```
 
+* `less`文件修改之后使用如下脚本编译：
+
+```
+node ./build/build-css.js
+```
+
 * 使用`edp`对fonteditor进行调试
 
 

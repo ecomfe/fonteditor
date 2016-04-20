@@ -56,6 +56,7 @@ define(
          * @param {number} glyfIndex 字形索引
          */
         function showEditor(glyfIndex) {
+            var isEditorVisible = program.editor.isVisible();
 
             // 重置editor缩放
             var ttf = program.ttfManager.get();
@@ -65,7 +66,11 @@ define(
 
                 program.viewer.setMode('editor');
 
-                program.editor.show();
+                if (!isEditorVisible) {
+                    program.editor.show();
+                    program.spliter.enable();
+                    program.fire('editor-show');
+                }
 
                 // 调整显示级别
                 program.editor.setAxis(getEditingOpt(ttf));
@@ -101,6 +106,8 @@ define(
             $('.editor').removeClass('editing');
 
             program.editor && program.editor.hide();
+            program.spliter.disable();
+            program.fire('editor-hide');
             program.viewer.clearEditing();
             program.viewer.setMode('list');
             program.viewer.focus();
@@ -462,6 +469,34 @@ define(
             });
         }
 
+        function bindSpliter(program) {
+            var adjustEditor = function () {
+                var width = $('.editor').css('width');
+                if (width) {
+                    $('.main').css('margin-left', width);
+                }
+            };
+
+            program
+                .on('editor-show', function () {
+                    // 为了防止多次绑定导致bug，这里先释放一下
+                    program.editor.editor.render.resizeCapture.un('resize', adjustEditor);
+                    program.editor.editor.render.resizeCapture.on('resize', adjustEditor);
+                    adjustEditor();
+                })
+                .on('editor-hide', function () {
+                    program.editor.editor.render.resizeCapture.un('resize', adjustEditor);
+                    $('.main').css('margin-left', '');
+                });
+
+            program.spliter.disable()
+                .on('change', function (e) {
+                    var editor = $('.editor');
+                    editor.width(editor.width() + e.delta);
+                    program.editor.editor.render.resizeCapture.fire('resize', e);
+                });
+        }
+
         /**
          * 绑定项目列表
          *
@@ -640,10 +675,10 @@ define(
                 program = curProgram;
 
                 bindViewer(program);
+                bindSpliter(program);
                 bindttfManager(program);
                 bindProject(program);
                 bindProgram(program);
-
 
                 $('.close-editor').click(function () {
                     hideEditor();
