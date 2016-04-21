@@ -531,7 +531,7 @@ define(
                 program.viewer.focus();
             })
             .on('sync', function (e) {
-                actions.sync(e.projectId);
+                actions['dosync'](e.projectId);
             })
             .on('del', function (e) {
                 program.project.remove(e.projectId).then(function () {

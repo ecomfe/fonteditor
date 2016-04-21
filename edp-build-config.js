@@ -40,6 +40,7 @@ exports.getProcessors = function () {
             files: [
                 'src/fonteditor/main.js',
                 'dep/**/*.js',
+                '!dep/**/*.min.js',
             ]
         }),
 

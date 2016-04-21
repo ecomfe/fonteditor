@@ -158,7 +158,12 @@ define(
                     config: config
                 });
             },
-
+            'dosync': function (projectId) {
+                var syncConfig = program.project.getConfig(projectId).sync;
+                if (syncConfig && syncConfig.autoSync) {
+                    actions.sync(projectId, program.ttfManager.get(), syncConfig);
+                }
+            },
             'save': function (options) {
                 if (program.ttfManager.get()) {
                     // 已经保存过的项目
@@ -168,10 +173,7 @@ define(
                         .then(function () {
                             program.ttfManager.setState('saved');
                             program.loading.show(i18n.lang.msg_save_success, 400);
-                            var syncConfig = program.project.getConfig(projectId).sync;
-                            if (syncConfig && syncConfig.autoSync) {
-                                actions.sync(projectId, program.ttfManager.get(), syncConfig);
-                            }
+                            actions['dosync'](projectId);
                         }, function () {
                             program.loading.show(i18n.lang.msg_save_failed, 1000);
                         });
