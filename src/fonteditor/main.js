@@ -6,22 +6,12 @@
 define(
     function (require) {
         var i18n = require('./i18n/i18n');
-        var GLYFViewer = require('./widget/glyfviewer/GLYFViewer');
-        var GLYFEditor = require('./widget/GLYFEditor');
-        var ProjectViewer = require('./widget/ProjectViewer');
-        var Spliter = require('./widget/Spliter');
-        var TTFManager = require('./widget/TTFManager');
-        var Toolbar = require('./widget/Toolbar');
-        var Pager = require('./widget/Pager');
-
         var program = require('./widget/program');
-
         var controller = require('./controller/default');
         var actions = require('./controller/actions');
 
-
-        function onUpFile(e) {
-            var file = e.target.files[0];
+        function loadFiles(files) {
+            var file = files[0];
             if (program.data.action === 'open' && program.loader.supportLoad(file.name)) {
                 program.loader.load(file, {
                     type: file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase(),
@@ -34,10 +24,9 @@ define(
             }
             else if (program.data.action === 'import' && program.loader.supportImport(file.name)) {
                 if (program.ttfManager.get()) {
-
                     var ext = file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase();
                     var reg = new RegExp('\.' + ext + '$', 'i');
-                    var files = Array.prototype.slice.call(e.target.files).filter(function (f) {
+                    var files = Array.prototype.slice.call(files).filter(function (f) {
                         return reg.test(f.name);
                     });
 
@@ -59,8 +48,20 @@ define(
             else {
                 alert(i18n.lang.msg_not_support_file_type);
             }
+        }
 
+        function onUpFile(e) {
+            loadFiles(e.target.files);
             e.target.value = '';
+        }
+
+        function onDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var file = e.dataTransfer.files[0];
+            var ext = file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase();
+            program.data.action = ext === 'svg' ? 'import' : 'open';
+            loadFiles(e.dataTransfer.files);
         }
 
         function bindEvent() {
@@ -73,6 +74,11 @@ define(
             });
 
             document.getElementById('font-import').addEventListener('change', onUpFile);
+            // 阻止拖拽默认事件
+            $(document).on('dragleave drop dragenter dragover', function (e) {
+                e.preventDefault();
+            });
+            document.getElementById('glyf-list').addEventListener('drop', onDrop);
         }
 
         var entry = {
@@ -88,16 +94,21 @@ define(
 
                 program.config = require('./config');
 
+                // 拖拽面板管理器
+                var Spliter = require('./widget/Spliter');
                 program.spliter = new Spliter($('#glyf-list-spliter'));
 
                 // glyf查看器命令组
+                var Toolbar = require('./widget/Toolbar');
                 var viewerCommandMenu = new Toolbar($('#glyf-list-commandmenu'), {
                     commands: require('./menu/viewer')
                 });
 
+                var Pager = require('./widget/Pager');
                 program.viewerPager = new Pager($('#glyf-list-pager'));
 
                 // glyf查看器
+                var GLYFViewer = require('./widget/glyfviewer/GLYFViewer');
                 program.viewer = new GLYFViewer($('#glyf-list'), {
                     commandMenu: viewerCommandMenu
                 });
@@ -108,15 +119,18 @@ define(
                 });
 
                 // 字体查看器
+                var GLYFEditor = require('./widget/GLYFEditor');
                 program.editor = new GLYFEditor($('#glyf-editor'), {
                     commandMenu: editorCommandMenu
                 });
 
                 // 项目管理
+                var ProjectViewer = require('./widget/ProjectViewer');
                 program.project = require('./widget/project');
                 program.projectViewer = new ProjectViewer($('#project-list'));
 
                 // ttf管理
+                var TTFManager = require('./widget/TTFManager');
                 program.ttfManager = new TTFManager();
 
                 // 导入导出器
