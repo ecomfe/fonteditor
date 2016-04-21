@@ -492,8 +492,11 @@ define(
             program.spliter.disable()
                 .on('change', function (e) {
                     var editor = $('.editor');
-                    editor.width(editor.width() + e.delta);
-                    program.editor.editor.render.resizeCapture.fire('resize', e);
+                    var width = editor.width();
+                    if (e.delta + width > 400) {
+                        editor.width(width + e.delta);
+                        program.editor.editor.render.resizeCapture.fire('resize', e);
+                    }
                 });
         }
 
