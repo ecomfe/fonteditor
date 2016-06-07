@@ -13,6 +13,7 @@ define(
 
         var storage = window.localStorage || window.sessionStorate;
         var projectDataStore;
+        var readyPromise = new Resolver();
 
         if (DataStore.enabled) {
             projectDataStore = new DataStore({
@@ -22,12 +23,23 @@ define(
 
             // 由于indexDB在隐私模式下会被禁用，这里需要检查下
             // 出错则不使用indexedDB
-            projectDataStore.open(null, function () {
+            projectDataStore.open(function () {
+                readyPromise.resolve(project)
+            }, function () {
                 projectDataStore = null;
+                readyPromise.resolve(project)
             });
         }
 
         var project = {
+
+            /**
+             * 加载后的 Promise
+             * @return {Promise}
+             */
+            ready: function () {
+                return readyPromise.promise();
+            },
 
             /**
              * 获取新项目的编号

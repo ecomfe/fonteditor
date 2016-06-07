@@ -81,6 +81,35 @@ define(
             document.getElementById('glyf-list').addEventListener('drop', onDrop);
         }
 
+        function loadProject(projectId) {
+            if (!program.project.getConfig(projectId)) {
+                return;
+            }
+
+            program.project.ready().then(function () {
+                program.projectViewer.select(projectId);
+                program.projectViewer.fire('open', {
+                    projectId: projectId
+                });
+            });
+        }
+
+        function getProjectId() {
+            var projectId = null;
+            // 从 url 中读取 id
+            if (location.search) {
+                var query = require('common/lang').parseQuery(location.search.slice(1))
+                if (query.project) {
+                    projectId = query.project;
+                }
+            }
+            // 上一次打开的项目
+            if (!projectId) {
+                 projectId = window.localStorage.getItem('project-cur');
+            }
+            return projectId;
+        }
+
         var entry = {
 
             /**
@@ -145,15 +174,18 @@ define(
 
                 controller.init(program);
 
-                // 加载项目
-                program.projectViewer.show(program.project.items());
-
-
                 // 加载用户设置
                 if (program.setting.isStored('editor')) {
                     var setting = program.setting.get('editor');
                     program.viewer.setSetting(setting.viewer);
                     program.editor.setSetting(setting.editor);
+                }
+
+                // 加载项目
+                program.projectViewer.show(program.project.items());
+                var projectId = getProjectId();
+                if (projectId) {
+                    loadProject(projectId);
                 }
 
             }

@@ -517,6 +517,7 @@ define(
                         program.data.projectId = e.projectId;
                         program.projectViewer.select(e.projectId);
                         program.viewer.focus();
+                        window.localStorage.setItem('project-cur', e.projectId);
                     }
                 }, function () {
                     if (window.confirm(i18n.lang.msg_error_open_proj)) {

@@ -6,8 +6,8 @@
 define(
     function (require) {
 
-        var computeBoundingBox = require('../../graphics/computeBoundingBox');
-        var isPathCross = require('../../graphics/isPathCross');
+        var computeBoundingBox = require('graphics/computeBoundingBox');
+        var isPathCross = require('graphics/isPathCross');
 
         /**
          * 从待选的shape中选择一个，作为选中的shape

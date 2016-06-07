@@ -6,7 +6,7 @@
 define(
     function (require) {
 
-        var isInsidePath = require('../../graphics/isInsidePath');
+        var isInsidePath = require('graphics/isInsidePath');
         var pathAdjust = require('graphics/pathAdjust');
         var drawPath = require('../util/drawPath');
         var computeBoundingBox = require('graphics/computeBoundingBox');
