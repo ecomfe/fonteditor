@@ -28,14 +28,14 @@ define(
             msg_save_failed: '保存失败...',
             msg_input_proj_name: '请输入项目名称：',
             msg_confirm_gen_names: '生成的字形名称会覆盖原来的名称，确定生成？',
-            msg_not_support_compound_glyf: '暂不支持复合字形!',
-            msg_transform_compound_glyf: '是否转换复合字形为简单字形？',
+            msg_not_support_compound_glyph: '暂不支持复合字形!',
+            msg_transform_compound_glyph: '是否转换复合字形为简单字形？',
             msg_confirm_save_glyph: '是否放弃保存当前编辑的字形?',
             msg_no_related_glhph: '未找到相关字形!',
             msg_error_open_proj: '打开项目失败，是否删除项目?',
             msg_error_del_proj: '删除项目失败，请刷新页面后删除!',
-            msg_no_sort_glyf: '没有要排序的字形!',
-            msg_has_compound_glyf_sort: '包含复合字形,无法进行排序',
+            msg_no_sort_glyph: '没有要排序的字形!',
+            msg_has_compound_glyph_sort: '包含复合字形,无法进行排序',
 
 
             preview_title: '预览{%=fontFormat%}格式字体',

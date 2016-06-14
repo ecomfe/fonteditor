@@ -14,8 +14,8 @@ define(
             mirror: 'Mirror',
 
             scale: 'Scale By Percent',
-            findglyf: 'Find Glyph',
-            downloadglyf: 'Download Glyf',
+            findglyph: 'Find Glyph',
+            downloadglyph: 'Download Glyph',
             setunicode: 'Set Unicode',
             del: 'Delete',
             edit: 'Edit',

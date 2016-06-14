@@ -1,5 +1,5 @@
 /**
- * @file glyf列表渲染器
+ * @file glyph列表渲染器
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -11,7 +11,7 @@ define(function (require) {
     var pathCeil = require('fonteditor-core/graphics/pathCeil');
     var string = require('common/string');
     var lang = require('common/lang');
-    var SVG_GLYF_TPL = ''
+    var SVG_glyph_TPL = ''
             + '<?xml version="1.0" encoding="utf-8"?>'
             + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"'
             +   ' "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
@@ -23,23 +23,23 @@ define(function (require) {
             + '</svg>';
 
     /**
-     * 获取glyf渲染列表项目
+     * 获取glyph渲染列表项目
      *
-     * @param  {Object} glyf glyf结构
+     * @param  {Object} glyph glyph结构
      * @param  {Object} opt  渲染参数
-     * @return {string}      glyf列表项目片段
+     * @return {string}      glyph列表项目片段
      */
-    function glyf2svgfile(glyf, opt) {
+    function glyph2svgfile(glyph, opt) {
         var g = {
             size: opt.size,
             unitsPerEm: opt.unitsPerEm,
-            name: glyf.name,
+            name: glyph.name,
             fillColor: opt.fillColor || '#000'
         };
 
         var d = '';
-        if (glyf.contours && glyf.contours.length) {
-            var contours = lang.clone(glyf.contours);
+        if (glyph.contours && glyph.contours.length) {
+            var contours = lang.clone(glyph.contours);
             var bound = computeBoundingBox.computePath.apply(null, contours);
             var originSize = Math.max(bound.width, bound.height);
             var scale = opt.unitsPerEm / originSize;
@@ -52,8 +52,8 @@ define(function (require) {
             g.d = 'd="' + contours2svg(contours) + '"';
         }
 
-        return string.format(SVG_GLYF_TPL, g);
+        return string.format(SVG_glyph_TPL, g);
     }
 
-    return glyf2svgfile;
+    return glyph2svgfile;
 });

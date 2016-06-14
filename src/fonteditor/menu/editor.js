@@ -1,5 +1,5 @@
 /**
- * @file glyf编辑器相关命令
+ * @file glyph编辑器相关命令
  * @author mengke01(kekee000@gmail.com)
  */
 

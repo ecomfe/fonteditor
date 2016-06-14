@@ -12,7 +12,7 @@ define(
 
         var proto = {
 
-            type: 'glyf',
+            type: 'glyph',
 
             adjust: function (shape, camera) {
                 var center = camera.center;
@@ -56,7 +56,7 @@ define(
                     transform.f
                 );
 
-                var contours = shape.glyf.contours;
+                var contours = shape.glyph.contours;
                 for (var i = 0, l = contours.length; i < l; i++) {
                     drawPath(ctx, contours[i]);
                 }

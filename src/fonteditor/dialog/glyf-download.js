@@ -7,7 +7,7 @@ define(
     function (require) {
         var pixelRatio = require('common/getPixelRatio');
         var i18n = require('../i18n/i18n');
-        var glyf2svgfile = require('../widget/util/glyf2svgfile');
+        var glyph2svgfile = require('../widget/util/glyph2svgfile');
         var download = require('../widget/util/download');
         var svg2base64 = require('fonteditor-core/ttf/svg2base64');
         var bytes2base64 = require('fonteditor-core/ttf/util/bytes2base64');
@@ -15,17 +15,17 @@ define(
 
         function getSvg(setting) {
             var opt = {
-                fillColor: $('#glyf-download-color').val().trim(),
-                size: +$('#glyf-download-size').val(),
+                fillColor: $('#glyph-download-color').val().trim(),
+                size: +$('#glyph-download-size').val(),
                 unitsPerEm: setting.ttf.head.unitsPerEm
             };
-            return glyf2svgfile(setting.glyf, opt);
+            return glyph2svgfile(setting.glyph, opt);
         }
 
-        function previewGlyf() {
+        function previewglyph() {
             // 由于生成的svg文档带xml头部，这里简单的去掉
             var svgText = getSvg(this.setting);
-            var size = +$('#glyf-download-size').val();
+            var size = +$('#glyph-download-size').val();
             var canvas = document.createElement('canvas');
             canvas.width = canvas.height = size;
 
@@ -40,44 +40,44 @@ define(
                 );
             };
 
-            var previewer = $('#glyf-download-preview');
+            var previewer = $('#glyph-download-preview');
             previewer.children().remove();
             previewer.append(canvas);
         }
 
         return require('./setting').derive({
-            title: i18n.lang.dialog_export_glyf,
+            title: i18n.lang.dialog_export_glyph,
             nofooter: true,
             getTpl: function () {
-                return require('../template/dialog/glyf-download.tpl');
+                return require('../template/dialog/glyph-download.tpl');
             },
             set: function (setting) {
-                var onChange = $.proxy(previewGlyf, this);
-                $('#glyf-download-color').on('change', onChange);
-                $('#glyf-download-size').on('change', onChange);
-                colorpicker.show('#glyf-download-color');
-                $('#glyf-download-svg').on('click', $.proxy(function (e) {
+                var onChange = $.proxy(previewglyph, this);
+                $('#glyph-download-color').on('change', onChange);
+                $('#glyph-download-size').on('change', onChange);
+                colorpicker.show('#glyph-download-color');
+                $('#glyph-download-svg').on('click', $.proxy(function (e) {
                     var svgText = getSvg(this.setting);
                     var target = $(e.target);
-                    download((this.setting.glyf.name || 'svg') + '.svg', svg2base64(svgText));
+                    download((this.setting.glyph.name || 'svg') + '.svg', svg2base64(svgText));
                 }, this));
 
-                $('#glyf-download-png').on('click', $.proxy(function (e) {
-                    var canvas = $('#glyf-download-preview canvas').get(0);
+                $('#glyph-download-png').on('click', $.proxy(function (e) {
+                    var canvas = $('#glyph-download-preview canvas').get(0);
                     var imgData = canvas.toDataURL();
                     var target = $(e.target);
-                    download((this.setting.glyf.name || 'png') + '.png', imgData);
+                    download((this.setting.glyph.name || 'png') + '.png', imgData);
                 }, this));
 
-                $('#glyf-download-name').html(setting.glyf.name);
+                $('#glyph-download-name').html(setting.glyph.name);
                 this.setting = setting;
-                previewGlyf.call(this);
+                previewglyph.call(this);
             },
             onDispose: function () {
-                $('#glyf-download-color').off('change');
-                $('#glyf-download-size').off('change');
-                $('#glyf-download-svg').off('click');
-                $('#glyf-download-png').off('click');
+                $('#glyph-download-color').off('change');
+                $('#glyph-download-size').off('change');
+                $('#glyph-download-svg').off('click');
+                $('#glyph-download-png').off('click');
                 this.setting = null;
             }
         });

@@ -20,7 +20,7 @@ module.exports = exports = {
     gen_glyph_name: 'Generate Glyph Name',
     clear_glyph_name: 'Clear Glyph Name',
     optimize_glyph: 'Optimize Glyph',
-    sort_glyf: 'Sort Glyph by Unicode',
+    sort_glyph: 'Sort Glyph by Unicode',
     compound2simple: 'Composite Glyph to Simple Glyph',
     preview: 'Preview',
     preview_ttf: 'ttf Font',

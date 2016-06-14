@@ -13,7 +13,7 @@ define(
         var viewerRender = require('./render');
 
 
-        function showGLYF(ttf) {
+        function showglyph(ttf) {
             var unitsPerEm = ttf.head.unitsPerEm;
             var descent = ttf.hhea.descent;
             var selectedHash = {};
@@ -22,17 +22,17 @@ define(
                 selectedHash[i] = true;
             });
 
-            var glyfStr = '';
+            var glyphStr = '';
             var color = this.options.color;
             var editing = this.getEditing();
             var startIndex = this.page * this.options.pageSize;
             var endIndex = startIndex + this.options.pageSize;
-            var glyfList = ttf.glyf.slice(startIndex, endIndex);
-            var getGlyfHTML = viewerRender.render;
+            var glyphList = ttf.glyph.slice(startIndex, endIndex);
+            var getglyphHTML = viewerRender.render;
 
-            glyfList.forEach(function (glyf, i) {
+            glyphList.forEach(function (glyph, i) {
                 var index = startIndex + i;
-                glyfStr += getGlyfHTML(glyf, ttf, {
+                glyphStr += getglyphHTML(glyph, ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
@@ -42,11 +42,11 @@ define(
                 });
             });
 
-            this.main.html(glyfStr);
+            this.main.html(glyphStr);
         }
 
 
-        function refreshGLYF(ttf, refreshList) {
+        function refreshglyph(ttf, refreshList) {
             var unitsPerEm = ttf.head.unitsPerEm;
             var descent = ttf.hhea.descent;
             var selectedHash = {};
@@ -59,11 +59,11 @@ define(
             var main = this.main;
             var color = this.options.color;
             var editing = this.getEditing();
-            var getGlyfHTML = viewerRender.render;
+            var getglyphHTML = viewerRender.render;
 
             main.hide();
             refreshList.forEach(function (index) {
-                var glyfStr = getGlyfHTML(ttf.glyf[index], ttf, {
+                var glyphStr = getglyphHTML(ttf.glyph[index], ttf, {
                     index: index,
                     unitsPerEm: unitsPerEm,
                     descent: descent,
@@ -74,7 +74,7 @@ define(
 
                 var before = main.find('[data-index="' + index + '"]');
                 if (before.length) {
-                    $(glyfStr).insertBefore(before);
+                    $(glyphStr).insertBefore(before);
                     before.remove();
                 }
             });
@@ -84,7 +84,7 @@ define(
 
 
         /**
-         * glyf查看器
+         * glyph查看器
          *
          * @constructor
          * @param {HTMLElement} main 主元素
@@ -94,7 +94,7 @@ define(
          * @param {number} options.pageSize 分页大小，如果字形个数超过100
          * @param {CommandMenu} options.commandMenu 菜单项
          */
-        function GLYFViewer(main, options) {
+        function glyphViewer(main, options) {
 
             this.options = lang.extend({
                 color: '', // 字形颜色
@@ -113,7 +113,7 @@ define(
         /**
          * 获取焦点
          */
-        GLYFViewer.prototype.focus = function () {
+        glyphViewer.prototype.focus = function () {
             if (!this.listening) {
                 this.listening = true;
                 document.body.addEventListener('keydown', this.downlistener);
@@ -123,7 +123,7 @@ define(
         /**
          * 失去焦点
          */
-        GLYFViewer.prototype.blur = function () {
+        glyphViewer.prototype.blur = function () {
             if (this.listening) {
                 this.listening = false;
                 document.body.removeEventListener('keydown', this.downlistener);
@@ -135,7 +135,7 @@ define(
          *
          * @param {number} page 页码
          */
-        GLYFViewer.prototype.setPage = function (page) {
+        glyphViewer.prototype.setPage = function (page) {
             this.page = page || 0;
         };
 
@@ -144,7 +144,7 @@ define(
          *
          * @return {number}
          */
-        GLYFViewer.prototype.getPage = function () {
+        glyphViewer.prototype.getPage = function () {
             return this.page;
         };
 
@@ -155,11 +155,11 @@ define(
          * @param {Array=} selectedList 选中的列表
          *
          */
-        GLYFViewer.prototype.show = function (ttf, selectedList) {
+        glyphViewer.prototype.show = function (ttf, selectedList) {
             if (selectedList) {
                 this.setSelected(selectedList);
             }
-            showGLYF.call(this, ttf);
+            showglyph.call(this, ttf);
             this.fire('selection:change');
         };
 
@@ -169,12 +169,12 @@ define(
          * @param {Object} ttf ttfObject
          * @param {Array=} indexList 需要刷新的列表
          */
-        GLYFViewer.prototype.refresh = function (ttf, indexList) {
+        glyphViewer.prototype.refresh = function (ttf, indexList) {
             if (!indexList || indexList.length === 0) {
-                showGLYF.call(this, ttf);
+                showglyph.call(this, ttf);
             }
             else {
-                refreshGLYF.call(this, ttf, indexList);
+                refreshglyph.call(this, ttf, indexList);
             }
         };
 
@@ -183,7 +183,7 @@ define(
          *
          * @param {Array=} selectedList 选中的列表
          */
-        GLYFViewer.prototype.setSelected = function (selectedList) {
+        glyphViewer.prototype.setSelected = function (selectedList) {
             this.selectedList = selectedList || [];
         };
 
@@ -192,14 +192,14 @@ define(
          *
          * @return {Array} 选中的indexList
          */
-        GLYFViewer.prototype.getSelected = function () {
+        glyphViewer.prototype.getSelected = function () {
             return this.selectedList;
         };
 
         /**
          * 清除选中列表
          */
-        GLYFViewer.prototype.clearSelected = function () {
+        glyphViewer.prototype.clearSelected = function () {
             this.main.children().removeClass('selected');
             this.selectedList = [];
         };
@@ -209,7 +209,7 @@ define(
          *
          * @return {number} 索引号
          */
-        GLYFViewer.prototype.getEditing = function () {
+        glyphViewer.prototype.getEditing = function () {
             return this.editingIndex >= 0 ? this.editingIndex : -1;
         };
 
@@ -218,7 +218,7 @@ define(
          *
          * @param {number} editingIndex 设置对象
          */
-        GLYFViewer.prototype.setEditing = function (editingIndex) {
+        glyphViewer.prototype.setEditing = function (editingIndex) {
             this.clearEditing();
             editingIndex = +editingIndex;
             this.editingIndex = editingIndex >= 0 ? editingIndex : -1;
@@ -230,7 +230,7 @@ define(
         /**
          * 清除正在编辑的元素
          */
-        GLYFViewer.prototype.clearEditing = function () {
+        glyphViewer.prototype.clearEditing = function () {
             this.main.find('.editing').removeClass('editing');
             this.editingIndex = -1;
         };
@@ -239,7 +239,7 @@ define(
          * 改变设置项目
          * @param {Object} options 设置对象
          */
-        GLYFViewer.prototype.setSetting = function (options) {
+        glyphViewer.prototype.setSetting = function (options) {
 
             var oldOptions = this.options;
             if (options.shapeSize !== oldOptions.shapeSize) {
@@ -267,7 +267,7 @@ define(
          * 获取设置项目
          * @return {Object}
          */
-        GLYFViewer.prototype.getSetting = function () {
+        glyphViewer.prototype.getSetting = function () {
             return this.options;
         };
 
@@ -276,15 +276,15 @@ define(
          *
          * @param {string} mode 编辑模式 list, edit
          */
-        GLYFViewer.prototype.setMode = function (mode) {
+        glyphViewer.prototype.setMode = function (mode) {
             this.mode = mode || 'list';
             if (this.commandMenu) {
                 this.commandMenu[this.mode === 'list' ? 'show' : 'hide']();
             }
         };
 
-        require('common/observable').mixin(GLYFViewer.prototype);
+        require('common/observable').mixin(glyphViewer.prototype);
 
-        return GLYFViewer;
+        return glyphViewer;
     }
 );

@@ -6,7 +6,7 @@
 define(
     function (require) {
         var i18n = require('../i18n/i18n');
-        var tpl = require('../template/dialog/setting-adjust-glyf.tpl');
+        var tpl = require('../template/dialog/setting-adjust-glyph.tpl');
 
         return require('./setting').derive({
 

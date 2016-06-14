@@ -43,8 +43,8 @@ define(
             }, 20);
 
             editor.on('setting:font', function (e) {
-                var SettingGlyf = settingSupport.glyf;
-                !new SettingGlyf({
+                var Settingglyph = settingSupport.glyph;
+                !new Settingglyph({
                     onChange: function (setting) {
                         editor.adjustFont(setting);
                         // 此处需要等待点击完成后设置focus状态
@@ -179,7 +179,7 @@ define(
          * @param {Object} options 参数
          * @param {CommandMenu} options.commandMenu 命令菜单对象
          */
-        function GLYFEditor(main, options) {
+        function glyphEditor(main, options) {
 
             this.main = $(main);
             this.options = lang.extend({}, options);
@@ -193,7 +193,7 @@ define(
         /**
          * 显示
          */
-        GLYFEditor.prototype.show = function () {
+        glyphEditor.prototype.show = function () {
             // 这里注意显示顺序，否则editor创建的时候计算宽度会错误
             this.main.show();
 
@@ -208,7 +208,7 @@ define(
         /**
          * 隐藏
          */
-        GLYFEditor.prototype.hide = function () {
+        glyphEditor.prototype.hide = function () {
             this.editor && this.editor.blur();
             this.main.hide();
             this.editing = false;
@@ -218,7 +218,7 @@ define(
          * 是否编辑中
          * @return {boolean} 是否
          */
-        GLYFEditor.prototype.isEditing = function () {
+        glyphEditor.prototype.isEditing = function () {
             return this.editing;
         };
 
@@ -226,14 +226,14 @@ define(
          * 是否可见
          * @return {boolean} 是否
          */
-        GLYFEditor.prototype.isVisible = function () {
+        glyphEditor.prototype.isVisible = function () {
             return this.editor && this.main.get(0).style.display !== 'none';
         };
 
         /**
          * 获取焦点
          */
-        GLYFEditor.prototype.focus = function () {
+        glyphEditor.prototype.focus = function () {
             this.editing = true;
             this.editor && this.editor.focus();
         };
@@ -241,7 +241,7 @@ define(
         /**
          * 失去焦点
          */
-        GLYFEditor.prototype.blur = function () {
+        glyphEditor.prototype.blur = function () {
             this.editing = false;
             this.editor && this.editor.blur();
         };
@@ -249,14 +249,14 @@ define(
         /**
          * 撤销
          */
-        GLYFEditor.prototype.undo = function () {
+        glyphEditor.prototype.undo = function () {
             execCommand.call(this, 'undo');
         };
 
         /**
          * 重做
          */
-        GLYFEditor.prototype.redo = function () {
+        glyphEditor.prototype.redo = function () {
             execCommand.call(this, 'redo');
         };
 
@@ -264,7 +264,7 @@ define(
          * 设置项目
          * @param {Object} options 参数集合
          */
-        GLYFEditor.prototype.setSetting = function (options) {
+        glyphEditor.prototype.setSetting = function (options) {
             if (this.editor) {
                 this.editor.setOptions(options);
             }
@@ -277,7 +277,7 @@ define(
          * 获取设置项目
          * @return {Object} 设置项目
          */
-        GLYFEditor.prototype.getSetting = function () {
+        glyphEditor.prototype.getSetting = function () {
             return this.editor ? this.editor.options : editorOptions.editor;
         };
 
@@ -286,12 +286,12 @@ define(
          * 获取设置项目
          * @return {Object} 设置项目
          */
-        GLYFEditor.prototype.execCommand = execCommand;
+        glyphEditor.prototype.execCommand = execCommand;
 
         /**
          * 注销
          */
-        GLYFEditor.prototype.dispose = function () {
+        glyphEditor.prototype.dispose = function () {
             this.editor.dispose();
             this.main = this.options = this.editor = null;
         };
@@ -301,11 +301,11 @@ define(
             'reset', 'setFont', 'getFont',
             'isChanged', 'setChanged', 'setAxis', 'adjustFont'
         ].forEach(function (fn) {
-            GLYFEditor.prototype[fn] = function () {
+            glyphEditor.prototype[fn] = function () {
                 return this.editor ? this.editor[fn].apply(this.editor, arguments) : undefined;
             };
         });
 
-        return GLYFEditor;
+        return glyphEditor;
     }
 );

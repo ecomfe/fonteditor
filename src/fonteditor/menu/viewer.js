@@ -1,5 +1,5 @@
 /**
- * @file glyf列表相关命令
+ * @file glyph列表相关命令
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -39,8 +39,8 @@ define(
                 title: ei18n.lang.adjustpos
             },
             {
-                name: 'adjust-glyf',
-                title: ei18n.lang.adjustglyf
+                name: 'adjust-glyph',
+                title: ei18n.lang.adjustglyph
             },
             {
                 name: 'setting-font',
@@ -51,12 +51,12 @@ define(
                 type: 'split'
             },
             {
-                name: 'find-glyf',
-                title: i18n.lang.findglyf
+                name: 'find-glyph',
+                title: i18n.lang.findglyph
             },
             {
-                name: 'download-glyf',
-                title: i18n.lang.downloadglyf
+                name: 'download-glyph',
+                title: i18n.lang.downloadglyph
             },
             {
                 type: 'split'

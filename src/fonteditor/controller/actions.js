@@ -12,7 +12,7 @@ define(
         var ajaxFile = require('common/ajaxFile');
         var string = require('common/string');
         var lang = require('common/lang');
-        var glyfAdjust = require('fonteditor-core/ttf/util/glyfAdjust');
+        var glyphAdjust = require('fonteditor-core/ttf/util/glyphAdjust');
         var getEmptyttfObject = require('fonteditor-core/ttf/getEmptyttfObject');
 
         /**
@@ -206,7 +206,7 @@ define(
             'add-new': function () {
                 if (program.ttfManager.get()) {
                     var selected = program.viewer.getSelected();
-                    program.ttfManager.insertGlyf({}, selected[0]);
+                    program.ttfManager.insertglyph({}, selected[0]);
                 }
                 else {
                     // 没有项目 先建立一个项目
@@ -287,17 +287,17 @@ define(
                 }
             },
 
-            'setting-glyf-name': function () {
+            'setting-glyph-name': function () {
                 if (program.ttfManager.get()) {
                     if (window.confirm(i18n.lang.msg_confirm_gen_names)) {
-                        program.ttfManager.genGlyfName(program.viewer.getSelected());
+                        program.ttfManager.genglyphName(program.viewer.getSelected());
                     }
                 }
             },
 
-            'setting-glyf-clearname': function () {
+            'setting-glyph-clearname': function () {
                 if (program.ttfManager.get()) {
-                    program.ttfManager.clearGlyfName(program.viewer.getSelected());
+                    program.ttfManager.clearglyphName(program.viewer.getSelected());
                 }
             },
 
@@ -318,7 +318,7 @@ define(
 
             'setting-sort': function () {
                 if (program.ttfManager.get()) {
-                    var result = program.ttfManager.sortGlyf();
+                    var result = program.ttfManager.sortglyph();
                     if (true !== result) {
                         alert(result.message);
                     }
@@ -360,7 +360,7 @@ define(
                                 }
                                 else {
                                     var selected = program.viewer.getSelected();
-                                    program.ttfManager.insertGlyf(glyfAdjust({
+                                    program.ttfManager.insertglyph(glyphAdjust({
                                         contours: setting.contours
                                     }, 1, 1, 0, 0, false), selected[0]);
                                 }

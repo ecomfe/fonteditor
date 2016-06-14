@@ -1,5 +1,5 @@
 /**
- * @file glyf列表渲染器
+ * @file glyph列表渲染器
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -7,14 +7,14 @@
 define(
     function (require) {
 
-        var glyf2svg = require('fonteditor-core/ttf/util/glyf2svg');
+        var glyph2svg = require('fonteditor-core/ttf/util/glyph2svg');
         var string = require('common/string');
         var i18n = require('../../i18n/i18n');
-        var GLYF_ITEM_TPL = ''
-            + '<div data-index="${index}" class="glyf-item ${compound} ${modify} ${selected} ${editing}">'
+        var glyph_ITEM_TPL = ''
+            + '<div data-index="${index}" class="glyph-item ${compound} ${modify} ${selected} ${editing}">'
             +   '<i data-action="edit" class="ico i-edit" title="' + i18n.lang.edit + '"></i>'
             +   '<i data-action="del" class="ico i-del" title="' + i18n.lang.del + '"></i>'
-            +   '<svg class="glyf" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
+            +   '<svg class="glyph" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}">'
             +       '<g transform="scale(1, -1) translate(0, -${translateY}) scale(0.9, 0.9) ">'
             +           '<path class="path" ${fillColor} ${d}/></g>'
             +   '</svg>'
@@ -23,41 +23,41 @@ define(
             + '</div>';
 
 
-        var glyfRender = {
+        var glyphRender = {
 
             /**
-             * 获取glyf渲染列表项目
+             * 获取glyph渲染列表项目
              *
-             * @param  {Object} glyf glyf结构
+             * @param  {Object} glyph glyph结构
              * @param  {Object} ttf  ttf字体结构
              * @param  {Object} opt  渲染参数
-             * @return {string}      glyf列表项目片段
+             * @return {string}      glyph列表项目片段
              */
-            render: function (glyf, ttf, opt) {
+            render: function (glyph, ttf, opt) {
                 var g = {
                     index: opt.index,
-                    compound: glyf.compound ? 'compound' : '',
+                    compound: glyph.compound ? 'compound' : '',
                     selected: opt.selected ? 'selected' : '',
                     editing: opt.editing ? 'editing' : '',
-                    modify: glyf.modify,
+                    modify: glyph.modify,
                     unitsPerEm: opt.unitsPerEm,
                     translateY: opt.unitsPerEm + opt.descent,
-                    unicode: (glyf.unicode || []).map(function (u) {
+                    unicode: (glyph.unicode || []).map(function (u) {
                         return '$' + u.toString(16).toUpperCase();
                     }).join(','),
-                    name: glyf.name,
+                    name: glyph.name,
                     fillColor: opt.color ? 'style="fill:' + opt.color + '"' : ''
                 };
 
                 var d = '';
-                if ((d = glyf2svg(glyf, ttf))) {
+                if ((d = glyph2svg(glyph, ttf))) {
                     g.d = 'd="' + d + '"';
                 }
 
-                return string.format(GLYF_ITEM_TPL, g);
+                return string.format(glyph_ITEM_TPL, g);
             }
         };
 
-        return glyfRender;
+        return glyphRender;
     }
 );

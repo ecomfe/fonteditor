@@ -1,9 +1,9 @@
-// glyf列表样式
-.glyf-list {
+// glyph列表样式
+.glyph-list {
     height: 100%;
     overflow: auto;
 
-    >.glyf-item {
+    >.glyph-item {
 
         float: left;
         position: relative;
@@ -27,7 +27,7 @@
             color: #70A9D6;
         }
 
-        .glyf {
+        .glyph {
             width: 80px;
             height: 80px;
             border: 3px solid #FFF;
@@ -52,9 +52,9 @@
         }
     }
 
-    >.glyf-item:hover,
+    >.glyph-item:hover,
     >.selected {
-        .glyf {
+        .glyph {
             border-color: #232830;
         }
         .name {
@@ -62,7 +62,7 @@
         }
     }
 
-    >.glyf-item:hover {
+    >.glyph-item:hover {
         background: #3C619B;
 
         .name {
@@ -83,7 +83,7 @@
 
     >.editing,
     >.editing:hover {
-        .glyf {
+        .glyph {
             border-color: #066BC5;
         }
     }
@@ -102,12 +102,12 @@
     }
 }
 
-.glyf-list {
+.glyph-list {
 
     &.xlarge {
-        >.glyf-item {
+        >.glyph-item {
             width: 160px;
-            .glyf {
+            .glyph {
                 width: 160px;
                 height: 160px;
             }
@@ -115,9 +115,9 @@
     }
 
     &.large {
-        >.glyf-item {
+        >.glyph-item {
             width: 120px;
-            .glyf {
+            .glyph {
                 width: 120px;
                 height: 120px;
             }
@@ -125,9 +125,9 @@
     }
 
     &.small {
-        >.glyf-item {
+        >.glyph-item {
             width: 60px;
-            .glyf {
+            .glyph {
                 width: 60px;
                 height: 60px;
             }
@@ -135,8 +135,8 @@
     }
 }
 
-.glyf-list.no-hover {
-  .glyf-item {
+.glyph-list.no-hover {
+  .glyph-item {
     pointer-events: none;
   }
 }

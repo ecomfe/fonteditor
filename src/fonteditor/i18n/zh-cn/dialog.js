@@ -19,10 +19,10 @@ define(
 
             dialog_top_bottom_padding: '顶部和底部留白',
 
-            dialog_find_glyf_by_unicode: '按代码点查找字形',
-            dialog_find_glyf_by_name: '按名字查找字形',
-            dialog_find_glyf_by_index: '按字形序号查找字形',
-            dialog_find_glyf_example: '<b>查找内容：</b> （代码点："$21"，名字： "uniE001"，序号："5"）',
+            dialog_find_glyph_by_unicode: '按代码点查找字形',
+            dialog_find_glyph_by_name: '按名字查找字形',
+            dialog_find_glyph_by_index: '按字形序号查找字形',
+            dialog_find_glyph_example: '<b>查找内容：</b> （代码点："$21"，名字： "uniE001"，序号："5"）',
 
             dialog_editor_setting: '编辑器设置',
             dialog_editor_viewercolor: '字体列表颜色',
@@ -42,7 +42,7 @@ define(
             dialog_editor_gap: '网格线间距',
             dialog_editor_metricscolor: '度量线颜色',
 
-            dialog_glyf_unicode_example: ' &nbsp;&nbsp;可以设置多个unicode，例如："$21,$22,$23"',
+            dialog_glyph_unicode_example: ' &nbsp;&nbsp;可以设置多个unicode，例如："$21,$22,$23"',
 
             dialog_unicode_set: '设置代码点',
             dialog_unicode_start: '起始代码点',
@@ -53,7 +53,7 @@ define(
             dialog_import_and_export: '导入和导出',
 
             dialog_combine_svg_single_glyph: '导入svg文件时合并成单个字形',
-            dialog_save_with_glyf_name: '保存字体时同时保存字形命名',
+            dialog_save_with_glyph_name: '保存字体时同时保存字形命名',
 
             dialog_onlinefont: '在线字体',
 
@@ -85,8 +85,8 @@ define(
             dialog_pic_dilate: '膨胀',
             dialog_pic_enrode: '腐蚀',
 
-            dialog_export_glyf: '导出字形',
-            dialog_glyf_name: '图标名称',
+            dialog_export_glyph: '导出字形',
+            dialog_glyph_name: '图标名称',
             dialog_color: '颜色',
             dialog_size: '大小',
             dialog_download_svg: '下载SVG',

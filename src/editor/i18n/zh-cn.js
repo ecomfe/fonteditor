@@ -42,7 +42,7 @@ define(
             tangencyshapes: '相切',
             removeshapes: '删除轮廓',
             adjustpos: '调整位置',
-            adjustglyf: '调整字形',
+            adjustglyph: '调整字形',
             addpath: '添加路径',
             addshapes: '添加形状',
             circle: '圆',

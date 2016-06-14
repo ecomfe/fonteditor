@@ -1,14 +1,14 @@
 <div class="form-inline">
   <div class="input-group input-group-sm">
     <span class="input-group-addon">unicode</span>
-    <input data-field="unicode" data-type="unicode" id="setting-glyf-unicode" class="form-control">
+    <input data-field="unicode" data-type="unicode" id="setting-glyph-unicode" class="form-control">
   </div>
-  <span>${lang.dialog_glyf_unicode_example}</span>
+  <span>${lang.dialog_glyph_unicode_example}</span>
 </div>
 <div class="form-inline">
   <div class="input-group input-group-sm">
     <span class="input-group-addon">${lang.glyph_name}</span>
-    <input data-field="name" id="setting-glyf-name" class="form-control">
+    <input data-field="name" id="setting-glyph-name" class="form-control">
   </div>
 </div>
 <div class="form-inline">

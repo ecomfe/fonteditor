@@ -21,7 +21,7 @@ define(
             var exportSetting = program.setting.get('ie');
             // 强制设置post表信息
             ttfObject.post = ttfObject.post || {};
-            if (exportSetting && exportSetting.export.saveWithGlyfName) {
+            if (exportSetting && exportSetting.export.saveWithglyphName) {
                 ttfObject.post.format = 2;
             }
             else {

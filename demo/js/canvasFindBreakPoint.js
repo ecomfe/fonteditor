@@ -121,7 +121,7 @@ define(
         function getContours(contoursPoints) {
 
             var result = processor.get();
-            var canvas = $('#canvas-glyf').get(0);
+            var canvas = $('#canvas-glyph').get(0);
             canvas.width = result.width;
             canvas.height = result.height;
             var ctx = canvas.getContext('2d');
@@ -181,7 +181,7 @@ define(
                     if (action === 'fitwindow') {
                         var fit = $(this).get(0).checked;
                         $('#canvas')[fit ? 'addClass' : 'removeClass']('fitwindow');
-                        $('#canvas-glyf')[fit ? 'addClass' : 'removeClass']('fitwindow');
+                        $('#canvas-glyph')[fit ? 'addClass' : 'removeClass']('fitwindow');
                         return;
                     }
                     else if (action === 'binarize') {

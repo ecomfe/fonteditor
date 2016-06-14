@@ -49,10 +49,10 @@
                     <span class="drop ico i-down"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a data-disabled="1" data-action="setting-glyf-name">${lang.gen_glyph_name}</a></li>
-                    <li><a data-disabled="1" data-action="setting-glyf-clearname">${lang.clear_glyph_name}</a></li>
+                    <li><a data-disabled="1" data-action="setting-glyph-name">${lang.gen_glyph_name}</a></li>
+                    <li><a data-disabled="1" data-action="setting-glyph-clearname">${lang.clear_glyph_name}</a></li>
                     <li><a data-disabled="1" data-action="setting-optimize">${lang.optimize_glyph}</a></li>
-                    <li><a data-disabled="1" data-action="setting-sort">${lang.sort_glyf}</a></li>
+                    <li><a data-disabled="1" data-action="setting-sort">${lang.sort_glyph}</a></li>
                     <li><a data-disabled="1" data-action="setting-compound2simple">${lang.compound2simple}</a></li>
                 </ul>
             </div>
@@ -109,16 +109,16 @@
     </section>
 
     <section class="main">
-        <div id="glyf-list-spliter" class="spliter"></div>
-        <ul id="glyf-list-commandmenu" class="command-groups"></ul>
-        <div id="glyf-list-pager" class="pager"></div>
-        <div id="glyf-list" class="glyf-list"></div>
+        <div id="glyph-list-spliter" class="spliter"></div>
+        <ul id="glyph-list-commandmenu" class="command-groups"></ul>
+        <div id="glyph-list-pager" class="pager"></div>
+        <div id="glyph-list" class="glyph-list"></div>
     </section>
 
     <section class="editor">
         <ul id="editor-commandmenu" class="command-groups"></ul>
         <i class="ico i-leave close-editor" title="${lang.close_editor}"></i>
-        <div id="glyf-editor" class="glyf-editor" oncontextMenu="return false"></div>
+        <div id="glyph-editor" class="glyph-editor" oncontextMenu="return false"></div>
     </section>
 
 
