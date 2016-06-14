@@ -1,5 +1,5 @@
 /**
- * @file glyfviewer的绑定相关函数
+ * @file glyphviewer的绑定相关函数
  * @author mengke01(kekee000@gmail.com)
  */
 
@@ -17,8 +17,8 @@ define(
             var target = $(e.target);
             var action = target.attr('data-action');
 
-            var selectedGlyf = target.parent('[data-index]');
-            var selected = +selectedGlyf.attr('data-index');
+            var selectedglyph = target.parent('[data-index]');
+            var selected = +selectedglyph.attr('data-index');
             var lastEditing = this.getEditing();
             if (action === 'del') {
                 if (!window.confirm(i18n.lang.msg_confirm_del_glyph)) {
@@ -26,7 +26,7 @@ define(
                 }
 
                 // 被选中的情况下需要移出
-                selectedGlyf.remove();
+                selectedglyph.remove();
                 var selectedIndex = this.getSelected().indexOf(selected);
                 if (selectedIndex >= 0) {
                     this.selectedList.splice(selectedIndex, 1);
@@ -119,7 +119,7 @@ define(
                     preventEvent(e);
                     selected = me.getSelected();
                     if (selected.length) {
-                        // del, cut 取消选中的glyf
+                        // del, cut 取消选中的glyph
                         me.clearSelected();
                         // 正在编辑的
                         var editing = selected.indexOf(me.getEditing());
@@ -237,11 +237,11 @@ define(
 
 
         /**
-         * 获取选中的glyfIndex
+         * 获取选中的glyphIndex
          *
-         * @return {Array} 选中的glyf列表
+         * @return {Array} 选中的glyph列表
          */
-        function getSelectedGlyf() {
+        function getSelectedglyph() {
             var selected = [];
             this.main.find('.selected').each(function (index, item) {
                 selected.push(+item.getAttribute('data-index'));
@@ -257,7 +257,7 @@ define(
 
             var me = this;
             me.on('selection:change', lang.debounce(function () {
-                var selected = getSelectedGlyf.call(me);
+                var selected = getSelectedglyph.call(me);
                 me.selectedList = selected;
 
                 if (selected.length) {
@@ -266,10 +266,10 @@ define(
                         selected.length === 1
                         ? 'enableCommands'
                         : 'disableCommands'
-                    ](['setting-font', 'download-glyf']);
+                    ](['setting-font', 'download-glyph']);
                 }
                 else {
-                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font', 'download-glyf']);
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font', 'download-glyph']);
                 }
 
             }, 100));
@@ -280,13 +280,13 @@ define(
 
             commandMenu.on('command', function (e) {
                 var command = e.command;
-                if (command === 'paste' || command === 'adjust-pos' || command === 'adjust-glyf') {
+                if (command === 'paste' || command === 'adjust-pos' || command === 'adjust-glyph') {
                     me.fire(command);
                 }
                 else {
                     var selected = me.getSelected();
 
-                    // 取消选中的glyf
+                    // 取消选中的glyph
                     if (command === 'cut' || command === 'del') {
                         me.clearSelected();
                     }

@@ -152,7 +152,7 @@ a:hover {
 .i-pointmode:before {
   content: '\e028';
 }
-.glyf-editor {
+.glyph-editor {
   width: 100%;
   height: 100%;
   font-size: 12px;
@@ -161,19 +161,19 @@ a:hover {
   -ms-user-select: none;
   display: none;
 }
-.glyf-editor .marker-x,
-.glyf-editor .marker-y {
+.glyph-editor .marker-x,
+.glyph-editor .marker-y {
   position: absolute;
   width: 0;
   height: 0;
   z-index: 60;
   pointer-events: none;
 }
-.glyf-editor .marker-x {
+.glyph-editor .marker-x {
   width: 20px;
   border-top: 1px dashed #000;
 }
-.glyf-editor .marker-y {
+.glyph-editor .marker-y {
   height: 20px;
   border-left: 1px dashed #000;
 }
@@ -258,7 +258,7 @@ html {
   width: 180px;
   background: #ECECEC;
 }
-#glyf-list a {
+#glyph-list a {
   display: block;
   line-height: 24px;
 }

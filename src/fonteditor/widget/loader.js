@@ -105,8 +105,8 @@ define(
                     var buffer = e.target.result;
                     var imported = svg2ttf(buffer);
                     // 设置单个字形名字
-                    if (imported.glyf && imported.glyf.length === 1) {
-                        imported.glyf[0].name = fName;
+                    if (imported.glyph && imported.glyph.length === 1) {
+                        imported.glyph[0].name = fName;
                     }
                     fileReader = null;
                     options.success && options.success(imported);

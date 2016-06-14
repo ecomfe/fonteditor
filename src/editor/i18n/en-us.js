@@ -42,7 +42,7 @@ define(
             tangencyshapes: 'Tangency',
             removeshapes: 'Remove',
             adjustpos: 'Adjust Position',
-            adjustglyf: 'Adjust Glyph',
+            adjustglyph: 'Adjust Glyph',
             addpath: 'Add Contour',
             addshapes: 'Add Shape',
             circle: 'Circle',

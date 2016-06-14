@@ -19,10 +19,10 @@ define(
 
             dialog_top_bottom_padding: 'Top and Bottom Padding',
 
-            dialog_find_glyf_by_unicode: 'Find Glyph by Unicode',
-            dialog_find_glyf_by_name: 'Find Glyph by Name',
-            dialog_find_glyf_by_index: 'Find Glyph by Index',
-            dialog_find_glyf_example: 'example: Unicode："$21", Glyph Name： "uniE001", Index："5"',
+            dialog_find_glyph_by_unicode: 'Find Glyph by Unicode',
+            dialog_find_glyph_by_name: 'Find Glyph by Name',
+            dialog_find_glyph_by_index: 'Find Glyph by Index',
+            dialog_find_glyph_example: 'example: Unicode："$21", Glyph Name： "uniE001", Index："5"',
 
 
             dialog_editor_setting: 'Editor Setting',
@@ -43,7 +43,7 @@ define(
             dialog_editor_gap: 'Gap Size',
             dialog_editor_metricscolor: 'Metrics Color',
 
-            dialog_glyf_unicode_example: ' &nbsp;&nbsp; Support Multi Unicodes, Example："$21,$22,$23"',
+            dialog_glyph_unicode_example: ' &nbsp;&nbsp; Support Multi Unicodes, Example："$21,$22,$23"',
 
             dialog_unicode_set: 'Set Unicode',
             dialog_unicode_start: 'Start Unicode Code',
@@ -54,7 +54,7 @@ define(
             dialog_import_and_export: 'Import and Export',
 
             dialog_combine_svg_single_glyph: 'Combine svg to Single Glyph',
-            dialog_save_with_glyf_name: 'save glyph name when exporting font',
+            dialog_save_with_glyph_name: 'save glyph name when exporting font',
 
             dialog_onlinefont: 'Online Font',
 
@@ -86,8 +86,8 @@ define(
             dialog_pic_dilate: 'Dilate',
             dialog_pic_enrode: 'Enrode',
 
-            dialog_export_glyf: 'Export Glyf',
-            dialog_glyf_name: 'Glyf Name',
+            dialog_export_glyph: 'Export glyph',
+            dialog_glyph_name: 'glyph Name',
             dialog_color: 'Color',
             dialog_size: 'Size',
             dialog_download_svg: 'Download SVG',

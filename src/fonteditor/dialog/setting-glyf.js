@@ -6,7 +6,7 @@
 define(
     function (require) {
         var i18n = require('../i18n/i18n');
-        var tpl = require('../template/dialog/setting-glyf.tpl');
+        var tpl = require('../template/dialog/setting-glyph.tpl');
         var string = require('fonteditor-core/ttf/util/string');
         var unicodeREG = /^(?:\$[A-F0-9]+)(?:\,\$[A-F0-9]+)*$/gi;
 
@@ -19,23 +19,23 @@ define(
             },
 
             set: function (setting) {
-                $('#setting-glyf-unicode').on('blur', function (e) {
+                $('#setting-glyph-unicode').on('blur', function (e) {
                     var val = $(this).val();
-                    var ctlGlyfName = $('#setting-glyf-name');
-                    if (!ctlGlyfName.val()) {
+                    var ctlglyphName = $('#setting-glyph-name');
+                    if (!ctlglyphName.val()) {
                         if (val.match(unicodeREG)) {
                             val = Number('0x' + val.split(',')[0].slice(1));
                         }
                         else if (val) {
                             val = val.charCodeAt(0);
                         }
-                        ctlGlyfName.val(string.getUnicodeName(val));
+                        ctlglyphName.val(string.getUnicodeName(val));
                     }
                 });
                 this.setFields(setting || {});
             },
             onDispose: function () {
-                $('#setting-glyf-unicode').off('blur');
+                $('#setting-glyph-unicode').off('blur');
             },
             validate: function () {
 

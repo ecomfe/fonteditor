@@ -12,18 +12,18 @@ define(
             + '<div id="setting-find-condition">'
             +   '<label class="radio-inline">'
             +       '<input type="radio" name="setting-find-condition" value="unicode" checked="checked">'
-            +       i18n.lang.dialog_find_glyf_by_unicode
+            +       i18n.lang.dialog_find_glyph_by_unicode
             +   '</label>'
             +   '<label class="radio-inline">'
             +       '<input type="radio" name="setting-find-condition" value="name">'
-            +       i18n.lang.dialog_find_glyf_by_name
+            +       i18n.lang.dialog_find_glyph_by_name
             +   '</label>'
             +   '<label class="radio-inline">'
             +       '<input type="radio" name="setting-find-condition" value="index">'
-            +       i18n.lang.dialog_find_glyf_by_index
+            +       i18n.lang.dialog_find_glyph_by_index
             +   '</label>'
             + '</div>'
-            + '<p class="form-line">' + i18n.lang.dialog_find_glyf_example + '</p>'
+            + '<p class="form-line">' + i18n.lang.dialog_find_glyph_example + '</p>'
             + '<div>'
             +   '<input value="" id="setting-find-value" class="form-control">'
             + '</div>';
@@ -31,7 +31,7 @@ define(
 
         return require('./setting').derive({
 
-            title: i18n.lang.findglyf,
+            title: i18n.lang.findglyph,
 
             getTpl: function () {
                 return tpl;

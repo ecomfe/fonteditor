@@ -9,17 +9,17 @@ define(
             'unicode': require('../dialog/setting-unicode'),
             'name': require('../dialog/setting-name'),
             'adjust-pos': require('../dialog/setting-adjust-pos'),
-            'adjust-glyf': require('../dialog/setting-adjust-glyf'),
+            'adjust-glyph': require('../dialog/setting-adjust-glyph'),
             'metrics': require('../dialog/setting-metrics'),
             'online': require('../dialog/font-online'),
             'url': require('../dialog/font-url'),
-            'glyf': require('../dialog/setting-glyf'),
+            'glyph': require('../dialog/setting-glyph'),
             'editor': require('../dialog/setting-editor'),
-            'find-glyf': require('../dialog/setting-find-glyf'),
+            'find-glyph': require('../dialog/setting-find-glyph'),
             'ie': require('../dialog/setting-ie'),
             'import-pic': require('../dialog/setting-import-pic'),
             'sync': require('../dialog/setting-sync'),
-            'glyf-download': require('../dialog/glyf-download')
+            'glyph-download': require('../dialog/glyph-download')
         };
     }
 );

@@ -34,10 +34,10 @@ define(
                         program.loader.load(f, {
                             type: ext,
                             success: function (imported) {
-                                if (imported.glyf.length) {
+                                if (imported.glyph.length) {
                                     program.ttfManager.merge(imported, {
                                         scale: true,
-                                        adjustGlyf: imported.from === 'svg' ? true : false
+                                        adjustglyph: imported.from === 'svg' ? true : false
                                     });
                                 }
                             }
@@ -78,7 +78,7 @@ define(
             $(document).on('dragleave drop dragenter dragover', function (e) {
                 e.preventDefault();
             });
-            document.getElementById('glyf-list').addEventListener('drop', onDrop);
+            document.getElementById('glyph-list').addEventListener('drop', onDrop);
         }
 
         function loadProject(projectId) {
@@ -125,20 +125,20 @@ define(
 
                 // 拖拽面板管理器
                 var Spliter = require('./widget/Spliter');
-                program.spliter = new Spliter($('#glyf-list-spliter'));
+                program.spliter = new Spliter($('#glyph-list-spliter'));
 
-                // glyf查看器命令组
+                // glyph查看器命令组
                 var Toolbar = require('./widget/Toolbar');
-                var viewerCommandMenu = new Toolbar($('#glyf-list-commandmenu'), {
+                var viewerCommandMenu = new Toolbar($('#glyph-list-commandmenu'), {
                     commands: require('./menu/viewer')
                 });
 
                 var Pager = require('./widget/Pager');
-                program.viewerPager = new Pager($('#glyf-list-pager'));
+                program.viewerPager = new Pager($('#glyph-list-pager'));
 
-                // glyf查看器
-                var GLYFViewer = require('./widget/glyfviewer/GLYFViewer');
-                program.viewer = new GLYFViewer($('#glyf-list'), {
+                // glyph查看器
+                var glyphViewer = require('./widget/glyphviewer/glyphViewer');
+                program.viewer = new glyphViewer($('#glyph-list'), {
                     commandMenu: viewerCommandMenu
                 });
 
@@ -148,8 +148,8 @@ define(
                 });
 
                 // 字体查看器
-                var GLYFEditor = require('./widget/GLYFEditor');
-                program.editor = new GLYFEditor($('#glyf-editor'), {
+                var glyphEditor = require('./widget/glyphEditor');
+                program.editor = new glyphEditor($('#glyph-editor'), {
                     commandMenu: editorCommandMenu
                 });
 

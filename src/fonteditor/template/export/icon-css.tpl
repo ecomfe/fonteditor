@@ -24,9 +24,9 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-{% _.each(glyfList, function(glyf) { %}
-.icon-{%=glyf.name%}:before {
-  content: "{%=glyf.codeName%}";
+{% _.each(glyphList, function(glyph) { %}
+.icon-{%=glyph.name%}:before {
+  content: "{%=glyph.codeName%}";
 }
 {% }); %}
 

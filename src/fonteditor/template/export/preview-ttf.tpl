@@ -17,11 +17,11 @@
 <div class="main">
     <h1>${lang.preview_title}</h1>
     <ul class="iconfont-list">
-        {%glyfList.forEach(function(glyf) {%}
+        {%glyphList.forEach(function(glyph) {%}
         <li>
-            <i class="icon">{%=glyf.code%}</i>
-            <div class="code">{%=glyf.codeName%}</div>
-            <div class="name">{%=glyf.name%}</div>
+            <i class="icon">{%=glyph.code%}</i>
+            <div class="code">{%=glyph.codeName%}</div>
+            <div class="name">{%=glyph.name%}</div>
         </li>
         {%});%}
     </ul>

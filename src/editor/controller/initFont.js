@@ -168,7 +168,7 @@ define(
         /**
          * 获取编辑后的font
          *
-         * @return {Object} glyfObject
+         * @return {Object} glyphObject
          */
         function getFont() {
             var font = lang.clone(this.font || {});

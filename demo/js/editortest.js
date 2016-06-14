@@ -24,11 +24,11 @@ define(
                     ttfObject = ttf;
                     var str = '';
 
-                    ttf.glyf.slice(0, 10).forEach(function(glyf, index) {
-                        str +='<a href="#" data-index="'+index+'">'+ glyf.name +'</a>';
+                    ttf.glyph.slice(0, 10).forEach(function(glyph, index) {
+                        str +='<a href="#" data-index="'+index+'">'+ glyph.name +'</a>';
                     });
 
-                    $('#glyf-list').html(str);
+                    $('#glyph-list').html(str);
 
 
                 });
@@ -38,13 +38,13 @@ define(
                 currentEditor.on('save', function(e) {
                     var font = e.font;
                     console.log(font);
-                    ttfObject.glyf[font.index] = font;
+                    ttfObject.glyph[font.index] = font;
                 });
 
-                $('#glyf-list').delegate('[data-index]', 'click', function(e) {
+                $('#glyph-list').delegate('[data-index]', 'click', function(e) {
                     e.preventDefault();
                     var index = +$(this).attr('data-index');
-                    var font = lang.clone(ttfObject.glyf[index]);
+                    var font = lang.clone(ttfObject.glyph[index]);
                     font.index = index;
                     currentEditor.setFont(font);
                 });

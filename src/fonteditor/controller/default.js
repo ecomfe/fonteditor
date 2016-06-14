@@ -22,10 +22,10 @@ define(
         function notifyError(options) {
             // 重复的代码点
             if (options.number === 10200 && options.data) {
-                var glyfList = Array.isArray(options.data) ? options.data : [options.data];
+                var glyphList = Array.isArray(options.data) ? options.data : [options.data];
                 var pageSize = program.setting.get('editor').viewer.pageSize;
-                var page = Math.ceil(glyfList[0] / pageSize);
-                showTTF(program.ttfManager.get(), page, glyfList);
+                var page = Math.ceil(glyphList[0] / pageSize);
+                showTTF(program.ttfManager.get(), page, glyphList);
             }
         }
 
@@ -53,9 +53,9 @@ define(
         /**
          * 显示指定索引的字形
          *
-         * @param {number} glyfIndex 字形索引
+         * @param {number} glyphIndex 字形索引
          */
-        function showEditor(glyfIndex) {
+        function showEditor(glyphIndex) {
             var isEditorVisible = program.editor.isVisible();
 
             // 重置editor缩放
@@ -74,22 +74,22 @@ define(
                 // 调整显示级别
                 program.editor.setAxis(getEditingOpt(ttf));
 
-                if (null == glyfIndex) {
+                if (null == glyphIndex) {
                     return;
                 }
-                glyfIndex = +glyfIndex;
-                var font = ttf.glyf[glyfIndex];
+                glyphIndex = +glyphIndex;
+                var font = ttf.glyph[glyphIndex];
                 if (font) {
                     var clonedFont = lang.clone(font);
                     if (clonedFont.compound) {
-                        if (!confirm(i18n.lang.msg_transform_compound_glyf)) {
+                        if (!confirm(i18n.lang.msg_transform_compound_glyph)) {
                             return;
                         }
 
                         // 转换复合字形为简单字形，原始字形不变
-                        var transformGlyfContours = require('fonteditor-core/ttf/util/transformGlyfContours');
+                        var transformglyphContours = require('fonteditor-core/ttf/util/transformglyphContours');
                         var compound2simple = require('fonteditor-core/ttf/util/compound2simple');
-                        clonedFont = compound2simple(clonedFont, transformGlyfContours(font, ttf));
+                        clonedFont = compound2simple(clonedFont, transformglyphContours(font, ttf));
                     }
 
                     program.editor.setFont(clonedFont);
@@ -120,9 +120,9 @@ define(
          */
         function showTTF(ttf, page, selected) {
 
-            var glyfTotal = ttf.glyf.length;
+            var glyphTotal = ttf.glyph.length;
             var pageSize = program.setting.get('editor').viewer.pageSize;
-            var totalPage = Math.ceil(glyfTotal / pageSize);
+            var totalPage = Math.ceil(glyphTotal / pageSize);
             if (page > totalPage) {
                 page = totalPage;
             }
@@ -136,8 +136,8 @@ define(
             program.viewer.focus();
 
             // 设置翻页
-            if (glyfTotal > pageSize) {
-                program.viewerPager.show(page, pageSize, glyfTotal);
+            if (glyphTotal > pageSize) {
+                program.viewerPager.show(page, pageSize, glyphTotal);
             }
             else {
                 program.viewerPager.hide();
@@ -145,15 +145,15 @@ define(
         }
 
         /**
-         * 移动选中的glyf到指定位置
+         * 移动选中的glyph到指定位置
          *
          * @param {Array} selected 选中的列表
          * @param {number} isLeft 是否左移
          */
-        function moveSelectedGlyf(selected, isLeft) {
+        function moveSelectedglyph(selected, isLeft) {
             var ttf = program.ttfManager.get();
-            var glyf = ttf.glyf;
-            var glyfCount = glyf.length;
+            var glyph = ttf.glyph;
+            var glyphCount = glyph.length;
             var selectedCount = selected.length;
             var step = isLeft ? -1 : 1;
             var index;
@@ -161,10 +161,10 @@ define(
             if (selectedCount === 1) {
                 index = selected[0];
                 var targetIndex = index + step;
-                if (targetIndex >= 0 && targetIndex < glyfCount) {
-                    var tmp = glyf[index];
-                    glyf[index] = glyf[targetIndex];
-                    glyf[targetIndex] = tmp;
+                if (targetIndex >= 0 && targetIndex < glyphCount) {
+                    var tmp = glyph[index];
+                    glyph[index] = glyph[targetIndex];
+                    glyph[targetIndex] = tmp;
                     program.viewer.setSelected([targetIndex]);
                     program.viewer.refresh(ttf, [index, targetIndex]);
                 }
@@ -177,7 +177,7 @@ define(
                 });
 
                 // 判读头部和尾部是否能移动，不能移动则整体不变
-                if (isLeft && selected[0] > 0 || !isLeft && selected[selectedCount - 1] < glyfCount - 1) {
+                if (isLeft && selected[0] > 0 || !isLeft && selected[selectedCount - 1] < glyphCount - 1) {
 
                     var i;
                     // 左移
@@ -185,29 +185,29 @@ define(
                         index = selected[0] - 1;
                         for (i = 1; i < selectedCount; i++) {
                             if (selected[i - 1] + 1 !== selected[i]) {
-                                glyf.splice(selected[i - 1] + 1, 0, glyf[index]);
-                                glyf.splice(index, 1);
+                                glyph.splice(selected[i - 1] + 1, 0, glyph[index]);
+                                glyph.splice(index, 1);
 
                                 index = selected[i] - 1;
                             }
                         }
-                        glyf.splice(selected[selectedCount - 1] + 1, 0, glyf[index]);
-                        glyf.splice(index, 1);
+                        glyph.splice(selected[selectedCount - 1] + 1, 0, glyph[index]);
+                        glyph.splice(index, 1);
                     }
                     // 右移
                     else {
                         index = selected[selectedCount - 1] + 1;
                         for (i = selectedCount - 2; i >= 0; i--) {
                             if (selected[i + 1] - 1 !== selected[i]) {
-                                glyf.splice(selected[i + 1], 0, glyf[index]);
-                                glyf.splice(index + 1, 1);
+                                glyph.splice(selected[i + 1], 0, glyph[index]);
+                                glyph.splice(index + 1, 1);
 
                                 index = selected[i] + 1;
                             }
                         }
 
-                        glyf.splice(selected[0], 0, glyf[index]);
-                        glyf.splice(index + 1, 1);
+                        glyph.splice(selected[0], 0, glyph[index]);
+                        glyph.splice(index + 1, 1);
                     }
 
                     program.viewer.setSelected(selected.map(function (u) {
@@ -220,7 +220,7 @@ define(
         }
 
         /**
-         * 绑定glyf列表
+         * 绑定glyph列表
          *
          * @param {Object} program 全局对象
          */
@@ -233,7 +233,7 @@ define(
 
             program.viewer.on('del', function (e) {
                 if (e.list) {
-                    program.ttfManager.removeGlyf(e.list);
+                    program.ttfManager.removeglyph(e.list);
                 }
             })
             .on('edit', function (e) {
@@ -254,36 +254,36 @@ define(
             })
             .on('copy', function (e) {
 
-                var list = program.ttfManager.getCopiedGlyf(e.list);
+                var list = program.ttfManager.getCopiedglyph(e.list);
                 var clip = {
                     unitsPerEm: program.ttfManager.get().head.unitsPerEm,
-                    glyf: list
+                    glyph: list
                 };
-                clipboard.set(clip, 'glyf');
+                clipboard.set(clip, 'glyph');
 
             })
             .on('cut', function (e) {
-                var list = program.ttfManager.getGlyf(e.list);
+                var list = program.ttfManager.getglyph(e.list);
                 var clip = {
                     unitsPerEm: program.ttfManager.get().head.unitsPerEm,
-                    glyf: list
+                    glyph: list
                 };
-                clipboard.set(clip, 'glyf');
-                program.ttfManager.removeGlyf(e.list);
+                clipboard.set(clip, 'glyph');
+                program.ttfManager.removeglyph(e.list);
 
             })
             .on('paste', function (e) {
-                var clip = clipboard.get('glyf');
-                if (clip && clip.glyf.length) {
+                var clip = clipboard.get('glyph');
+                if (clip && clip.glyph.length) {
                     // 根据 unitsPerEm 调整形状
                     if (program.ttfManager.get().head.unitsPerEm !== clip.unitsPerEm) {
                         var scale = program.ttfManager.get().head.unitsPerEm / (clip.unitsPerEm || 1024);
-                        var glyfAdjust = require('fonteditor-core/ttf/util/glyfAdjust');
-                        clip.glyf.forEach(function (g) {
-                            glyfAdjust(g, scale, scale);
+                        var glyphAdjust = require('fonteditor-core/ttf/util/glyphAdjust');
+                        clip.glyph.forEach(function (g) {
+                            glyphAdjust(g, scale, scale);
                         });
                     }
-                    program.ttfManager.appendGlyf(clip.glyf, program.viewer.getSelected());
+                    program.ttfManager.appendglyph(clip.glyph, program.viewer.getSelected());
                 }
             })
             .on('undo', function (e) {
@@ -299,11 +299,11 @@ define(
                 var opt = {};
 
                 if (selected.length === 1) {
-                    var glyf = program.ttfManager.getGlyf(selected)[0];
+                    var glyph = program.ttfManager.getglyph(selected)[0];
                     opt = {
-                        unicode: glyf.unicode,
-                        leftSideBearing: glyf.leftSideBearing,
-                        rightSideBearing: glyf.advanceWidth - glyf.xMax
+                        unicode: glyph.unicode,
+                        leftSideBearing: glyph.leftSideBearing,
+                        rightSideBearing: glyph.advanceWidth - glyph.xMax
                     };
                 }
 
@@ -311,19 +311,19 @@ define(
                 !new SettingAdjustPos({
                     onChange: function (setting) {
                         setTimeout(function () {
-                            program.ttfManager.adjustGlyfPos(selected, setting);
+                            program.ttfManager.adjustglyphPos(selected, setting);
                         }, 20);
                     }
                 }).show(opt);
 
             })
-            .on('adjust-glyf', function (e) {
+            .on('adjust-glyph', function (e) {
 
-                var SettingAdjustGlyf = settingSupport['adjust-glyf'];
-                !new SettingAdjustGlyf({
+                var SettingAdjustglyph = settingSupport['adjust-glyph'];
+                !new SettingAdjustglyph({
                     onChange: function (setting) {
                         setTimeout(function () {
-                            program.ttfManager.adjustGlyf(program.viewer.getSelected(), setting);
+                            program.ttfManager.adjustglyph(program.viewer.getSelected(), setting);
                         }, 20);
                     }
                 }).show();
@@ -334,32 +334,32 @@ define(
                 // 如果仅选择一个字形，则填充现有值
                 var selected = program.viewer.getSelected();
                 if (selected.length) {
-                    var glyf = program.ttfManager.getGlyf(selected)[0];
-                    var SettingGlyf = settingSupport.glyf;
-                    !new SettingGlyf({
+                    var glyph = program.ttfManager.getglyph(selected)[0];
+                    var Settingglyph = settingSupport.glyph;
+                    !new Settingglyph({
                         onChange: function (setting) {
-                            program.ttfManager.updateGlyf(setting, selected[0]);
+                            program.ttfManager.updateglyph(setting, selected[0]);
                         }
                     }).show({
-                        unicode: glyf.unicode,
-                        leftSideBearing: glyf.leftSideBearing,
-                        rightSideBearing: glyf.advanceWidth - (glyf.xMax || 0),
-                        name: glyf.name
+                        unicode: glyph.unicode,
+                        leftSideBearing: glyph.leftSideBearing,
+                        rightSideBearing: glyph.advanceWidth - (glyph.xMax || 0),
+                        name: glyph.name
                     });
                 }
 
             })
-            .on('find-glyf', function (e) {
-                var SettingFindGlyf = settingSupport['find-glyf'];
-                !new SettingFindGlyf({
+            .on('find-glyph', function (e) {
+                var SettingFindglyph = settingSupport['find-glyph'];
+                !new SettingFindglyph({
                     onChange: function (setting) {
-                        var glyfList = program.ttfManager.findGlyf(setting);
+                        var glyphList = program.ttfManager.findglyph(setting);
 
-                        if (glyfList.length) {
+                        if (glyphList.length) {
                             var pageSize = program.setting.get('editor').viewer.pageSize;
-                            var page = Math.ceil(glyfList[0] / pageSize);
+                            var page = Math.ceil(glyphList[0] / pageSize);
 
-                            showTTF(program.ttfManager.get(), page, glyfList);
+                            showTTF(program.ttfManager.get(), page, glyphList);
                         }
                         else {
                             program.loading.warn(i18n.lang.msg_no_related_glhph, 1000);
@@ -368,13 +368,13 @@ define(
                 }).show();
 
             })
-            .on('download-glyf', function (e) {
-                var SettingGlyfDownload = settingSupport['glyf-download'];
+            .on('download-glyph', function (e) {
+                var SettingglyphDownload = settingSupport['glyph-download'];
                 // 获取需要下载的图标，转换成简单字形
-                var list = program.ttfManager.getCopiedGlyf(e.list);
-                !new SettingGlyfDownload().show({
+                var list = program.ttfManager.getCopiedglyph(e.list);
+                !new SettingglyphDownload().show({
                     ttf: program.ttfManager.get(),
-                    glyf: list[0]
+                    glyph: list[0]
                 });
 
             })
@@ -385,8 +385,8 @@ define(
                         // 此处延迟处理
                         setTimeout(function () {
                             if (program.ttfManager.get()) {
-                                var glyfList = program.viewer.getSelected();
-                                program.ttfManager.setUnicode(setting.unicode, glyfList, setting.isGenerateName);
+                                var glyphList = program.viewer.getSelected();
+                                program.ttfManager.setUnicode(setting.unicode, glyphList, setting.isGenerateName);
                             }
                         }, 20);
                     }
@@ -422,7 +422,7 @@ define(
                 var editingIndex = program.viewer.getEditing();
                 if (program.editor.isVisible()) {
                     if (editingIndex <= 0) {
-                        editingIndex = program.ttfManager.get().glyf.length;
+                        editingIndex = program.ttfManager.get().glyph.length;
                     }
 
                     if (program.editor.isChanged() && !confirm(i18n.lang.msg_confirm_save_glyph)) {
@@ -434,7 +434,7 @@ define(
                 else {
                     var selected = program.viewer.getSelected();
                     if (selected.length) {
-                        moveSelectedGlyf(selected, true);
+                        moveSelectedglyph(selected, true);
                         pushHistory();
                     }
                 }
@@ -443,7 +443,7 @@ define(
             .on('moveright', function (e) {
                 var editingIndex = program.viewer.getEditing();
                 if (program.editor.isVisible()) {
-                    if (editingIndex >= program.ttfManager.get().glyf.length - 1) {
+                    if (editingIndex >= program.ttfManager.get().glyph.length - 1) {
                         editingIndex = -1;
                     }
 
@@ -456,7 +456,7 @@ define(
                 else {
                     var selected = program.viewer.getSelected();
                     if (selected.length) {
-                        moveSelectedGlyf(selected, false);
+                        moveSelectedglyph(selected, false);
                         pushHistory();
                     }
                 }
@@ -592,16 +592,16 @@ define(
          */
         function bindProgram(program) {
 
-            // 保存正在编辑的glyf
-            var saveEditingGlyf = function () {
+            // 保存正在编辑的glyph
+            var saveEditingglyph = function () {
                 // 如果是正在编辑的
                 var editingIndex = program.viewer.getEditing();
                 if (editingIndex !== -1) {
-                    program.ttfManager.replaceGlyf(program.editor.getFont(), editingIndex);
+                    program.ttfManager.replaceglyph(program.editor.getFont(), editingIndex);
                 }
                 // 否则新建font
                 else {
-                    program.ttfManager.insertGlyf(program.editor.getFont());
+                    program.ttfManager.insertglyph(program.editor.getFont());
                 }
 
                 program.editor.setChanged(false);
@@ -610,15 +610,15 @@ define(
             program.on('save', function (e) {
                 if (program.ttfManager.get()) {
                     var saveType = e.saveType;
-                    // 如果是强制save则直接保存正在编辑的glyf和项目
+                    // 如果是强制save则直接保存正在编辑的glyph和项目
                     if (saveType === 'force') {
                         if (program.editor.isEditing()) {
-                            saveEditingGlyf();
+                            saveEditingglyph();
                         }
                         actions.save();
                     }
                     else if (saveType === 'editor' || program.editor.isEditing()) {
-                        saveEditingGlyf();
+                        saveEditingglyph();
                         program.viewer.blur();
                         program.editor.focus();
                     }
@@ -630,13 +630,13 @@ define(
                 }
             })
             .on('paste', function (e) {
-                var clip = clipboard.get('glyf');
-                if (clip && clip.glyf.length) {
+                var clip = clipboard.get('glyph');
+                if (clip && clip.glyph.length) {
                     if (!program.editor.isEditing()) {
                         program.viewer.fire('paste');
                     }
                     else {
-                        program.editor.execCommand('addcontours', clip.glyf[0].contours, {
+                        program.editor.execCommand('addcontours', clip.glyph[0].contours, {
                             selected: true
                         });
                     }

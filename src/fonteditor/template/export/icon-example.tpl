@@ -10,11 +10,11 @@
     <div class="main">
         <h1>{%=fontFamily%} example</h1>
         <ul class="iconfont-list">
-            {%_.each(glyfList, function(glyf) {%}
+            {%_.each(glyphList, function(glyph) {%}
             <li>
-            <i class="icon icon-{%=glyf.name%}"></i>
-                <div class="code">{%=glyf.codeName%}</div>
-                <div class="name">{%=glyf.name%}</div>
+            <i class="icon icon-{%=glyph.name%}"></i>
+                <div class="code">{%=glyph.codeName%}</div>
+                <div class="name">{%=glyph.name%}</div>
             </li>
             {%});%}
         </ul>
