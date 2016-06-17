@@ -9,6 +9,7 @@ define(function (require) {
     var contours2svg = require('fonteditor-core/ttf/util/contours2svg');
     var pathAdjust = require('fonteditor-core/graphics/pathAdjust');
     var pathCeil = require('fonteditor-core/graphics/pathCeil');
+    var escape = require('fonteditor-core/ttf/util/string').escape;
     var string = require('common/string');
     var lang = require('common/lang');
     var SVG_GLYF_TPL = ''
@@ -33,7 +34,7 @@ define(function (require) {
         var g = {
             size: opt.size,
             unitsPerEm: opt.unitsPerEm,
-            name: glyf.name,
+            name: escape(glyf.name),
             fillColor: opt.fillColor || '#000'
         };
 

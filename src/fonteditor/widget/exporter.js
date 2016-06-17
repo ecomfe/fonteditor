@@ -57,17 +57,19 @@ define(
                         // zip
                         var zip = new JSZip();
                         var fontzip = zip.folder(config.fontId);
-
+                        var symbolText;
                         // ttf
-                        ['woff', 'eot', 'svg', 'ttf'].forEach(function (fileType) {
+                        ['woff', 'eot', 'svg', 'ttf', 'symbol'].forEach(function (fileType) {
+                            var name = fileName + '.' + fileType;
+                            var content = writefont(ttf, {
+                                type: fileType
+                            });
+                            if (fileType === 'symbol') {
+                                name = fileName + '-symbol.svg';
+                                symbolText = content;
+                            }
 
-                            fontzip.file(
-                                fileName + '.' + fileType,
-                                writefont(ttf, {
-                                    type: fileType
-                                })
-                            );
-
+                            fontzip.file(name, content);
                         });
 
                         // icon
@@ -89,6 +91,13 @@ define(
                         fontzip.file(
                             'example.html',
                             exportRender.renderFontExample(iconData)
+                        );
+
+                        // symbol example
+                        iconData.symbolText = symbolText;
+                        fontzip.file(
+                            'example-symbol.html',
+                            exportRender.renderSymbolExample(iconData)
                         );
 
                         // zip

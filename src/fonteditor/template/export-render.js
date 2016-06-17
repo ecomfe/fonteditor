@@ -11,6 +11,7 @@ define(
         var fontExampleRender = null; // 图标示例渲染器
         var fontCssRender = null; // 图标css渲染器
         var tplPreviewCss = null; // 预览css样式
+        var symbolExampleRender = null; // symbol渲染器
 
 
         $.get('./css/preview.css', function (text) {
@@ -30,6 +31,16 @@ define(
                 return fontExampleRender(iconData);
             },
 
+            /**
+             * 渲染symbol图标示例
+             *
+             * @param  {Object} iconData 图标数据
+             * @return {string}          html片段
+             */
+            renderSymbolExample: function (iconData) {
+                symbolExampleRender = symbolExampleRender || utpl.template(require('./export/symbol-example.tpl'));
+                return symbolExampleRender(iconData);
+            },
 
             /**
              * 渲染图标css
