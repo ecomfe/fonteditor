@@ -17,10 +17,10 @@ define(
             /**
              * 重置缩放
              */
-            rescale: function () {
+            rescale: function (scale) {
                 this.coverLayer.clearShapes();
                 var size = this.render.getSize();
-                var scale = 512 / this.options.unitsPerEm;
+                scale = scale || (512 / this.options.unitsPerEm);
 
                 this.render.scaleTo(scale, {
                     x: size.width / 2,
@@ -130,14 +130,16 @@ define(
                     rightSideBearing = (this.rightSideBearing.p0.x - box.x - box.width) / scale;
                 }
 
-                this.fire('setting:font', {
-                    setting: {
-                        leftSideBearing: Math.round(leftSideBearing),
-                        rightSideBearing: Math.round(rightSideBearing || 0),
-                        unicode: this.font.unicode,
-                        name: this.font.name
-                    }
-                });
+                if (this.font) {
+                    this.fire('setting:font', {
+                        setting: {
+                            leftSideBearing: Math.round(leftSideBearing),
+                            rightSideBearing: Math.round(rightSideBearing || 0),
+                            unicode: this.font.unicode,
+                            name: this.font.name
+                        }
+                    });
+                }
             }
         };
     }

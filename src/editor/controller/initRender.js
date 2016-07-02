@@ -43,7 +43,7 @@ define(
                     this.fire('save');
                     break;
                 default:
-                    this.execCommand(e.command, e);
+                    this.execCommand(e.command);
             }
         }
 

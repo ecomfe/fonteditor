@@ -11,6 +11,7 @@ exports.getProcessors = function () {
         new LessCompiler({
             files: [
                 'css/main.less',
+                'css/editor.less',
                 'css/preview.less'
             ],
             entryFiles: []
@@ -30,7 +31,8 @@ exports.getProcessors = function () {
 
         new ModuleCompiler( {
             files: [
-                'src/fonteditor/main.js'
+                'src/fonteditor/main.js',
+                'src/fonteditor/editor.js'
             ],
             configFile: './module.conf'
         }),
@@ -39,6 +41,7 @@ exports.getProcessors = function () {
         new JsCompressor({
             files: [
                 'src/fonteditor/main.js',
+                'src/fonteditor/editor.js',
                 'dep/**/*.js',
                 '!dep/**/*.min.js',
             ]

@@ -69,7 +69,7 @@ define(
                 default:
                     // 是否编辑器支持
                     if (this.supportCommand(command)) {
-                        this.execCommand(command, e);
+                        this.execCommand(command);
                     }
             }
         }

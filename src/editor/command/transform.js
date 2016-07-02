@@ -58,6 +58,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             rotateleft: function (shapes) {
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 return support.rotate.call(this, shapes, -Math.PI / 2);
             },
 
@@ -68,6 +69,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             rotateright: function (shapes) {
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 return support.rotate.call(this, shapes, Math.PI / 2);
             },
 
@@ -78,7 +80,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             flipshapes: function (shapes) {
-
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 if (!shapes || !shapes.length) {
                     return false;
                 }
@@ -97,7 +99,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             mirrorshapes: function (shapes) {
-
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 if (!shapes || !shapes.length) {
                     return false;
                 }
