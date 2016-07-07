@@ -205,6 +205,8 @@ define(
                 return;
             }
 
+            prevent(e);
+
             // tracepad触发滚动事件比滚轮触发速度快很多，这里需要截流一下
             // 15毫秒可以去掉一半的trancepad滚动事件, 但是对滚轮滚动影响很小
             // http://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
@@ -214,7 +216,6 @@ define(
             }
             this.lastWheel = now;
 
-            prevent(e);
 
             var delta = 0;
             if (e.wheelDelta) {

@@ -47,9 +47,6 @@ define(
                 this.capture.on('wheel', function (e) {
                     if (e.altKey || e.ctrlKey) {
 
-                        e.originEvent.preventDefault();
-                        e.originEvent.stopPropagation();
-
                         var defaultRatio = me.options.defaultRatio || 1.2;
                         var ratio = e.delta > 0 ?  defaultRatio : 1 / defaultRatio;
                         var toScale = me.camera.scale * ratio;
