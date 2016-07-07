@@ -29,6 +29,27 @@ define(
                 this.setMode();
             },
 
+            /**
+             * 放大视图
+             */
+            enlargeview: function () {
+                var size = this.render.getSize();
+                this.render.scale(1.25, {
+                    x: size.width / 2,
+                    y: size.height / 2
+                });
+            },
+
+            /**
+             * 缩小视图
+             */
+            narrowview: function () {
+                var size = this.render.getSize();
+                this.render.scale(0.8, {
+                    x: size.width / 2,
+                    y: size.height / 2
+                });
+            },
 
             /**
              * 撤销

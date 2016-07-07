@@ -198,21 +198,13 @@ define(
                 else if (e.keyCode === 187 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
-                    var size = render.getSize();
-                    render.scale(1.25, {
-                        x: size.width / 2,
-                        y: size.height / 2
-                    });
+                    me.execCommand('enlargeview')
                 }
                 // 缩小
                 else if (e.keyCode === 189 && (e.ctrlKey || e.altKey)) {
                     e.originEvent.stopPropagation();
                     e.originEvent.preventDefault();
-                    var sz = render.getSize();
-                    render.scale(0.8, {
-                        x: sz.width / 2,
-                        y: sz.height / 2
-                    });
+                    me.execCommand('narrowview')
                 }
                 // 撤销
                 else if (e.keyCode === 90 && e.ctrlKey) {
