@@ -76,6 +76,14 @@ define(function (require) {
     }
 
     function main() {
+        // 由于editor会在iframe中嵌入，组件会阻止默认的`click`事件，
+        // 导致无法获取焦点，然后键盘事件失效，这里需要监听window事件，手动focus
+        window.addEventListener('mousedown', function () {
+            if (!window.isFocused) {
+                window.focus();
+                window.isFocused = true;
+            }
+        }, true);
         onMessage();
         var context = initEditor();
         context.focus();
