@@ -253,7 +253,7 @@ define(
                         val = originValue;
                     }
                     else {
-                        val = 0;
+                        val = null;
                     }
                 }
                 else {
