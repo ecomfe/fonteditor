@@ -19,7 +19,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             alignshapes: function (shapes, align) {
-
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 if (!shapes || !shapes.length) {
                     return false;
                 }
@@ -75,7 +75,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             verticalalignshapes: function (shapes, align) {
-
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 if (!shapes || !shapes.length) {
                     return false;
                 }
@@ -123,7 +123,7 @@ define(
              * @return {boolean} `false`或者`undefined`
              */
             horizontalalignshapes: function (shapes, align) {
-
+                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
                 if (!shapes || !shapes.length) {
                     return false;
                 }
