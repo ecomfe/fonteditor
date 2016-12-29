@@ -198,6 +198,9 @@ define(
                             }, function () {
                                 program.loading.show(i18n.lang.msg_save_failed, 400);
                             });
+                            require('../log').send({
+                                'action': 'create-project:' + name
+                            });
                         }
                     }
                 }

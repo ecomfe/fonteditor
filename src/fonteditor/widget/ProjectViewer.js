@@ -74,7 +74,8 @@ define(
             var str = '';
             (projects || []).forEach(function (proj) {
                 str += '<dl data-id="' + proj.id + '">'
-                    +       '<dt>' + proj.name + '</dt>'
+                    +       '<dt class="WA_LOG_BTN" data-click="project-open:'
+                    +                   proj.name.replace(/["'\n]/, '_') + '">' + proj.name + '</dt>'
                     +       '<dd>'
                     +           (proj.config && proj.config.sync
                                   ? ('<span data-action="sync" title="'

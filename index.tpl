@@ -13,7 +13,7 @@
         <div class="logo"></div>
         <div class="action-groups btn-groups">
 
-            <button data-action="add-new" type="button" class="btn btn-flat btn-new btn-sm"><i class="ico ico-left i-add"></i>${lang.newglyph}</button>
+            <button data-action="add-new" type="button" class="btn btn-flat btn-new btn-sm WA_LOG_BTN" data-click="add-new-glyf"><i class="ico ico-left i-add"></i>${lang.newglyph}</button>
             <i class="split"></i>
 
             <button data-disabled="1" data-action="undo" type="button" class="btn btn-flat btn-ico" title="${lang.undo}"><i class="ico i-undo"></i></button>
@@ -21,7 +21,7 @@
             <i class="split"></i>
 
             <div class="btn-group">
-                <button type="button" class="btn btn-flat btn-sm dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-flat btn-sm dropdown-toggle WA_LOG_BTN" data-click="menu-import" data-toggle="dropdown">
                     ${lang.import}
                     <span class="ico i-down"></span>
                 </button>
@@ -36,12 +36,12 @@
             </div>
             <i class="split"></i>
 
-            <a data-disabled="1" id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-flat btn-ico" title="${lang.export_ttf}"><i class="ico i-ttf"></i></a>
-            <a data-disabled="1" id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-flat btn-ico" title="${lang.export_woff}"><i class="ico i-woff"></i></a>
-            <a data-disabled="1" id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico" title="${lang.export_zip}"><i class="ico i-zip"></i></a>
+            <a data-disabled="1" id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-flat btn-ico WA_LOG_BTN" data-click="download-ttf" title="${lang.export_ttf}"><i class="ico i-ttf"></i></a>
+            <a data-disabled="1" id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-flat btn-ico WA_LOG_BTN" data-click="download-woff" title="${lang.export_woff}"><i class="ico i-woff"></i></a>
+            <a data-disabled="1" id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico WA_LOG_BTN" data-click="download-zip" title="${lang.export_zip}"><i class="ico i-zip"></i></a>
             <i class="split"></i>
 
-            <button data-disabled="1" data-action="save" type="button" class="btn btn-flat btn-sm"><i class="ico ico-left i-save"></i>${lang.save_proj}</button>
+            <button data-disabled="1" data-action="save" type="button" class="btn btn-flat btn-sm"><i class="ico ico-left i-save WA_LOG_BTN" data-click="save-project"></i>${lang.save_proj}</button>
 
             <div class="btn-group">
                 <button type="button" class="btn btn-flat btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -76,7 +76,7 @@
 
             <div class="btn-group">
 
-                <button type="button" class="btn btn-flat btn-preview btn-sm dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-flat btn-preview btn-sm dropdown-toggle WA_LOG_BTN" data-click="preview-btn" data-toggle="dropdown">
                     ${lang.preview}
                     <span class="drop ico i-down"></span>
                 </button>
@@ -100,7 +100,7 @@
 
     <section class="sidebar">
         <div class="project-btns action-groups">
-            <button data-action="new" type="button" class="btn btn-flat btn-sm" title="${lang.new_font_title}"><i class="ico ico-left i-new"></i>${lang.new_font}</button><button data-action="open" type="button" class="btn btn-flat btn-sm" title="${lang.open_font_title}"><i class="ico ico-left i-open"></i>${lang.open_font}</button>
+            <button data-action="new" type="button" class="btn btn-flat btn-sm WA_LOG_BTN" data-click="add-new" title="${lang.new_font_title}"><i class="ico ico-left i-new"></i>${lang.new_font}</button><button data-action="open" type="button" class="btn btn-flat btn-sm WA_LOG_BTN" data-click="open" title="${lang.open_font_title}"><i class="ico ico-left i-open"></i>${lang.open_font}</button>
         </div>
         <div class="project">
             <div class="project-title">${lang.project_list}</div>

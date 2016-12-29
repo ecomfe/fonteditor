@@ -5,6 +5,8 @@
 
 define(
     function (require) {
+        require('./log').init();
+
         var i18n = require('./i18n/i18n');
         var program = require('./widget/program');
         var controller = require('./controller/default');
@@ -192,7 +194,6 @@ define(
         };
 
         entry.init();
-
         return entry;
     }
 );
