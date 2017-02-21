@@ -1,9 +1,9 @@
 fonteditor 在线ttf字体编辑器
 ==========
 
-[线上地址](http://font.baidu.com)
+[线上地址](http://fontstore.baidu.com/static/editor/index.html)
 
-[English Version](http://font.baidu.com/editor/index-en.html)
+[English Version](http://fontstore.baidu.com/static/editor/index-en.html)
 
 
 ### 开发:

@@ -17,7 +17,7 @@ define(function (require) {
     var defaultOptions = {
         url: 'http://fonteditor.duapp.com/?url=',
         data: {
-            from: 'fonteditor' // 标记统计类型
+            from: 'font-store' // 标记统计类型
         }
     };
 
