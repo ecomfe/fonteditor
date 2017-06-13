@@ -45,7 +45,7 @@ define(
                     unicode: (glyf.unicode || []).map(function (u) {
                         return '$' + u.toString(16).toUpperCase();
                     }).join(','),
-                    name: glyf.name,
+                    name: string.encodeHTML(glyf.name || ''),
                     fillColor: opt.color ? 'style="fill:' + opt.color + '"' : ''
                 };
 

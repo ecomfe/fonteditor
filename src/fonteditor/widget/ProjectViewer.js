@@ -6,7 +6,7 @@
 define(
     function (require) {
         var i18n = require('../i18n/i18n');
-
+        var string = require('common/string');
         /**
          * 项目列表查看器
          *
@@ -73,8 +73,8 @@ define(
         ProjectViewer.prototype.show = function (projects, selectedId) {
             var str = '';
             (projects || []).forEach(function (proj) {
-                str += '<dl data-id="' + proj.id + '">'
-                    +       '<dt>' + proj.name + '</dt>'
+                str += '<dl data-id="' + string.encodeHTML(proj.id) + '">'
+                    +       '<dt>' + string.encodeHTML(proj.name) + '</dt>'
                     +       '<dd>'
                     +           (proj.config && proj.config.sync
                                   ? ('<span data-action="sync" title="'
