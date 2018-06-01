@@ -34,3 +34,7 @@
       <span class="input-group-addon">${lang.created}</span>
       <input data-field="created" type="datetime-local" class="form-control">
 </div>
+<div class="input-group input-group-sm">
+      <span class="input-group-addon">${lang.modified}</span>
+      <input data-field="modified" type="datetime-local" class="form-control">
+</div>

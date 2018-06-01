@@ -70,6 +70,7 @@ define(
             unitsPerEm: 'em框大小',
             lowestRecPPEM: '最小可读尺寸',
             created: '创建日期',
+            modified: '修改日期',
             setting: '设置',
             help: '帮助',
             confirm: '确定',

@@ -95,6 +95,7 @@ define(
                 this.setCommands(commands);
             }
 
+            this._visible = true;
             this.main.style.display = 'block';
             var maxWidth = this.container.clientWidth;
             var maxHeight = this.container.clientHeight;
@@ -115,6 +116,7 @@ define(
          * 隐藏右键菜单
          */
         ContextMenu.prototype.hide = function () {
+            this._visible = false;
             this.main.style.display = 'none';
             this.onClick = null;
             this.container.removeEventListener('click', this._hideClick);
@@ -126,7 +128,8 @@ define(
          * @return {boolean} 是否
          */
         ContextMenu.prototype.visible = function () {
-            return this.main.style.display !== 'none';
+            return null == this._visible
+                ? (this._visible = this.main.style.display !== 'none') : this._visible;
         };
 
         /**

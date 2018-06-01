@@ -70,6 +70,7 @@ define(
             unitsPerEm: 'EM Size',
             lowestRecPPEM: 'Lowest Recognized PPEM',
             created: 'Created Time',
+            modified: 'Modified Time',
             setting: 'Setting',
             help: 'Help',
             confirm: 'Confirm',
