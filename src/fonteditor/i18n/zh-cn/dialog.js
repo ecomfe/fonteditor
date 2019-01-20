@@ -86,6 +86,7 @@ define(
             dialog_pic_enrode: '腐蚀',
 
             dialog_export_glyf: '导出字形',
+            dialog_batch_export_glyf: '批量导出字形',
             dialog_glyf_name: '图标名称',
             dialog_color: '颜色',
             dialog_size: '大小',

@@ -20,3 +20,6 @@ demo/sync/*.eot
 demo/sync/*.svg
 
 dep/fonteditor-core
+.idea
+dep/fonteditor-core
+/package-lock.json

@@ -16,6 +16,7 @@ define(
             scale: 'Scale By Percent',
             findglyf: 'Find Glyph',
             downloadglyf: 'Download Glyf',
+            batchdownloadglyf: 'Batch Download Glyf',
             setunicode: 'Set Unicode',
             del: 'Delete',
             edit: 'Edit',

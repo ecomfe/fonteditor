@@ -59,6 +59,10 @@ define(
                 title: i18n.lang.downloadglyf
             },
             {
+                name: 'batch-download-glyf',
+                title: i18n.lang.batchdownloadglyf
+            },
+            {
                 type: 'split'
             },
             {

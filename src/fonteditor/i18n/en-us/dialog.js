@@ -87,6 +87,7 @@ define(
             dialog_pic_enrode: 'Enrode',
 
             dialog_export_glyf: 'Export Glyf',
+            dialog_batch_export_glyf: 'Batch Export Glyf',
             dialog_glyf_name: 'Glyf Name',
             dialog_color: 'Color',
             dialog_size: 'Size',

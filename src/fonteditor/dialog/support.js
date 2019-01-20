@@ -19,7 +19,8 @@ define(
             'ie': require('../dialog/setting-ie'),
             'import-pic': require('../dialog/setting-import-pic'),
             'sync': require('../dialog/setting-sync'),
-            'glyf-download': require('../dialog/glyf-download')
+            'glyf-download': require('../dialog/glyf-download'),
+            'glyf-download-batch': require('../dialog/glyf-download-batch')
         };
     }
 );
