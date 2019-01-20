@@ -25,7 +25,7 @@ define(
         function getSvgSingle(ttf, glyf) {
             var opt = {
                 fillColor: $('#glyf-download-color').val().trim(),
-                size: 36,
+                size: +$('#glyf-download-size').val(),
                 unitsPerEm: ttf.head.unitsPerEm
             };
             return glyf2svgfile(glyf, opt);
@@ -34,15 +34,14 @@ define(
         function previewGlyf() {
             var previewer = $('#glyf-download-preview');
             previewer.children().remove();
-            var this_setting = this.setting;
 
-            this_setting.glyfList.forEach(function (item, index) {
-                console.log("==================");
+            this.setting.glyfList.forEach(function (item, index) {
                 // 由于生成的svg文档带xml头部，这里简单的去掉
-                var svgText = getSvgSingle(item.ttf, item.glyf);
+                var svgText = getSvg(item);
                 var size = +$('#glyf-download-size').val();
                 var canvas = document.createElement('canvas');
-                canvas.width = canvas.height = 36;
+                canvas.width = canvas.height = size;
+                canvas.title = item.glyf.name;
 
                 var img = new Image();
                 img.src = 'data:image/svg+xml;base64,' + btoa(svgText);
@@ -64,40 +63,31 @@ define(
             getTpl: function () {
                 return require('../template/dialog/glyf-download-batch.tpl');
             },
-            setOne: function (setting) {
-                var onChange = $.proxy(previewGlyf, this);
-                $('#glyf-download-color').on('change', onChange);
-                colorpicker.show('#glyf-download-color');
-                setting.glyfList.forEach(function (item, i) {
-                    console.log("==================");
-                    console.log(item.name);
-                });
-
-
-            },
             set: function (setting) {
                 var onChange = $.proxy(previewGlyf, this);
                 $('#glyf-download-color').on('change', onChange);
-                // 仅改变导出尺寸，不改变显示大小
-                // $('#glyf-download-size').on('change', onChange);
+                $('#glyf-download-size').on('change', onChange);
                 colorpicker.show('#glyf-download-color');
-               /* $('#glyf-download-confirm').on('click', $.proxy(function (e) {
-                    var svgText = getSvg(this.setting);
-                    var target = $(e.target);
-                    console.log("----------------------");
-                    console.log(this.setting);
-                    download((this.setting.glyf.name || 'svg') + '.svg', svg2base64(svgText));
+                // 可增加zip打包下载
+                $('#glyf-download-confirm').on('click', $.proxy(function (e) {
+                    var condition = $('#download-glyf-select').find('input[type="radio"]:checked').val();
+                    if (condition == 'svg') {
+                        setting.glyfList.forEach(function (item, index) {
+                            var svgText = getSvg(item);
+                            var target = $(e.target);
+                            download((item.glyf.name || 'svg') + '.svg', svg2base64(svgText));
+                        });
+                    } else if (condition == 'png') {
+                        setting.glyfList.forEach(function (item, index) {
+                            var canvas = $('#glyf-download-preview canvas').get(index);
+                            var imgData = canvas.toDataURL();
+                            var target = $(e.target);
+                            download((item.glyf.name || 'png') + '.png', imgData);
+                        });
+                    }
                 }, this));
 
-                $('#glyf-download-png').on('click', $.proxy(function (e) {
-                    var canvas = $('#glyf-download-preview canvas').get(0);
-                    var imgData = canvas.toDataURL();
-                    var target = $(e.target);
-                    download((this.setting.glyf.name || 'png') + '.png', imgData);
-                }, this));*/
-
-                // 名称显示在每个cavas title中
-                // $('#glyf-download-name').html(setting.glyf.name);
+                // 名称显示在每个canvas title中
                 this.setting = setting;
                 previewGlyf.call(this);
             },

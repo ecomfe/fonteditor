@@ -22,15 +22,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        &batch{
-            text-align: left;
-            >canvas {
-                position: static;
-                display: block;
-                float: left;
-                margin: 12px;
-            }
-        }
     }
 
     .glyf-download-btn {
@@ -42,6 +33,28 @@
 
         .field-margin {
             margin-left: 30px;
+        }
+    }
+
+
+    &.batch{
+        .preview-panel {
+            text-align: left;
+
+            >canvas {
+                position: static;
+                top: 0;
+                left: 0;
+                transform: none;
+                display: block;
+                float: left;
+                margin: 5px 15px;
+            }
+        }
+        .glyf-download-btn{
+            label {
+                padding: 10px 15px;
+            }
         }
     }
 }

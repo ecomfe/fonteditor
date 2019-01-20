@@ -385,9 +385,6 @@ define(
                 list.forEach(function(item, i){
                     list[i] = {ttf: program.ttfManager.get(), glyf: list[i]};
                 });
-
-                console.log("+++++++++++++++++++");
-                console.log(list);
                 !new SettingGlyfDownloadBatch().show({
                     glyfList: list
                 });
