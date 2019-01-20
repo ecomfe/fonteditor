@@ -267,9 +267,14 @@ define(
                         ? 'enableCommands'
                         : 'disableCommands'
                     ](['setting-font', 'download-glyf']);
+                    commandMenu[
+                        selected.length > 1
+                            ? 'enableCommands'
+                            : 'disableCommands'
+                        ](['batch-download-glyf']);
                 }
                 else {
-                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font', 'download-glyf']);
+                    commandMenu.disableCommands(['copy', 'cut', 'del', 'setting-font', 'download-glyf', 'batch-download-glyf']);
                 }
 
             }, 100));

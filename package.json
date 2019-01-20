@@ -21,8 +21,8 @@
         "build-css": "node build/build-css.js"
     },
     "devDependencies": {
-            "less": "~2.0.0",
-            "q": "^1.2.0"
+        "less": "~2.0.0",
+        "q": "^1.2.0"
     },
     "homepage": "https://github.com/ecomfe/fonteditor",
     "keywords": [
