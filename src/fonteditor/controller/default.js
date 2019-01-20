@@ -380,7 +380,7 @@ define(
             })
             .on('batch-download-glyf', function (e) {
                 var SettingGlyfDownloadBatch = settingSupport['glyf-download-batch'];
-                // 批量获取需要下载的图标，转换成简单字形，自动生成下载压缩包
+                // 批量获取需要下载的图标，转换成简单字形，可增加生成压缩包
                 var list = program.ttfManager.getCopiedGlyf(e.list);
                 list.forEach(function(item, i){
                     list[i] = {ttf: program.ttfManager.get(), glyf: list[i]};

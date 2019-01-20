@@ -1,6 +1,6 @@
 /**
- * @file 下载单个字形
- * @author mengke01(kekee000@gmail.com)
+ * @file 批量下载字形
+ * @author lorron(lorron@126.com)
  */
 
 define(
@@ -20,15 +20,6 @@ define(
                 unitsPerEm: setting.ttf.head.unitsPerEm
             };
             return glyf2svgfile(setting.glyf, opt);
-        }
-
-        function getSvgSingle(ttf, glyf) {
-            var opt = {
-                fillColor: $('#glyf-download-color').val().trim(),
-                size: +$('#glyf-download-size').val(),
-                unitsPerEm: ttf.head.unitsPerEm
-            };
-            return glyf2svgfile(glyf, opt);
         }
 
         function previewGlyf() {
