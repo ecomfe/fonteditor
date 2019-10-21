@@ -9,7 +9,7 @@ import i18n from '../i18n/i18n';
 import font from 'fonteditor-core/ttf/font';
 import loading from './loading';
 import program from './program';
-const inflate = window.pako.inflate;
+import inflate from 'inflate';
 
 function svg2ttf(buffer) {
     let options = program.setting.get('ie').import;

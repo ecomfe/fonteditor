@@ -5,7 +5,6 @@
     <title>FontEditor</title>
     <link rel="shortcut icon" href="http://www.baidu.com/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="./dep/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
 
@@ -150,12 +149,7 @@
     <script src="./dep/jquery.min.js"></script>
     <script src="./dep/jqColorPicker.min.js"></script>
     <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
-    <script src="./dep/paper-full.js"></script>
     <script src="./dep/hidpi-canvas.js"></script>
-    <script src="./dep/jszip/jszip.min.js"></script>
-    <script src="./dep/utpl.min.js"></script>
-    <script src="./dep/pako_inflate.min.js"></script>
-    <script src="./dep/pako_deflate.min.js"></script>
     <script>
         window.language = '${lang.lang}';
     </script>

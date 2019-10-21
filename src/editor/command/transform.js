@@ -12,7 +12,7 @@ import pathsUtil from 'graphics/pathsUtil';
  * @param {number} angle 弧度
  * @return {boolean} `false`或者`undefined`
  */
-function rotate(shapes, angle) {
+function rotateShapes(shapes, angle) {
     if (!angle) {
         return false;
     }
@@ -24,7 +24,7 @@ function rotate(shapes, angle) {
 }
 
 
-export default {
+const transform = {
 
     /**
      * 旋转指定角度
@@ -39,7 +39,7 @@ export default {
             return false;
         }
 
-        let ret = rotate(shapes, angle);
+        let ret = rotateShapes(shapes, angle);
         if (false !== ret) {
             this.fontLayer.refresh();
             this.refreshSelected(shapes);
@@ -55,7 +55,7 @@ export default {
      */
     rotateleft(shapes) {
         shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
-        return this.rotate.call(this, shapes, -Math.PI / 2);
+        return transform.rotate.call(this, shapes, -Math.PI / 2);
     },
 
     /**
@@ -66,7 +66,7 @@ export default {
      */
     rotateright(shapes) {
         shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
-        return this.rotate.call(this, shapes, Math.PI / 2);
+        return transform.rotate.call(this, shapes, Math.PI / 2);
     },
 
     /**
@@ -107,3 +107,5 @@ export default {
         this.refreshSelected(shapes);
     }
 };
+
+export default transform;

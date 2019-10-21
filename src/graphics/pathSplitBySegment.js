@@ -7,7 +7,7 @@ import path2contours from 'fonteditor-core/ttf/svg/path2contours';
 import contours2svg from 'fonteditor-core/ttf/util/contours2svg';
 import pathUtil from './pathUtil';
 import reducePath from './reducePath';
-const paper = window.paper;
+import paper from 'paper';
 
 function initPaper() {
     if (!paper.project) {

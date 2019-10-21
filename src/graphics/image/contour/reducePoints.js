@@ -4,7 +4,7 @@
  */
 
 import douglasPeuckerReducePoints from './douglasPeuckerReducePoints';
-import {makeLink} from '../../pathUtil';
+import pathUtil from '../../pathUtil';
 import vector from '../../vector';
 
 
@@ -21,7 +21,7 @@ import vector from '../../vector';
  */
 export default function reducePoints(contour, firstIndex, lastIndex, scale, threshold) {
     let points = douglasPeuckerReducePoints(contour, firstIndex, lastIndex, scale, threshold);
-    points = makeLink(points);
+    points = pathUtil.makeLink(points);
 
     let start = points[0];
     let tinyDist = 3 * scale;

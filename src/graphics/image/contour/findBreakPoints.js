@@ -3,7 +3,7 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-import {makeLink} from 'graphics/pathUtil';
+import pathUtil from 'graphics/pathUtil';
 import vector from 'graphics/vector';
 const getCos = vector.getCos;
 
@@ -27,7 +27,7 @@ function dist(p0, p1) {
  */
 export default function getBreakPoints(contour, scale) {
 
-    contour = makeLink(contour);
+    contour = pathUtil.makeLink(contour);
 
     let farDist = THRESHOLD_FAR_DIST * scale;
     let longDist = THRESHOLD_LONG_DIST * scale;

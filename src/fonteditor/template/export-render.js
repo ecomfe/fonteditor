@@ -4,16 +4,10 @@
  */
 
 import utpl from 'utpl';
-
+import previewTpl from 'css/preview.lesstpl';
 let fontExampleRender = null; // 图标示例渲染器
 let fontCssRender = null; // 图标css渲染器
-let tplPreviewCss = null; // 预览css样式
 let symbolExampleRender = null; // symbol渲染器
-
-
-$.get('./css/preview.css', function (text) {
-    tplPreviewCss = text;
-});
 
 export default {
 
@@ -56,6 +50,6 @@ export default {
      * @return {string} html片段
      */
     renderPreviewCss() {
-        return tplPreviewCss;
+        return previewTpl.toString();
     }
 };

@@ -2,6 +2,7 @@
  * @file 编辑器导出接口，用于编辑字形相关的矢量图形
  * @author mengke01(kekee000@gmail.com)
  */
+import 'css/editor.less';
 
 import lang from 'common/lang';
 import editor from '../editor/main';

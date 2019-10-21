@@ -3,6 +3,8 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import 'css/main.less';
+
 import i18n from './i18n/i18n';
 import program from './widget/program';
 import controller from './controller/default';
@@ -44,7 +46,7 @@ function loadFiles(files) {
         if (program.ttfManager.get()) {
             let ext = file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase();
             let reg = new RegExp('\.' + ext + '$', 'i');
-            let files = Array.prototype.slice.call(files).filter(function (f) {
+            files = Array.prototype.slice.call(files).filter(function (f) {
                 return reg.test(f.name);
             });
 

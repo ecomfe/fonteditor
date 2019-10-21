@@ -7,7 +7,7 @@ import contours2svg from 'fonteditor-core/ttf/util/contours2svg';
 import path2contours from 'fonteditor-core/ttf/svg/path2contours';
 import pathUtil from './pathUtil';
 import reducePath from './reducePath';
-const paper = window.paper;
+import paper from 'paper';
 
 const RELATION = {
     intersect: 0, // 相交

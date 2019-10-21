@@ -8,8 +8,8 @@ import resolvettf from './util/resolvettf';
 import config from 'fonteditor-core/ttf/data/default';
 import exportRender from '../template/export-render';
 import download from './util/download';
+import JSZip from 'JSZip';
 
-const JSZip = window.JSZip;
 const font = core.Font;
 const ttf2icon = core.ttf2icon;
 

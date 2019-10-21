@@ -25,8 +25,9 @@ function format(source, data) {
 
 
 module.exports = function main(tpl) {
+    let language = String(this.resource).match(/\?en-us/) ? 'en-us' : 'zh-cn';
     let i18n = {};
-    i18n.lang = require('./i18n.zh-cn');
+    i18n.lang = require('./i18n.' + language);
     let fileContent = format(tpl, i18n);
     return 'module.exports=' + JSON.stringify(fileContent);
 };

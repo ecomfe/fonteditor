@@ -5,6 +5,8 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -15,7 +17,7 @@ module.exports = {
         path: path.resolve(__dirname, '../dist'),
         filename: 'js/[name].js'
     },
-    devtool: 'inline-source-map',
+    devtool: false,
     devServer: {
         contentBase: './'
     },
@@ -45,20 +47,27 @@ module.exports = {
             title: 'index',
             filename: 'index.html',
             template: path.resolve(__dirname, '../index.tpl?zh-cn'),
-            chunks: ['index']
+            chunks: ['index'],
+            language: 'zh-ch'
         }),
         new HtmlWebpackPlugin({
             title: 'index',
             filename: 'index-en.html',
             template: path.resolve(__dirname, '../index.tpl?en-us'),
-            chunks: ['index']
+            chunks: ['index'],
+            language: 'en-us'
         }),
         new HtmlWebpackPlugin({
             title: 'editor',
             filename: 'editor.html',
             template: path.resolve(__dirname, '../editor.tpl'),
             chunks: ['editor']
-        })
+        }),
+        new MiniCssPlugin({
+            filename: 'css/[name]-[chunkhash:8].css',
+            chunkFilename: 'css/[id]-[chunkhash:8].css'
+        }),
+        new OptimizeCssAssetsPlugin()
     ],
     module: {
         rules: [
@@ -79,7 +88,7 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: ['style-loader', 'css-loader', 'less-loader']
+                use: [MiniCssPlugin.loader, 'css-loader', 'less-loader']
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
@@ -87,7 +96,8 @@ module.exports = {
                     {
                         loader: 'url-loader',
                         options: {
-                            limit: 1000
+                            limit: 15000,
+                            name: 'css/[name]-[hash:8].[ext]'
                         }
                     }
                 ]
@@ -98,7 +108,8 @@ module.exports = {
                     {
                         loader: 'url-loader',
                         options: {
-                            limit: 1000
+                            limit: 15000,
+                            name: 'css/[name]-[hash:8].[ext]'
                         }
                     }
                 ]

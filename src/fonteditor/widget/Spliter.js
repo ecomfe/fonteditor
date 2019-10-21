@@ -8,6 +8,9 @@ import observable from 'common/observable';
 
 function init(spliter) {
     const fireChange = lang.throttle(function (e) {
+        if (!e) {
+            return;
+        }
         let offset = e.pageX - spliter.x;
         let deltaX = e.pageX - spliter.deltaX;
         spliter.deltaX = e.pageX;
