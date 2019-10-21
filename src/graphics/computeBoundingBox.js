@@ -3,8 +3,16 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        return require('fonteditor-core/graphics/computeBoundingBox');
-    }
-);
+import {
+
+    computeBounding,
+    quadraticBezier,
+    computePath,
+    computePathBox
+} from 'fonteditor-core/graphics/computeBoundingBox';
+export default {
+    computeBounding,
+    quadraticBezier,
+    computePath,
+    computePathBox
+};

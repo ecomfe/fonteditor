@@ -3,60 +3,52 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+import shape from './Shape';
+import isInsidePath from 'graphics/isInsidePath';
+import pathAdjust from 'graphics/pathAdjust';
+import drawPath from '../util/drawPath';
+import computeBoundingBox from 'graphics/computeBoundingBox';
 
-        var isInsidePath = require('graphics/isInsidePath');
-        var pathAdjust = require('graphics/pathAdjust');
-        var drawPath = require('../util/drawPath');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
+export default shape.derive({
 
-        var proto = {
+    type: 'path',
 
-            type: 'path',
+    adjust(shape, camera) {
+        let ratio = camera.ratio;
+        let x = camera.center.x;
+        let y = camera.center.y;
+        pathAdjust(shape.points, ratio, ratio, -x, -y);
+        pathAdjust(shape.points, 1, 1, x, y);
+    },
 
-            adjust: function (shape, camera) {
-                var ratio = camera.ratio;
-                var x = camera.center.x;
-                var y = camera.center.y;
-                pathAdjust(shape.points, ratio, ratio, -x, -y);
-                pathAdjust(shape.points, 1, 1, x, y);
-            },
+    move(shape, mx, my) {
+        pathAdjust(shape.points, 1, 1, mx, my);
+        return shape;
+    },
 
-            move: function (shape, mx, my) {
-                pathAdjust(shape.points, 1, 1, mx, my);
-                return shape;
-            },
+    getRect(shape) {
+        return computeBoundingBox.computePath(shape.points);
+    },
 
-            getRect: function (shape) {
-                return computeBoundingBox.computePath(shape.points);
-            },
+    isIn(shape, x, y) {
+        let bound = computeBoundingBox.computePath(shape.points);
+        if (
+            x <= bound.x + bound.width
+            && x >= bound.x
+            && y <= bound.y + bound.height
+            && y >= bound.y
+        ) {
 
-            isIn: function (shape, x, y) {
-                var bound = computeBoundingBox.computePath(shape.points);
-                if (
-                    x <= bound.x + bound.width
-                    && x >= bound.x
-                    && y <= bound.y + bound.height
-                    && y >= bound.y
-                ) {
-
-                    return isInsidePath(shape.points, {
-                        x: x,
-                        y: y
-                    });
-                }
-                return false;
-            },
+            return isInsidePath(shape.points, {
+                x,
+                y
+            });
+        }
+        return false;
+    },
 
 
-            draw: function (ctx, shape) {
-                drawPath(ctx, shape.points);
-            }
-        };
-
-
-
-        return require('./Shape').derive(proto);
+    draw(ctx, shape) {
+        drawPath(ctx, shape.points);
     }
-);
+});

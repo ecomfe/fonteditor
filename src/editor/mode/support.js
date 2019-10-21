@@ -3,19 +3,25 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import point from './point';
+import range from './range';
+import pan from './pan';
+import bound from './bound';
+import shapes from './shapes';
+import addshapes from './addshapes';
+import addpath from './addpath';
+import split from './split';
+import referenceline from './referenceline';
 
-define(
-    function (require) {
-        return {
-            'point': require('./point'),
-            'range': require('./range'),
-            'pan': require('./pan'),
-            'default': require('./bound'),
-            'shapes': require('./shapes'),
-            'addshapes': require('./addshapes'),
-            'addpath': require('./addpath'),
-            'split': require('./split'),
-            'referenceline': require('./referenceline')
-        };
-    }
-);
+
+export default {
+    point,
+    range,
+    pan,
+    'default': bound,
+    shapes,
+    addshapes,
+    addpath,
+    split,
+    referenceline
+};

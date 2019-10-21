@@ -3,115 +3,107 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import pathsUtil from 'graphics/pathsUtil';
 
-define(
-    function (require) {
+/**
+ * 旋转图形
+ *
+ * @param {Array} shapes 图形集合
+ * @param {number} angle 弧度
+ * @return {boolean} `false`或者`undefined`
+ */
+function rotate(shapes, angle) {
+    if (!angle) {
+        return false;
+    }
+    let paths = shapes.map(function (shape) {
+        return shape.points;
+    });
 
-        var pathsUtil = require('graphics/pathsUtil');
+    pathsUtil.rotate(paths, angle);
+}
 
-        /**
-         * 旋转图形
-         *
-         * @param {Array} shapes 图形集合
-         * @param {number} angle 弧度
-         * @return {boolean} `false`或者`undefined`
-         */
-        function rotate(shapes, angle) {
-            if (!angle) {
-                return false;
-            }
-            var paths = shapes.map(function (shape) {
-                return shape.points;
-            });
 
-            pathsUtil.rotate(paths, angle);
+export default {
+
+    /**
+     * 旋转指定角度
+     *
+     * @param {Array} shapes 图形集合
+     * @param {number} angle 弧度
+     * @return {boolean} `false`或者`undefined`
+     */
+    rotate(shapes, angle) {
+
+        if (!shapes || !shapes.length) {
+            return false;
         }
 
+        let ret = rotate(shapes, angle);
+        if (false !== ret) {
+            this.fontLayer.refresh();
+            this.refreshSelected(shapes);
+        }
+        return ret;
+    },
 
-        var support = {
+    /**
+     * 向左旋转
+     *
+     * @param {Array} shapes 图形集合
+     * @return {boolean} `false`或者`undefined`
+     */
+    rotateleft(shapes) {
+        shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
+        return this.rotate.call(this, shapes, -Math.PI / 2);
+    },
 
-            /**
-             * 旋转指定角度
-             *
-             * @param {Array} shapes 图形集合
-             * @param {number} angle 弧度
-             * @return {boolean} `false`或者`undefined`
-             */
-            rotate: function (shapes, angle) {
+    /**
+     * 向右旋转
+     *
+     * @param {Array} shapes 图形集合
+     * @return {boolean} `false`或者`undefined`
+     */
+    rotateright(shapes) {
+        shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
+        return this.rotate.call(this, shapes, Math.PI / 2);
+    },
 
-                if (!shapes || !shapes.length) {
-                    return false;
-                }
+    /**
+     * 翻转
+     *
+     * @param {Array} shapes 图形集合
+     * @return {boolean} `false`或者`undefined`
+     */
+    flipshapes(shapes) {
+        shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
+        if (!shapes || !shapes.length) {
+            return false;
+        }
 
-                var ret = rotate(shapes, angle);
-                if (false !== ret) {
-                    this.fontLayer.refresh();
-                    this.refreshSelected(shapes);
-                }
-                return ret;
-            },
+        pathsUtil.flip(shapes.map(function (shape) {
+            return shape.points;
+        }));
+        this.fontLayer.refresh();
+        this.refreshSelected(shapes);
+    },
 
-            /**
-             * 向左旋转
-             *
-             * @param {Array} shapes 图形集合
-             * @return {boolean} `false`或者`undefined`
-             */
-            rotateleft: function (shapes) {
-                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
-                return support.rotate.call(this, shapes, -Math.PI / 2);
-            },
+    /**
+     * 镜像
+     *
+     * @param {Array} shapes 图形集合
+     * @return {boolean} `false`或者`undefined`
+     */
+    mirrorshapes(shapes) {
+        shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
+        if (!shapes || !shapes.length) {
+            return false;
+        }
 
-            /**
-             * 向右旋转
-             *
-             * @param {Array} shapes 图形集合
-             * @return {boolean} `false`或者`undefined`
-             */
-            rotateright: function (shapes) {
-                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
-                return support.rotate.call(this, shapes, Math.PI / 2);
-            },
-
-            /**
-             * 翻转
-             *
-             * @param {Array} shapes 图形集合
-             * @return {boolean} `false`或者`undefined`
-             */
-            flipshapes: function (shapes) {
-                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
-                if (!shapes || !shapes.length) {
-                    return false;
-                }
-
-                pathsUtil.flip(shapes.map(function (shape) {
-                    return shape.points;
-                }));
-                this.fontLayer.refresh();
-                this.refreshSelected(shapes);
-            },
-
-            /**
-             * 镜像
-             *
-             * @param {Array} shapes 图形集合
-             * @return {boolean} `false`或者`undefined`
-             */
-            mirrorshapes: function (shapes) {
-                shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
-                if (!shapes || !shapes.length) {
-                    return false;
-                }
-
-                pathsUtil.mirror(shapes.map(function (shape) {
-                    return shape.points;
-                }));
-                this.fontLayer.refresh();
-                this.refreshSelected(shapes);
-            }
-        };
-
-        return support;
+        pathsUtil.mirror(shapes.map(function (shape) {
+            return shape.points;
+        }));
+        this.fontLayer.refresh();
+        this.refreshSelected(shapes);
     }
-);
+};

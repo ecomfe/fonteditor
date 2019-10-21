@@ -3,165 +3,166 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import lang from 'common/lang';
+import computeBoundingBox from 'graphics/computeBoundingBox';
+import commandList from '../menu/commandList';
+import shapesSupport from '../shapes/support';
+import setSelectedCommand from './setSelectedCommand';
 
-define(
-    function (require) {
-        var lang = require('common/lang');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var commandList = require('../menu/commandList');
-        var shapesSupport = require('../shapes/support');
-        var setSelectedCommand = require('./setSelectedCommand');
+export default {
 
-        return {
+    /**
+     * 重置缩放
+     *
+     * @param {number} scale scale
+     */
+    rescale(scale) {
+        this.coverLayer.clearShapes();
+        let size = this.render.getSize();
+        scale = scale || (512 / this.options.unitsPerEm);
 
-            /**
-             * 重置缩放
-             */
-            rescale: function (scale) {
-                this.coverLayer.clearShapes();
-                var size = this.render.getSize();
-                scale = scale || (512 / this.options.unitsPerEm);
+        this.render.scaleTo(scale, {
+            x: size.width / 2,
+            y: size.height / 2
+        });
+        this.setMode();
+    },
 
-                this.render.scaleTo(scale, {
-                    x: size.width / 2,
-                    y: size.height / 2
-                });
-                this.setMode();
-            },
+    /**
+     * 放大视图
+     */
+    enlargeview() {
+        let size = this.render.getSize();
+        this.render.scale(1.25, {
+            x: size.width / 2,
+            y: size.height / 2
+        });
+    },
 
-            /**
-             * 放大视图
-             */
-            enlargeview: function () {
-                var size = this.render.getSize();
-                this.render.scale(1.25, {
-                    x: size.width / 2,
-                    y: size.height / 2
-                });
-            },
+    /**
+     * 缩小视图
+     */
+    narrowview() {
+        let size = this.render.getSize();
+        this.render.scale(0.8, {
+            x: size.width / 2,
+            y: size.height / 2
+        });
+    },
 
-            /**
-             * 缩小视图
-             */
-            narrowview: function () {
-                var size = this.render.getSize();
-                this.render.scale(0.8, {
-                    x: size.width / 2,
-                    y: size.height / 2
-                });
-            },
+    /**
+     * 撤销
+     */
+    undo() {
+        let shapes = this.history.back();
+        this.fontLayer.shapes.length = 0;
+        this.addShapes(shapes);
+        this.setMode();
+    },
 
-            /**
-             * 撤销
-             */
-            undo: function () {
-                var shapes = this.history.back();
-                this.fontLayer.shapes.length = 0;
-                this.addShapes(shapes);
-                this.setMode();
-            },
+    /**
+     * 恢复
+     */
+    redo() {
+        let shapes = this.history.forward();
+        this.fontLayer.shapes.length = 0;
+        this.addShapes(shapes);
+        this.setMode();
+    },
 
-            /**
-             * 恢复
-             */
-            redo: function () {
-                var shapes = this.history.forward();
-                this.fontLayer.shapes.length = 0;
-                this.addShapes(shapes);
-                this.setMode();
-            },
+    /**
+     * 是否打开网格吸附
+     *
+     * @param {boolean} enabled 是否
+     */
+    gridsorption(enabled) {
+        setSelectedCommand(commandList.editor, 'setting.gridsorption', !!enabled);
+        this.options.sorption.enableGrid = this.sorption.enableGrid = !!enabled;
+    },
 
-            /**
-             * 是否打开网格吸附
-             * @param {boolean} enabled 是否
-             */
-            gridsorption: function (enabled) {
-                setSelectedCommand(commandList.editor, 'setting.gridsorption', !!enabled);
-                this.options.sorption.enableGrid = this.sorption.enableGrid = !!enabled;
-            },
+    /**
+     * 是否打开轮廓吸附
+     *
+     * @param {boolean} enabled 是否
+     */
+    shapesorption(enabled) {
+        setSelectedCommand(commandList.editor, 'setting.shapesorption', !!enabled);
+        this.options.sorption.enableShape = this.sorption.enableShape = !!enabled;
+    },
 
-            /**
-             * 是否打开轮廓吸附
-             * @param {boolean} enabled 是否
-             */
-            shapesorption: function (enabled) {
-                setSelectedCommand(commandList.editor, 'setting.shapesorption', !!enabled);
-                this.options.sorption.enableShape = this.sorption.enableShape = !!enabled;
-            },
+    /**
+     * 是否打开轮廓吸附
+     *
+     * @param {boolean} enabled 是否
+     */
+    showgrid(enabled) {
+        setSelectedCommand(commandList.editor, 'setting.showgrid', !!enabled);
+        this.options.axis.showGrid = this.axis.showGrid = !!enabled;
+        this.axisLayer.refresh();
+    },
 
-            /**
-             * 是否打开轮廓吸附
-             * @param {boolean} enabled 是否
-             */
-            showgrid: function (enabled) {
-                setSelectedCommand(commandList.editor, 'setting.showgrid', !!enabled);
-                this.options.axis.showGrid = this.axis.showGrid = !!enabled;
-                this.axisLayer.refresh();
-            },
+    /**
+     * 更多设置
+     */
+    moresetting() {
+        this.fire('setting:editor', {
+            setting: this.options
+        });
+    },
 
-            /**
-             * 更多设置
-             */
-            moresetting: function () {
-                this.fire('setting:editor', {
-                    setting: this.options
-                });
-            },
+    /**
+     * 添加path
+     */
+    addpath() {
+        let me = this;
+        // 此处由于监听down事件，需要延迟处理
+        setTimeout(function () {
+            me.setMode('addpath');
+        }, 20);
+    },
 
-            /**
-             * 添加path
-             */
-            addpath: function () {
-                var me = this;
-                // 此处由于监听down事件，需要延迟处理
-                setTimeout(function () {
-                    me.setMode('addpath');
-                }, 20);
-            },
+    /**
+     * 添加自选图形
+     *
+     * @param {string} type 图形类型
+     */
+    addsupportshapes(type) {
+        if (shapesSupport[type]) {
+            this.setMode('addshapes', lang.clone(shapesSupport[type]));
+        }
+    },
 
-            /**
-             * 添加自选图形
-             * @param {string} type 图形类型
-             */
-            addsupportshapes: function (type) {
-                if (shapesSupport[type]) {
-                    this.setMode('addshapes', lang.clone(shapesSupport[type]));
+    /**
+     * 设置字体信息
+     */
+    fontsetting() {
+
+        // 计算边界
+        let box = computeBoundingBox.computePathBox.apply(
+            null,
+            this.fontLayer.shapes.map(function (shape) {
+                return shape.points;
+            })
+        );
+
+        let leftSideBearing = 0;
+        let rightSideBearing = 0;
+
+        if (box) {
+            let scale = this.render.camera.scale;
+            leftSideBearing = (box.x - this.axis.x) / scale;
+            rightSideBearing = (this.rightSideBearing.p0.x - box.x - box.width) / scale;
+        }
+
+        if (this.font) {
+            this.fire('setting:font', {
+                setting: {
+                    leftSideBearing: Math.round(leftSideBearing),
+                    rightSideBearing: Math.round(rightSideBearing || 0),
+                    unicode: this.font.unicode,
+                    name: this.font.name
                 }
-            },
-
-            /**
-             * 设置字体信息
-             */
-            fontsetting: function () {
-
-                // 计算边界
-                var box = computeBoundingBox.computePathBox.apply(
-                    null,
-                    this.fontLayer.shapes.map(function (shape) {
-                        return shape.points;
-                    })
-                );
-
-                var leftSideBearing = 0;
-                var rightSideBearing = 0;
-
-                if (box) {
-                    var scale = this.render.camera.scale;
-                    leftSideBearing = (box.x - this.axis.x) / scale;
-                    rightSideBearing = (this.rightSideBearing.p0.x - box.x - box.width) / scale;
-                }
-
-                if (this.font) {
-                    this.fire('setting:font', {
-                        setting: {
-                            leftSideBearing: Math.round(leftSideBearing),
-                            rightSideBearing: Math.round(rightSideBearing || 0),
-                            unicode: this.font.unicode,
-                            name: this.font.name
-                        }
-                    });
-                }
-            }
-        };
+            });
+        }
     }
-);
+};

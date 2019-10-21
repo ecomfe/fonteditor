@@ -38,6 +38,7 @@
 
             <a data-disabled="1" id="export-btn" href="#" data-action="export" data-type="ttf" class="btn btn-flat btn-ico" title="${lang.export_ttf}"><i class="ico i-ttf"></i></a>
             <a data-disabled="1" id="export-btn-woff" href="#" data-action="export" data-type="woff" class="btn btn-flat btn-ico" title="${lang.export_woff}"><i class="ico i-woff"></i></a>
+                        <a data-disabled="1" id="export-btn-woff" href="#" data-action="export" data-type="woff2" class="btn btn-flat btn-ico" title="${lang.export_woff2}"><i class="ico i-woff2"></i></a>
             <a data-disabled="1" id="export-btn-zip" href="#" data-action="export" data-type="zip" class="btn btn-flat btn-ico" title="${lang.export_zip}"><i class="ico i-zip"></i></a>
             <i class="split"></i>
 
@@ -83,6 +84,7 @@
 
                 <ul class="dropdown-menu" role="menu">
                     <li><a data-disabled="1" data-format="ttf" data-action="preview">${lang.preview_ttf}</a></li>
+                    <li><a data-disabled="1" data-format="woff2" data-action="preview">${lang.preview_woff2}</a></li>
                     <li><a data-disabled="1" data-format="woff" data-action="preview">${lang.preview_woff}</a></li>
                     <li><a data-disabled="1" data-format="svg" data-action="preview">${lang.preview_svg}</a></li>
                     <li><a data-disabled="1" data-format="eot" data-action="preview">${lang.preview_eot}</a></li>
@@ -145,33 +147,17 @@
 
     <form id="font-form" style="width:0px;height:0px;overflow:hidden;"><input id="font-import" type="file" multiple="multiple"></form>
     <iframe id="sync-frame" name="sync-frame" width="0" height="0" frameborder="0" style="display:none;"></iframe>
-    <script src="./dep/esl.js"></script>
     <script src="./dep/jquery.min.js"></script>
     <script src="./dep/jqColorPicker.min.js"></script>
     <script src="./dep/bootstrap/js/bootstrap.min.js"></script>
     <script src="./dep/paper-full.js"></script>
     <script src="./dep/hidpi-canvas.js"></script>
+    <script src="./dep/jszip/jszip.min.js"></script>
+    <script src="./dep/utpl.min.js"></script>
+    <script src="./dep/pako_inflate.min.js"></script>
+    <script src="./dep/pako_deflate.min.js"></script>
     <script>
         window.language = '${lang.lang}';
-        require.config({
-            baseUrl: './src',
-            packages: [
-                {
-                    name: 'fonteditor-core',
-                    location: '../dep/fonteditor-core/src'
-                }
-            ],
-            paths: {
-                utpl: '../dep/utpl.min',
-                JSZip: '../dep/jszip/jszip.min',
-                inflate: '../dep/pako_inflate.min',
-                deflate: '../dep/pako_deflate.min'
-            }
-        });
-        define('jquery', window.jQuery);
-        paper.install(window);
-        define('paper', window.paper);
-        require(['fonteditor/main'])
     </script>
 
     <script>

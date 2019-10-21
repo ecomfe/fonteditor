@@ -3,17 +3,14 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import I18n from 'common/I18n';
+import zhcn from './zh-cn';
+import enus from './en-us';
 
-define(
-    function (require) {
-        var I18n = require('common/I18n');
-
-        return new I18n(
-            [
-                ['zh-cn', require('./zh-cn')],
-                ['en-us', require('./en-us')]
-            ],
-            window.language
-        );
-    }
+export default new I18n(
+    [
+        ['zh-cn', zhcn],
+        ['en-us', enus]
+    ],
+    window.language
 );

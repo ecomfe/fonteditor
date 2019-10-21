@@ -3,99 +3,93 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        var pathAdjust = require('graphics/pathAdjust');
-        var computeBoundingBox = require('graphics/computeBoundingBox');
-        var lang = require('common/lang');
+import pathAdjust from 'graphics/pathAdjust';
+import computeBoundingBox from 'graphics/computeBoundingBox';
+import lang from 'common/lang';
 
-        var mode = {
+export default {
 
-            down: function (e) {
-                if (1 === e.which) {
+    down(e) {
+        if (1 === e.which) {
 
-                    // 初始化空路径
-                    this.coverLayer.clearShapes();
-                    for (var i = 0, l = this.curShapes.length; i < l; i++) {
-                        this.coverLayer.addShape('path', {
-                            points: []
-                        });
-                    }
-
-                    this.curBound = computeBoundingBox.computePath.apply(
-                        null,
-                        this.curShapes
-                    );
-                }
-            },
-
-            drag: function (e) {
-                if (1 === e.which) {
-                    if (this.curShapes) {
-                        var x = e.startX;
-                        var y = e.startY;
-                        var w = e.x - e.startX;
-                        var h = e.y - e.startY;
-                        var xScale = w / this.curBound.width;
-                        var yScale = h / this.curBound.height;
-
-                        // 等比缩放
-                        if (e.shiftKey) {
-                            var scale = Math.min(Math.abs(xScale), Math.abs(yScale));
-                            xScale = xScale > 0 ? scale : -scale;
-                            yScale = yScale > 0 ? scale : -scale;
-                        }
-
-                        // 初始化空路径
-                        var shapes = this.curShapes;
-                        var coverShapes = this.coverLayer.shapes;
-                        for (var i = 0, l = shapes.length; i < l; i++) {
-                            var points = lang.clone(shapes[i]);
-                            pathAdjust(points, xScale, yScale);
-                            pathAdjust(points, 1, 1, x, y);
-                            coverShapes[i].points = points;
-                        }
-                        this.coverLayer.refresh();
-                    }
-                }
-            },
-
-
-            dragend: function (e) {
-                if (1 === e.which) {
-
-                    if (this.curShapes) {
-                        var fontLayer = this.fontLayer;
-                        var shapes = lang.clone(this.coverLayer.shapes);
-                        for (var i = 0, l = shapes.length; i < l; i++) {
-                            fontLayer.addShape(shapes[i]);
-                        }
-
-                        fontLayer.refresh();
-                        this.fire('change');
-                        this.setMode('shapes', shapes);
-                        return;
-                    }
-
-                    this.setMode();
-                }
-            },
-
-
-            begin: function (shapes) {
-                this.render.setCursor('crosshair');
-                this.curShapes = shapes;
-            },
-
-
-            end: function () {
-                this.curShapes = this.curBound = null;
-                this.coverLayer.clearShapes();
-                this.coverLayer.refresh();
-                this.render.setCursor('default');
+            // 初始化空路径
+            this.coverLayer.clearShapes();
+            for (let i = 0, l = this.curShapes.length; i < l; i++) {
+                this.coverLayer.addShape('path', {
+                    points: []
+                });
             }
-        };
 
-        return mode;
+            this.curBound = computeBoundingBox.computePath.apply(
+                null,
+                this.curShapes
+            );
+        }
+    },
+
+    drag(e) {
+        if (1 === e.which) {
+            if (this.curShapes) {
+                let x = e.startX;
+                let y = e.startY;
+                let w = e.x - e.startX;
+                let h = e.y - e.startY;
+                let xScale = w / this.curBound.width;
+                let yScale = h / this.curBound.height;
+
+                // 等比缩放
+                if (e.shiftKey) {
+                    let scale = Math.min(Math.abs(xScale), Math.abs(yScale));
+                    xScale = xScale > 0 ? scale : -scale;
+                    yScale = yScale > 0 ? scale : -scale;
+                }
+
+                // 初始化空路径
+                let shapes = this.curShapes;
+                let coverShapes = this.coverLayer.shapes;
+                for (let i = 0, l = shapes.length; i < l; i++) {
+                    let points = lang.clone(shapes[i]);
+                    pathAdjust(points, xScale, yScale);
+                    pathAdjust(points, 1, 1, x, y);
+                    coverShapes[i].points = points;
+                }
+                this.coverLayer.refresh();
+            }
+        }
+    },
+
+
+    dragend(e) {
+        if (1 === e.which) {
+
+            if (this.curShapes) {
+                let fontLayer = this.fontLayer;
+                let shapes = lang.clone(this.coverLayer.shapes);
+                for (let i = 0, l = shapes.length; i < l; i++) {
+                    fontLayer.addShape(shapes[i]);
+                }
+
+                fontLayer.refresh();
+                this.fire('change');
+                this.setMode('shapes', shapes);
+                return;
+            }
+
+            this.setMode();
+        }
+    },
+
+
+    begin(shapes) {
+        this.render.setCursor('crosshair');
+        this.curShapes = shapes;
+    },
+
+
+    end() {
+        this.curShapes = this.curBound = null;
+        this.coverLayer.clearShapes();
+        this.coverLayer.refresh();
+        this.render.setCursor('default');
     }
-);
+};

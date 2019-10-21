@@ -3,43 +3,34 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+import shape from './Shape';
+const POINT_SIZE = 2;
 
-        var POINT_SIZE = 2;
+export default shape.derive({
 
-        var proto = {
+    type: 'cpoint',
 
-            type: 'cpoint',
-
-            getRect: function (shape) {
-                var size = shape.size || POINT_SIZE;
-                return {
-                    x: shape.x - size,
-                    y: shape.y - size,
-                    width: 2 * size,
-                    height: 2 * size
-                };
-            },
-
-            isIn: function (shape, x, y) {
-                var size = shape.size || POINT_SIZE;
-                return Math.pow(shape.x - x, 2) + Math.pow(shape.y - y, 2) <= Math.pow(size * 2, 2);
-            },
-
-            draw: function (ctx, shape) {
-                var size = shape.size || POINT_SIZE;
-                var x = Math.round(shape.x);
-                var y = Math.round(shape.y);
-
-                ctx.moveTo(x + size, y);
-                ctx.arc(x, y, size, 0, Math.PI * 2, true);
-
-            }
+    getRect(shape) {
+        let size = shape.size || POINT_SIZE;
+        return {
+            x: shape.x - size,
+            y: shape.y - size,
+            width: 2 * size,
+            height: 2 * size
         };
+    },
 
+    isIn(shape, x, y) {
+        let size = shape.size || POINT_SIZE;
+        return Math.pow(shape.x - x, 2) + Math.pow(shape.y - y, 2) <= Math.pow(size * 2, 2);
+    },
 
+    draw(ctx, shape) {
+        let size = shape.size || POINT_SIZE;
+        let x = Math.round(shape.x);
+        let y = Math.round(shape.y);
 
-        return require('./Shape').derive(proto);
+        ctx.moveTo(x + size, y);
+        ctx.arc(x, y, size, 0, Math.PI * 2, true);
     }
-);
+});

@@ -3,55 +3,47 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+const storage = window.localStorage;
+const storageName = 'clipboard.default';
 
-define(
-    function (require) {
+export default {
 
-        var storage = window.localStorage;
+    /**
+     * 设置clipboard
+     *
+     * @param {Object} data 设置的数据
+     * @param {string} type 数据类型
+     */
+    set(data, type) {
+        storage.setItem(storageName, JSON.stringify({
+            type: type || -9999,
+            data: data
+        }));
+    },
 
-        var storageName = 'clipboard.default';
-
-        var clipboard = {
-
-            /**
-             * 设置clipboard
-             *
-             * @param {Object} data 设置的数据
-             * @param {string} type 数据类型
-             */
-            set: function (data, type) {
-                storage.setItem(storageName, JSON.stringify({
-                    type: type || -9999,
-                    data: data
-                }));
-            },
-
-            /**
-             * 获取clipboard
-             * @param {string} type 数据类型
-             * @return {?Object}
-             */
-            get: function (type) {
-                var data = storage.getItem(storageName);
-                if (null !== data) {
-                    data = JSON.parse(data);
-                    if (data.type === type) {
-                        // storage.removeItem(storageName);
-                        return data.data;
-                    }
-                }
-
-                return null;
-            },
-
-            /**
-             * 清空
-             */
-            clear: function () {
-                storage.removeItem(storageName);
+    /**
+     * 获取clipboard
+     *
+     * @param {string} type 数据类型
+     * @return {?Object}
+     */
+    get(type) {
+        var data = storage.getItem(storageName);
+        if (null !== data) {
+            data = JSON.parse(data);
+            if (data.type === type) {
+                // storage.removeItem(storageName);
+                return data.data;
             }
-        };
+        }
 
-        return clipboard;
+        return null;
+    },
+
+    /**
+     * 清空
+     */
+    clear() {
+        storage.removeItem(storageName);
     }
-);
+};

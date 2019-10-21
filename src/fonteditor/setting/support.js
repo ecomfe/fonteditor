@@ -3,15 +3,10 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import editor from './editor';
+import ie from './ie';
 
-define(
-    function (require) {
-
-        var support = {
-            editor: require('./editor'),
-            ie: require('./ie')
-        };
-
-        return support;
-    }
-);
+export default {
+    editor,
+    ie
+};

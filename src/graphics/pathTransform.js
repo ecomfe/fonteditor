@@ -13,8 +13,4 @@
  *  Y = x * b + y * d + f
  */
 
-define(
-    function (require) {
-        return require('fonteditor-core/graphics/pathTransform');
-    }
-);
+export {default} from 'fonteditor-core/graphics/pathTransform';

@@ -3,8 +3,24 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        return require('fonteditor-core/graphics/pathUtil');
-    }
-);
+import {
+    interpolate,
+    deInterpolate,
+    isClockWise,
+    getPathHash,
+    removeOverlapPoints,
+    makeLink,
+    scale,
+    clone
+} from 'fonteditor-core/graphics/pathUtil';
+
+export default {
+    interpolate,
+    deInterpolate,
+    isClockWise,
+    getPathHash,
+    removeOverlapPoints,
+    makeLink,
+    scale,
+    clone
+};

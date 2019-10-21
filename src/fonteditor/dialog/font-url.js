@@ -3,29 +3,28 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        var i18n = require('../i18n/i18n');
-        var tpl = ''
-            +   '<div class="input-group input-group-sm">'
-            +       '<span class="input-group-addon">' + i18n.lang.dialog_fonturl + '</span>'
-            +       '<input data-field="url" type="text" class="form-control">'
-            +   '</div>';
+import i18n from '../i18n/i18n';
+import setting from './setting';
 
-        return require('./setting').derive({
+const tpl = ''
+    +   '<div class="input-group input-group-sm">'
+    +       '<span class="input-group-addon">' + i18n.lang.dialog_fonturl + '</span>'
+    +       '<input data-field="url" type="text" class="form-control">'
+    +   '</div>';
 
-            title: i18n.lang.dialog_fonturl,
+export default setting.derive({
 
-            getTpl: function () {
-                return tpl;
-            },
+    title: i18n.lang.dialog_fonturl,
 
-            validate: function () {
-                var setting = this.getFields();
-                if (setting.url) {
-                    return setting.url;
-                }
-            }
-        });
+    getTpl() {
+        return tpl;
+    },
+
+    validate() {
+        let setting = this.getFields();
+        if (setting.url) {
+            return setting.url;
+        }
     }
-);
+});
+

@@ -1,42 +1,47 @@
 {
-    "author": "mkwiser",
-    "bugs": {
-        "url": "https://github.com/ecomfe/fonteditor/issues"
+  "author": "mkwiser",
+  "bugs": {
+    "url": "https://github.com/ecomfe/fonteditor/issues"
+  },
+  "contributors": [
+    {
+      "email": "kekee000@gmail.com",
+      "name": "kekee000"
     },
-    "contributors": [
-        {
-            "email": "kekee000@gmail.com",
-            "name": "kekee000"
-        },
-        {
-            "email": "junmer@foxmail.com",
-            "name": "junmer"
-        }
-    ],
-    "description": "ttf to woff,svg,eot convert, ttf adjust",
-    "scripts": {
-        "start": "edp webserver start",
-        "build": "sh build.sh",
-        "build-index": "node build/build-index.js",
-        "build-css": "node build/build-css.js"
-    },
-    "devDependencies": {
-            "less": "~2.0.0",
-            "q": "^1.2.0"
-    },
-    "homepage": "https://github.com/ecomfe/fonteditor",
-    "keywords": [
-        "font",
-        "ttf",
-        "woff",
-        "svg",
-        "eot"
-    ],
-    "license": "MIT",
-    "name": "fonteditor",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/ecomfe/fonteditor.git"
-    },
-    "version": "0.0.1"
+    {
+      "email": "junmer@foxmail.com",
+      "name": "junmer"
+    }
+  ],
+  "description": "ttf to woff,svg,eot convert, ttf adjust",
+  "scripts": {
+    "dev": "webpack-dev-server --open --config ./config/webpack.dev.js",
+    "build": "webpack --production --config ./config/webpack.prod.js"
+  },
+  "devDependencies": {
+    "fonteditor-core": "^2.0.3",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "~2.0.0",
+    "q": "^1.2.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
+  },
+  "homepage": "https://github.com/ecomfe/fonteditor",
+  "keywords": [
+    "font",
+    "ttf",
+    "woff",
+    "woff2",
+    "svg",
+    "eot"
+  ],
+  "license": "MIT",
+  "name": "fonteditor",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ecomfe/fonteditor.git"
+  },
+  "version": "1.0.1"
 }
