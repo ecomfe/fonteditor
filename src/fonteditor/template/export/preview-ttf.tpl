@@ -31,6 +31,7 @@
     font-family: '{%=fontFamily%}';
     src: url('{%=fontFamily%}.eot'); /* IE9*/
     src: url('{%=fontFamily%}.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('{%=fontFamily%}.woff2') format('woff2'), /* chrome、firefox、opera、Safari, Android, iOS */
     url('{%=fontFamily%}.woff') format('woff'), /* chrome、firefox */
     url('{%=fontFamily%}.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
     url('{%=fontFamily%}.svg#ux{%=fontFamily%}') format('svg'); /* iOS 4.1- */

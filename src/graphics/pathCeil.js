@@ -3,8 +3,4 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        return require('fonteditor-core/graphics/pathCeil');
-    }
-);
+export {default} from 'fonteditor-core/graphics/pathCeil';

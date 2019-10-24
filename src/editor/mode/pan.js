@@ -3,36 +3,29 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+export default {
 
-        var mode = {
+    drag(e) {
+        if (1 === e.which) {
+            let camera = this.render.camera;
+            this.render.move(camera.mx, camera.my);
+            this.render.refresh();
+        }
+    },
 
-            drag: function (e) {
-                if (1 === e.which) {
-                    var camera = this.render.camera;
-                    this.render.move(camera.mx, camera.my);
-                    this.render.refresh();
-                }
-            },
-
-            keyup: function (e) {
-                if (e.keyCode === 32) {
-                    this.setMode('bound');
-                }
-            },
+    keyup(e) {
+        if (e.keyCode === 32) {
+            this.setMode('bound');
+        }
+    },
 
 
-            begin: function () {
-                this.render.setCursor('pointer');
-            },
+    begin() {
+        this.render.setCursor('pointer');
+    },
 
 
-            end: function () {
-                this.render.setCursor('default');
-            }
-        };
-
-        return mode;
+    end() {
+        this.render.setCursor('default');
     }
-);
+};

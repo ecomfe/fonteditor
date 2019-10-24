@@ -3,275 +3,263 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import DataStore from 'common/DataStore';
 
-define(
-    function (require) {
+const storage = window.localStorage || window.sessionStorate;
 
-        var lang = require('common/lang');
-        var DataStore = require('common/DataStore');
-        var Resolver = require('common/promise');
+let projectDataStore;
+let project;
 
-        var storage = window.localStorage || window.sessionStorate;
-        var projectDataStore;
-        var readyPromise = new Resolver();
+const readyPromise = new Promise(resolve => {
+    if (DataStore.enabled) {
+        projectDataStore = new DataStore({
+            name: 'fonteditor-datastore',
+            storeName: 'project'
+        });
 
-        if (DataStore.enabled) {
-            projectDataStore = new DataStore({
-                name: 'fonteditor-datastore',
-                storeName: 'project'
+        // 由于indexDB在隐私模式下会被禁用，这里需要检查下
+        // 出错则不使用indexedDB
+        projectDataStore.open(function () {
+            resolve(project);
+        }, function () {
+            projectDataStore = null;
+            resolve(project);
+        });
+    }
+});
+
+
+project = {
+
+    /**
+     * 加载后的 Promise
+     *
+     * @return {Promise}
+     */
+    ready() {
+        return readyPromise;
+    },
+
+    /**
+     * 获取新项目的编号
+     *
+     * @return {string} 编号
+     */
+    getId() {
+        return ('' + Date.now());
+    },
+
+    /**
+     * 获取现有项目列表
+     *
+     * @return {Array} 现有项目列表
+     */
+    items() {
+        let list = storage.getItem('project-list');
+        return list ? JSON.parse(list).map(function (item) {
+            item.id = '' + item.id;
+            return item;
+        }) : [];
+    },
+
+    /**
+     * 添加一个项目
+     *
+     * @param {string} name 项目名称
+     * @param {Object} ttf ttfObject
+     * @param {Object} config 当前的项目配置
+     *
+     * @return {Array} 现有项目列表
+     */
+    add(name, ttf, config) {
+        let list = this.items();
+        let id = (config && config.id) || this.getId();
+        let item = {
+            name: name,
+            id: id
+        };
+        // 设置当前项目的配置
+        if (config) {
+            item.config = config;
+        }
+
+        list.push(item);
+        storage.setItem('project-list', JSON.stringify(list));
+
+        if (projectDataStore) {
+            return new Promise((resolve, reject) => {
+                projectDataStore.add(id, ttf, function () {
+                    resolve(id);
+                }, function () {
+                    reject(ttf);
+                });
             });
+        }
+        // 不支持 datastore 则使用localstorate存储
+        storage.setItem(id, JSON.stringify(ttf));
+        return Promise.resolve(id);
+    },
 
-            // 由于indexDB在隐私模式下会被禁用，这里需要检查下
-            // 出错则不使用indexedDB
-            projectDataStore.open(function () {
-                readyPromise.resolve(project)
-            }, function () {
-                projectDataStore = null;
-                readyPromise.resolve(project)
+    /**
+     * 更新一个项目
+     *
+     * @param {string} id 编号
+     * @param {Object} ttf ttf对象
+     * @param {Object} config 当前的项目配置
+     *
+     * @return {string} 项目编号
+     */
+    update(id, ttf, config) {
+        // 设置当前项目的配置
+        if (config) {
+            this.updateConfig(id, config);
+        }
+
+        if (projectDataStore) {
+            return new Promise((resolve, reject) => {
+                projectDataStore.update(id, ttf, function () {
+                    resolve(id);
+                }, function () {
+                    reject(id);
+                });
             });
         }
 
-        var project = {
+        // 不支持 datastore 则使用localstorate存储
+        storage.setItem(id, JSON.stringify(ttf));
+        return Promise.resolve(id);
+    },
 
-            /**
-             * 加载后的 Promise
-             * @return {Promise}
-             */
-            ready: function () {
-                return readyPromise.promise();
-            },
+    /**
+     * 删除一个项目
+     *
+     * @param {string} id 项目名称
+     * @param {boolean} force 是否强制删除，
+     * 有些项目数据损坏可以强制删除此项目索引
+     * @return {Array} 现有项目列表
+     */
+    remove(id, force) {
+        let list = this.items();
+        for (let i = list.length - 1; i >= 0; i--) {
+            if (list[i].id === id) {
+                storage.removeItem(list[i].id);
+                list.splice(i, 1);
+            }
+        }
 
-            /**
-             * 获取新项目的编号
-             *
-             * @return {string} 编号
-             */
-            getId: function () {
-                return ('' + Date.now());
-            },
-
-            /**
-             * 获取现有项目列表
-             *
-             * @return {Array} 现有项目列表
-             */
-            items: function () {
-                var list = storage.getItem('project-list');
-                return list ? JSON.parse(list).map(function (item) {
-                    item.id = '' + item.id;
-                    return item;
-                }) : [];
-            },
-
-            /**
-             * 添加一个项目
-             *
-             * @param {string} name 项目名称
-             * @param {Object} ttf ttfObject
-             * @param {Object} config 当前的项目配置
-             *
-             * @return {Array} 现有项目列表
-             */
-            add: function (name, ttf, config) {
-                var list = this.items();
-                var id = (config && config.id) || this.getId();
-                var item = {
-                    name: name,
-                    id: id
-                };
-                // 设置当前项目的配置
-                if (config) {
-                    item.config = config;
-                }
-
-                list.push(item);
-                storage.setItem('project-list', JSON.stringify(list));
-
-                if (projectDataStore) {
-                    var resolver = new Resolver();
-
-                    projectDataStore.add(id, ttf, function () {
-                        resolver.resolve(id);
-                    }, function () {
-                        resolver.reject(ttf);
-                    });
-
-                    return resolver.promise();
-                }
-                // 不支持 datastore 则使用localstorate存储
-                storage.setItem(id, JSON.stringify(ttf));
-                return Resolver.resolved(id);
-            },
-
-            /**
-             * 更新一个项目
-             *
-             * @param {string} id 编号
-             * @param {Object} ttf ttf对象
-             * @param {Object} config 当前的项目配置
-             *
-             * @return {string} 项目编号
-             */
-            update: function (id, ttf, config) {
-                // 设置当前项目的配置
-                if (config) {
-                    this.updateConfig(id, config);
-                }
-
-                if (projectDataStore) {
-                    var resolver = new Resolver();
-
-                    projectDataStore.update(id, ttf, function () {
-                        resolver.resolve(id);
-                    }, function () {
-                        resolver.reject(id);
-                    });
-
-                    return resolver.promise();
-                }
-
-                // 不支持 datastore 则使用localstorate存储
-                storage.setItem(id, JSON.stringify(ttf));
-                return Resolver.resolved(id);
-            },
-
-            /**
-             * 删除一个项目
-             *
-             * @param {string} id 项目名称
-             * @param {boolean} force 是否强制删除，
-             * 有些项目数据损坏可以强制删除此项目索引
-             * @return {Array} 现有项目列表
-             */
-            remove: function (id, force) {
-                var list = this.items();
-                for (var i = list.length - 1; i >= 0; i--) {
-                    if (list[i].id === id) {
-                        storage.removeItem(list[i].id);
-                        list.splice(i, 1);
-                    }
-                }
-
-                if (projectDataStore) {
-                    var resolver = new Resolver();
-
-                    projectDataStore.remove(id, function () {
-                        storage.setItem('project-list', JSON.stringify(list));
-                        resolver.resolve(list);
-                    }, function () {
-                        force && storage.setItem('project-list', JSON.stringify(list));
-                        resolver.reject(id);
-                    });
-
-                    return resolver.promise();
-                }
-
-                storage.setItem('project-list', JSON.stringify(list));
-                return Resolver.resolved(list);
-            },
-
-            /**
-             * 获取一个项目
-             *
-             * @param {string} id 项目编号
-             * @return {Object} 项目对象
-             */
-            get: function (id) {
-                var list = this.items();
-                for (var i = 0, l = list.length; i < l; i++) {
-                    if (list[i].id === id) {
-
-                        if (projectDataStore) {
-                            var resolver = new Resolver();
-                            /* eslint-disable no-loop-func */
-                            projectDataStore.get(id, function (data) {
-                                resolver.resolve(data);
-                            }, function () {
-                                resolver.reject(id);
-                            });
-
-                            return resolver.promise();
-                        }
-
-                        var item = storage.getItem(list[i].id);
-                        if (item) {
-                            return Resolver.resolved(JSON.parse(item));
-                        }
-                    }
-                }
-
-                return Resolver.rejected(id);
-            },
-
-            /**
-             * 获取项目配置
-             *
-             * @param {string} id 项目编号
-             * @return {Object} 项目配置
-             */
-            getConfig: function (id) {
-                var list = this.items();
-                var item = list.filter(function (item) {
-                    return item.id === id;
-                })[0];
-
-                if (!item) {
-                    return false;
-                }
-
-                return item.config || {};
-            },
-
-            /**
-             * 更新项目配置
-             *
-             * @param {string} id 项目编号
-             * @param {Object} config 配置信息
-             * @return {boolean} 是否更新成功
-             */
-            updateConfig: function (id, config) {
-                var list = this.items();
-                var finded = false;
-                for (var i = list.length - 1; i >= 0; i--) {
-                    if (list[i].id === id) {
-                        if (list[i].config) {
-                            lang.extend(list[i].config, config);
-                        }
-                        else {
-                            list[i].config = config;
-                        }
-                        finded = true;
-                        break;
-                    }
-                }
-
-                if (finded) {
+        if (projectDataStore) {
+            return new Promise((resolve, reject) => {
+                projectDataStore.remove(id, function () {
                     storage.setItem('project-list', JSON.stringify(list));
-                }
-                return finded;
-            },
+                    resolve(list);
+                }, function () {
+                    force && storage.setItem('project-list', JSON.stringify(list));
+                    reject(id);
+                });
+            });
+        }
+        storage.setItem('project-list', JSON.stringify(list));
+        return Promise.resolve(list);
+    },
 
-            /**
-             * 清空项目组
-             */
-            clear: function () {
-                var list = this.items();
+    /**
+     * 获取一个项目
+     *
+     * @param {string} id 项目编号
+     * @return {Object} 项目对象
+     */
+    get(id) {
+        let list = this.items();
+        for (let i = 0, l = list.length; i < l; i++) {
+            if (list[i].id === id) {
                 if (projectDataStore) {
-                    list.forEach(function (item) {
-                        projectDataStore.remove(item.id);
+                    return new Promise((resolve, reject) => {
+                        /* eslint-disable no-loop-func */
+                        projectDataStore.get(id, function (data) {
+                            resolve(data);
+                        }, function () {
+                            reject(id);
+                        });
                     });
+                }
+
+                let item = storage.getItem(list[i].id);
+                if (item) {
+                    return Promise.resolve(JSON.parse(item));
+                }
+            }
+        }
+
+        return Promise.reject(id);
+    },
+
+    /**
+     * 获取项目配置
+     *
+     * @param {string} id 项目编号
+     * @return {Object} 项目配置
+     */
+    getConfig(id) {
+        let list = this.items();
+        let item = list.filter(function (item) {
+            return item.id === id;
+        })[0];
+
+        if (!item) {
+            return false;
+        }
+
+        return item.config || {};
+    },
+
+    /**
+     * 更新项目配置
+     *
+     * @param {string} id 项目编号
+     * @param {Object} config 配置信息
+     * @return {boolean} 是否更新成功
+     */
+    updateConfig(id, config) {
+        let list = this.items();
+        let finded = false;
+        for (let i = list.length - 1; i >= 0; i--) {
+            if (list[i].id === id) {
+                if (list[i].config) {
+                    Object.assign(list[i].config, config);
                 }
                 else {
-                    list.forEach(function (item) {
-                        storage.removeItem(item.id);
-                    });
+                    list[i].config = config;
                 }
-
-                storage.removeItem('project-list');
+                finded = true;
+                break;
             }
+        }
 
-        };
+        if (finded) {
+            storage.setItem('project-list', JSON.stringify(list));
+        }
+        return finded;
+    },
 
-        return project;
+    /**
+     * 清空项目组
+     */
+    clear() {
+        let list = this.items();
+        if (projectDataStore) {
+            list.forEach(function (item) {
+                projectDataStore.remove(item.id);
+            });
+        }
+        else {
+            list.forEach(function (item) {
+                storage.removeItem(item.id);
+            });
+        }
+
+        storage.removeItem('project-list');
     }
-);
+};
+
+
+export default project;

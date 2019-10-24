@@ -4,39 +4,37 @@
  */
 
 
-define(
-    function (require) {
-        var i18n = require('../i18n/i18n');
-        var tpl = require('../template/dialog/setting-editor.tpl');
-        var lang = require('common/lang');
-        var program = require('../widget/program');
+import i18n from '../i18n/i18n';
+import setting from './setting';
+import lang from 'common/lang';
+import program from '../widget/program';
 
-        return require('./setting').derive({
+export default setting.derive({
 
-            title: i18n.lang.dialog_editor_setting,
+    title: i18n.lang.dialog_editor_setting,
 
-            getTpl: function () {
-                return tpl;
-            },
+    getTpl() {
+        let tpl = require('../template/dialog/setting-editor.tpl');
+        console.log(tpl);
+        return tpl;
+    },
 
-            set: function (setting) {
-                this.setting = lang.clone(setting);
-                this.setFields(this.setting);
-                var me = this;
-                $('#setting-editor-default').on('click', function (e) {
-                    e.preventDefault();
-                    me.setting = program.setting.getDefault('editor');
-                    me.setFields(me.setting);
-                    me.oldSetting = null;
-                });
-            },
-            onDispose: function () {
-                $('#setting-editor-default').off('click');
-            },
-            validate: function () {
-                return this.getFields(lang.clone(this.setting));
-            }
-
+    set(setting) {
+        this.setting = lang.clone(setting);
+        this.setFields(this.setting);
+        let me = this;
+        $('#setting-editor-default').on('click', function (e) {
+            e.preventDefault();
+            me.setting = program.setting.getDefault('editor');
+            me.setFields(me.setting);
+            me.oldSetting = null;
         });
+    },
+    onDispose() {
+        $('#setting-editor-default').off('click');
+    },
+    validate() {
+        return this.getFields(lang.clone(this.setting));
     }
-);
+
+});

@@ -3,19 +3,26 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        return {
-            circle: require('./circle'),
-            rect: require('./rect'),
-            roundrect: require('./roundrect'),
-            arrow: require('./arrow'),
-            star: require('./star'),
-            triangle: require('./triangle'),
-            heart: require('./heart'),
-            tel: require('./tel'),
-            du: require('./du'),
-            drop: require('./drop')
-        };
-    }
-);
+import circle from './circle';
+import rect from './rect';
+import roundrect from './roundrect';
+import arrow from './arrow';
+import star from './star';
+import triangle from './triangle';
+import heart from './heart';
+import tel from './tel';
+import du from './du';
+import drop from './drop';
+
+export default {
+    circle,
+    rect,
+    roundrect,
+    arrow,
+    star,
+    triangle,
+    heart,
+    tel,
+    du,
+    drop
+};

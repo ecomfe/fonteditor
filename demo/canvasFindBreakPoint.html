@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>canvas查找关键点</title>
-    <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <style>
 
@@ -51,22 +50,7 @@
 
     <div class="left"><canvas id="canvas"></canvas></div>
     <div class="right"><canvas id="canvas-glyf"></canvas></div>
-<script>
-    require.config({
-        baseUrl: '../src',
-        packages: [
-            {
-                name: 'fonteditor-core',
-                location: '../dep/fonteditor-core/src'
-            }
-        ],
-        paths: {
-            demo: '../demo/js',
-        }
-    });
-    define('jquery', $);
-</script>
 
-<script>require(['demo/canvasFindBreakPoint'])</script>
+
 </body>
 </html>

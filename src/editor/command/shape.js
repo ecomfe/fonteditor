@@ -3,179 +3,170 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+import pathsUtil from 'graphics/pathsUtil';
 
-        var pathsUtil = require('graphics/pathsUtil');
+export default {
 
+    /**
+     * 移除shape
+     *
+     * @param {Array} shapes 形状集合
+     */
+    removeshapes(shapes) {
+        let fontLayer = this.fontLayer;
+        shapes.forEach(function (shape) {
+            fontLayer.removeShape(shape);
+        });
+        fontLayer.refresh();
+        this.refreshSelected([]);
+        this.setMode();
+    },
 
-        return {
+    /**
+     * 反转shape
+     *
+     * @param {Array} shapes 形状集合
+     */
+    reversepoints(shapes) {
+        shapes.forEach(function (shape) {
+            shape.points = shape.points.reverse();
+        });
 
-            /**
-             * 移除shape
-             *
-             * @param {Array} shapes 形状集合
-             */
-            removeshapes: function (shapes) {
+        this.fontLayer.refresh();
+    },
 
-                var fontLayer = this.fontLayer;
-                shapes.forEach(function (shape) {
-                    fontLayer.removeShape(shape);
-                });
-                fontLayer.refresh();
-                this.refreshSelected([]);
-                this.setMode();
-            },
+    /**
+     * 设置shape到顶层
+     *
+     * @param {Array} shape 形状
+     */
+    topshape(shape) {
+        let index = this.fontLayer.shapes.indexOf(shape);
+        this.fontLayer.shapes.splice(index, 1);
+        this.fontLayer.shapes.push(shape);
+    },
 
-            /**
-             * 反转shape
-             *
-             * @param {Array} shapes 形状集合
-             */
-            reversepoints: function (shapes) {
-                shapes.forEach(function (shape) {
-                    shape.points = shape.points.reverse();
-                });
+    /**
+     * 设置shape到底层
+     *
+     * @param {Array} shape 形状
+     */
+    bottomshape(shape) {
+        let index = this.fontLayer.shapes.indexOf(shape);
+        this.fontLayer.shapes.splice(index, 1);
+        this.fontLayer.shapes.unshift(shape);
+    },
 
-                this.fontLayer.refresh();
-            },
+    /**
+     * 提升shape层级
+     *
+     * @param {Array} shape 形状
+     */
+    upshape(shape) {
+        let index = this.fontLayer.shapes.indexOf(shape);
+        this.fontLayer.shapes.splice(index, 1);
+        this.fontLayer.shapes.splice(index + 1, 0, shape);
+    },
 
-            /**
-             * 设置shape到顶层
-             *
-             * @param {Array} shape 形状
-             */
-            topshape: function (shape) {
-                var index = this.fontLayer.shapes.indexOf(shape);
-                this.fontLayer.shapes.splice(index, 1);
-                this.fontLayer.shapes.push(shape);
-            },
+    /**
+     * 降低shape层级
+     *
+     * @param {Array} shape 形状
+     */
+    downshape(shape) {
+        let index = this.fontLayer.shapes.indexOf(shape);
+        this.fontLayer.shapes.splice(index, 1);
+        this.fontLayer.shapes.splice(index - 1, 0, shape);
+    },
 
-            /**
-             * 设置shape到底层
-             *
-             * @param {Array} shape 形状
-             */
-            bottomshape: function (shape) {
-                var index = this.fontLayer.shapes.indexOf(shape);
-                this.fontLayer.shapes.splice(index, 1);
-                this.fontLayer.shapes.unshift(shape);
-            },
+    /**
+     * 剪切shapes
+     *
+     * @param {Array} shapes 形状集合
+     */
+    cutshapes(shapes) {
+        let cutedShapes = this.getShapes(shapes);
+        this.setClipBoard(cutedShapes);
+        let fontLayer = this.fontLayer;
+        shapes.forEach(function (shape) {
+            fontLayer.removeShape(shape);
+        });
+        fontLayer.refresh();
+        this.refreshSelected([]);
+    },
 
-            /**
-             * 提升shape层级
-             *
-             * @param {Array} shape 形状
-             */
-            upshape: function (shape) {
-                var index = this.fontLayer.shapes.indexOf(shape);
-                this.fontLayer.shapes.splice(index, 1);
-                this.fontLayer.shapes.splice(index + 1, 0, shape);
-            },
+    /**
+     * 复制shapes
+     *
+     * @param {Array} shapes 形状集合
+     */
+    copyshapes(shapes) {
+        shapes = this.getShapes(shapes);
+        this.setClipBoard(shapes);
+    },
 
-            /**
-             * 降低shape层级
-             *
-             * @param {Array} shape 形状
-             */
-            downshape: function (shape) {
-                var index = this.fontLayer.shapes.indexOf(shape);
-                this.fontLayer.shapes.splice(index, 1);
-                this.fontLayer.shapes.splice(index - 1, 0, shape);
-            },
+    /**
+     * 粘贴shapes
+     *
+     * @param {Array} shapes 形状集合
+     * @param {Object=} pos 指定的位置
+     * @return {boolean} `false`或者`undefined`
+     */
+    pasteshapes(shapes, pos) {
 
-            /**
-             * 剪切shapes
-             *
-             * @param {Array} shapes 形状集合
-             */
-            cutshapes: function (shapes) {
-                var cutedShapes = this.getShapes(shapes);
-                this.setClipBoard(cutedShapes);
-                var fontLayer = this.fontLayer;
-                shapes.forEach(function (shape) {
-                    fontLayer.removeShape(shape);
-                });
-                fontLayer.refresh();
-                this.refreshSelected([]);
-            },
+        if (!shapes || !shapes.length) {
+            return false;
+        }
 
-            /**
-             * 复制shapes
-             *
-             * @param {Array} shapes 形状集合
-             */
-            copyshapes: function (shapes) {
-                shapes = this.getShapes(shapes);
-                this.setClipBoard(shapes);
-            },
+        if (pos) {
+            let paths = shapes.map(function (shape) {
+                return shape.points;
+            });
+            // 需要根据坐标原点以及缩放换算成鼠标位置移动
+            let origin = this.axis;
+            let scale = this.render.camera.scale;
+            let x = (pos.x - origin.x) / scale;
+            let y = (origin.y - pos.y) / scale;
 
-            /**
-             * 粘贴shapes
-             *
-             * @param {Array} shapes 形状集合
-             * @param {Object=} pos 指定的位置
-             * @return {boolean} `false`或者`undefined`
-             */
-            pasteshapes: function (shapes, pos) {
-
-                if (!shapes || !shapes.length) {
-                    return false;
-                }
-
-                if (pos) {
-                    var paths = shapes.map(function (shape) {
-                        return shape.points;
-                    });
-                    // 需要根据坐标原点以及缩放换算成鼠标位置移动
-                    var origin = this.axis;
-                    var scale = this.render.camera.scale;
-                    var x = (pos.x - origin.x) / scale;
-                    var y = (origin.y - pos.y) / scale;
-
-                    pathsUtil.move(paths, x, y);
-                }
+            pathsUtil.move(paths, x, y);
+        }
 
 
-                this.addShapes(shapes);
-                this.setMode('shapes', shapes);
-            },
+        this.addShapes(shapes);
+        this.setMode('shapes', shapes);
+    },
 
-            /**
-             * 增加shapes
-             *
-             * @param {Array} shapes 形状集合
-             * @param {boolean} selected 是否选中
-             */
-            addshapes: function (shapes, selected) {
-                this.addShapes(shapes);
-                selected && this.setSelected(shapes);
-            },
+    /**
+     * 增加shapes
+     *
+     * @param {Array} shapes 形状集合
+     * @param {boolean} selected 是否选中
+     */
+    addshapes(shapes, selected) {
+        this.addShapes(shapes);
+        selected && this.setSelected(shapes);
+    },
 
-            /**
-             * 增加轮廓
-             *
-             * @param {Array} contours 轮廓集合
-             * @param {Object} options 选项
-             * @param {number} scale 缩放级别
-             * @param {boolean} selected 是否选中
-             */
-            addcontours: function (contours, options) {
-                options = options || {};
+    /**
+     * 增加轮廓
+     *
+     * @param {Array} contours 轮廓集合
+     * @param {Object} options 选项
+     * @param {number} scale 缩放级别
+     * @param {boolean} selected 是否选中
+     */
+    addcontours(contours, options = {}) {
+        // 是否翻转图像
+        if (options.flip) {
+            pathsUtil.flip(contours);
+        }
 
-                // 是否翻转图像
-                if (options.flip) {
-                    pathsUtil.flip(contours);
-                }
+        if (options.mirror) {
+            pathsUtil.mirror(contours);
+        }
 
-                if (options.mirror) {
-                    pathsUtil.mirror(contours);
-                }
+        let shapes = this.addContours(contours, options.scale);
 
-                var shapes = this.addContours(contours, options.scale);
-
-                options.selected && this.setSelected(shapes);
-            }
-        };
+        options.selected && this.setSelected(shapes);
     }
-);
+};

@@ -3,70 +3,60 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import shape from './Shape';
+import drawPath from '../util/drawPath';
 
-define(
-    function (require) {
+export default shape.derive({
 
-        var ShapeConstructor = require('./Shape');
-        var drawPath = require('../util/drawPath');
+    type: 'glyf',
 
-        var proto = {
+    adjust(shape, camera) {
+        let center = camera.center;
+        let ratio = camera.ratio;
 
-            type: 'glyf',
+        shape.x = ratio * (shape.x - center.x) + center.x;
+        shape.y = ratio * (shape.y - center.y) + center.y;
 
-            adjust: function (shape, camera) {
-                var center = camera.center;
-                var ratio = camera.ratio;
+        return shape;
 
-                shape.x = ratio * (shape.x - center.x) + center.x;
-                shape.y = ratio * (shape.y - center.y) + center.y;
+    },
 
-                return shape;
+    move(shape, mx, my) {
+        shape.x += mx;
+        shape.y += my;
 
-            },
+        return shape;
+    },
 
-            move: function (shape, mx, my) {
-                shape.x += mx;
-                shape.y += my;
+    getRect(shape) {
+        return false;
+    },
 
-                return shape;
-            },
+    isIn(shape, x, y) {
+        return false;
+    },
 
-            getRect: function (shape) {
-                return false;
-            },
+    draw(ctx, shape, camera) {
 
-            isIn: function (shape, x, y) {
-                return false;
-            },
+        ctx.save();
+        ctx.translate(shape.x, shape.y);
+        ctx.scale(camera.scale, -camera.scale);
 
-            draw: function (ctx, shape, camera) {
+        let transform = shape.transform;
+        ctx.transform(
+            transform.a,
+            transform.b,
+            transform.c,
+            transform.d,
+            transform.e,
+            transform.f
+        );
 
-                ctx.save();
-                ctx.translate(shape.x, shape.y);
-                ctx.scale(camera.scale, -camera.scale);
+        let contours = shape.glyf.contours;
+        for (let i = 0, l = contours.length; i < l; i++) {
+            drawPath(ctx, contours[i]);
+        }
 
-                var transform = shape.transform;
-                ctx.transform(
-                    transform.a,
-                    transform.b,
-                    transform.c,
-                    transform.d,
-                    transform.e,
-                    transform.f
-                );
-
-                var contours = shape.glyf.contours;
-                for (var i = 0, l = contours.length; i < l; i++) {
-                    drawPath(ctx, contours[i]);
-                }
-
-                ctx.restore();
-            }
-        };
-
-
-
-        return ShapeConstructor.derive(proto);
+        ctx.restore();
     }
-);
+});

@@ -2,59 +2,48 @@
  * @file 坐标轴绘制
  * @author mengke01(kekee000@gmail.com)
  */
+import shape from './Shape';
+import drawAxis from '../util/drawAxis';
 
+export default shape.derive({
 
-define(
-    function (require) {
+    type: 'axis',
 
-        var drawAxis = require('../util/drawAxis');
+    adjust(shape, camera) {
+        let center = camera.center;
+        let ratio = camera.ratio;
 
-        var proto = {
+        shape.unitsPerEm *= ratio;
 
-            type: 'axis',
+        let metrics = shape.metrics;
+        Object.keys(metrics).forEach(function (line) {
+            metrics[line] *= ratio;
+        });
 
-            adjust: function (shape, camera) {
-                var center = camera.center;
-                var ratio = camera.ratio;
+        shape.x = ratio * (shape.x - center.x) + center.x;
+        shape.y = ratio * (shape.y - center.y) + center.y;
 
-                shape.unitsPerEm *= ratio;
+        return shape;
+    },
 
-                var metrics = shape.metrics;
-                Object.keys(metrics).forEach(function (line) {
-                    metrics[line] *= ratio;
-                });
+    isIn(shape, x, y) {
+        return false;
+    },
 
-                shape.x = ratio * (shape.x - center.x) + center.x;
-                shape.y = ratio * (shape.y - center.y) + center.y;
-
-                return shape;
-            },
-
-            isIn: function (shape, x, y) {
-                return false;
-            },
-
-            getBound: function (shape) {
-                return {
-                    x: shape.x,
-                    y: shape.y,
-                    width: 0,
-                    height: 0
-                };
-            },
-
-            draw: function (ctx, shape, camera) {
-
-                shape.scale = camera.scale;
-                ctx.save();
-                drawAxis(ctx, shape);
-                ctx.restore();
-                ctx.beginPath();
-            }
+    getBound(shape) {
+        return {
+            x: shape.x,
+            y: shape.y,
+            width: 0,
+            height: 0
         };
+    },
 
-
-
-        return require('./Shape').derive(proto);
+    draw(ctx, shape, camera) {
+        shape.scale = camera.scale;
+        ctx.save();
+        drawAxis(ctx, shape);
+        ctx.restore();
+        ctx.beginPath();
     }
-);
+});

@@ -3,50 +3,35 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import program from './program';
+import syncStatus from './sync-status';
 
-define(function (require) {
-    var lang = require('common/lang');
-    var Resolver = require('common/promise');
-    var program = require('./program');
-    var syncStatus = require('./sync-status');
-
-    var PUSH_TIME_OUT = 10000; // 同步超时时间;
-    var formSubmitId = 0;
+const PUSH_TIME_OUT = 10000; // 同步超时时间;
+let formSubmitId = 0;
 
 
-    function createSubmitForm(data) {
-        var form = document.createElement('form');
-        form.id = 'form_sync_' + (formSubmitId++);
-        form.target = 'sync-frame';
-        form.method = 'post';
-        // 默认为push操作
-        form.action = this.url + (~this.url.indexOf('?') ? '&' : '?') + 'action=push';
-        // 设置成功回调地址
-        data.callbackUrl = program.config.proxyUrl + '?callback=' + this.callback;
+function createSubmitForm(data) {
+    var form = document.createElement('form');
+    form.id = 'form_sync_' + (formSubmitId++);
+    form.target = 'sync-frame';
+    form.method = 'post';
+    // 默认为push操作
+    form.action = this.url + (~this.url.indexOf('?') ? '&' : '?') + 'action=push';
+    // 设置成功回调地址
+    data.callbackUrl = program.config.proxyUrl + '?callback=' + this.callback;
 
-        Object.keys(data).forEach(function (key) {
-            var element = document.createElement('input');
-            element.type = 'hidden';
-            element.name = key;
-            element.value = data[key];
-            form.appendChild(element);
-        });
-        document.body.appendChild(form);
-        return form;
-    }
+    Object.keys(data).forEach(function (key) {
+        var element = document.createElement('input');
+        element.type = 'hidden';
+        element.name = key;
+        element.value = data[key];
+        form.appendChild(element);
+    });
+    document.body.appendChild(form);
+    return form;
+}
 
-    function onSubmitCallback(data) {
-        this.resolver && this.resolver.resolve(data);
-        this.dispose();
-    }
-
-    function onSubmitTimeout() {
-        this.resolver && this.resolver.reject({
-            status: syncStatus.pushNoResponse,
-            reason: 'sync time out!'
-        });
-        this.dispose();
-    }
+export default class SyncForm {
 
     /**
      * 用于同步的form表单对象
@@ -55,8 +40,7 @@ define(function (require) {
      * @param {Object} options 同步参数
      * @param {number} options.serviceStatus 当前服务器的同步状态
      */
-    function SyncForm(url, options) {
-        options = options || {};
+    constructor(url, options = {}) {
         this.url = url;
         this.serviceStatus = options.serviceStatus || 0;
     }
@@ -65,47 +49,58 @@ define(function (require) {
      * 提交同步表单
      *
      * @param {Object} data 用于同步的数据
-     * @return {promise}
+     * @return {Promise}
      */
-    SyncForm.prototype.submit = function (data) {
+    submit(data) {
         this.callback = 'script_sync_' + (formSubmitId++);
-        window[this.callback] = $.proxy(onSubmitCallback, this);
-        var form = createSubmitForm.call(this, data);
+
+        const form = createSubmitForm.call(this, data);
         form.submit();
         document.body.removeChild(form);
-        // 如果推送服务无响应，则直接返回成功
-        if (this.serviceStatus & syncStatus.pushNoResponse) {
-            delete window[this.callback];
-            return Resolver.resolved({
-                status: 0
-            });
-        }
-        this.timer = setTimeout($.proxy(onSubmitTimeout, this), PUSH_TIME_OUT);
-        this.resolver = new Resolver();
-        return this.resolver.promise();
-    };
+
+        return new Promise((resolve, reject) => {
+            window[this.callback] = data => {
+                resolve(data);
+                this.dispose();
+            };
+
+            // 如果推送服务无响应，则直接返回成功
+            if (this.serviceStatus & syncStatus.pushNoResponse) {
+                delete window[this.callback];
+                resolve({
+                    status: 0
+                });
+                return;
+            }
+
+            this.timer = setTimeout(() => {
+                reject({
+                    status: syncStatus.pushNoResponse,
+                    reason: 'sync time out!'
+                });
+                this.dispose();
+            }, PUSH_TIME_OUT);
+        });
+    }
 
     /**
      * 重置表单，用于下次提交
      *
      * @return {SyncForm}
      */
-    SyncForm.prototype.reset = function () {
+    reset() {
         clearTimeout(this.timer);
         if (this.callback) {
             delete window[this.callback];
             delete this.callback;
         }
-        delete this.resolver;
         return this;
-    };
+    }
 
     /**
      * 注销
      */
-    SyncForm.prototype.dispose = function () {
+    dispose() {
         this.reset();
-    };
-
-    return SyncForm;
-});
+    }
+}

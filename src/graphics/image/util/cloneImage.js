@@ -4,16 +4,12 @@
  */
 
 
-define(
-    function (require) {
-        return function (imageData) {
-            return {
-                width: imageData.width,
-                height: imageData.height,
-                gray: imageData.gray,
-                binarize: imageData.binarize,
-                data: imageData.data.slice(0)
-            };
-        };
-    }
-);
+export default function (imageData) {
+    return {
+        width: imageData.width,
+        height: imageData.height,
+        gray: imageData.gray,
+        binarize: imageData.binarize,
+        data: imageData.data.slice(0)
+    };
+}

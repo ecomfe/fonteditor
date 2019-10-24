@@ -3,119 +3,110 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import observable from 'common/observable';
+import loading from './loading';
 
-define(
-    function (require) {
+function bindClick(components) {
+    let me = this;
 
-        var observable = require('common/observable');
+    document.body.addEventListener('click', function (e) {
 
-
-        function bindClick(components) {
-            var me = this;
-
-            document.body.addEventListener('click', function (e) {
-
-                if (!me.listening) {
-                    return;
-                }
-
-                // 监听查看器
-                if (components.viewer === e.target || components.viewer.contains(e.target)) {
-                    me.viewer.focus();
-                }
-                else {
-                    me.viewer.blur();
-                }
-
-                // 监听编辑器
-                if (components.editor) {
-                    if (components.editor === e.target || components.editor.contains(e.target)) {
-                        me.editor.focus();
-                    }
-                    else {
-                        me.editor.blur();
-                    }
-                }
-            });
+        if (!me.listening) {
+            return;
         }
 
-        /**
-         * 绑定键盘事件
-         */
-        function bindKey() {
-            var me = this;
-
-            document.body.addEventListener('keydown', function (e) {
-
-                if (!me.listening) {
-                    return;
-                }
-
-                e.ctrl = e.ctrlKey || e.metaKey;
-
-                // 全选
-                if (65 === e.keyCode && e.ctrl) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-                // 功能键
-                if (e.keyCode >= 112 && e.keyCode <= 119 && e.keyCode !== 116) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    me.fire('function', {
-                        keyCode: e.keyCode
-                    });
-                }
-                // 保存
-                else if (83 === e.keyCode && e.ctrl) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (e.shiftKey) {
-                        me.fire('save', {
-                            saveType: 'force'
-                        });
-                    }
-                    else {
-                        me.fire('save');
-                    }
-                }
-                // 粘贴
-                else if ((86 === e.keyCode && e.ctrl)) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    me.fire('paste');
-                }
-            });
+        // 监听查看器
+        if (components.viewer === e.target || components.viewer.contains(e.target)) {
+            me.viewer.focus();
+        }
+        else {
+            me.viewer.blur();
         }
 
-        var program = {
+        // 监听编辑器
+        if (components.editor) {
+            if (components.editor === e.target || components.editor.contains(e.target)) {
+                me.editor.focus();
+            }
+            else {
+                me.editor.blur();
+            }
+        }
+    });
+}
 
-            /**
-             * 初始化
-             *
-             * @param {HTMLElement} components 主面板元素
-             */
-            init: function (components) {
-                bindClick.call(this, components);
-                bindKey.call(this, components);
-            },
+/**
+ * 绑定键盘事件
+ */
+function bindKey() {
+    let me = this;
 
-            /**
-             * 暂存对象
-             *
-             * @type {Object}
-             */
-            data: {},
+    document.body.addEventListener('keydown', function (e) {
 
-            setting: {},
+        if (!me.listening) {
+            return;
+        }
 
-            listening: true, // 正在监听事件
+        e.ctrl = e.ctrlKey || e.metaKey;
 
-            loading: require('./loading') // loading 对象
-        };
+        // 全选
+        if (65 === e.keyCode && e.ctrl) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        // 功能键
+        if (e.keyCode >= 112 && e.keyCode <= 119 && e.keyCode !== 116) {
+            e.preventDefault();
+            e.stopPropagation();
+            me.fire('function', {
+                keyCode: e.keyCode
+            });
+        }
+        // 保存
+        else if (83 === e.keyCode && e.ctrl) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.shiftKey) {
+                me.fire('save', {
+                    saveType: 'force'
+                });
+            }
+            else {
+                me.fire('save');
+            }
+        }
+        // 粘贴
+        else if ((86 === e.keyCode && e.ctrl)) {
+            e.preventDefault();
+            e.stopPropagation();
+            me.fire('paste');
+        }
+    });
+}
 
-        observable.mixin(program);
+const program = {
 
-        return program;
-    }
-);
+    /**
+     * 初始化
+     *
+     * @param {HTMLElement} components 主面板元素
+     */
+    init: function (components) {
+        bindClick.call(this, components);
+        bindKey.call(this, components);
+    },
+
+    /**
+     * 暂存对象
+     *
+     * @type {Object}
+     */
+    data: {},
+    setting: {},
+    listening: true, // 正在监听事件
+    loading // loading 对象
+};
+
+observable.mixin(program);
+
+export default program;

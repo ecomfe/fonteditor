@@ -3,34 +3,28 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+import shape from './Shape';
+import drawGraduation from '../util/drawGraduation';
 
-        var drawGraduation = require('../util/drawGraduation');
+export default shape.derive({
 
-        var proto = {
+    type: 'graduation',
 
-            type: 'graduation',
+    adjust(shape, camera) {
+        return shape;
+    },
 
-            adjust: function (shape, camera) {
-                return shape;
-            },
+    isIn(shape, x, y) {
+        return false;
+    },
 
-            isIn: function (shape, x, y) {
-                return false;
-            },
+    draw(ctx, shape, camera) {
 
-            draw: function (ctx, shape, camera) {
-
-                shape.scale = camera.scale;
-                ctx.save();
-                // 绘制刻度线
-                drawGraduation(ctx, shape.config);
-                ctx.restore();
-                ctx.beginPath();
-            }
-        };
-
-        return require('./Shape').derive(proto);
+        shape.scale = camera.scale;
+        ctx.save();
+        // 绘制刻度线
+        drawGraduation(ctx, shape.config);
+        ctx.restore();
+        ctx.beginPath();
     }
-);
+});

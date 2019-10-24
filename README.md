@@ -8,44 +8,23 @@ fonteditor 在线ttf字体编辑器
 
 ### 开发:
 
-* fonteditor依赖[fonteditor-core](https://github.com/kekee000/fonteditor-core)项目，需要在dep目录引入`fonteditor-core`。
-
 ```
-cd ./dep
-git clone https://github.com/kekee000/fonteditor-core
+npm install && npm run dev
 ```
 
-* `index.tpl`为入口模板文件，若要修改`index.tpl`需要执行以下命令来生成`index.html`和`index-en.html`入口文件。
-
-```
-node ./build/build-index.js
-```
-
-* `less`文件修改之后使用如下脚本编译：
-
-```
-node ./build/build-css.js
-```
-
-* 使用`edp`对fonteditor进行调试
-
-
-```
-edp webserver start
-```
+* `index.tpl`为入口模板文件，根据`index.tpl`生成`index.html`和`index-en.html`入口文件。
+* jszip模块3.0 api有变动，若要升级，需要测试和修改导出zip模式
 
 ### 编译:
 
 ```
-sh build.sh
+npm run build
 ```
 
 ### 相关项目
 
 
 在线编辑器核心: [fonteditor-core](https://github.com/kekee000/fonteditor-core)
-
-在线编辑器node版: [fonteditor-ttf](https://github.com/kekee000/fonteditor-ttf)
 
 
 ## release log:
@@ -104,3 +83,7 @@ sh build.sh
 26. 2016-3-22 增加字形旋转吸附，调整配色.
 
 27. 2016-4-18 更新新lib库，优化错误提示体验.
+
+28. 2019-10-14 使用es6 module 进行重构.
+
+29. 2019-10-24 支持woff2读取和写入.

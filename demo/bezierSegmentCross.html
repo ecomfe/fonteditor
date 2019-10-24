@@ -40,22 +40,5 @@
     <div class="point" data-index="3"></div>
     <div class="point" data-index="4"></div>
     <canvas id="canvas" width="800" height="800"></canvas>
-<script>
-    require.config({
-        baseUrl: '../src',
-        packages: [
-            {
-                name: 'fonteditor-core',
-                location: '../dep/fonteditor-core/src'
-            }
-        ],
-        paths: {
-            demo: '../demo/js',
-        }
-    });
-    define('jquery', $);
-</script>
-
-<script>require(['demo/bezierSegmentCross'])</script>
 </body>
 </html>

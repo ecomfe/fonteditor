@@ -94,5 +94,6 @@
   <div class="input-group input-group-sm">
     <span class="input-group-addon">${lang.dialog_savesetting}</span>
     <span class="form-control"><input data-field="saveSetting" type="checkbox"></span>
-    </div> <a href="#" id="setting-editor-default">${lang.dialog_resetsetting}</a>
-  </div>
+    </div>
+    <a href="#" id="setting-editor-default">${lang.dialog_resetsetting}</a>
+</div>

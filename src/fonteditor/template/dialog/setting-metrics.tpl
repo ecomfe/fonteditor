@@ -178,4 +178,3 @@
 
 <label for="panose-bFamilyType">panose</label>
 <div class="form-inline  column-3 panose-inline">${panoseOptions}</div>
-</div>

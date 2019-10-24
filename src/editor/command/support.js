@@ -3,18 +3,19 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import shape from './shape';
+import transform from './transform';
+import align from './align';
+import join from './join';
+import referenceline from './referenceline';
+import editor from './editor';
 
-define(
-    function (require) {
-        var lang = require('common/lang');
-        var support = {};
-
-        lang.extend(support, require('./shape'));
-        lang.extend(support, require('./transform'));
-        lang.extend(support, require('./align'));
-        lang.extend(support, require('./join'));
-        lang.extend(support, require('./referenceline'));
-        lang.extend(support, require('./editor'));
-        return support;
-    }
-);
+export default {
+    ...shape,
+    ...transform,
+    ...align,
+    ...join,
+    ...referenceline,
+    ...shape,
+    ...editor
+};

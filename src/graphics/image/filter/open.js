@@ -5,15 +5,10 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
+import dilate from './dilate';
+import erode from './erode';
 
-define(
-    function (require) {
+export default function (imageData, mode, radius) {
+    return dilate(erode(imageData, mode, radius));
+}
 
-        var dilate = require('./dilate');
-        var erode = require('./erode');
-
-        return function (imageData, mode, radius) {
-            return dilate(erode(imageData, mode, radius));
-        };
-    }
-);

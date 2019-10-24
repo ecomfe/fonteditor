@@ -3,24 +3,30 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+import circle from './Circle';
+import cpoint from './CirclePoint';
+import point from './Point';
+import rect from './Rect';
+import polygon from './Polygon';
+import font from './Font';
+import path from './Path';
+import axis from './Axis';
+import graduation from './Graduation';
+import line from './Line';
+import beziercurve from './BezierCurve';
+import gridarrow from './GridArrow';
 
-        var support = {
-            circle: require('./Circle'),
-            cpoint: require('./CirclePoint'),
-            point: require('./Point'),
-            rect: require('./Rect'),
-            polygon: require('./Polygon'),
-            font: require('./Font'),
-            path: require('./Path'),
-            axis: require('./Axis'),
-            graduation: require('./Graduation'),
-            line: require('./Line'),
-            beziercurve: require('./BezierCurve'),
-            gridarrow: require('./GridArrow')
-        };
-
-        return support;
-    }
-);
+export default {
+    circle,
+    cpoint,
+    point,
+    rect,
+    polygon,
+    font,
+    path,
+    axis,
+    graduation,
+    line,
+    beziercurve,
+    gridarrow
+};

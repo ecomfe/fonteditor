@@ -3,46 +3,43 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
-        var i18n = require('../i18n/i18n');
-        var string = require('common/string');
-        var onlineList = require('../data/online-font');
+import string from 'common/string';
+import i18n from '../i18n/i18n';
+import setting from './setting';
+import onlineList from '../data/online-font';
 
-        return require('./setting').derive({
+export default setting.derive({
 
-            title: i18n.lang.dialog_onlinefont,
-            nofooter: true,
+    title: i18n.lang.dialog_onlinefont,
+    nofooter: true,
 
-            getTpl: function () {
+    getTpl() {
 
-                var str = '<div class="list-group list-font-online">';
-                onlineList.forEach(function (item, index) {
-                    str += '<a data-url="' + item.url + '" href="'
-                        +       item.url + '" class="list-group-item">'
-                        +       '<span class="from">' + string.encodeHTML(item.from) + '</span>'
-                        +       (index + 1) + '. '
-                        +       string.encodeHTML(item.name)
-                        +  '</a>';
-                });
+        let str = '<div class="list-group list-font-online">';
+        onlineList.forEach(function (item, index) {
+            str += '<a data-url="' + item.url + '" href="'
+                +       item.url + '" class="list-group-item">'
+                +       '<span class="from">' + string.encodeHTML(item.from) + '</span>'
+                +       (index + 1) + '. '
+                +       string.encodeHTML(item.name)
+                +  '</a>';
+        });
 
-                str += '</div>';
+        str += '</div>';
 
-                return str;
-            },
+        return str;
+    },
 
-            set: function () {
-                var me = this;
-                var dialog = this.getDialog();
-                dialog.find('.list-group').on('click', '.list-group-item', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var url = $(this).attr('data-url');
-                    dialog.find('.list-group').off('click', '.list-group-item');
-                    me.options.onChange && me.options.onChange.call(this, decodeURIComponent(url));
-                    $('#model-dialog').modal('hide');
-                });
-            }
+    set() {
+        let me = this;
+        let dialog = this.getDialog();
+        dialog.find('.list-group').on('click', '.list-group-item', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let url = $(this).attr('data-url');
+            dialog.find('.list-group').off('click', '.list-group-item');
+            me.options.onChange && me.options.onChange.call(this, decodeURIComponent(url));
+            $('#model-dialog').modal('hide');
         });
     }
-);
+});
