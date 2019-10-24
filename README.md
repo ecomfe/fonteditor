@@ -21,6 +21,18 @@ npm install && npm run dev
 npm run build
 ```
 
+### 测试:
+
+```
+npm run test
+```
+
+### DEMO:
+
+```
+npm run demo
+```
+
 ### 相关项目
 
 

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>canvas读取图片</title>
-    <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <style>
         body {
@@ -45,22 +44,6 @@
     <div id="points" width="800" height="800"></div>
     <canvas id="canvas" width="800" height="800"></canvas>
     <div id="points-break"></div>
-<script>
-    require.config({
-        baseUrl: '../src',
-        packages: [
-            {
-                name: 'fonteditor-core',
-                location: '../dep/fonteditor-core/src'
-            }
-        ],
-        paths: {
-            demo: '../demo/js',
-        }
-    });
-    define('jquery', $);
-</script>
 
-<script>require(['demo/fitContours'])</script>
 </body>
 </html>

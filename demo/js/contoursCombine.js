@@ -8,7 +8,7 @@
 
 import lang from 'common/lang';
 import editor from 'editor/main';
-import shape_baidu from 'demo/../data/contours-2';
+const shape_baidu = require('../data/contours-2');
 
 let currentEditor;
 

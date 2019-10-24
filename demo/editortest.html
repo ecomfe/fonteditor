@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>测试editor</title>
-    <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <script src="../dep/paper-full.js"></script>
     <script src="../dep/hidpi-canvas.js"></script>
@@ -11,23 +10,6 @@
     <style id="font-face"></style>
 </head>
 <body>
-    <script>
-        require.config({
-            baseUrl: '../src',
-            packages: [
-                {
-                    name: 'fonteditor-core',
-                    location: '../dep/fonteditor-core/src'
-                }
-            ],
-            paths: {
-                demo: '../demo/js',
-            }
-        });
-        define('jquery', $);
-        paper.install(window);
-        define('paper', paper);
-    </script>
 
 
     <div class="pan-left">
@@ -48,10 +30,5 @@
     </div>
 
     <div id="render-view" class="render-view glyf-editor" oncontextMenu="return false"></div>
-
-    <script>
-        require(['demo/editortest']);
-    </script>
-
 </body>
 </html>

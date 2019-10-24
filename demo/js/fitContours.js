@@ -3,56 +3,49 @@
  * @author mengke01(kekee000@gmail.com)
  */
 
-define(
-    function (require) {
+import fitContour from 'graphics/image/contour/fitContour';
+import drawPath from 'render/util/drawPath';
+import pathUtil from 'graphics/pathUtil';
 
-        var fitContour = require('graphics/image/contour/fitContour');
-        var data = require('demo/../data/image-contours5');
-        var drawPath = require('render/util/drawPath');
-        var pathUtil = require('graphics/pathUtil');
+const data = require('../data/image-contours5');
+const entry = {
 
-        var entry = {
+    /**
+     * 初始化
+     */
+    init() {
 
-            /**
-             * 初始化
-             */
-            init: function () {
+        let html = '';
+        let contours = [];
+        data.forEach(function (points) {
 
-                var html = '';
-                var contours = [];
-                data.forEach(function(points) {
+            points.forEach(function (p) {
+                html += '<i style="left:' + p.x + 'px;top:' + p.y + 'px;"></i>';
+            });
 
-                    points.forEach(function (p) {
-                        html += '<i style="left:'+p.x+'px;top:'+p.y+'px;"></i>';
-                    });
-
-                    points = pathUtil.scale(points, 2);
-                    contours.push(pathUtil.scale(fitContour(points, 2), 0.5));
-                    points = pathUtil.scale(points, 0.5);
-                });
+            points = pathUtil.scale(points, 2);
+            contours.push(pathUtil.scale(fitContour(points, 2), 0.5));
+            points = pathUtil.scale(points, 0.5);
+        });
 
 
-                $('#points').html(html);
+        $('#points').html(html);
 
-                html = '';
+        html = '';
 
-                var ctx = $('#canvas').get(0).getContext('2d');
-                ctx.strokeStyle = 'pink';
+        let ctx = $('#canvas').get(0).getContext('2d');
+        ctx.strokeStyle = 'pink';
 
-                contours.forEach(function (contour) {
-                    for (var i = 0, l = contour.length; i < l; i++) {
-                        html += '<i style="left:'+contour[i].x+'px;top:'+contour[i].y+'px;" class="break"></i>';
-                    }
-                    drawPath(ctx, contour);
-                });
-
-                ctx.stroke();
-                $('#points-break').html(html);
+        contours.forEach(function (contour) {
+            for (let i = 0, l = contour.length; i < l; i++) {
+                html += '<i style="left:' + contour[i].x + 'px;top:' + contour[i].y + 'px;" class="break"></i>';
             }
-        };
+            drawPath(ctx, contour);
+        });
 
-        entry.init();
-
-        return entry;
+        ctx.stroke();
+        $('#points-break').html(html);
     }
-);
+};
+
+entry.init();

@@ -6,29 +6,21 @@
  * editor 组件测试
  */
 
-define(
-    function(require) {
+import editor from 'editor/main';
+const shape_baidu = require('../data/contours-1');
 
-        var editor = require('editor/main');
-        var shape_baidu = require('demo/../data/contours-1');
+let currentEditor;
+const entry = {
 
-        var currentEditor;
+    /**
+     * 初始化
+     */
+    init() {
+        currentEditor = editor.create($('#render-view').get(0));
+        window.editor = currentEditor.setFont(shape_baidu);
+        //currentEditor.blur();
 
-        var entry = {
-
-            /**
-             * 初始化
-             */
-            init: function () {
-                currentEditor = editor.create($('#render-view').get(0));
-                window.editor = currentEditor.setFont(shape_baidu);
-                //currentEditor.blur();
-
-            }
-        };
-
-        entry.init();
-
-        return entry;
     }
-);
+};
+
+entry.init();
