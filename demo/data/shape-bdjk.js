@@ -6,12 +6,7 @@
  * 百度健康shape
  */
 
-
-define(
-
-function(require) {
-
-    var shape = {
+module.exports = {
         "xMin": 3,
         "xMax": 552,
         "yMin": 154,
@@ -2500,6 +2495,3 @@ function(require) {
             ]
         ]
         };
-
-        return shape;
-});
