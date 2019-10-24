@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>查找拐点</title>
-    <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <style>
         body {
@@ -65,22 +64,6 @@
 <body>
     <div id="points"></div>
     <div id="points-break"></div>
-<script>
-    require.config({
-        baseUrl: '../src',
-        packages: [
-            {
-                name: 'fonteditor-core',
-                location: '../dep/fonteditor-core/src'
-            }
-        ],
-        paths: {
-            demo: '../demo/js',
-        }
-    });
-    define('jquery', $);
-</script>
 
-<script>require(['demo/findBreakPoints'])</script>
 </body>
 </html>

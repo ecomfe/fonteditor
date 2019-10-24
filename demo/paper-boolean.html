@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>paperjs path boolean操作</title>
-    <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <script src="../dep/paper-full.js"></script>
     <style>
@@ -29,20 +28,6 @@
         <path id="pathresult"></path>
     </svg>
     <canvas id="canvas" width="800" height="800"></canvas>
-<script>
-    require.config({
-        baseUrl: '../src',
-        paths: {
-            demo: '../demo/js',
-            'fonteditor-core': '../dep/fonteditor-core/src'
-        }
-    });
-    define('jquery', $);
 
-    paper.install(window);
-    define('paper', paper);
-</script>
-
-<script>require(['demo/paper-boolean'])</script>
 </body>
 </html>

@@ -17,7 +17,7 @@ class Editor {
      */
     constructor(options) {
         this.main = $(options.main);
-        this.url = options.url || '../editor.html';
+        this.url = options.url || './editor.html';
         this.key = 'editor-' + Math.random();
         // 给 editor页面传递 key id，以便于通信的时候根据key来进行通信
         this.onMessage = $.proxy(this.onMessage, this);
