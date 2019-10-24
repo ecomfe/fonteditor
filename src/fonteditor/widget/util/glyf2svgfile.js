@@ -4,7 +4,7 @@
  */
 
 
-import computeBoundingBox from 'fonteditor-core/graphics/computeBoundingBox';
+import computeBoundingBox from 'graphics/computeBoundingBox';
 import contours2svg from 'fonteditor-core/ttf/util/contours2svg';
 import pathAdjust from 'fonteditor-core/graphics/pathAdjust';
 import pathCeil from 'fonteditor-core/graphics/pathCeil';

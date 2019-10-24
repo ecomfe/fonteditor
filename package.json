@@ -13,21 +13,21 @@
       "name": "junmer"
     }
   ],
-  "description": "ttf to woff,svg,eot convert, ttf adjust",
+  "description": "ttf to woff, woff2, svg, eot convert, ttf adjust",
   "scripts": {
     "dev": "webpack-dev-server --open --config ./config/webpack.dev.js",
-    "build": "webpack --production --config ./config/webpack.prod.js"
+    "prod": "webpack --production --config ./config/webpack.prod.js",
+    "build": "sh build.sh"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
     "fonteditor-core": "^2.0.3",
     "html-webpack-plugin": "^3.2.0",
-    "jquery": "^3.4.1",
     "less": "^2.0.0",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
-    "q": "^1.2.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "style-loader": "^1.0.0",
     "to-string-loader": "^1.1.5",
     "url-loader": "^2.2.0",
@@ -50,5 +50,5 @@
     "type": "git",
     "url": "git://github.com/ecomfe/fonteditor.git"
   },
-  "version": "1.0.1"
+  "version": "2.0.1"
 }
