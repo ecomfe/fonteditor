@@ -95,6 +95,7 @@ const transform = {
      * @return {boolean} `false`或者`undefined`
      */
     mirrorshapes(shapes) {
+        debugger;
         shapes = shapes || (this.currentGroup && this.currentGroup.shapes);
         if (!shapes || !shapes.length) {
             return false;

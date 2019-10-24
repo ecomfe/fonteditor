@@ -40,7 +40,7 @@ export default class Editor {
         this.render = render;
 
         // 按顺序执行editor的控制器
-        for (var i = 0, l = this.initers.length; i < l; i++) {
+        for (let i = 0, l = this.initers.length; i < l; i++) {
             this.initers[i].call(this);
         }
 
@@ -54,16 +54,14 @@ export default class Editor {
      * 切换编辑模式
      *
      * @param {string} modeName 模式名称
+     * @param {...Array} args args
      * @return {this}
      */
-    setMode(modeName) {
-
+    setMode(modeName, ...args) {
         if (this.mode) {
             this.mode.end && this.mode.end.call(this);
         }
-
         this.mode = modeSupport[modeName] || modeSupport.default;
-        var args = Array.prototype.slice.call(arguments, 1);
         this.mode.begin && this.mode.begin.apply(this, args);
         return this;
     }
@@ -107,13 +105,13 @@ export default class Editor {
      */
     refreshSelected(shapes) {
         if (this.currentGroup) {
-            var lastShapes = this.currentGroup.shapes;
+            let lastShapes = this.currentGroup.shapes;
             this.currentGroup.setShapes(shapes);
             this.currentGroup.refresh();
 
             if (shapes !== lastShapes) {
                 this.fire('selection:change', {
-                    shapes: shapes
+                    shapes
                 });
             }
         }
@@ -132,14 +130,13 @@ export default class Editor {
      * 执行指定命令
      *
      * @param {...string} command 指令名，后续为命令参数集合
+     * @param {...Array} args args
      * @return {boolean} 是否执行成功
      */
-    execCommand(command) {
-
-        var args = Array.prototype.slice.call(arguments, 1);
-        var event = {
-            command: command,
-            args: args
+    execCommand(command, ...args) {
+        let event = {
+            command,
+            args
         };
         this.fire('beforecommand', event);
 
@@ -148,7 +145,7 @@ export default class Editor {
         }
 
         if (commandSupport[command]) {
-            var ret = commandSupport[command].apply(this, args);
+            let ret = commandSupport[command].apply(this, args);
             event.result = ret;
             this.fire('command', event);
             return ret;
@@ -188,7 +185,7 @@ export default class Editor {
      * @return {boolean}
      */
     isChanged() {
-        var font = this.getFont();
+        let font = this.getFont();
         return this.fontHash !== getFontHash(font);
     }
 
@@ -202,7 +199,7 @@ export default class Editor {
             this.fontHash = 0;
         }
         else {
-            var font = this.getFont();
+            let font = this.getFont();
             this.fontHash = getFontHash(font);
         }
     }

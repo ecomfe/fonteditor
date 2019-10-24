@@ -4,7 +4,7 @@
  */
 
 export default {
-glyph_name: 'Glyph Name',
+    glyph_name: 'Glyph Name',
     left_side_bearing: 'Left Side Bearing',
     right_side_bearing: 'Right Side Bearing',
     baseline_offset: 'Baseline Offset',
