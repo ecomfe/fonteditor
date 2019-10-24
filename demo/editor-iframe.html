@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>测试editor远程调用</title>
-    <script src="../dep/esl.js"></script>
     <script src="../dep/jquery.min.js"></script>
     <style>
         body {
@@ -19,19 +18,6 @@
     <iframe src="" frameborder="0" class="editor-frame"></iframe>
 
     <button id="get-font">获取font</button>
-
-    <script>
-        require.config({
-            baseUrl: '../src',
-            paths: {
-                demo: '../demo/js',
-            }
-        });
-        define('jquery', $);
-    </script>
-    <script>
-        require(['demo/editor-iframe']);
-    </script>
 
 </body>
 </html>

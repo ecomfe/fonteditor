@@ -16,6 +16,7 @@
   "description": "ttf to woff, woff2, svg, eot convert, ttf adjust",
   "scripts": {
     "dev": "webpack-dev-server --open --config ./config/webpack.dev.js",
+    "demo": "webpack-dev-server --open --config ./config/webpack.demo.js",
     "prod": "webpack --production --config ./config/webpack.prod.js",
     "build": "sh build.sh"
   },
