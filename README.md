@@ -1,6 +1,8 @@
 fonteditor 在线ttf字体编辑器
 ==========
 
+[Github Preview](https://kekee000.github.io/fonteditor/)
+
 [线上地址](http://fontstore.baidu.com/static/editor/index.html)
 
 [English Version](http://fontstore.baidu.com/static/editor/index-en.html)
@@ -98,4 +100,4 @@ npm run demo
 
 28. 2019-10-14 使用es6 module 进行重构.
 
-29. 2019-10-24 支持woff2读取和写入.
+29. 2019-10-24 支持woff2读取和写入, 发布Ver2.
