@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Editor</title>
-    <link rel="shortcut icon" href="http://www.baidu.com/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="dep/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <div id="editor-panel" class="editor-panel" oncontextMenu="return false"></div>

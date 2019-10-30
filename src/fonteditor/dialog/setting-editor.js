@@ -14,9 +14,7 @@ export default setting.derive({
     title: i18n.lang.dialog_editor_setting,
 
     getTpl() {
-        let tpl = require('../template/dialog/setting-editor.tpl');
-        console.log(tpl);
-        return tpl;
+        return require('../template/dialog/setting-editor.tpl');
     },
 
     set(setting) {
