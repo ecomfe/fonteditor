@@ -12,6 +12,8 @@ import lang from 'common/lang';
 import glyfAdjust from 'fonteditor-core/ttf/util/glyfAdjust';
 import getEmptyttfObject from 'fonteditor-core/ttf/getEmptyttfObject';
 
+let actions = null;
+
 /**
  * 读取在线字体
  *
@@ -22,10 +24,10 @@ function readOnlineFont(type, url) {
     ajaxFile({
         type: type === 'svg' ? 'xml' : 'binary',
         url: url,
-        onSuccess: function (buffer) {
+        onSuccess(buffer) {
             program.loader.load(buffer, {
                 type: type || 'ttf',
-                success: function (imported) {
+                success(imported) {
                     program.loading.hide();
                     program.ttfManager.set(imported);
                     program.data.projectId = null;
@@ -33,7 +35,7 @@ function readOnlineFont(type, url) {
                 }
             });
         },
-        onError: function () {
+        onError() {
             alert(i18n.lang.msg_read_file_error);
         }
     });
@@ -74,9 +76,9 @@ const fontDelaySync = lang.debounce(function (options) {
     });
 }, 500);
 
-const actions = {
+actions = {
 
-    'undo': function () {
+    'undo'() {
         if (program.editor.isEditing()) {
             program.editor.undo();
             editorDelayFocus();
@@ -86,7 +88,7 @@ const actions = {
         }
     },
 
-    'redo': function () {
+    'redo'() {
         if (program.editor.isEditing()) {
             program.editor.redo();
             editorDelayFocus();
@@ -96,7 +98,7 @@ const actions = {
         }
     },
 
-    'new': function (options) {
+    'new'(options) {
         if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
             return;
         }
@@ -107,33 +109,33 @@ const actions = {
         actions.save(options);
     },
 
-    'open': function () {
+    'open'() {
         $('#font-import').click();
     },
 
-    'import': function () {
+    'import'() {
         if (program.ttfManager.get()) {
             $('#font-import').click();
         }
     },
 
-    'export': function (e) {
+    'export'(e) {
         if (program.ttfManager.get()) {
-            var target = $(e.target);
+            let target = $(e.target);
             program.exporter.export(program.ttfManager.get(), {
                 type: target.attr('data-type'),
-                error: function (ev) {
+                error(ev) {
                     program.fire('font-error', ev);
                 }
             });
         }
     },
 
-    'sync-from-server': function () {
-        var SettingSync = settingSupport.sync;
+    'sync-from-server'() {
+        let SettingSync = settingSupport.sync;
         // 从服务器同步字体
         !new SettingSync({
-            onChange: function (setting) {
+            onChange(setting) {
                 setting.timestamp = -1; // 配置强制拉取
                 fontDelaySync({
                     type: 'pull',
@@ -146,7 +148,7 @@ const actions = {
         });
     },
 
-    'sync': function (projectId, ttf, config) {
+    'sync'(projectId, ttf, config) {
         // 推送字体
         fontDelaySync({
             type: 'push',
@@ -155,16 +157,16 @@ const actions = {
             config: config
         });
     },
-    'dosync': function (projectId) {
-        var syncConfig = program.project.getConfig(projectId).sync;
+    'dosync'(projectId) {
+        let syncConfig = program.project.getConfig(projectId).sync;
         if (syncConfig && syncConfig.autoSync) {
             actions.sync(projectId, program.ttfManager.get(), syncConfig);
         }
     },
-    'save': function (options) {
+    'save'(options) {
         if (program.ttfManager.get()) {
             // 已经保存过的项目
-            var projectId = program.data.projectId;
+            let projectId = program.data.projectId;
             if (projectId) {
                 program.project.update(projectId, program.ttfManager.get())
                 .then(function () {
@@ -178,7 +180,7 @@ const actions = {
             }
             // 未保存的项目
             else {
-                var name = program.ttfManager.get().name.fontFamily || '';
+                let name = program.ttfManager.get().name.fontFamily || '';
                 if ((name = window.prompt(i18n.lang.msg_input_proj_name, name))) {
                     name = string.encodeHTML(name);
                     options = options || {};
@@ -200,9 +202,9 @@ const actions = {
         }
     },
 
-    'add-new': function () {
+    'add-new'() {
         if (program.ttfManager.get()) {
-            var selected = program.viewer.getSelected();
+            let selected = program.viewer.getSelected();
             program.ttfManager.insertGlyf({}, selected[0]);
         }
         else {
@@ -211,10 +213,10 @@ const actions = {
         }
     },
 
-    'add-online': function () {
-        var SettingOnline = settingSupport.online;
+    'add-online'() {
+        let SettingOnline = settingSupport.online;
         !new SettingOnline({
-            onChange: function (url) {
+            onChange(url) {
                 if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
                     return;
                 }
@@ -222,8 +224,8 @@ const actions = {
                 program.loading.show(i18n.lang.msg_loading, 1000);
                 // 此处延迟处理
                 setTimeout(function () {
-                    var type = url.slice(url.lastIndexOf('.') + 1);
-                    var fontUrl = url;
+                    let type = url.slice(url.lastIndexOf('.') + 1);
+                    let fontUrl = url;
 
                     if (/^https?:\/\//i.test(url)) {
                         fontUrl = string.format(program.config.readOnline, ['font', encodeURIComponent(url)]);
@@ -234,10 +236,10 @@ const actions = {
         }).show();
     },
 
-    'add-url': function () {
-        var SettingUrl = settingSupport.url;
+    'add-url'() {
+        let SettingUrl = settingSupport.url;
         !new SettingUrl({
-            onChange: function (url) {
+            onChange(url) {
                 if (program.ttfManager.isChanged() && !window.confirm(i18n.lang.msg_confirm_save_proj)) {
                     return;
                 }
@@ -245,46 +247,46 @@ const actions = {
                 program.loading.show(i18n.lang.msg_loading, 1000);
                 // 此处延迟处理
                 setTimeout(function () {
-                    var fontUrl = string.format(program.config.readOnline, ['font', encodeURIComponent(url)]);
+                    let fontUrl = string.format(program.config.readOnline, ['font', encodeURIComponent(url)]);
                     readOnlineFont(url.slice(url.lastIndexOf('.') + 1), fontUrl);
                 }, 20);
             }
         }).show();
     },
 
-    'preview': function (e) {
-        var ttf = program.ttfManager.get();
+    'preview'(e) {
+        let ttf = program.ttfManager.get();
         if (ttf) {
-            var format = e.target.getAttribute('data-format');
+            let format = e.target.getAttribute('data-format');
             program.previewer.load(ttf, format);
         }
     },
 
-    'setting-name': function () {
-        var ttf = program.ttfManager.get();
+    'setting-name'() {
+        let ttf = program.ttfManager.get();
         if (ttf) {
-            var SettingName = settingSupport.name;
+            let SettingName = settingSupport.name;
             !new SettingName({
-                onChange: function (setting) {
+                onChange(setting) {
                     program.ttfManager.setInfo(setting);
                 }
             }).show($.extend({}, ttf.head, ttf.name));
         }
     },
 
-    'setting-metrics': function () {
-        var ttf = program.ttfManager.get();
+    'setting-metrics'() {
+        let ttf = program.ttfManager.get();
         if (ttf) {
-            var SettingMetrics = settingSupport.metrics;
+            let SettingMetrics = settingSupport.metrics;
             !new SettingMetrics({
-                onChange: function (setting) {
+                onChange(setting) {
                     program.ttfManager.setMetrics(setting);
                 }
             }).show($.extend({}, ttf['OS/2'], ttf.hhea, ttf.post));
         }
     },
 
-    'setting-glyf-name': function () {
+    'setting-glyf-name'() {
         if (program.ttfManager.get()) {
             if (window.confirm(i18n.lang.msg_confirm_gen_names)) {
                 program.ttfManager.genGlyfName(program.viewer.getSelected());
@@ -292,15 +294,15 @@ const actions = {
         }
     },
 
-    'setting-glyf-clearname': function () {
+    'setting-glyf-clearname'() {
         if (program.ttfManager.get()) {
             program.ttfManager.clearGlyfName(program.viewer.getSelected());
         }
     },
 
-    'setting-optimize': function () {
+    'setting-optimize'() {
         if (program.ttfManager.get()) {
-            var result = program.ttfManager.optimize();
+            let result = program.ttfManager.optimize();
             if (true !== result) {
                 if (result.repeat) {
                     program.fire('font-error', {
@@ -313,25 +315,25 @@ const actions = {
         }
     },
 
-    'setting-sort': function () {
+    'setting-sort'() {
         if (program.ttfManager.get()) {
-            var result = program.ttfManager.sortGlyf();
+            let result = program.ttfManager.sortGlyf();
             if (true !== result) {
                 alert(result.message);
             }
         }
     },
 
-    'setting-compound2simple': function () {
+    'setting-compound2simple'() {
         if (program.ttfManager.get()) {
             program.ttfManager.compound2simple(program.viewer.getSelected());
         }
     },
 
-    'setting-editor': function () {
-        var SettingEditor = settingSupport.editor;
+    'setting-editor'() {
+        let SettingEditor = settingSupport.editor;
         !new SettingEditor({
-            onChange: function (setting) {
+            onChange(setting) {
                 program.setting.set('editor', setting, setting.saveSetting);
                 setTimeout(function () {
                     program.viewer.setSetting(setting.viewer);
@@ -341,11 +343,11 @@ const actions = {
         }).show(program.setting.get('editor'));
     },
 
-    'import-pic': function () {
-        var SettingEditor = settingSupport['import-pic'];
+    'import-pic'() {
+        let SettingEditor = settingSupport['import-pic'];
         if (program.ttfManager.get()) {
             !new SettingEditor({
-                onChange: function (setting) {
+                onChange(setting) {
                     if (setting.contours) {
 
                         if (program.editor.isVisible()) {
@@ -356,7 +358,7 @@ const actions = {
                             editorDelayFocus();
                         }
                         else {
-                            var selected = program.viewer.getSelected();
+                            let selected = program.viewer.getSelected();
                             program.ttfManager.insertGlyf(glyfAdjust({
                                 contours: setting.contours
                             }, 1, 1, 0, 0, false), selected[0]);
@@ -367,10 +369,10 @@ const actions = {
         }
     },
 
-    'setting-import-and-export': function () {
-        var SettingEditor = settingSupport.ie;
+    'setting-import-and-export'() {
+        let SettingEditor = settingSupport.ie;
         !new SettingEditor({
-            onChange: function (setting) {
+            onChange(setting) {
                 program.setting.set('ie', setting, setting.saveSetting);
             }
         }).show(program.setting.get('ie'));

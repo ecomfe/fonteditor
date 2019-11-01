@@ -41,7 +41,7 @@ function bindEditor() {
     editor.on('setting:font', function (e) {
         let SettingGlyf = settingSupport.glyf;
         !new SettingGlyf({
-            onChange: function (setting) {
+            onChange(setting) {
                 editor.adjustFont(setting);
                 // 此处需要等待点击完成后设置focus状态
                 delayFocus();
@@ -52,7 +52,7 @@ function bindEditor() {
     editor.on('setting:editor', function (e) {
         let SettingEditor = settingSupport.editor;
         let dlg = new SettingEditor({
-            onChange: function (setting) {
+            onChange(setting) {
                 setTimeout(function () {
                     program.viewer.setSetting(setting.viewer);
                     me.setSetting(setting.editor);

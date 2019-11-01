@@ -39,7 +39,7 @@ export default {
      * @param  {Array} histGram 灰度数据
      * @return {number}          阈值
      */
-    mean: function (histGram) {
+    mean(histGram) {
         let sum = 0;
         let amount = 0;
         for (let y = 0; y < 256; y++) {
@@ -60,7 +60,7 @@ export default {
      * @param  {Array} HistGram 灰度数据
      * @return {number}          阈值
      */
-    minimum: function (HistGram) {
+    minimum(HistGram) {
         let Y;
         let Iter = 0;
         let HistGramC = []; // 基于精度问题，一定要用浮点数来处理，否则得不到正确的结果
@@ -113,7 +113,7 @@ export default {
      * @param  {Array} HistGram 灰度数据
      * @return {number}          阈值
      */
-    intermodes: function (HistGram) {
+    intermodes(HistGram) {
         let Y;
         let Iter = 0;
         let Index;
@@ -163,7 +163,7 @@ export default {
      * @param  {Array} HistGram 灰度数据
      * @return {number}          阈值
      */
-    ostu: function (HistGram) {
+    ostu(HistGram) {
 
         let Y;
         let Amount = 0;
@@ -240,7 +240,7 @@ export default {
      * @param  {Array} HistGram 灰度数据
      * @return {number}          阈值
      */
-    isoData: function (HistGram) {
+    isoData(HistGram) {
         let i;
         let g = 0;
         let length = HistGram.length;

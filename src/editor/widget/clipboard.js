@@ -28,7 +28,7 @@ export default {
      * @return {?Object}
      */
     get(type) {
-        var data = storage.getItem(storageName);
+        let data = storage.getItem(storageName);
         if (null !== data) {
             data = JSON.parse(data);
             if (data.type === type) {

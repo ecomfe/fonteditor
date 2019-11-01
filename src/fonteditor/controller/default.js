@@ -306,7 +306,7 @@ function bindViewer(program) {
 
         let SettingAdjustPos = settingSupport['adjust-pos'];
         !new SettingAdjustPos({
-            onChange: function (setting) {
+            onChange(setting) {
                 setTimeout(function () {
                     program.ttfManager.adjustGlyfPos(selected, setting);
                 }, 20);
@@ -318,7 +318,7 @@ function bindViewer(program) {
 
         let SettingAdjustGlyf = settingSupport['adjust-glyf'];
         !new SettingAdjustGlyf({
-            onChange: function (setting) {
+            onChange(setting) {
                 setTimeout(function () {
                     program.ttfManager.adjustGlyf(program.viewer.getSelected(), setting);
                 }, 20);
@@ -334,7 +334,7 @@ function bindViewer(program) {
             let glyf = program.ttfManager.getGlyf(selected)[0];
             let SettingGlyf = settingSupport.glyf;
             !new SettingGlyf({
-                onChange: function (setting) {
+                onChange(setting) {
                     program.ttfManager.updateGlyf(setting, selected[0]);
                 }
             }).show({
@@ -349,7 +349,7 @@ function bindViewer(program) {
     .on('find-glyf', function (e) {
         let SettingFindGlyf = settingSupport['find-glyf'];
         !new SettingFindGlyf({
-            onChange: function (setting) {
+            onChange(setting) {
                 let glyfList = program.ttfManager.findGlyf(setting);
 
                 if (glyfList.length) {
@@ -378,7 +378,7 @@ function bindViewer(program) {
     .on('setting-unicode', function (e) {
         let SettingUnicode = settingSupport.unicode;
         !new SettingUnicode({
-            onChange: function (setting) {
+            onChange(setting) {
                 // 此处延迟处理
                 setTimeout(function () {
                     if (program.ttfManager.get()) {
@@ -401,7 +401,7 @@ function bindViewer(program) {
 
             let SettingSync = settingSupport.sync;
             !new SettingSync({
-                onChange: function (setting) {
+                onChange(setting) {
                     program.project.updateConfig(program.data.projectId, {
                         sync: setting ? $.extend(syncConfig, setting) : null
                     });
@@ -670,7 +670,7 @@ export default {
         *
         * @param {Object} curProgram 项目组件
         */
-    init: function (curProgram) {
+    init(curProgram) {
 
         // 设置当前的项目对象为指定的项目对象
         program = curProgram;

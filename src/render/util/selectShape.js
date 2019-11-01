@@ -18,24 +18,25 @@ export default function selectShape(shapes, p) {
         return shapes[0];
     }
 
-    var sorted = shapes.map(function (shape) {
-        var bound = computeBoundingBox.computePath(shape.points);
-        shape._bound = bound;
-        shape._size = bound.width * bound.height;
-        return shape;
-    }).sort(function (a, b) {
-        return a._size - b._size;
-    });
+    let sorted = shapes.map(function (shape) {
+            let bound = computeBoundingBox.computePath(shape.points);
+            shape._bound = bound;
+            shape._size = bound.width * bound.height;
+            return shape;
+        })
+        .sort(function (a, b) {
+            return a._size - b._size;
+        });
 
-    var start = sorted[0];
-    var end = sorted[sorted.length - 1];
+    let start = sorted[0];
+    let end = sorted[sorted.length - 1];
 
-    var result = isPathCross(
+    let result = isPathCross(
         start.points, end.points,
         start._bound, end._bound
     );
 
-    var selection = start;
+    let selection = start;
 
     if (2 === result) {
         selection = end;
@@ -46,10 +47,10 @@ export default function selectShape(shapes, p) {
     else {
         // 如果大小相等，则选择距离中心点远的
         if (p && Math.abs(start._size - end._size) / start._size  < 0.01) {
-            var sx = start._bound.x + start._bound.width / 2;
-            var sy = start._bound.y + start._bound.height / 2;
-            var ex = end._bound.x + end._bound.width / 2;
-            var ey = end._bound.y + end._bound.height / 2;
+            let sx = start._bound.x + start._bound.width / 2;
+            let sy = start._bound.y + start._bound.height / 2;
+            let ex = end._bound.x + end._bound.width / 2;
+            let ey = end._bound.y + end._bound.height / 2;
             if (
                 Math.pow(p.x - ex, 2) + Math.pow(p.y - ey, 2)
                 > Math.pow(p.x - sx, 2) + Math.pow(p.y - sy, 2)

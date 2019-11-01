@@ -29,7 +29,7 @@ export default class Controller {
     setRender(render) {
         this.render = render;
         render.capture.on('down', function (e) {
-            var result = render.getLayer('cover').getShapeIn(e);
+            let result = render.getLayer('cover').getShapeIn(e);
 
             if (result) {
                 render.selectedShape = result[0];
@@ -50,7 +50,7 @@ export default class Controller {
         });
 
         render.capture.on('drag', function (e) {
-            var shape = render.selectedShape;
+            let shape = render.selectedShape;
             if (shape) {
                 render.getLayer(shape.layerId)
                     .move(e.x - render.camera.x, e.y - render.camera.y, shape)
@@ -65,7 +65,7 @@ export default class Controller {
         });
 
         render.capture.on('dragend', function (e) {
-            var shape = render.selectedShape;
+            let shape = render.selectedShape;
             if (shape) {
                 render.getLayer(shape.layerId)
                     .move(e.x - render.camera.x, e.y - render.camera.y, shape)

@@ -19,7 +19,8 @@
     "demo": "webpack-dev-server --open --config ./config/webpack.demo.js",
     "prod": "webpack --production --config ./config/webpack.prod.js",
     "test": "./node_modules/.bin/mocha --require @babel/register  test/spec/*.spec.js test/spec/**/*.spec.js",
-    "build": "sh build.sh"
+    "build": "sh build.sh",
+    "lint": "fecs ./src --reporter=baidu --rules"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",

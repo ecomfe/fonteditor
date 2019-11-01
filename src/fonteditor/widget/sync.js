@@ -107,7 +107,7 @@ function confirmSync(data) {
                 let ttfBuffer = new Int8Array(base642bytes(data[data.fontType])).buffer;
                 loader.load(ttfBuffer, {
                     type: data.fontType,
-                    success: function (ttfObject) {
+                    success(ttfObject) {
                         resolve({
                             status: 0,
                             hasNew: 1,
@@ -115,7 +115,7 @@ function confirmSync(data) {
                             timestamp: data.timestamp
                         });
                     },
-                    error: function () {
+                    error() {
                         data.status = syncStatus.parseFontError;
                         reject(data);
                         alert(i18n.lang.msg_error_sync_font_version);

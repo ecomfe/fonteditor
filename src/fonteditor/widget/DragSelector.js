@@ -12,11 +12,11 @@ import MouseCapture from 'render/capture/Mouse';
  * @return {Array} 范围内元素
  */
 function getRangeItem(bound) {
-    var elements = [];
+    let elements = [];
     this.main.children().each(function (i, element) {
-        var item = $(element);
-        var pos = item.offset();
-        var p = {
+        let item = $(element);
+        let pos = item.offset();
+        let p = {
             x: pos.left + item.width() / 2,
             y: pos.top + item.height() / 2
         };
@@ -50,7 +50,7 @@ export default class DragSelector {
 
     init() {
 
-        var me = this;
+        let me = this;
         me.capture = new MouseCapture(me.main.get(0), {
             events: {
                 dblclick: false,
@@ -67,9 +67,9 @@ export default class DragSelector {
             me.startY = e.originEvent.pageY;
         });
 
-        var dragging = function (e) {
-            var x = e.originEvent.pageX;
-            var y = e.originEvent.pageY;
+        let dragging = function (e) {
+            let x = e.originEvent.pageX;
+            let y = e.originEvent.pageY;
             me.rangeElement.css({
                 left: Math.min(me.startX, x),
                 top: Math.min(me.startY, y),
@@ -83,10 +83,10 @@ export default class DragSelector {
             me.rangeElement.hide();
             me.main.removeClass('no-hover');
 
-            var x = e.originEvent.pageX;
-            var y = e.originEvent.pageY;
-            var width = Math.abs(me.startX - x);
-            var height = Math.abs(me.startY - y);
+            let x = e.originEvent.pageX;
+            let y = e.originEvent.pageY;
+            let width = Math.abs(me.startX - x);
+            let height = Math.abs(me.startY - y);
             if (width < 20 && height < 20) {
                 return;
             }

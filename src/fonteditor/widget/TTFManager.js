@@ -98,7 +98,7 @@ export default class Manager {
      */
     findGlyf(condition) {
         if (null != condition.index) {
-            var size = this.ttf.getGlyf().length;
+            let size = this.ttf.getGlyf().length;
             return condition.index.filter(function (index) {
                 return index >= 0 && index < size;
             });
@@ -116,15 +116,15 @@ export default class Manager {
      * @return {this}
      */
     insertGlyf(glyf, beforeIndex) {
-        var glyfList = this.ttf.getGlyf();
-        var unicode = 0x20;
+        let glyfList = this.ttf.getGlyf();
+        let unicode = 0x20;
 
         if (!glyf.unicode || !glyf.unicode.length) {
             // 找到unicode的最大值
-            for (var i = glyfList.length - 1; i > 0; i--) {
-                var g = glyfList[i];
+            for (let i = glyfList.length - 1; i > 0; i--) {
+                let g = glyfList[i];
                 if (g.unicode && g.unicode.length) {
-                    var u = Math.max.apply(null, g.unicode);
+                    let u = Math.max.apply(null, g.unicode);
                     unicode = Math.max(u, unicode);
                 }
             }
@@ -162,7 +162,7 @@ export default class Manager {
      */
     merge(imported, options) {
 
-        var list = this.ttf.mergeGlyf(imported, options);
+        let list = this.ttf.mergeGlyf(imported, options);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'new';
@@ -182,7 +182,7 @@ export default class Manager {
      */
     removeGlyf(indexList) {
 
-        var list = this.ttf.removeGlyf(indexList);
+        let list = this.ttf.removeGlyf(indexList);
         if (list.length) {
             this.fireChange(true);
         }
@@ -201,7 +201,7 @@ export default class Manager {
      */
     setUnicode(unicode, indexList, isGenerateName) {
 
-        var list = this.ttf.setUnicode(unicode, indexList, isGenerateName);
+        let list = this.ttf.setUnicode(unicode, indexList, isGenerateName);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'edit';
@@ -220,7 +220,7 @@ export default class Manager {
      */
     genGlyfName(indexList) {
 
-        var list = this.ttf.genGlyfName(indexList);
+        let list = this.ttf.genGlyfName(indexList);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'edit';
@@ -239,7 +239,7 @@ export default class Manager {
      */
     clearGlyfName(indexList) {
 
-        var list = this.ttf.clearGlyfName(indexList);
+        let list = this.ttf.clearGlyfName(indexList);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'edit';
@@ -259,7 +259,7 @@ export default class Manager {
      */
     appendGlyf(glyfList, indexList) {
 
-        var list = this.ttf.appendGlyf(glyfList, indexList);
+        let list = this.ttf.appendGlyf(glyfList, indexList);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'new';
@@ -278,7 +278,7 @@ export default class Manager {
      * @return {this}
      */
     replaceGlyf(glyf, index) {
-        var list = this.ttf.replaceGlyf(glyf, index);
+        let list = this.ttf.replaceGlyf(glyf, index);
         if (list.length) {
             list[0].modify = 'edit';
             this.fireChange(true, 'replace');
@@ -295,7 +295,7 @@ export default class Manager {
      */
     adjustGlyfPos(indexList, setting) {
 
-        var list = this.ttf.adjustGlyfPos(indexList, setting);
+        let list = this.ttf.adjustGlyfPos(indexList, setting);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'edit';
@@ -316,7 +316,7 @@ export default class Manager {
      */
     adjustGlyf(indexList, setting) {
 
-        var list = this.ttf.adjustGlyf(indexList, setting);
+        let list = this.ttf.adjustGlyf(indexList, setting);
         if (list.length) {
             list.forEach(function (g) {
                 g.modify = 'edit';
@@ -336,8 +336,8 @@ export default class Manager {
      */
     updateGlyf(setting, index) {
 
-        var glyf = this.getGlyf([index])[0];
-        var changed = false;
+        let glyf = this.getGlyf([index])[0];
+        let changed = false;
 
         if (setting.unicode.length) {
             glyf.unicode = setting.unicode;
@@ -357,7 +357,7 @@ export default class Manager {
             || (undefined !== setting.rightSideBearing
                 && setting.rightSideBearing + (glyf.xMax || 0) !== glyf.advanceWidth)
         ) {
-            var list = this.ttf.adjustGlyfPos([index], setting);
+            let list = this.ttf.adjustGlyfPos([index], setting);
             if (list.length) {
                 list.forEach(function (g) {
                     g.modify = 'edit';
@@ -416,7 +416,7 @@ export default class Manager {
      */
     optimize() {
 
-        var result = this.ttf.optimize();
+        let result = this.ttf.optimize();
 
         this.ttf.get().glyf.forEach(function (g) {
             g.modify = 'edit';
@@ -428,7 +428,7 @@ export default class Manager {
             return true;
         }
 
-        var message = '';
+        let message = '';
         if (result.repeat) {
             message = i18n.lang.msg_repeat_unicode + result.repeat.join(',');
         }
@@ -446,7 +446,7 @@ export default class Manager {
      */
     sortGlyf() {
 
-        var result = this.ttf.sortGlyf();
+        let result = this.ttf.sortGlyf();
 
         if (result === -1) {
             return {
@@ -475,7 +475,7 @@ export default class Manager {
      * @return {this}
      */
     compound2simple(indexList) {
-        var result = this.ttf.compound2simple(indexList);
+        let result = this.ttf.compound2simple(indexList);
         if (result.length) {
             result.forEach(function (g) {
                 g.modify = 'edit';
@@ -557,11 +557,11 @@ export default class Manager {
      * @return {Array} glyflist
      */
     getCopiedGlyf(indexList) {
-        var list = [];
-        var ttf = this.ttf.get();
-        for (var i = 0, l = indexList.length; i < l; ++i) {
-            var index = indexList[i];
-            var cloned = lang.clone(ttf.glyf[index]);
+        let list = [];
+        let ttf = this.ttf.get();
+        for (let i = 0, l = indexList.length; i < l; ++i) {
+            let index = indexList[i];
+            let cloned = lang.clone(ttf.glyf[index]);
             if (ttf.glyf[index].compound) {
                 compound2simple(cloned, transformGlyfContours(ttf.glyf[index], ttf));
             }

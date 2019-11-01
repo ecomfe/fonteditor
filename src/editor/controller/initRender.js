@@ -18,7 +18,7 @@ function onContextMenu(e) {
             this.setMode('split');
             break;
         case 'paste':
-            var shapes = this.getClipBoard();
+            let shapes = this.getClipBoard();
             if (shapes) {
                 this.execCommand('pasteshapes', shapes, e.pos);
             }
@@ -48,10 +48,10 @@ function onContextMenu(e) {
  * 初始化渲染器
  */
 export default function initRender() {
-    var me = this;
-    var render = this.render;
+    let me = this;
+    let render = this.render;
 
-    var setCamera = function (e) {
+    let setCamera = function (e) {
         render.camera.x = e.x;
         render.camera.y = e.y;
         render.camera.event = e;
@@ -138,9 +138,9 @@ export default function initRender() {
             return;
         }
 
-        var result = render.getLayer('font').getShapeIn(e);
+        let result = render.getLayer('font').getShapeIn(e);
         if (result) {
-            var shape = selectShape(result, e);
+            let shape = selectShape(result, e);
             me.setMode('point', shape);
         }
         else if (me.mode === modeSupport.point) {
@@ -185,7 +185,7 @@ export default function initRender() {
         }
         // 粘贴
         else if (e.keyCode === 86 && e.ctrlKey) {
-            var shapes = me.getClipBoard();
+            let shapes = me.getClipBoard();
             if (shapes) {
                 me.execCommand('pasteshapes', shapes);
             }

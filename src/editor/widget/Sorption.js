@@ -74,13 +74,13 @@ export default class Sorption {
      * @param {Array} shapes 对象数组
      */
     addShapes(shapes) {
-        var xAxis = this.xAxis;
-        var yAxis = this.yAxis;
+        let xAxis = this.xAxis;
+        let yAxis = this.yAxis;
 
-        for (var i = shapes.length - 1; i >= 0; i--) {
-            var box = computeBoundingBox.computePath(shapes[i].points);
-            var cx = box.x + box.width / 2;
-            var cy = box.y + box.height / 2;
+        for (let i = shapes.length - 1; i >= 0; i--) {
+            let box = computeBoundingBox.computePath(shapes[i].points);
+            let cx = box.x + box.width / 2;
+            let cy = box.y + box.height / 2;
 
             xAxis.push({
                 axis: box.x,
@@ -125,7 +125,7 @@ export default class Sorption {
      * @param {Array.<number>} xAxisArray x轴坐标集合
      */
     addXAxis(xAxisArray) {
-        var xAxis = this.xAxis;
+        let xAxis = this.xAxis;
         xAxisArray.forEach(function (x) {
             xAxis.push({
                 axis: x,
@@ -143,7 +143,7 @@ export default class Sorption {
      * @param {Array.<number>} yAxisArray y轴坐标集合
      */
     addYAxis(yAxisArray) {
-        var yAxis = this.yAxis;
+        let yAxis = this.yAxis;
         yAxisArray.forEach(function (y) {
             yAxis.push({
                 axis: y,
@@ -165,7 +165,7 @@ export default class Sorption {
 
         // 检测是否有吸附的对象
         if (this.enableShape) {
-            var result = binaryFind(this.xAxis, x, this.delta);
+            let result = binaryFind(this.xAxis, x, this.delta);
             if (result) {
                 return result;
             }
@@ -173,7 +173,7 @@ export default class Sorption {
 
 
         if (this.enableGrid) {
-            var delta = (x - this.axis.x) % this.axis.gap;
+            let delta = (x - this.axis.x) % this.axis.gap;
             if (Math.abs(delta) < this.gridDelta) {
                 return {
                     axis: x - delta,
@@ -194,14 +194,14 @@ export default class Sorption {
     detectY(y) {
         // 检测是否有吸附的对象
         if (this.enableShape) {
-            var result = binaryFind(this.yAxis, y, this.delta);
+            let result = binaryFind(this.yAxis, y, this.delta);
             if (result) {
                 return result;
             }
         }
 
         if (this.enableGrid) {
-            var delta = (y - this.axis.y) % this.axis.gap;
+            let delta = (y - this.axis.y) % this.axis.gap;
             if (Math.abs(delta) < this.gridDelta) {
                 return {
                     axis: y - delta,
