@@ -16,8 +16,8 @@ import getPoint from './getBezierQ2Point';
  * @return {Array} 分割后的贝塞尔
  */
 export default function bezierQ2Split(p0, p1, p2, point) {
-    var t;
-    var p;
+    let t;
+    let p;
 
     if (typeof point === 'number') {
         t = point;

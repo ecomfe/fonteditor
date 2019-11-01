@@ -31,15 +31,15 @@ export default class Pager {
         this.main.html(PAGER_TPL);
         this.textPage = this.main.find('input[data-pager="text"]');
 
-        var me = this;
+        let me = this;
         me.main.on('click', 'button[data-pager]', function (e) {
 
             if (this.getAttribute('data-disabled')) {
                 return;
             }
 
-            var action = this.getAttribute('data-pager');
-            var page = me.page;
+            let action = this.getAttribute('data-pager');
+            let page = me.page;
             if (action === 'prev') {
                 page = me.page > 1 ? me.page - 1 : 1;
             }
@@ -47,7 +47,7 @@ export default class Pager {
                 page = me.page < me.totalPage ? me.page + 1 : me.totalPage;
             }
             else if (action === 'goto') {
-                var p = +me.textPage.val();
+                let p = +me.textPage.val();
                 if (p >= 1 && p <= me.totalPage) {
                     page = p;
                 }
@@ -68,7 +68,7 @@ export default class Pager {
 
         me.textPage.on('keyup', function (e) {
             if (e.keyCode === 13) {
-                var page = +this.value.trim();
+                let page = +this.value.trim();
                 if (page >= 1 && page <= me.totalPage) {
                     me.page = page;
                     me.fire('change', {

@@ -91,7 +91,7 @@ const program = {
      *
      * @param {HTMLElement} components 主面板元素
      */
-    init: function (components) {
+    init(components) {
         bindClick.call(this, components);
         bindKey.call(this, components);
     },

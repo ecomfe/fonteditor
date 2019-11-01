@@ -74,16 +74,16 @@ export default class Render {
 
         this.camera = this.painter.camera;
 
-        var me = this;
+        let me = this;
 
         // 是否允许缩放
         if (this.options.enableScale) {
             this.capture.on('wheel', function (e) {
                 if (e.altKey || e.ctrlKey) {
 
-                    var defaultRatio = me.options.defaultRatio || 1.2;
-                    var ratio = e.delta > 0 ? defaultRatio : 1 / defaultRatio;
-                    var toScale = me.camera.scale * ratio;
+                    let defaultRatio = me.options.defaultRatio || 1.2;
+                    let ratio = e.delta > 0 ? defaultRatio : 1 / defaultRatio;
+                    let toScale = me.camera.scale * ratio;
                     if (
                         toScale < me.options.minScale
                         || toScale > me.options.maxScale
@@ -94,7 +94,7 @@ export default class Render {
                     me.scale(ratio, e);
                 }
                 else {
-                    var moval = e.delta > 0 ? 30 : -30;
+                    let moval = e.delta > 0 ? 30 : -30;
                     me.move(e.shiftKey ? moval : 0, e.shiftKey ? 0 : moval);
                     me.refresh();
                 }
@@ -111,9 +111,9 @@ export default class Render {
                     return;
                 }
 
-                var prevSize = me.painter.getSize();
+                let prevSize = me.painter.getSize();
                 me.painter.resetSize();
-                var size = me.painter.getSize();
+                let size = me.painter.getSize();
 
                 me.fire('resize', {
                     size: size,
@@ -164,7 +164,7 @@ export default class Render {
      */
     scale(ratio, p, noRefresh) {
 
-        var toScale = this.camera.scale * ratio;
+        let toScale = this.camera.scale * ratio;
         if (
             toScale < this.options.minScale
             || toScale > this.options.maxScale

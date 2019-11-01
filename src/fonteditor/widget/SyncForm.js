@@ -11,7 +11,7 @@ let formSubmitId = 0;
 
 
 function createSubmitForm(data) {
-    var form = document.createElement('form');
+    let form = document.createElement('form');
     form.id = 'form_sync_' + (formSubmitId++);
     form.target = 'sync-frame';
     form.method = 'post';
@@ -21,7 +21,7 @@ function createSubmitForm(data) {
     data.callbackUrl = program.config.proxyUrl + '?callback=' + this.callback;
 
     Object.keys(data).forEach(function (key) {
-        var element = document.createElement('input');
+        let element = document.createElement('input');
         element.type = 'hidden';
         element.name = key;
         element.value = data[key];

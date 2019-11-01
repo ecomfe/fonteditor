@@ -11,7 +11,7 @@ export default {
 
     // 用于form同步的代理页面地址
     proxyUrl: (function () {
-        var a = document.createElement('a');
+        let a = document.createElement('a');
         a.href = 'proxy.html';
         return a.href;
     })()
