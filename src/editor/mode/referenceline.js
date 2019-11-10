@@ -31,6 +31,8 @@ const mode = {
                         p0: {
                             x: e.x
                         },
+                        axis: this.axis,
+                        drawAxisText: true,
                         style: this.options.referenceline.style
                     });
                     this._dragMode = mode.dragLine;
@@ -41,6 +43,8 @@ const mode = {
                         p0: {
                             y: e.y
                         },
+                        axis: this.axis,
+                        drawAxisText: true,
                         style: this.options.referenceline.style
                     });
                     this._dragMode = mode.dragLine;

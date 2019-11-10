@@ -56,13 +56,13 @@ export default function () {
 
     // 坐标原点位置，基线原点
     let originX = (width - options.unitsPerEm) / 2;
-    let origionY = (height + (options.unitsPerEm + options.axis.metrics.descent)) / 2;
+    let originY = (height + (options.unitsPerEm + options.axis.metrics.descent)) / 2;
 
     // 绘制轴线
     this.axis = this.axisLayer.addShape('axis', Object.assign(lang.clone(options.axis), {
         id: 'axis',
         x: originX,
-        y: origionY,
+        y: originY,
         unitsPerEm: options.unitsPerEm,
         selectable: false
     }));
@@ -76,6 +76,8 @@ export default function () {
         arrow: {
             y: 22
         },
+        axis: this.axis,
+        drawAxisText: true,
         style: {
             fill: true,
             stroke: true,
