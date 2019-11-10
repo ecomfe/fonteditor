@@ -41,7 +41,7 @@ export default shape.derive({
 
     isIn(shape, x, y) {
         // 单点模式
-        return  undefined !== shape.p0.x && Math.abs(shape.p0.x - x) < 4
+        return undefined !== shape.p0.x && Math.abs(shape.p0.x - x) < 4
             || undefined !== shape.p0.y && Math.abs(shape.p0.y - y) < 4;
     },
 
@@ -55,7 +55,7 @@ export default shape.derive({
      * @param {number} shape.p0.y y坐标位置
      * @param {Object} shape.arrow 箭头配置数据
      */
-    draw(ctx, shape) {
+    draw(ctx, shape, camera) {
         if (undefined !== shape.p0.x) {
             let x0 = Math.round(shape.p0.x);
             ctx.moveTo(x0, 0);
@@ -77,6 +77,23 @@ export default shape.derive({
                 ctx.lineTo(shape.arrow.x + ARROW_HEIGHT, y0 + ARROW_WIDTH);
                 ctx.lineTo(shape.arrow.x, y0);
             }
+        }
+
+        // 绘制axis的坐标
+        if (shape.axis && shape.drawAxisText) {
+            ctx.save();
+            ctx.scale(0.8, 0.8);
+            let axis = shape.axis;
+            let thickness = (axis.graduation.thickness || 22) + 18;
+            if (undefined !== shape.p0.x) {
+                let px = Math.round((shape.p0.x - shape.axis.x) / camera.scale);
+                ctx.fillText(px, (shape.p0.x + 2) * 1.25, thickness * 1.25);
+            }
+            else {
+                let py = Math.round((shape.axis.y - shape.p0.y) / camera.scale);
+                ctx.fillText(py, thickness * 1.25, (shape.p0.y - 2) * 1.25);
+            }
+            ctx.restore();
         }
     }
 });

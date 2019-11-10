@@ -116,8 +116,8 @@ export default class Render {
                 let size = me.painter.getSize();
 
                 me.fire('resize', {
-                    size: size,
-                    prevSize: prevSize
+                    size,
+                    prevSize
                 });
             });
         }

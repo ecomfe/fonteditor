@@ -270,11 +270,11 @@ export default class GLYFEditor {
         /**
          * 执行指定命令
          *
-         * @param {string} command 命令名
+         * @param {...Array} args 命令参数
          */
-        execCommand() {
+        execCommand(...args) {
             if (this.editor) {
-                this.editor.execCommand.apply(this.editor, arguments);
+                this.editor.execCommand.apply(this.editor, args);
             }
         }
 

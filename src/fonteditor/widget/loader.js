@@ -20,7 +20,7 @@ function svg2ttf(buffer) {
 function readttf(buffer, options) {
     // 暂不支持otf直接编辑，这里需要将otf转换成ttf
     if (options.type === 'woff') {
-        options.inflate = inflate;
+        options.inflate = inflate.inflate;
     }
     let ttf =  font.create(buffer, options).data;
     delete options.inflate;
