@@ -10,7 +10,7 @@ const ARROW_WIDTH = 3; // 箭头宽度
 export default shape.derive({
     type: 'gridarrow',
 
-    adjus(shape, camera) {
+    adjust(shape, camera) {
         let center = camera.center;
         let ratio = camera.ratio;
 
@@ -52,7 +52,7 @@ export default shape.derive({
      * @param {Object} shape shape数据
      * @param {number} shape.p0.x x坐标位置
      * @param {number} shape.p0.y y坐标位置
-     * @param {number} shape.p0.y y坐标位置
+     * @param {Object} camera camera坐标
      * @param {Object} shape.arrow 箭头配置数据
      */
     draw(ctx, shape, camera) {

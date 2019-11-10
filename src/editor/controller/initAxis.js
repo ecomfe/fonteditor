@@ -46,6 +46,13 @@ function setAxis(options) {
 
 }
 
+function getPointCoordinate(p) {
+    let scale = this.render.camera.scale;
+    let x = Math.round((p.x - this.axis.x) / scale);
+    let y = Math.round(-(p.y - this.axis.y) / scale);
+    return {x, y};
+}
+
 /**
  * 初始化坐标系
  */
@@ -97,5 +104,6 @@ export default function () {
     // 设置吸附选项
     this.sorption.setGrid(this.axis);
 
+    this.getPointCoordinate = getPointCoordinate;
     this.setAxis = setAxis;
 }

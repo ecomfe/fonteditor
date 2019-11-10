@@ -277,7 +277,6 @@ export default class Layer {
      * @return {this}
      */
     adjust(shape) {
-
         let shapes = [];
         if (shape) {
             shape = this.getShape(shape);
@@ -292,7 +291,6 @@ export default class Layer {
         let drawer;
 
         for (let i = 0, l = shapes.length; i < l; i++) {
-
             shape = shapes[i];
             if ((drawer = support[shape.type])) {
                 if (camera.ratio !== 1) {
