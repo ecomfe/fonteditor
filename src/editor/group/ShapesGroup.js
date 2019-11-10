@@ -223,7 +223,6 @@ export default class ShapesGroup {
      * @param {number} my y偏移
      */
     move(mx, my) {
-
         this.shapes.forEach(function (shape) {
             pathAdjust(shape.points, 1, 1, mx, my);
         });

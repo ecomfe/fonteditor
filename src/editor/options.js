@@ -26,6 +26,13 @@ export default {
             }
         },
 
+        // 提示文本
+        tipText: {
+            fillColor: 'blue',
+            x: 30,
+            y: 36
+        },
+
         // 覆盖层
         coverLayer: {
             lineColor: '#4780FF',

@@ -140,7 +140,6 @@ export default {
         delete this.curPoint;
 
         let result = this.coverLayer.getShapeIn(e);
-
         if (result) {
             this.curPoint = result[0];
             this.curPoint._style = lang.clone(this.curPoint.style);
@@ -183,9 +182,12 @@ export default {
 
 
     drag(e) {
-
         let camera = this.render.camera;
         if (this.curPoint) {
+            if (!this.tipTextPoint) {
+                this.tipTextPoint = this.coverLayer.addShape('text',
+                Object.assign({text: ''}, this.options.tipText));
+            }
             let current = this.curPoint;
             let reserved = this.curShape.points[current.pointId];
 
@@ -205,7 +207,6 @@ export default {
 
             if (this.sorption.isEnable()) {
                 let result;
-
                 if (result = this.sorption.detectX(current.x)) {
                     current.x = result.axis;
                 }
@@ -217,12 +218,20 @@ export default {
 
             current.point.x = current.x;
             current.point.y = current.y;
-
+            let coord = this.getPointCoordinate(current);
+            this.tipTextPoint.text = coord.x + ',' + coord.y;
+            this.tipTextPoint.x = current.x + 16;
+            this.tipTextPoint.y = current.y + 10;
             this.coverLayer.refresh();
         }
     },
 
     dragend() {
+        if (this.tipTextPoint) {
+            this.coverLayer.removeShape(this.tipTextPoint);
+            this.tipTextPoint = null;
+            this.coverLayer.refresh();
+        }
         if (this.curPoint) {
             let reserved = this.curShape.points[this.curPoint.pointId];
             reserved.x = this.curPoint.x;
