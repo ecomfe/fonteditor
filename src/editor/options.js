@@ -22,12 +22,14 @@ export default {
         // 辅助线
         referenceline: {
             style: {
-                strokeColor: '#746AFE'
+                strokeColor: '#746AFE',
+                fillColor: 'blue'
             }
         },
 
         // 提示文本
         tipText: {
+            id: 'tip-text',
             fillColor: 'blue',
             x: 30,
             y: 36

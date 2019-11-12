@@ -59,6 +59,4 @@ export default function rotateTransform(point, camera) {
     boundCenter.x = (boundShape.points[0].x + boundShape.points[2].x) / 2;
     boundCenter.y = (boundShape.points[0].y + boundShape.points[2].y) / 2;
 
-
-    coverLayer.refresh();
 }

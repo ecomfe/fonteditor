@@ -61,6 +61,5 @@ export default function scaleTransform(point, camera) {
     );
     pathAdjust(points, 1, 1, matrix[0], matrix[1]);
     boundShape.points = points;
-    coverLayer.refresh();
 
 }

@@ -121,7 +121,4 @@ export default function moveTransform(camera, fixX, fixY, enableSorption) {
         ],
         1, 1, x, y
     );
-
-    coverLayer.refresh();
-
 }

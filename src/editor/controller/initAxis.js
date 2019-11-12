@@ -48,8 +48,8 @@ function setAxis(options) {
 
 function getPointCoordinate(p) {
     let scale = this.render.camera.scale;
-    let x = Math.round((p.x - this.axis.x) / scale);
-    let y = Math.round(-(p.y - this.axis.y) / scale);
+    let x = Math.floor((p.x - this.axis.x) / scale);
+    let y = Math.floor(-(p.y - this.axis.y) / scale);
     return {x, y};
 }
 

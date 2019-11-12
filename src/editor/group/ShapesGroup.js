@@ -229,7 +229,6 @@ export default class ShapesGroup {
 
         this.editor.fontLayer.refresh();
         this.editor.coverLayer.move(mx, my);
-        this.editor.coverLayer.refresh();
     }
 
     /**
