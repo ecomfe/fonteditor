@@ -71,6 +71,41 @@ function onContextMenu(e) {
     }
 }
 
+function getTipTextPointCoord(pos, boundPoints) {
+    switch (pos) {
+        case 1:
+            return boundPoints[0];
+        case 2:
+            return boundPoints[1];
+        case 3:
+            return boundPoints[2];
+        case 4:
+            return boundPoints[3];
+        case 5:
+            return {
+                x: (boundPoints[0].x + boundPoints[1].x) / 2,
+                y: (boundPoints[0].y + boundPoints[1].y) / 2
+            };
+        case 6:
+            return {
+                x: (boundPoints[1].x + boundPoints[2].x) / 2,
+                y: (boundPoints[1].y + boundPoints[2].y) / 2
+            };
+        case 7:
+            return {
+                x: (boundPoints[2].x + boundPoints[3].x) / 2,
+                y: (boundPoints[2].y + boundPoints[3].y) / 2
+            };
+        case 8:
+            return {
+                x: (boundPoints[0].x + boundPoints[3].x) / 2,
+                y: (boundPoints[0].y + boundPoints[3].y) / 2
+            };
+    }
+
+    // 右下角
+    return boundPoints[3];
+}
 
 export default {
 
@@ -153,11 +188,34 @@ export default {
     drag(e) {
         if (this.currentGroup) {
             this.currentGroup.transform(this.currentPoint, this.render.camera, e);
+
+            // tip text point
+            if (this.currentGroup.mode === 'scale' || this.currentGroup.mode === 'rotate') {
+                if (!this.tipTextPoint) {
+                    this.tipTextPoint = this.coverLayer.addShape('text',
+                    Object.assign({text: ''}, this.options.tipText));
+                }
+
+                let currentPointCoord = getTipTextPointCoord(
+                    this.currentPoint ? this.currentPoint.pos : 9,
+                    this.coverLayer.getShape('bound').points);
+                let coord = this.getPointCoordinate(currentPointCoord);
+                this.tipTextPoint.text = coord.x + ',' + coord.y;
+                this.tipTextPoint.x = e.x + 16;
+                this.tipTextPoint.y = e.y + 16;
+            }
+            this.coverLayer.refresh();
         }
     },
 
 
     dragend(e) {
+       // remove tip text
+        if (this.tipTextPoint) {
+            this.coverLayer.removeShape(this.tipTextPoint);
+            this.tipTextPoint = null;
+            this.coverLayer.refresh();
+        }
 
         if (this.currentPoint) {
             this.currentGroup.finishTransform(this.currentPoint, this.render.camera, e);
@@ -247,6 +305,7 @@ export default {
         // 移动
         if (stepMap[e.key]) {
             this.currentGroup.move(stepMap[e.key][0], stepMap[e.key][1]);
+            this.coverLayer.refresh();
         }
     },
 
