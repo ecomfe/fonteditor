@@ -14,13 +14,19 @@ export default {
     addreferenceline(x, y) {
         if (x > 20) {
             this.referenceLineLayer.addShape('gridarrow', {
-                p0: {x}
+                p0: {x},
+                axis: this.axis,
+                drawAxisText: true,
+                style: this.options.referenceline.style
             });
         }
 
         if (y > 20) {
             this.referenceLineLayer.addShape('gridarrow', {
-                p0: {y}
+                p0: {y},
+                axis: this.axis,
+                drawAxisText: true,
+                style: this.options.referenceline.style
             });
         }
 
