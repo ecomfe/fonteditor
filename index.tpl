@@ -96,7 +96,7 @@
             <a href="./index-en.html">English</a>
         </div>
         <a class="ico i-github forkme" href="https://github.com/ecomfe/fonteditor" target="_blank">Fork me on Github</a>
-        <a class="ico i-help userguide" href="./doc/index.html" target="_blank">${lang.help}</a>
+        <a class="ico i-help userguide" href="https://kekee000.github.io/fonteditor-doc/" target="_blank">${lang.help}</a>
     </section>
 
     <section class="sidebar">
