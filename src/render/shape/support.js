@@ -15,7 +15,7 @@ import graduation from './Graduation';
 import line from './Line';
 import beziercurve from './BezierCurve';
 import gridarrow from './GridArrow';
-import text from './text';
+import text from './Text';
 
 export default {
     circle,
