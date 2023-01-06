@@ -9,7 +9,6 @@ Fonteditor Online Font Editor
 
 [线上地址](https://kekee000.github.io/fonteditor/)
 
-[Fontstore](http://fontstore.baidu.com/static/editor/index.html)
 
 ![Fonteditor](./fonteditor-zh.jpg)
 
