@@ -9,7 +9,6 @@ Support ttf, woff, woff2, otf, svg font, eot import and edit online.
 
 [English Version](https://kekee000.github.io/fonteditor/index-en.html)
 
-[Fontstore](http://fontstore.baidu.com/static/editor/index.html)
 
 ![Fonteditor](./fonteditor.jpg)
 
