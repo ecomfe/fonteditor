@@ -7,7 +7,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-
+const isWindows = process.platform === 'win32';
 module.exports = {
     entry: {
         index: './src/fonteditor/index',
@@ -72,11 +72,11 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\/(index|empty|editor)\.tpl$/,
+                test: isWindows ? /\\(index|empty|editor)\.tpl$/ : /\/(index|empty|editor)\.tpl$/,
                 loader: 'index-loader'
             },
             {
-                test: /template\/(.+?)\.tpl$/,
+                test: isWindows ? /template\\(.+?)\.tpl$/ : /template\/(.+?)\.tpl$/,
                 loader: 'tpl-loader'
             },
             {

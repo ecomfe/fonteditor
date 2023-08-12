@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const DEMO_DIR = path.resolve(__dirname, '../demo');
+const isWindows = process.platform === 'win32';
 
 function getEntries() {
     let files = fs.readdirSync(DEMO_DIR + '/js');
@@ -83,11 +84,11 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\/(index|empty|editor)\.tpl$/,
+                test: isWindows ? /\\(index|empty|editor)\.tpl$/ : /\/(index|empty|editor)\.tpl$/,
                 loader: 'index-loader'
             },
             {
-                test: /template\/(.+?)\.tpl$/,
+                test: isWindows ? /template\\(.+?)\.tpl$/ : /template\/(.+?)\.tpl$/,
                 loader: 'tpl-loader'
             },
             {
